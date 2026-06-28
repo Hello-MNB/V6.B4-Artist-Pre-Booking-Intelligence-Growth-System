@@ -37,9 +37,13 @@ export async function getMyArtist(userId) {
   return data
 }
 
+// Public/by-id read — BUYER-SAFE columns only (anon-facing: availability flow).
+// Never selects private fields (whatsapp/rider/created_by); the owner uses
+// getMyArtist for their full record. Matches the anon column grant (migration 016).
+const PUBLIC_ARTIST_COLS = 'id, stage_name, name, genre, city, photo_url, one_line, regions, set_length, invoice_ready, music_links, lineup_frequency_band, sells_tickets, price_band, community_size_band, published'
 export async function getArtist(id) {
   if (DEMO) return id === demoArtist2.id ? demoArtist2 : demoArtist
-  const { data, error } = await supabase.from('artists').select('*').eq('id', id).maybeSingle()
+  const { data, error } = await supabase.from('artists').select(PUBLIC_ARTIST_COLS).eq('id', id).maybeSingle()
   if (error) throw error
   return data
 }

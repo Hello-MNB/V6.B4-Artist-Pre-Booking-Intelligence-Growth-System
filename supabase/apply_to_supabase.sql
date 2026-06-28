@@ -994,3 +994,22 @@ begin
     values (p_org, null, coalesce(nullif(p_role, ''), 'member'), 'invited', lower(p_email), auth.uid(), v_token);
   return v_token;
 end; $$;
+
+-- ============================================================
+-- (016) FIREWALL column security — mirrors migrations/016_firewall_column_security.sql
+-- ============================================================
+revoke select on public.artists from anon;
+grant select (id, stage_name, name, genre, city, photo_url, one_line, regions,
+  set_length, invoice_ready, music_links, lineup_frequency_band, sells_tickets,
+  price_band, community_size_band, published) on public.artists to anon;
+
+-- profile_items: buyer-safe columns only (no internal metadata)
+revoke select on public.profile_items from anon;
+grant select (id, artist_id, item_type, title, detail, item_date, public_url, source_status)
+  on public.profile_items to anon;
+
+-- claims: buyer-safe columns only — NO internal_confidence (score), NO expires_at
+-- (raw timestamp), NO extraction_method / model_version / verified_by
+revoke select on public.claims from anon;
+grant select (id, artist_id, claim_type, value, source_type, verification_status, reason_code, method_label)
+  on public.claims to anon;

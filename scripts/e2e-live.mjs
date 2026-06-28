@@ -108,21 +108,22 @@ async function main() {
   const { error: pubErr } = await sb.from('artists').update({ published: true }).eq('id', artistId)
   pubErr ? fail('5a publish (published=true)', pubErr) : pass('5a publish (artist.published=true) under org-RLS')
 
-  const [{ data: aArt }, { data: aItems }, { data: aClaims }] = await Promise.all([
-    anon.from('artists').select('id,stage_name,published,whatsapp_number,created_by').eq('id', artistId).maybeSingle(),
-    anon.from('profile_items').select('visibility').eq('artist_id', artistId),
-    anon.from('claims').select('visibility,verification_status').eq('artist_id', artistId),
-  ])
-  const sees = !!aArt?.published
-  const itemsOk = (aItems || []).every(i => i.visibility === OK)
-  const claimsOk = (aClaims || []).every(c => c.visibility === OK && STRONG.includes(c.verification_status))
-  const mirrorHidden = !(aClaims || []).some(c => c.visibility === MIRROR)
-  ;(sees && itemsOk && claimsOk && mirrorHidden) ? pass('5b FIREWALL — anon reads ONLY published + passport-ok', `items_all_ok=${itemsOk} · claims_all_ok=${claimsOk} · mirror_hidden=${mirrorHidden}`) : fail('5b FIREWALL anon read', { message: `sees=${sees} itemsOk=${itemsOk} claimsOk=${claimsOk} mirrorHidden=${mirrorHidden} anonClaims=${JSON.stringify(aClaims)}` })
+  // 5b — anon reads only buyer-safe ROWS (published artist + passport-ok strong claims; mirror hidden)
+  const aArt = await anon.from('artists').select('id, stage_name, published').eq('id', artistId).maybeSingle()
+  const aClaims = await anon.from('claims').select('claim_type, verification_status').eq('artist_id', artistId)
+  const own = await sb.from('claims').select('id, visibility').eq('artist_id', artistId)
+  const sees = !!aArt.data?.published
+  const allStrong = (aClaims.data || []).every((c) => STRONG.includes(c.verification_status))
+  const mirrorTotal = (own.data || []).filter((c) => c.visibility === MIRROR).length
+  const mirrorHidden = mirrorTotal > 0 && (aClaims.data || []).length === (own.data || []).length - mirrorTotal
+  ;(sees && allStrong && mirrorHidden) ? pass('5b FIREWALL — anon reads only published + passport-ok rows', `anon ${(aClaims.data || []).length}/${(own.data || []).length} claims · ${mirrorTotal} mirror hidden`) : fail('5b FIREWALL row read', { message: `sees=${sees} allStrong=${allStrong} mirrorHidden=${mirrorHidden} anon=${JSON.stringify(aClaims.data || aClaims.error?.message)} own=${JSON.stringify(own.data)}` })
 
-  // 5c — does the row-level public policy leak PRIVATE columns to anon? (hardening, not a blocker)
-  if (aArt && aArt.whatsapp_number != null) {
-    console.log(`⚠ 5c HARDENING — anon can read private artists.whatsapp_number ("${aArt.whatsapp_number}") via the row-level public-read policy. The app serves the public Passport through /api/passport (server, column-stripped) so it's not exposed in-app — but for defense-in-depth, restrict the anon public read to buyer-safe columns (a view) or drop direct anon table reads. (Not counted as a failure.)`)
-  } else pass('5c no private-column leak to anon')
+  // 5c — COLUMN SECURITY (migration 016): anon must be DENIED private/PII columns
+  const wa = await anon.from('artists').select('whatsapp_number').eq('id', artistId).maybeSingle()
+  const ic = await anon.from('claims').select('internal_confidence').eq('artist_id', artistId).limit(1)
+  const waBlocked = !!wa.error
+  const icBlocked = !!ic.error
+  ;(waBlocked && icBlocked) ? pass('5c FIREWALL column security — anon DENIED private columns', `whatsapp_number=${waBlocked ? 'denied' : 'READABLE("' + wa.data?.whatsapp_number + '")'} · claims.internal_confidence=${icBlocked ? 'denied' : 'READABLE'}`) : fail('5c FIREWALL column security — anon read a PRIVATE column', { message: `whatsapp blocked=${waBlocked} (${wa.data?.whatsapp_number ?? wa.error?.message}) · internal_confidence blocked=${icBlocked}` })
 
   // ── 6 · demand + seat-limit trigger ──
   const { error: arErr } = await anon.from('availability_requests').insert({ artist_id: artistId, requester_name: 'E2E Booker', event_type: 'Club night', location: 'Tel Aviv', capacity_band: '300–800', status: 'new' })
