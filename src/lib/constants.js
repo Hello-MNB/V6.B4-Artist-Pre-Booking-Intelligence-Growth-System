@@ -19,7 +19,11 @@ export const SIGNUP_ROLES = [ROLES.ARTIST, ROLES.BOOKER, ROLES.PRODUCER, ROLES.A
 // OAuth (Google/Facebook) stays OFF until the providers are configured in the
 // Supabase dashboard. Flip on with VITE_OAUTH_ENABLED=1 (e.g. Netlify env) — no
 // code change. Pilot auth = email + password (anon + RLS); never a dead button.
-export const OAUTH_ENABLED = import.meta.env.VITE_OAUTH_ENABLED === '1'
+// NOTE: `import.meta.env?.` (optional chaining) — constants.js is imported by
+// server/index.js too, where import.meta.env is undefined (Vite-only). Without the
+// `?.` the API server crashes on startup and `concurrently -k` takes the web dev
+// server down with it → blank preview.
+export const OAUTH_ENABLED = import.meta.env?.VITE_OAUTH_ENABLED === '1'
 
 // Bounded status vocabulary — the ONLY statuses the firewall permits in the UI
 // (חזק · מתפתח · חסר-הוכחה · לא-ניתן-להעריך). Keys map to i18n status.*.
