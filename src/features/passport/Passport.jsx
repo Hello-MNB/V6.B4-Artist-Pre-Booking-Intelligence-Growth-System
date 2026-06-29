@@ -143,18 +143,33 @@ export default function Passport() {
   )
 }
 
-// B2 action ladder — the 5 secondary one-tap validation signals (rungs 2–6).
-// Rung 1 (availability) is the primary sticky CTA → the B3 request form.
+// B2 action ladder — secondary one-tap signals (rungs 2–6).
+// Rung 1 (check availability) is the primary sticky CTA → B3 request form.
+//
+// Intent hierarchy (Correction 2 — follows professional intent, NOT GIGPROOF data interest):
+//   PRIMARY commercial  → sticky CTA (check availability) + rung 2 (price/details)
+//   SECONDARY workflow  → future fit · forward (save = future BT)
+//   DIAGNOSTIC          → request specific proof  ← easy to find, NOT promoted
+//   CLOSE               → not fit for this event
+//
+// "needs_proof" is placed AFTER workflow rungs so it is discoverable but not
+// visually steered toward. The corpus is built by making it easy to select
+// honestly, not by making it conspicuous. (BT-61: expand needs_proof into a
+// dimension-selector — draw / fee / activity / territory / source strength.)
 function ActionLadder({ artistId, T }) {
   const [open, setOpen] = useState(false)
   const [sent, setSent] = useState(false)
   const [busy, setBusy] = useState(false)
   const rungs = [
-    ['price_details', T.passport.rungPrice],
-    ['future_fit', T.passport.rungFuture],
-    ['needs_proof', T.passport.rungNeedsProof],
+    // PRIMARY commercial (rung 2)
+    ['price_details',  T.passport.rungPrice],
+    // SECONDARY workflow (rungs 3–4)
+    ['future_fit',     T.passport.rungFuture],
+    ['forwarded',      T.passport.rungForward],
+    // DIAGNOSTIC — easy to find, not promoted (rung 5)
+    ['needs_proof',    T.passport.rungNeedsProof],
+    // CLOSE (rung 6)
     ['not_this_event', T.passport.rungNotThis],
-    ['forwarded', T.passport.rungForward],
   ]
   async function send(signal) {
     if (busy || sent) return

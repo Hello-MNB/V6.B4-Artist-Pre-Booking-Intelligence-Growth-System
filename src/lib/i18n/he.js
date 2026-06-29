@@ -74,8 +74,8 @@ export const T = {
   roleSelect: {
     title: 'מי אתה?',
     artist: 'אני אמן',
-    booker: 'אני אמרגן',
-    producer: 'אני מפיק',
+    booker: 'אני מזמין / מפיק אירוע',
+    producer: 'אני מפיק',  // kept for magic-link edge-case fallback; NOT shown in UserTypeSelect
     agency: 'אני מסוכנות / ניהול אמנים',
     operator: 'מנהל מערכת (פנימי)',
   },
@@ -202,7 +202,7 @@ export const T = {
   },
   readiness: {
     title: 'מצב מוכנות',
-    subtitle: 'תצוגה פרטית — לא נראית לאמרגנים.',
+    subtitle: 'תצוגה פרטית — רק אתה רואה את זה.',
     emptyTitle: 'הוסף הוכחות כדי להעריך',
     buildProfile: 'בנה פרופיל',
     nextStep: 'הצעד הבא שלך',

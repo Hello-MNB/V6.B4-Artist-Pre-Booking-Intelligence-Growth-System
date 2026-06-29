@@ -205,7 +205,7 @@ export default function ArtistDashboard() {
         {pubError && <p className="mt-2 text-xs text-warn">{pubError}</p>}
       </div>
 
-      {/* next-actions (Mirror — plain text, no score) */}
+      {/* next-actions (Artist Radar — plain text, no score; Mirror = private view state within the Radar) */}
       {suggestions.length > 0 && (
         <div className="card mb-4">
           <p className="font-bold text-soft mb-3">{T.dashboard.suggestionsTitle}</p>
@@ -219,7 +219,7 @@ export default function ArtistDashboard() {
         </div>
       )}
 
-      {/* claims summary (private mirror) */}
+      {/* claims summary (Artist Radar private view — mirror-only visibility) */}
       {claims.length > 0 && (
         <div className="card mb-4">
           <p className="font-bold text-soft mb-1">{T.dashboard.claimsTitle}</p>

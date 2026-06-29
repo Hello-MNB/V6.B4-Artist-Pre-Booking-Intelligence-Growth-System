@@ -74,8 +74,8 @@ export const T = {
   roleSelect: {
     title: 'Who are you?',
     artist: "I'm an artist",
-    booker: "I'm a booker",
-    producer: "I'm a producer",
+    booker: "I'm an event organizer / booker",
+    producer: "I'm a producer",  // kept for magic-link edge-case fallback; NOT shown in UserTypeSelect
     agency: "I'm an agency / artist manager",
     operator: "I'm an operator (internal)",
   },
