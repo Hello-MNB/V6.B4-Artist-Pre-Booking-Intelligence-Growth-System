@@ -1,0 +1,95 @@
+{
+  "nav": {
+    "artists": "For Artists",
+    "bookers": "For Bookers",
+    "producers": "For Producers",
+    "howItWorks": "How It Works",
+    "methodology": "Methodology",
+    "pricing": "Pricing",
+    "getStarted": "GET STARTED →",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "footer": {
+    "tagline": "Pre-booking proof for independent artists.",
+    "entityNotice": "אמרגן ≠ מפיק · BOOKING MANAGER ≠ PRODUCER — DISTINCT ROLES, NEVER MERGED.",
+    "firewallNotice": "NO SCORE · NO RANKING · NO PREDICTION · NO GUARANTEE. Evidence, labelled by method.",
+    "copyright": "© 2026 GIGPROOF · CLOSED BETA · TEL AVIV, ISRAEL",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "contact": "Contact"
+  },
+  "home": {
+    "hero": {
+      "badge": "CLOSED BETA · TEL AVIV",
+      "headline": "Before a booking manager risks their name, they need proof.",
+      "sub": "GIGPROOF turns your live-performance evidence into a verified, method-labelled Artist Passport — so bookers can evaluate without guessing.",
+      "ctaBuild": "BUILD YOUR PASSPORT →",
+      "ctaDemo": "SEE A SAMPLE PASSPORT"
+    },
+    "firewall": "NO SCORE · NO RANKING · NO PREDICTION · NO GUARANTEE — EVIDENCE, LABELLED BY METHOD",
+    "actors": {
+      "heading": "One platform, three different jobs",
+      "sub": "Booking manager ≠ producer. These are distinct roles with distinct interests — and GIGPROOF keeps them separate at every level.",
+      "artist": {
+        "tag": "אמן · ARTIST",
+        "title": "Build your proof profile",
+        "body": "Collect evidence, invite producers to confirm a single claim, and publish a verified Passport that speaks for you before the first call.",
+        "cta": "FOR ARTISTS →"
+      },
+      "booker": {
+        "tag": "אמרגן · BOOKING MANAGER",
+        "title": "Evaluate before you risk your name",
+        "body": "Read an Artist Passport in under two minutes. Every claim shows its method and review date — no algorithm, no guessing. Viewing is always free.",
+        "cta": "FOR BOOKING MANAGERS →"
+      },
+      "producer": {
+        "tag": "מפיק · PRODUCER",
+        "title": "Confirm one claim, no account needed",
+        "body": "Receive a bounded magic link, confirm a single claim you know first-hand, and done. Your confirmation is method-labelled on the Passport.",
+        "cta": "FOR PRODUCERS →"
+      }
+    },
+    "ctaFinal": {
+      "heading": "Ready to build your proof profile?",
+      "sub": "Closed beta — Israeli artists only. Early access is limited.",
+      "cta": "REQUEST ACCESS →"
+    }
+  },
+  "passport": {
+    "demoBanner": "SAMPLE PASSPORT — FICTIONAL ARTIST FOR ILLUSTRATION ONLY",
+    "footer": "NO SCORE · NO RANKING · NO PREDICTION · NO GUARANTEE.",
+    "sections": {
+      "draw": "AUDIENCE DRAW",
+      "performance": "LIVE PERFORMANCE",
+      "community": "COMMUNITY",
+      "readiness": "READINESS",
+      "feeContext": "FEE CONTEXT"
+    },
+    "methodLabels": {
+      "ticketExport": "TICKET EXPORT",
+      "producerConfirmed": "PRODUCER-CONFIRMED",
+      "platformData": "PLATFORM DATA",
+      "operatorReviewed": "OPERATOR-REVIEWED",
+      "selfReported": "SELF-REPORTED"
+    },
+    "bandNote": "FIGURES SHOWN AS BAND — NO EXACT NUMBER",
+    "streamingNote": "CONTEXTUAL — NOT DRAW EVIDENCE"
+  },
+  "methodology": {
+    "firewallPrinciple": "GIGPROOF publishes no score, ranking, percentile, prediction, or guarantee.",
+    "methodLabels": {
+      "ticketExport": { "label": "TICKET EXPORT", "desc": "Exported ticket sales data from the ticketing platform operator." },
+      "producerConfirmed": { "label": "PRODUCER-CONFIRMED", "desc": "A producer with first-hand knowledge confirmed this claim via a bounded magic link." },
+      "platformData": { "label": "PLATFORM DATA", "desc": "Public data sourced directly from the platform (contextual, not draw evidence)." },
+      "operatorReviewed": { "label": "OPERATOR-REVIEWED", "desc": "GIGPROOF reviewed documentation and approved this claim." },
+      "selfReported": { "label": "SELF-REPORTED", "desc": "Provided by the artist without external verification." }
+    }
+  },
+  "common": {
+    "reviewed": "REVIEWED",
+    "sampleFictional": "FICTIONAL ARTIST FOR ILLUSTRATION ONLY",
+    "closedBeta": "CLOSED BETA",
+    "telAviv": "TEL AVIV, ISRAEL"
+  }
+}

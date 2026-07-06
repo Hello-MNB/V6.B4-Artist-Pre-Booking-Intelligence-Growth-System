@@ -1,0 +1,97 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@700&amp;family=Heebo:wght@400;600&amp;display=swap');
+    </style>
+  </defs>
+
+  <!-- Background: Paper -->
+  <rect width="1200" height="630" fill="#EFEBDF"/>
+
+  <!-- Top stamp bar -->
+  <rect x="0" y="0" width="1200" height="6" fill="#5B3FD6"/>
+
+  <!-- Left accent line -->
+  <rect x="80" y="80" width="3" height="470" fill="#5B3FD6"/>
+
+  <!-- GIGPROOF wordmark -->
+  <text
+    x="113"
+    y="160"
+    font-family="'Space Mono', monospace"
+    font-weight="700"
+    font-size="52"
+    fill="#16150F"
+    letter-spacing="-1"
+  >GIGPROOF</text>
+
+  <!-- Tagline -->
+  <text
+    x="113"
+    y="220"
+    font-family="'Space Mono', monospace"
+    font-weight="400"
+    font-size="18"
+    fill="#7A766A"
+    letter-spacing="2"
+  >VERIFIED PROOF. METHOD-LABELED.</text>
+
+  <!-- Main headline -->
+  <text
+    x="113"
+    y="340"
+    font-family="'Heebo', sans-serif"
+    font-weight="600"
+    font-size="44"
+    fill="#16150F"
+  >Booking proof for</text>
+  <text
+    x="113"
+    y="398"
+    font-family="'Heebo', sans-serif"
+    font-weight="600"
+    font-size="44"
+    fill="#16150F"
+  >independent artists.</text>
+
+  <!-- Sub copy -->
+  <text
+    x="113"
+    y="468"
+    font-family="'Heebo', sans-serif"
+    font-weight="400"
+    font-size="24"
+    fill="#7A766A"
+  >Standardized evidence. No score. No ranking. No guarantee.</text>
+
+  <!-- Domain -->
+  <text
+    x="113"
+    y="548"
+    font-family="'Space Mono', monospace"
+    font-weight="700"
+    font-size="18"
+    fill="#5B3FD6"
+    letter-spacing="1"
+  >gigproof.co</text>
+
+  <!-- Right decoration: proof unit example -->
+  <rect x="780" y="160" width="340" height="1" fill="rgba(22,21,15,0.15)"/>
+
+  <text x="780" y="210" font-family="'Space Mono', monospace" font-size="11" fill="#7A766A" letter-spacing="1.5">PRODUCER-CONFIRMED</text>
+  <text x="780" y="238" font-family="'Heebo', sans-serif" font-weight="600" font-size="22" fill="#16150F">70–150</text>
+  <text x="780" y="262" font-family="'Heebo', sans-serif" font-size="16" fill="#7A766A">Audience draw · Tel Aviv</text>
+  <text x="780" y="284" font-family="'Space Mono', monospace" font-size="10" fill="#7A766A" letter-spacing="1">REVIEWED MAR 2025</text>
+
+  <rect x="780" y="312" width="340" height="1" fill="rgba(22,21,15,0.08)"/>
+
+  <text x="780" y="358" font-family="'Space Mono', monospace" font-size="11" fill="#7A766A" letter-spacing="1.5">TICKET EXPORT · REVIEWED</text>
+  <text x="780" y="386" font-family="'Heebo', sans-serif" font-weight="600" font-size="22" fill="#16150F">200–300</text>
+  <text x="780" y="410" font-family="'Heebo', sans-serif" font-size="16" fill="#7A766A">Sold-out · Barby, Tel Aviv</text>
+  <text x="780" y="432" font-family="'Space Mono', monospace" font-size="10" fill="#7A766A" letter-spacing="1">REVIEWED JAN 2025</text>
+
+  <rect x="780" y="460" width="340" height="1" fill="rgba(22,21,15,0.08)"/>
+
+  <!-- Bottom border -->
+  <rect x="0" y="624" width="1200" height="6" fill="rgba(22,21,15,0.08)"/>
+</svg>

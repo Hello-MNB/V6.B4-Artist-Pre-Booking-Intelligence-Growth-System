@@ -1,0 +1,65 @@
+# GIGPROOF
+
+> Pre-booking proof and risk-reduction tool for the live music industry.
+> Helps Israeli booking managers (אמרגנים) evaluate an unfamiliar artist via standardized, method-labeled evidence before they risk their name.
+
+## What GIGPROOF is
+
+GIGPROOF is a verification system for independent artists seeking to prove their live performance track record to booking managers. It is NOT a booking marketplace, NOT an EPK generator, NOT a guarantee of any outcome, and NOT a comparison or ranking tool.
+
+## Three actors
+
+- **Artist (אמן)** — builds and controls their own proof. Pays for the service. Uses the private Artist Radar workspace.
+- **Booking Manager (אמרגן)** — evaluates artists before booking. Free access. Views the public Passport.
+- **Producer (מפיק)** — confirms a single claim via a bounded magic link. No account required.
+
+These three roles are distinct. Booking manager ≠ producer. They are never merged.
+
+## Two surfaces
+
+- **Artist Radar (Mirror)** — private workspace for the artist. Shows evidence states, gaps, and one next action per dimension. Never visible to outsiders.
+- **Artist Passport** — public, buyer-facing document. Shows verified strengths only. Method-labeled. WhatsApp-scannable. Never shows gaps, weaknesses, or unverified claims.
+
+## Verification methodology
+
+Every claim on a Passport carries a method label and reviewed date. Method labels:
+- PRODUCER-CONFIRMED — strongest. A producer verified via magic link.
+- TICKET EXPORT · REVIEWED — document verified by the GIGPROOF team.
+- PLATFORM DATA · REVIEWED — contextual data, not draw evidence.
+- SELF-REPORTED · UNVERIFIED — internal only, never public.
+
+## What GIGPROOF does not do
+
+- No score, rating, ranking, or prediction
+- No exact headcount (audience draw shown as a band: e.g. 70–150)
+- No artist-vs-artist comparison
+- No booking guarantee
+- No automated matching or recommendation engine (future feature, not live)
+- No score-like visual (no gauge, no fill bar, no polygon/spider chart, no progress ring)
+
+## Pages
+
+- / — Homepage
+- /artists — For artists (אמן): how to build a Passport
+- /bookers — For booking managers (אמרגן): how to read a Passport
+- /producers — For producers (מפיק): the magic-link confirmation flow
+- /passport/demo — A sample Passport showing verified evidence
+- /how-it-works — Three players, seven steps
+- /methodology — How evidence is verified; method labels explained
+- /pricing — Free for booking managers; artist access by arrangement during beta
+- /radar — The Artist Radar feature explained
+- /faq — Frequently asked questions
+- /contact — Contact form and information
+
+## Current stage
+
+Closed beta, 2026. Manual payment (Bit/bank transfer). No automated billing yet.
+
+## Language
+
+English and Hebrew (עברית). Hebrew copy is authored native-first, not translated from English.
+
+## Domain
+
+https://gigproof.co — marketing site
+https://app.gigproof.co — artist and operator app (not indexed here)

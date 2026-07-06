@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+/* ─── GIGPROOF Design Tokens ─── */
+@theme {
+  --color-paper:  #EFEBDF;
+  --color-ink:    #16150F;
+  --color-stamp:  #5B3FD6;
+  --color-night:  #0E0E13;
+  --color-tally:  #7A766A;
+  --color-void:   #B23B2E;
+
+  --font-family-body:    var(--font-heebo), system-ui, sans-serif;
+  --font-family-display: var(--font-archivo), system-ui, sans-serif;
+  --font-family-mono:    var(--font-space-mono), monospace;
+
+  --radius: 2px;
+  --radius-none: 0px;
+  --radius-sm: 2px;
+  --radius-md: 2px;
+  --radius-lg: 4px;
+}
+
+html {
+  font-family: var(--font-heebo), system-ui, sans-serif;
+  color: var(--color-ink);
+  background-color: var(--color-paper);
+}
+
+* {
+  box-sizing: border-box;
+}
