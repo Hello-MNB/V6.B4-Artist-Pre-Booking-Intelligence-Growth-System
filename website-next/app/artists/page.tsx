@@ -1,248 +1,377 @@
-﻿import type { Metadata } from 'next'
+import type { Metadata } from 'next'
 import Link from 'next/link'
-import { DoorStamp } from '@/components/door-stamp'
 
 export const metadata: Metadata = {
-  title: 'For Artists — Own Your Live-Performance Evidence',
+  title: 'For Artists — Build Verifiable Live-Performance Proof | GIGPROOF',
   description:
-    'GIGPROOF helps independent artists build a verified Bookability Passport. Log gigs, get producer confirmation, share proof — not promises.',
+    'GIGPROOF gives independent artists method-labelled evidence that booking managers can actually trust — not a link, not a bio. Build your Bookability Passport.',
   openGraph: {
     title: 'For Artists | GIGPROOF',
-    description: 'A Spotify link doesn\'t close a booking. Method-labelled proof does.',
+    description:
+      'You played a great set. Now prove it — in a way a booking manager can trust.',
     type: 'website',
   },
 }
 
 const APP_URL = 'https://app.gigproof.co'
 
-const problems = [
+const ICON_PATHS: Record<string, string> = {
+  arrow:
+    '<path d="M4 12h15M14 7l5 5-5 5"/>',
+  approved:
+    '<circle cx="12" cy="12" r="9"/><path d="m8 12 2.5 2.5L16.5 8"/>',
+  radar:
+    '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><path d="M12 3v9l6.5-6.5M12 12l5 3"/>',
+  passport:
+    '<path d="M5 3h14v18H5z"/><circle cx="12" cy="10" r="3"/><path d="M8 17c.7-2 2-3 4-3s3.3 1 4 3"/>',
+}
+
+function Icon({
+  id,
+  size = 18,
+  color = 'currentColor',
+}: {
+  id: string
+  size?: number
+  color?: string
+}) {
+  const paths = ICON_PATHS[id] ?? ''
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      style={{ display: 'inline-block', flexShrink: 0, verticalAlign: 'middle' }}
+      dangerouslySetInnerHTML={{ __html: paths }}
+    />
+  )
+}
+
+function MethodBadge({ label }: { label: string }) {
+  return (
+    <span
+      style={{
+        fontFamily: 'var(--font-space-mono)',
+        fontSize: '0.6rem',
+        fontWeight: 700,
+        letterSpacing: '0.08em',
+        color: 'var(--color-stamp)',
+        background: 'rgba(200,240,77,0.08)',
+        border: '1px solid rgba(200,240,77,0.2)',
+        borderRadius: '2px',
+        padding: '0.15rem 0.4rem',
+      }}
+    >
+      {label}
+    </span>
+  )
+}
+
+const painPoints = [
   {
-    num: '01',
-    title: 'Followers don\'t fill floors.',
-    body: 'A serious booking manager knows social reach ≠ live draw. Follower counts are existence, not evidence.',
+    title: 'The manager loved your mix. Then nothing.',
+    body: "You have no way to prove you draw a crowd. A Spotify link shows you exist — it says nothing about what happens when you're in the room.",
   },
   {
-    num: '02',
-    title: 'An EPK isn\'t evidence.',
-    body: 'An EPK is a marketing profile. A booking manager who\'s been burned once won\'t trust a polished bio the second time.',
+    title: "You've played 40 gigs. Nobody outside your network knows.",
+    body: 'Your live record lives in WhatsApp threads and memory. It\'s invisible to every booking manager who hasn\'t personally seen you play.',
   },
   {
-    num: '03',
-    title: 'Your data lives on their platforms.',
-    body: 'Spotify, Instagram, YouTube — that data is theirs. GIGPROOF lets you own the evidence that matters for live performance.',
+    title: 'An EPK is a sales pitch. They know it too.',
+    body: "Experienced booking managers have seen enough polished bios to stop trusting them. They need something with a third party's name on it.",
   },
 ]
 
 const steps = [
   {
     num: '01',
-    title: 'Log your gigs',
-    body: 'Add date, venue, and your audience estimate. The system creates a record with a unique verification ID.',
+    title: 'Log your evidence',
+    body: 'Add your gig history, platform data, and professional context. Everything stays private in your Artist Radar until you\'re ready.',
   },
   {
     num: '02',
-    title: 'Send verification link to the producer',
-    body: 'GIGPROOF generates a magic link. Send it via WhatsApp, SMS, or email — the producer doesn\'t need an account.',
+    title: 'Send the producer a link',
+    body: 'One WhatsApp message. They confirm a single claim they know first-hand — no account, no ongoing access.',
   },
   {
     num: '03',
-    title: 'Producer confirms in 30 seconds',
-    body: 'They open the link, review the data, and click confirm. The claim becomes "producer-confirmed."',
+    title: 'Operator reviews and labels',
+    body: 'We review the evidence and apply the exact method label. No claim appears on your Passport without one.',
   },
   {
     num: '04',
-    title: 'You approve before anything goes public',
-    body: 'Every piece of evidence waits for your approval before crossing into the public Passport. Nothing goes out without your explicit OK.',
+    title: 'Publish your Passport',
+    body: 'One link. Send it before the call. The booking manager sees exactly what was verified — and how.',
   },
+]
+
+const radarFeatures = [
+  'Gig log with verification status',
+  'Evidence gap indicators',
+  'Producer invite flow',
+  'Privacy controls — nothing public without your OK',
+]
+
+const passportFeatures = [
+  'Method-labelled claims only',
+  'Audience draw as a band (e.g., 200–350)',
+  'Each claim shows its review date',
+  'Free for booking managers to view',
 ]
 
 export default function ArtistsPage() {
   return (
-    <>
-      {/* ── HERO ─────────────────────────────────────────── */}
-      <header
+    <main>
+      {/* ── HERO — floating dark card ──────────────────────────────────── */}
+      <section
         style={{
-          background: 'var(--color-stamp)',
-          color: 'var(--color-paper)',
-          padding: '4.5rem 1.5rem',
-          position: 'relative',
+          margin: '28px max(24px, 4vw) 0',
+          border: '1px solid #2a362c',
+          borderRadius: '20px',
           overflow: 'hidden',
+          minHeight: '620px',
+          background: `
+            linear-gradient(160deg,
+              rgba(10,13,11,0.97) 0%,
+              rgba(10,13,11,0.84) 55%,
+              rgba(10,13,11,0.52) 100%
+            ),
+            url('/gigproof-persona-artist-v1.webp') center/cover no-repeat
+          `,
+          color: 'var(--color-paper)',
+          position: 'relative',
+          display: 'flex',
+          alignItems: 'flex-end',
+          padding: 'clamp(2.5rem, 5vw, 4.5rem)',
         }}
       >
+        {/* Lime ambient glow */}
         <div
           aria-hidden="true"
           style={{
             position: 'absolute',
-            inset: 0,
-            backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\' opacity=\'0.06\'/%3E%3C/svg%3E")',
+            width: '480px',
+            height: '480px',
+            borderRadius: '50%',
+            right: '-120px',
+            bottom: '-180px',
+            background: 'rgba(200,240,77,0.1)',
+            filter: 'blur(72px)',
             pointerEvents: 'none',
           }}
         />
-        {/* Stamp watermark — ink color on lime */}
-        <div
-          aria-hidden="true"
-          style={{
-            position: 'absolute',
-            top: '-10px',
-            right: '-50px',
-            transform: 'rotate(-10deg)',
-            color: 'var(--color-ink)',
-            opacity: 0.1,
-            pointerEvents: 'none',
-          }}
-        >
-          <DoorStamp size={300} />
-        </div>
-        <div style={{ maxWidth: '48rem', margin: '0 auto', position: 'relative' }}>
-          <p
+
+        <div style={{ maxWidth: '640px', position: 'relative' }}>
+          {/* Eyebrow with pulsing dot */}
+          <div
             style={{
-              fontFamily: 'var(--font-space-mono), monospace',
-              fontSize: '0.65rem',
-              letterSpacing: '0.1em',
-              color: 'rgba(243,245,239,0.6)',
-              textTransform: 'uppercase',
-              marginBottom: '1rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              marginBottom: '1.75rem',
             }}
           >
-            FOR ARTISTS · לאמנים
-          </p>
-          <h1
-            style={{
-              fontFamily: 'var(--font-archivo), system-ui, sans-serif',
-              fontSize: 'clamp(2rem, 6vw, 3.25rem)',
-              color: 'var(--color-paper)',
-              lineHeight: 1.05,
-              marginBottom: '1.25rem',
-            }}
-          >
-            Proof you own and control.
-          </h1>
-          <p
-            style={{
-              fontFamily: 'var(--font-heebo), system-ui, sans-serif',
-              fontSize: '1.1rem',
-              color: 'rgba(243,245,239,0.75)',
-              lineHeight: 1.6,
-              maxWidth: '42rem',
-              marginBottom: '2.5rem',
-            }}
-          >
-            Talent isn&apos;t enough. You need to prove it — in a way a booking manager
-            can actually trust.
-          </p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
-            <a
-              href={APP_URL}
-              target="_blank"
-              rel="noopener noreferrer"
+            <span
+              className="pulse-dot"
               style={{
-                background: 'var(--color-ink)',
-                color: 'var(--color-paper)',
-                fontFamily: 'var(--font-archivo), system-ui, sans-serif',
-                fontSize: '0.9rem',
-                fontWeight: 700,
-                letterSpacing: '0.02em',
-                padding: '0.875rem 1.75rem',
-                textDecoration: 'none',
-                borderRadius: 'var(--radius-sm)',
                 display: 'inline-block',
+                width: '7px',
+                height: '7px',
+                borderRadius: '50%',
+                background: 'var(--color-stamp)',
+                boxShadow: '0 0 10px var(--color-stamp)',
+                flexShrink: 0,
+              }}
+            />
+            <span
+              style={{
+                fontFamily: 'var(--font-space-mono)',
+                fontSize: '0.65rem',
+                letterSpacing: '0.14em',
+                color: 'var(--color-stamp)',
+                textTransform: 'uppercase',
               }}
             >
-              Build your Passport →
+              For Artists · לאמנים
+            </span>
+          </div>
+
+          {/* H1 — Georgia serif, Codex standard */}
+          <h1
+            style={{
+              fontFamily: 'Georgia, "Times New Roman", serif',
+              fontSize: 'clamp(2.4rem, 5vw, 4rem)',
+              fontWeight: 400,
+              lineHeight: 0.96,
+              letterSpacing: '-0.055em',
+              color: 'var(--color-paper)',
+              marginBottom: '1.5rem',
+            }}
+          >
+            You played a great set.
+            <br />
+            <em style={{ fontStyle: 'italic', color: 'var(--color-stamp)' }}>
+              Nobody booked you.
+            </em>
+          </h1>
+
+          {/* Sub */}
+          <p
+            style={{
+              fontSize: 'clamp(0.9rem, 1.8vw, 1.05rem)',
+              lineHeight: 1.65,
+              color: 'rgba(243,245,239,0.62)',
+              maxWidth: '520px',
+              marginBottom: '2.25rem',
+            }}
+          >
+            You managed your own rider. Built your audience from scratch. And
+            when it matters most — a booking manager you&apos;ve never met,
+            deciding your next six months — all you can send is a link.
+            GIGPROOF changes that.
+          </p>
+
+          {/* CTAs */}
+          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+            <a
+              href={APP_URL}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                background: 'var(--color-stamp)',
+                color: 'var(--color-ink)',
+                fontFamily: 'var(--font-space-mono)',
+                fontSize: '0.78rem',
+                fontWeight: 700,
+                letterSpacing: '0.08em',
+                padding: '0.9rem 1.75rem',
+                borderRadius: 'var(--radius-sm)',
+                textDecoration: 'none',
+              }}
+            >
+              BUILD YOUR PASSPORT
+              <Icon id="arrow" size={15} color="var(--color-ink)" />
             </a>
             <Link
               href="/passport/demo"
               style={{
-                border: '1px solid rgba(243,245,239,0.3)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                border: '1px solid rgba(243,245,239,0.22)',
                 color: 'var(--color-paper)',
-                fontFamily: 'var(--font-archivo), system-ui, sans-serif',
-                fontSize: '0.9rem',
-                letterSpacing: '0.02em',
-                padding: '0.875rem 1.75rem',
-                textDecoration: 'none',
+                fontFamily: 'var(--font-space-mono)',
+                fontSize: '0.78rem',
+                fontWeight: 700,
+                letterSpacing: '0.08em',
+                padding: '0.9rem 1.75rem',
                 borderRadius: 'var(--radius-sm)',
-                display: 'inline-block',
+                textDecoration: 'none',
               }}
             >
-              See a sample Passport
+              SEE A SAMPLE
             </Link>
           </div>
         </div>
-      </header>
 
-      {/* ── THE PROBLEM ──────────────────────────────────── */}
+        <style>{`
+          @keyframes gp-pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 8px #c8f04d; }
+            50%       { opacity: 0.55; box-shadow: 0 0 20px #c8f04d; }
+          }
+          .pulse-dot { animation: gp-pulse 2.4s ease-in-out infinite; }
+        `}</style>
+      </section>
+
+      {/* ── PAIN SECTION ──────────────────────────────────────────────── */}
       <section
         style={{
-          background: 'var(--color-paper)',
-          padding: '4rem 1.5rem',
-          borderBottom: '1px solid rgba(10,13,11,0.06)',
+          background: 'var(--color-night)',
+          padding: 'clamp(3.5rem, 7vw, 5.5rem) max(24px, 4vw)',
+          borderTop: '1px solid #2a342d',
+          borderBottom: '1px solid #2a342d',
         }}
       >
-        <div style={{ maxWidth: '72rem', margin: '0 auto' }}>
+        <div style={{ maxWidth: '1120px', margin: '0 auto' }}>
           <p
             style={{
-              fontFamily: 'var(--font-space-mono), monospace',
+              fontFamily: 'var(--font-space-mono)',
               fontSize: '0.65rem',
+              letterSpacing: '0.14em',
               color: 'var(--color-tally)',
-              letterSpacing: '0.1em',
               textTransform: 'uppercase',
-              marginBottom: '0.5rem',
+              marginBottom: '1rem',
             }}
           >
-            WHAT&apos;S NOT WORKING NOW
+            THE PROBLEM
           </p>
           <h2
             style={{
-              fontFamily: 'var(--font-archivo), system-ui, sans-serif',
-              fontSize: 'clamp(1.5rem, 3.5vw, 2rem)',
-              color: 'var(--color-ink)',
-              marginBottom: '2.5rem',
+              fontFamily: 'Georgia, "Times New Roman", serif',
+              fontSize: 'clamp(1.75rem, 4vw, 2.75rem)',
+              fontWeight: 400,
+              letterSpacing: '-0.04em',
+              lineHeight: 1.08,
+              color: 'var(--color-paper)',
+              marginBottom: 'clamp(2rem, 5vw, 3.5rem)',
+              maxWidth: '600px',
             }}
           >
-            A Spotify link doesn&apos;t close a booking.
+            Every artist hits the same wall.
           </h2>
+
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
               gap: '1px',
-              background: 'rgba(10,13,11,0.08)',
-              border: '1px solid rgba(10,13,11,0.08)',
+              background: 'rgba(255,255,255,0.06)',
             }}
           >
-            {problems.map((p) => (
+            {painPoints.map((p, i) => (
               <div
-                key={p.num}
-                style={{ background: 'var(--color-paper)', padding: '1.75rem' }}
+                key={i}
+                style={{
+                  background: 'var(--color-night)',
+                  padding: 'clamp(1.5rem, 3vw, 2.25rem)',
+                }}
               >
-                <span
+                <div
                   style={{
-                    fontFamily: 'var(--font-space-mono), monospace',
-                    fontSize: '0.65rem',
-                    color: 'var(--color-tally)',
-                    opacity: 0.5,
-                    display: 'block',
-                    marginBottom: '0.75rem',
+                    fontFamily: 'var(--font-space-mono)',
+                    fontSize: '0.55rem',
+                    letterSpacing: '0.12em',
+                    color: 'rgba(243,245,239,0.2)',
+                    textTransform: 'uppercase',
+                    marginBottom: '1rem',
                   }}
                 >
-                  {p.num}
-                </span>
+                  0{i + 1}
+                </div>
                 <h3
                   style={{
-                    fontFamily: 'var(--font-archivo), system-ui, sans-serif',
-                    fontSize: '1rem',
-                    color: 'var(--color-ink)',
-                    marginBottom: '0.5rem',
+                    fontFamily: 'var(--font-archivo)',
+                    fontSize: 'clamp(0.95rem, 2vw, 1.1rem)',
+                    fontWeight: 700,
+                    color: 'var(--color-paper)',
+                    marginBottom: '0.75rem',
+                    lineHeight: 1.3,
                   }}
                 >
                   {p.title}
                 </h3>
                 <p
                   style={{
-                    fontFamily: 'var(--font-heebo), system-ui, sans-serif',
-                    fontSize: '0.875rem',
-                    color: 'var(--color-tally)',
-                    lineHeight: 1.6,
+                    fontSize: '0.9rem',
+                    color: 'rgba(243,245,239,0.55)',
+                    lineHeight: 1.65,
                   }}
                 >
                   {p.body}
@@ -253,150 +382,398 @@ export default function ArtistsPage() {
         </div>
       </section>
 
-      {/* ── WHAT YOU GET ─────────────────────────────────── */}
-      <section style={{ background: 'var(--color-paper)', padding: '4rem 1.5rem' }}>
-        <div style={{ maxWidth: '72rem', margin: '0 auto' }}>
+      {/* ── TWO TOOLS ─────────────────────────────────────────────────── */}
+      <section
+        style={{
+          background: 'var(--color-paper)',
+          padding: 'clamp(3.5rem, 7vw, 5.5rem) max(24px, 4vw)',
+        }}
+      >
+        <div style={{ maxWidth: '1120px', margin: '0 auto' }}>
           <p
             style={{
-              fontFamily: 'var(--font-space-mono), monospace',
+              fontFamily: 'var(--font-space-mono)',
               fontSize: '0.65rem',
+              letterSpacing: '0.14em',
               color: 'var(--color-tally)',
-              letterSpacing: '0.1em',
               textTransform: 'uppercase',
-              marginBottom: '0.5rem',
+              marginBottom: '1rem',
             }}
           >
             WHAT YOU GET
           </p>
           <h2
             style={{
-              fontFamily: 'var(--font-archivo), system-ui, sans-serif',
-              fontSize: 'clamp(1.5rem, 3.5vw, 2rem)',
+              fontFamily: 'Georgia, "Times New Roman", serif',
+              fontSize: 'clamp(1.75rem, 4vw, 2.75rem)',
+              fontWeight: 400,
+              letterSpacing: '-0.04em',
               color: 'var(--color-ink)',
-              marginBottom: '2.5rem',
+              marginBottom: 'clamp(2rem, 5vw, 3.5rem)',
             }}
           >
-            Two tools. One goal.
+            Your proof. Your control.
           </h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
-            {[
-              {
-                title: 'Artist Radar (private to you)',
-                body: "Your private dashboard: see exactly what evidence you have, what you're missing, and the single highest-value next action. A growth tool — never exposed publicly.",
-              },
-              {
-                title: 'Bookability Passport (public — with your approval)',
-                body: 'A clean, method-labelled view of your verified strengths. Only what you approve is shown. No scores, no rankings — evidence with bands, verification method, and date.',
-              },
-              {
-                title: 'Direct share to booking managers',
-                body: 'One link. Send via WhatsApp, email, or DM — the booking manager opens it in a browser and sees your evidence. No account required on their end.',
-              },
-              {
-                title: 'Booking requests come to you',
-                body: "A booking manager who views your Passport can send an availability request directly. No intermediary, no account needed on their side.",
-              },
-            ].map((f, i) => (
+
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+              gap: '1.5rem',
+            }}
+          >
+            {/* Artist Radar */}
+            <div
+              style={{
+                border: '1px solid rgba(10,13,11,0.1)',
+                borderRadius: 'var(--radius-lg)',
+                padding: 'clamp(1.75rem, 3vw, 2.5rem)',
+                background: 'var(--color-paper)',
+              }}
+            >
               <div
-                key={i}
                 style={{
-                  padding: '1.75rem 0',
-                  borderBottom: '1px solid rgba(10,13,11,0.06)',
+                  width: '44px',
+                  height: '44px',
+                  borderRadius: 'var(--radius-sm)',
+                  background: 'rgba(10,13,11,0.05)',
+                  border: '1px solid rgba(10,13,11,0.08)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: '1.25rem',
                 }}
               >
-                <h3
-                  style={{
-                    fontFamily: 'var(--font-archivo), system-ui, sans-serif',
-                    fontSize: '1rem',
-                    color: 'var(--color-ink)',
-                    marginBottom: '0.4rem',
-                  }}
-                >
-                  {f.title}
-                </h3>
-                <p
-                  style={{
-                    fontFamily: 'var(--font-heebo), system-ui, sans-serif',
-                    fontSize: '0.875rem',
-                    color: 'var(--color-tally)',
-                    lineHeight: 1.6,
-                    maxWidth: '56rem',
-                  }}
-                >
-                  {f.body}
-                </p>
+                <Icon id="radar" size={20} color="var(--color-ink)" />
               </div>
-            ))}
+              <div
+                style={{
+                  fontFamily: 'var(--font-space-mono)',
+                  fontSize: '0.6rem',
+                  letterSpacing: '0.12em',
+                  color: 'var(--color-tally)',
+                  textTransform: 'uppercase',
+                  marginBottom: '0.5rem',
+                }}
+              >
+                PRIVATE · Only you see this
+              </div>
+              <h3
+                style={{
+                  fontFamily: 'var(--font-archivo)',
+                  fontSize: '1.2rem',
+                  fontWeight: 900,
+                  color: 'var(--color-ink)',
+                  marginBottom: '0.75rem',
+                }}
+              >
+                Artist Radar
+              </h3>
+              <p
+                style={{
+                  fontSize: '0.9rem',
+                  color: 'var(--color-tally)',
+                  lineHeight: 1.65,
+                  marginBottom: '1.5rem',
+                }}
+              >
+                Your private workspace — see what evidence you have, what&apos;s
+                missing, and the single highest-value next action. A growth
+                tool. Never exposed publicly.
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                {radarFeatures.map((f) => (
+                  <div key={f} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                    <Icon id="approved" size={14} color="rgba(10,13,11,0.35)" />
+                    <span style={{ fontSize: '0.82rem', color: 'var(--color-tally)', lineHeight: 1.4 }}>
+                      {f}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Bookability Passport */}
+            <div
+              style={{
+                border: '1px solid rgba(10,13,11,0.1)',
+                borderRadius: 'var(--radius-lg)',
+                padding: 'clamp(1.75rem, 3vw, 2.5rem)',
+                background: 'var(--color-paper)',
+              }}
+            >
+              <div
+                style={{
+                  width: '44px',
+                  height: '44px',
+                  borderRadius: 'var(--radius-sm)',
+                  background: 'rgba(10,13,11,0.05)',
+                  border: '1px solid rgba(10,13,11,0.08)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: '1.25rem',
+                }}
+              >
+                <Icon id="passport" size={20} color="var(--color-ink)" />
+              </div>
+              <div
+                style={{
+                  fontFamily: 'var(--font-space-mono)',
+                  fontSize: '0.6rem',
+                  letterSpacing: '0.12em',
+                  color: 'var(--color-tally)',
+                  textTransform: 'uppercase',
+                  marginBottom: '0.5rem',
+                }}
+              >
+                PUBLIC · With your explicit approval
+              </div>
+              <h3
+                style={{
+                  fontFamily: 'var(--font-archivo)',
+                  fontSize: '1.2rem',
+                  fontWeight: 900,
+                  color: 'var(--color-ink)',
+                  marginBottom: '0.75rem',
+                }}
+              >
+                Bookability Passport
+              </h3>
+              <p
+                style={{
+                  fontSize: '0.9rem',
+                  color: 'var(--color-tally)',
+                  lineHeight: 1.65,
+                  marginBottom: '1.5rem',
+                }}
+              >
+                The view a booking manager sees — verified claims only, each
+                with a method label and review date. Nothing appears without
+                your approval. No scores. No rankings.
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                {passportFeatures.map((f) => (
+                  <div key={f} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                    <Icon id="approved" size={14} color="rgba(10,13,11,0.35)" />
+                    <span style={{ fontSize: '0.82rem', color: 'var(--color-tally)', lineHeight: 1.4 }}>
+                      {f}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Sample proof unit — shows how claims display */}
+          <div
+            style={{
+              marginTop: '2.5rem',
+              border: '1px solid rgba(10,13,11,0.08)',
+              borderRadius: 'var(--radius-lg)',
+              padding: 'clamp(1.5rem, 3vw, 2rem)',
+            }}
+          >
+            <p
+              style={{
+                fontFamily: 'var(--font-space-mono)',
+                fontSize: '0.6rem',
+                letterSpacing: '0.1em',
+                color: 'var(--color-tally)',
+                textTransform: 'uppercase',
+                marginBottom: '1.25rem',
+              }}
+            >
+              Sample claim from a Passport — fictional artist
+            </p>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                gap: '1px',
+                background: 'rgba(10,13,11,0.06)',
+              }}
+            >
+              {[
+                {
+                  label: 'Audience Draw',
+                  value: '200–350',
+                  detail: 'Headline slot, Zappa Club TLV, Feb 2025',
+                  badge: 'TICKET EXPORT',
+                  date: 'REVIEWED MAR 2025',
+                },
+                {
+                  label: 'Gig',
+                  value: 'Barby — support slot',
+                  detail: 'Self-managed booking, Dec 2024',
+                  badge: 'PRODUCER-CONFIRMED',
+                  date: 'REVIEWED DEC 2024',
+                },
+              ].map((item) => (
+                <div
+                  key={item.label}
+                  style={{
+                    background: 'var(--color-paper)',
+                    padding: '1.25rem 1.5rem',
+                    borderLeft: '2px solid var(--color-stamp)',
+                  }}
+                >
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-space-mono)',
+                      fontSize: '0.55rem',
+                      letterSpacing: '0.1em',
+                      color: 'var(--color-tally)',
+                      textTransform: 'uppercase',
+                      marginBottom: '0.35rem',
+                    }}
+                  >
+                    {item.label}
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-space-mono)',
+                      fontSize: '1.25rem',
+                      fontWeight: 700,
+                      color: 'var(--color-ink)',
+                      marginBottom: '0.2rem',
+                    }}
+                  >
+                    {item.value}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: '0.8rem',
+                      color: 'var(--color-tally)',
+                      marginBottom: '0.6rem',
+                    }}
+                  >
+                    {item.detail}
+                  </div>
+                  <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                    <MethodBadge label={item.badge} />
+                    <span
+                      style={{
+                        fontFamily: 'var(--font-space-mono)',
+                        fontSize: '0.58rem',
+                        color: 'var(--color-tally)',
+                        letterSpacing: '0.06em',
+                      }}
+                    >
+                      {item.date}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── HOW VERIFICATION WORKS ───────────────────────── */}
-      <section style={{ background: 'var(--color-night)', padding: '4rem 1.5rem' }}>
-        <div style={{ maxWidth: '48rem', margin: '0 auto' }}>
+      {/* ── HOW VERIFICATION WORKS ────────────────────────────────────── */}
+      <section
+        style={{
+          background: 'var(--color-night)',
+          padding: 'clamp(3.5rem, 7vw, 5.5rem) max(24px, 4vw)',
+          borderTop: '1px solid #2a342d',
+          borderBottom: '1px solid #2a342d',
+        }}
+      >
+        <div style={{ maxWidth: '640px', margin: '0 auto' }}>
           <p
             style={{
-              fontFamily: 'var(--font-space-mono), monospace',
+              fontFamily: 'var(--font-space-mono)',
               fontSize: '0.65rem',
+              letterSpacing: '0.14em',
               color: 'var(--color-stamp)',
-              letterSpacing: '0.1em',
               textTransform: 'uppercase',
-              marginBottom: '0.5rem',
+              marginBottom: '1rem',
             }}
           >
             HOW VERIFICATION WORKS
           </p>
           <h2
             style={{
-              fontFamily: 'var(--font-archivo), system-ui, sans-serif',
-              fontSize: 'clamp(1.5rem, 3.5vw, 2rem)',
+              fontFamily: 'Georgia, "Times New Roman", serif',
+              fontSize: 'clamp(1.75rem, 4vw, 2.4rem)',
+              fontWeight: 400,
+              letterSpacing: '-0.04em',
+              lineHeight: 1.08,
               color: 'var(--color-paper)',
-              marginBottom: '2.5rem',
+              marginBottom: 'clamp(2.5rem, 5vw, 4rem)',
             }}
           >
-            30 seconds for the producer. Evidence that lasts.
+            From your first gig log to a booking manager&apos;s trust.
           </h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
-            {steps.map((s) => (
+
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            {steps.map((s, i, arr) => (
               <div
                 key={s.num}
                 style={{
-                  display: 'flex',
-                  gap: '1.5rem',
-                  padding: '1.5rem 0',
-                  borderBottom: '1px solid rgba(243,245,239,0.07)',
-                  alignItems: 'flex-start',
+                  display: 'grid',
+                  gridTemplateColumns: '44px 1fr',
+                  gap: '1.25rem',
+                  paddingBottom: i < arr.length - 1 ? '2rem' : '0',
                 }}
               >
-                <span
+                {/* Step indicator + connector */}
+                <div
                   style={{
-                    fontFamily: 'var(--font-space-mono), monospace',
-                    fontSize: '0.75rem',
-                    color: 'var(--color-stamp)',
-                    letterSpacing: '0.08em',
-                    flexShrink: 0,
-                    marginTop: '2px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
                   }}
                 >
-                  {s.num}
-                </span>
-                <div>
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-space-mono)',
+                      fontSize: '0.65rem',
+                      fontWeight: 700,
+                      color: 'var(--color-stamp)',
+                      background: 'rgba(200,240,77,0.08)',
+                      border: '1px solid rgba(200,240,77,0.2)',
+                      borderRadius: 'var(--radius-sm)',
+                      width: '44px',
+                      height: '44px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                    }}
+                  >
+                    {s.num}
+                  </div>
+                  {i < arr.length - 1 && (
+                    <div
+                      style={{
+                        flex: 1,
+                        width: '1px',
+                        background: 'rgba(200,240,77,0.15)',
+                        marginTop: '0.5rem',
+                      }}
+                    />
+                  )}
+                </div>
+
+                {/* Content */}
+                <div style={{ paddingTop: '0.5rem' }}>
                   <h3
                     style={{
-                      fontFamily: 'var(--font-archivo), system-ui, sans-serif',
-                      fontSize: '0.95rem',
+                      fontFamily: 'var(--font-archivo)',
+                      fontSize: '1rem',
+                      fontWeight: 700,
                       color: 'var(--color-paper)',
-                      marginBottom: '0.35rem',
+                      marginBottom: '0.4rem',
                     }}
                   >
                     {s.title}
                   </h3>
                   <p
                     style={{
-                      fontFamily: 'var(--font-heebo), system-ui, sans-serif',
-                      fontSize: '0.875rem',
+                      fontSize: '0.9rem',
                       color: 'rgba(243,245,239,0.55)',
-                      lineHeight: 1.6,
+                      lineHeight: 1.65,
                     }}
                   >
                     {s.body}
@@ -405,96 +782,123 @@ export default function ArtistsPage() {
               </div>
             ))}
           </div>
+
           <p
             style={{
-              fontFamily: 'var(--font-space-mono), monospace',
-              fontSize: '0.65rem',
-              color: 'rgba(243,245,239,0.3)',
+              fontFamily: 'var(--font-space-mono)',
+              fontSize: '0.62rem',
               letterSpacing: '0.06em',
-              marginTop: '2rem',
+              color: 'rgba(243,245,239,0.25)',
+              marginTop: '2.5rem',
+              lineHeight: 1.6,
             }}
           >
-            The producer (מפיק) confirms ONE claim via a bounded magic link — no
-            account, no ongoing access. אמרגן ≠ מפיק — they are different roles.
+            The producer (מפיק) confirms one claim via a bounded magic link —
+            no account, no ongoing access. אמרגן ≠ מפיק — they are distinct roles.
           </p>
         </div>
       </section>
 
-      {/* ── CTA ──────────────────────────────────────────── */}
-      <section style={{ background: 'var(--color-paper)', padding: '5rem 1.5rem', textAlign: 'center' }}>
-        <div style={{ maxWidth: '36rem', margin: '0 auto' }}>
+      {/* ── CLOSING CTA ───────────────────────────────────────────────── */}
+      <section
+        style={{
+          background: 'var(--color-ink)',
+          padding: 'clamp(4rem, 9vw, 7rem) max(24px, 4vw)',
+          textAlign: 'center',
+        }}
+      >
+        <div style={{ maxWidth: '640px', margin: '0 auto' }}>
           <p
             style={{
-              fontFamily: 'var(--font-space-mono), monospace',
+              fontFamily: 'var(--font-space-mono)',
               fontSize: '0.65rem',
-              color: 'var(--color-tally)',
-              letterSpacing: '0.1em',
+              letterSpacing: '0.14em',
+              color: 'var(--color-stamp)',
               textTransform: 'uppercase',
-              marginBottom: '0.75rem',
+              marginBottom: '1.5rem',
             }}
           >
             CLOSED BETA · ISRAEL
           </p>
           <h2
             style={{
-              fontFamily: 'var(--font-archivo), system-ui, sans-serif',
-              fontSize: 'clamp(1.5rem, 3.5vw, 2rem)',
-              color: 'var(--color-ink)',
-              marginBottom: '1rem',
+              fontFamily: 'Georgia, "Times New Roman", serif',
+              fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+              fontWeight: 400,
+              letterSpacing: '-0.055em',
+              lineHeight: 0.96,
+              color: 'var(--color-paper)',
+              marginBottom: '1.75rem',
             }}
           >
-            Ready to build your Passport?
+            Build the career
+            <br />
+            <em style={{ fontStyle: 'italic', color: 'var(--color-stamp)' }}>
+              behind the spotlight.
+            </em>
           </h2>
           <p
             style={{
-              fontFamily: 'var(--font-heebo), system-ui, sans-serif',
-              fontSize: '0.9rem',
-              color: 'var(--color-tally)',
-              marginBottom: '2rem',
-              lineHeight: 1.6,
+              fontSize: '1rem',
+              color: 'rgba(243,245,239,0.52)',
+              lineHeight: 1.7,
+              maxWidth: '400px',
+              margin: '0 auto 2.5rem',
             }}
           >
-            Private beta, Israeli market. Artists pay; booking managers are always free.
+            Early access is limited. Israeli artists only.
+            Artists pay — booking managers are always free.
           </p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', justifyContent: 'center' }}>
+          <div
+            style={{
+              display: 'flex',
+              gap: '0.75rem',
+              justifyContent: 'center',
+              flexWrap: 'wrap',
+            }}
+          >
             <a
               href={APP_URL}
-              target="_blank"
-              rel="noopener noreferrer"
               style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
                 background: 'var(--color-stamp)',
                 color: 'var(--color-ink)',
-                fontFamily: 'var(--font-archivo), system-ui, sans-serif',
-                fontSize: '0.9rem',
+                fontFamily: 'var(--font-space-mono)',
+                fontSize: '0.8rem',
                 fontWeight: 700,
-                letterSpacing: '0.02em',
-                padding: '0.875rem 1.75rem',
-                textDecoration: 'none',
+                letterSpacing: '0.08em',
+                padding: '0.95rem 2rem',
                 borderRadius: 'var(--radius-sm)',
-                display: 'inline-block',
+                textDecoration: 'none',
               }}
             >
-              Build your Passport — start free →
+              BUILD YOUR PASSPORT
+              <Icon id="arrow" size={15} color="var(--color-ink)" />
             </a>
             <Link
               href="/passport/demo"
               style={{
-                border: '1.5px solid var(--color-ink)',
-                color: 'var(--color-ink)',
-                fontFamily: 'var(--font-archivo), system-ui, sans-serif',
-                fontSize: '0.9rem',
-                letterSpacing: '0.02em',
-                padding: '0.875rem 1.75rem',
-                textDecoration: 'none',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                border: '1px solid rgba(243,245,239,0.22)',
+                color: 'var(--color-paper)',
+                fontFamily: 'var(--font-space-mono)',
+                fontSize: '0.8rem',
+                fontWeight: 700,
+                letterSpacing: '0.08em',
+                padding: '0.95rem 2rem',
                 borderRadius: 'var(--radius-sm)',
-                display: 'inline-block',
+                textDecoration: 'none',
               }}
             >
-              See a sample Passport
+              SEE A SAMPLE
             </Link>
           </div>
         </div>
       </section>
-    </>
+    </main>
   )
 }

@@ -171,6 +171,9 @@ export default function HomePage() {
         {/* ── HERO ─────────────────────────────────────────────────────── */}
         <section
           style={{
+            margin: '28px max(24px, 4vw) 0',
+            border: '1px solid #2a362c',
+            borderRadius: '20px',
             background: `
               linear-gradient(135deg,
                 rgba(10,13,11,0.97) 0%,
@@ -180,8 +183,8 @@ export default function HomePage() {
               url('/gigproof-live-hero.webp') center/cover no-repeat
             `,
             color: 'var(--color-paper)',
-            minHeight: '640px',
-            padding: 'clamp(3.5rem, 8vw, 5.5rem) 1.5rem',
+            minHeight: '620px',
+            padding: 'clamp(3.5rem, 8vw, 5.5rem) clamp(1.5rem, 4vw, 4rem)',
             position: 'relative',
             overflow: 'hidden',
             display: 'flex',
@@ -272,11 +275,11 @@ export default function HomePage() {
               {/* Headline */}
               <h1
                 style={{
-                  fontFamily: 'var(--font-archivo)',
+                  fontFamily: 'Georgia, "Times New Roman", serif',
                   fontSize: 'clamp(2.4rem, 5.5vw, 4.25rem)',
-                  fontWeight: 900,
-                  lineHeight: 1.0,
-                  letterSpacing: '-0.03em',
+                  fontWeight: 400,
+                  lineHeight: 0.96,
+                  letterSpacing: '-0.055em',
                   color: 'var(--color-paper)',
                   marginBottom: '1.5rem',
                 }}
@@ -285,11 +288,8 @@ export default function HomePage() {
                 <br />
                 <em
                   style={{
-                    fontFamily: 'Georgia, "Times New Roman", serif',
-                    fontWeight: 400,
                     fontStyle: 'italic',
-                    color: 'rgba(243,245,239,0.52)',
-                    letterSpacing: '-0.01em',
+                    color: 'var(--color-stamp)',
                   }}
                 >
                   that books you.
@@ -833,7 +833,9 @@ export default function HomePage() {
         <section
           style={{
             background: 'var(--color-night)',
-            padding: 'clamp(3rem, 7vw, 5rem) 1.25rem',
+            padding: 'clamp(3rem, 7vw, 5rem) max(24px, 4vw)',
+            borderTop: '1px solid #2a342d',
+            borderBottom: '1px solid #2a342d',
           }}
         >
           <div style={{ maxWidth: '860px', margin: '0 auto' }}>
@@ -1193,8 +1195,10 @@ export default function HomePage() {
         <section
           style={{
             background: 'var(--color-ink)',
-            padding: 'clamp(3rem, 7vw, 5rem) 1.25rem',
+            padding: 'clamp(3rem, 7vw, 5rem) max(24px, 4vw)',
             textAlign: 'center',
+            borderTop: '1px solid #1a221c',
+            borderBottom: '1px solid #1a221c',
           }}
         >
           <div style={{ maxWidth: '680px', margin: '0 auto' }}>

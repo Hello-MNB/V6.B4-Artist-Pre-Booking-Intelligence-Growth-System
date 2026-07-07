@@ -145,7 +145,7 @@ export default function WaitlistForm() {
         style={{
           padding: '14px 28px',
           backgroundColor: 'var(--color-stamp)',
-          color: '#fff',
+          color: 'var(--color-ink)',
           fontFamily: 'var(--font-space-mono)',
           fontSize: '0.75rem',
           fontWeight: 700,
