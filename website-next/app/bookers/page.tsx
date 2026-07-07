@@ -1,5 +1,6 @@
 ﻿import type { Metadata } from 'next'
 import Link from 'next/link'
+import { DoorStamp } from '@/components/door-stamp'
 
 export const metadata: Metadata = {
   title: 'For Booking Managers — Evaluate Before You Commit',
@@ -75,6 +76,35 @@ export default function BookersPage() {
             pointerEvents: 'none',
           }}
         />
+        {/* Stamp watermarks */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            top: '-15px',
+            right: '-55px',
+            transform: 'rotate(-11deg)',
+            color: 'var(--color-paper)',
+            opacity: 0.07,
+            pointerEvents: 'none',
+          }}
+        >
+          <DoorStamp size={310} />
+        </div>
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            bottom: '-20px',
+            left: '-70px',
+            transform: 'rotate(7deg)',
+            color: 'var(--color-paper)',
+            opacity: 0.03,
+            pointerEvents: 'none',
+          }}
+        >
+          <DoorStamp size={240} />
+        </div>
         <div style={{ maxWidth: '48rem', margin: '0 auto', position: 'relative' }}>
           <p
             style={{

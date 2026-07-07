@@ -1,5 +1,6 @@
 ﻿import type { Metadata } from 'next'
 import Link from 'next/link'
+import { DoorStamp } from '@/components/door-stamp'
 
 const APP_URL = 'https://app.gigproof.co'
 const SITE_URL = 'https://gigproof.co'
@@ -209,9 +210,53 @@ export default function HomePage() {
             color: 'var(--color-paper)',
             padding: 'clamp(4rem, 10vw, 7rem) 1.25rem clamp(3rem, 7vw, 5rem)',
             textAlign: 'center',
+            position: 'relative',
+            overflow: 'hidden',
           }}
         >
-          <div style={{ maxWidth: '760px', margin: '0 auto' }}>
+          {/* Grain texture */}
+          <div
+            aria-hidden="true"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\' opacity=\'1\'/%3E%3C/svg%3E")',
+              backgroundSize: '256px 256px',
+              opacity: 0.04,
+              pointerEvents: 'none',
+            }}
+          />
+          {/* Stamp watermark — top right */}
+          <div
+            aria-hidden="true"
+            style={{
+              position: 'absolute',
+              top: '-20px',
+              right: '-60px',
+              transform: 'rotate(-12deg)',
+              color: 'var(--color-paper)',
+              opacity: 0.06,
+              pointerEvents: 'none',
+            }}
+          >
+            <DoorStamp size={320} />
+          </div>
+          {/* Stamp watermark — bottom left, fainter */}
+          <div
+            aria-hidden="true"
+            style={{
+              position: 'absolute',
+              bottom: '-30px',
+              left: '-80px',
+              transform: 'rotate(9deg)',
+              color: 'var(--color-paper)',
+              opacity: 0.03,
+              pointerEvents: 'none',
+            }}
+          >
+            <DoorStamp size={260} />
+          </div>
+          <div style={{ maxWidth: '760px', margin: '0 auto', position: 'relative' }}>
             <p
               style={{
                 fontFamily: 'var(--font-space-mono)',

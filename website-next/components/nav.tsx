@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { useLocale } from '@/lib/locale-context'
 import type { Locale } from '@/lib/i18n'
+import { DoorStamp } from '@/components/door-stamp'
 
 const APP_URL = 'https://app.gigproof.co'
 
@@ -75,10 +76,13 @@ export function Nav() {
         justifyContent: 'space-between',
         height: '64px',
       }}>
-        {/* Wordmark */}
+        {/* Wordmark + stamp logo */}
         <Link
           href="/"
           style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
             fontFamily: 'var(--font-space-mono)',
             fontWeight: 700,
             fontSize: '0.9rem',
@@ -89,6 +93,7 @@ export function Nav() {
           }}
           aria-label="GIGPROOF home"
         >
+          <DoorStamp size={36} style={{ color: 'var(--color-stamp)' }} />
           GIGPROOF
         </Link>
 

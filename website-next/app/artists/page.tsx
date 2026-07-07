@@ -1,5 +1,6 @@
 ﻿import type { Metadata } from 'next'
 import Link from 'next/link'
+import { DoorStamp } from '@/components/door-stamp'
 
 export const metadata: Metadata = {
   title: 'For Artists — Own Your Live-Performance Evidence',
@@ -77,6 +78,21 @@ export default function ArtistsPage() {
             pointerEvents: 'none',
           }}
         />
+        {/* Stamp watermark — ink color on lime */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            top: '-10px',
+            right: '-50px',
+            transform: 'rotate(-10deg)',
+            color: 'var(--color-ink)',
+            opacity: 0.1,
+            pointerEvents: 'none',
+          }}
+        >
+          <DoorStamp size={300} />
+        </div>
         <div style={{ maxWidth: '48rem', margin: '0 auto', position: 'relative' }}>
           <p
             style={{
