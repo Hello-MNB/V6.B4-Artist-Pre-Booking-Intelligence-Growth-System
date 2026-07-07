@@ -5,6 +5,7 @@ import { Loading } from './components/ui.jsx'
 import { ROLES } from './lib/constants.js'
 import { DEMO } from './lib/demo.js'
 
+import AppShell from './components/layout/AppShell.jsx'
 import SetupNotice from './features/setup/SetupNotice.jsx'
 import Login from './features/auth/Login.jsx'
 import Signup from './features/auth/Signup.jsx'
@@ -25,6 +26,7 @@ import AgencyRequestsInbox from './features/agency/AgencyRequestsInbox.jsx'
 import RadarFeed from './features/agency/RadarFeed.jsx'
 import BookerHome from './features/booker/BookerHome.jsx'
 import ProducerHome from './features/producer/ProducerHome.jsx'
+import ProducerReceivedPassports from './features/producer/ProducerReceivedPassports.jsx'
 import ProducerConfirm from './features/producer/ProducerConfirm.jsx'
 import AdminDashboard from './features/admin/AdminDashboard.jsx'
 import ForgotPassword from './features/auth/ForgotPassword.jsx'
@@ -56,7 +58,7 @@ function RequireRole({ role: need, children }) {
   return children
 }
 
-// Agency-feature gate: an agency is a GROWN booker-org. Access is granted by org
+// Agency-feature gate: an agency is a grown booker-org. Access is granted by org
 // PLAN (isAgency) OR the legacy agency role — so an upgraded booker reaches the
 // agency screens on the SAME account, no migration, no role swap.
 function RequireAgency({ children }) {
@@ -78,7 +80,7 @@ function RoleHome() {
   if (role === ROLES.OPERATOR) return <Navigate to="/admin" replace />
   if (role === ROLES.AGENCY) return <Navigate to="/agency" replace />
   if (role === ROLES.BOOKER) return <Navigate to="/discover" replace />
-  if (role === ROLES.PRODUCER) return <Navigate to="/producer" replace />
+  if (role === ROLES.PRODUCER) return <Navigate to="/producer/received" replace />
   return <Navigate to="/artist/home" replace />
 }
 
@@ -88,53 +90,56 @@ export default function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<RoleHome />} />
-
-      {/* public auth */}
+      {/* ── Public — no AppShell ──────────────────────────────────────── */}
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/select" element={<UserTypeSelect />} />
-
-      {/* universal settings (any role) */}
-      <Route path="/settings" element={<RequireAuth><Settings /></RequireAuth>} />
-
-      {/* org-first account model (any authed member; in-screen owner/admin guards) */}
-      <Route path="/org/settings" element={<RequireAuth><OrgSettings /></RequireAuth>} />
-      <Route path="/org/members" element={<RequireAuth><Members /></RequireAuth>} />
-      <Route path="/org/upgrade" element={<RequireAuth><UpgradePlan /></RequireAuth>} />
-      <Route path="/org/billing" element={<RequireAuth><Billing /></RequireAuth>} />
-      <Route path="/invite/:token" element={<AcceptInvite />} />
-
-      {/* artist flow */}
-      <Route path="/consent" element={<RequireRole role={ROLES.ARTIST}><ConsentLegal /></RequireRole>} />
-      <Route path="/onboarding" element={<RequireRole role={ROLES.ARTIST}><Onboarding /></RequireRole>} />
-      <Route path="/artist/home" element={<RequireRole role={ROLES.ARTIST}><ArtistDashboard /></RequireRole>} />
-      <Route path="/artist/readiness" element={<RequireRole role={ROLES.ARTIST}><ArtistReadiness /></RequireRole>} />
-      <Route path="/artist/claims" element={<RequireRole role={ROLES.ARTIST}><ClaimReview /></RequireRole>} />
-      <Route path="/artist/offer" element={<RequireRole role={ROLES.ARTIST}><OfferPayment /></RequireRole>} />
-      <Route path="/evidence/:artistId" element={<RequireRole role={ROLES.ARTIST}><EvidenceCapture /></RequireRole>} />
-
-      {/* agency flow */}
-      <Route path="/agency" element={<RequireAgency><AgencyDashboard /></RequireAgency>} />
-      <Route path="/agency/requests" element={<RequireAgency><AgencyRequestsInbox /></RequireAgency>} />
-      <Route path="/agency/radar" element={<RequireAgency><RadarFeed /></RequireAgency>} />
-
-      {/* operator / admin */}
-      <Route path="/admin" element={<RequireRole role={ROLES.OPERATOR}><AdminDashboard /></RequireRole>} />
-
-      {/* public — the wedge */}
+      {/* Passport — public, no nav */}
       <Route path="/passport/:id" element={<Passport />} />
       <Route path="/passport/:id/request" element={<AvailabilityRequest />} />
       <Route path="/passport/:id/sent" element={<RequestConfirmation />} />
-      {/* producer (מפיק) magic-link claim confirmation — no login (P1) */}
+      {/* Producer magic-link — no login, no nav */}
       <Route path="/confirm/:token" element={<ProducerConfirm />} />
-      {/* booker discovery deferred post-validation; bookers open a passport via link */}
-      <Route path="/discover" element={<RequireRole role={ROLES.BOOKER}><BookerHome /></RequireRole>} />
+      {/* Org invite — standalone landing, may be unauthenticated */}
+      <Route path="/invite/:token" element={<AcceptInvite />} />
 
-      {/* producer (מפיק) — confirmer; real action is the no-login magic-link (P1) */}
-      <Route path="/producer" element={<RequireRole role={ROLES.PRODUCER}><ProducerHome /></RequireRole>} />
+      {/* ── Authenticated — wrapped in AppShell (persistent nav) ──────── */}
+      <Route element={<AppShell />}>
+        <Route path="/" element={<RoleHome />} />
+
+        {/* universal (any authed role) */}
+        <Route path="/settings" element={<RequireAuth><Settings /></RequireAuth>} />
+        <Route path="/org/settings" element={<RequireAuth><OrgSettings /></RequireAuth>} />
+        <Route path="/org/members" element={<RequireAuth><Members /></RequireAuth>} />
+        <Route path="/org/upgrade" element={<RequireAuth><UpgradePlan /></RequireAuth>} />
+        <Route path="/org/billing" element={<RequireAuth><Billing /></RequireAuth>} />
+
+        {/* artist workspace */}
+        <Route path="/consent" element={<RequireRole role={ROLES.ARTIST}><ConsentLegal /></RequireRole>} />
+        <Route path="/onboarding" element={<RequireRole role={ROLES.ARTIST}><Onboarding /></RequireRole>} />
+        <Route path="/artist/home" element={<RequireRole role={ROLES.ARTIST}><ArtistDashboard /></RequireRole>} />
+        <Route path="/artist/readiness" element={<RequireRole role={ROLES.ARTIST}><ArtistReadiness /></RequireRole>} />
+        <Route path="/artist/claims" element={<RequireRole role={ROLES.ARTIST}><ClaimReview /></RequireRole>} />
+        <Route path="/artist/offer" element={<RequireRole role={ROLES.ARTIST}><OfferPayment /></RequireRole>} />
+        <Route path="/evidence/:artistId" element={<RequireRole role={ROLES.ARTIST}><EvidenceCapture /></RequireRole>} />
+
+        {/* manager/agency workspace */}
+        <Route path="/agency" element={<RequireAgency><AgencyDashboard /></RequireAgency>} />
+        <Route path="/agency/requests" element={<RequireAgency><AgencyRequestsInbox /></RequireAgency>} />
+        <Route path="/agency/radar" element={<RequireAgency><RadarFeed /></RequireAgency>} />
+
+        {/* operator */}
+        <Route path="/admin" element={<RequireRole role={ROLES.OPERATOR}><AdminDashboard /></RequireRole>} />
+
+        {/* booker */}
+        <Route path="/discover" element={<RequireRole role={ROLES.BOOKER}><BookerHome /></RequireRole>} />
+
+        {/* producer workspace */}
+        <Route path="/producer" element={<RequireRole role={ROLES.PRODUCER}><ProducerHome /></RequireRole>} />
+        <Route path="/producer/received" element={<RequireRole role={ROLES.PRODUCER}><ProducerReceivedPassports /></RequireRole>} />
+      </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

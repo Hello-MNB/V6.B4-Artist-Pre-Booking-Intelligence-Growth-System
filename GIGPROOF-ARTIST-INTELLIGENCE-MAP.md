@@ -21,10 +21,10 @@ LAYER 1 · DATA FIELD  →  every atomic fact about the artist + source + date +
 
 ### CERTAINTY LABELS (every Layer-1 field carries exactly one) — from GPT, canon-aligned
 `OBSERVED` (authoritative source) · `EXTRACTED` (AI from doc/page) · `CALCULATED` (formula on observed) · `INFERRED` (model, uncertain) · `HUMAN_REVIEWED` · `COUNTERPARTY_CONFIRMED` (producer/venue) · `SELF_REPORTED` · `STALE` · `CONFLICTED`
-Plus metadata on every field: source · date · territory · visibility(passport-ok/mirror-only/internal) · freshness · method_label.
+Plus metadata on every field: source · date · territory · visibility(passport-ok/working-only/internal) · freshness · method_label.
 
 ### FIREWALL LINE HELD (against GPT's two drifts)
-- ❌ Cohort percentile / artist-vs-artist / "top X%" / market-prevalence → BANNED (CANON §2A, B4-10.30 §11/15). Market-Context view = "your pattern vs a reference pattern + coverage + WHY," never a rank.
+- ❌ Cohort percentile / artist-vs-artist / "top X%" / market-prevalence → BANNED (CANON §2A, B4-10.30 §11/15). Market-Context view = "your own evidence pattern over time + coverage + WHY," never a rank — no reference population.
 - ❌ Scraping / Chartmetric / Social-Blade / public-web harvest as a data tier → BANNED (zero-party). Canon-legal path = discovery→artist-confirms→method-labeled. Aggregators may be *referenced by the artist*, never scraped by us.
 
 ---
@@ -62,7 +62,7 @@ Selector (producer per-link export) · Go-out (inconsistent) · Eventer (verify)
 ---
 
 ## LAYER 2 — WHICH FIELDS BECOME PROOF UNITS (publishable bounded claims)
-*Only these can cross to a Passport face. Everything else stays Radar-private or internal.*
+*Only these can cross to a Passport face. Per-Act (multi-Act canon): each Act has its own Passport and its own evidence — Proof Units are non-transferable between an artist's Acts. Everything else stays Radar-private or internal.*
 Draw band · ticket contribution band · owned-community band · repeat/invited-back · fee/guarantee band · lineup frequency · pre-sale velocity · door-vs-guestlist · slot type · residency · track record · live video · set format · fiscal readiness · technical rider · peer reference (name-consented) · cross-border/touring evidence · press/reviews.
 Everything in segments 04,13,16,17 + all settings/files/freshness/outcomes = NOT Proof Units.
 
@@ -71,7 +71,7 @@ Everything in segments 04,13,16,17 + all settings/files/freshness/outcomes = NOT
 ## LAYER 3 — NAVIGATION (the filter question — DECIDE LATER)
 *This is the ONLY open question. Same Layer-1 data, cut into views. Options on the table:*
 
-**Option A — Two radars (CODEX):** Career 360° (7 worlds) + Market Context (reference pattern, no rank).
+**Option A — Two radars (CODEX):** Career 360° (7 worlds) + Market Context (own-evidence context over time, no reference population, no rank).
 **Option B — One radar, 7 worlds** (simpler for Gate-1).
 **Option C — More views later** (per persona: artist / אמרגן / מפיק each get a filtered cut).
 
@@ -100,14 +100,17 @@ OPEN (Maria, later — it's a filter): how many radars (A/B/C) · which worlds a
 ---
 
 ## LAYER 0 — ARTIST TAXONOMY (the "smart radar" switch) — added v2.1
-*Both GPT taxonomy docs adopted. This is the engine that makes one radar serve every artist type. Sits BELOW Layer 1: the taxonomy decides which Layer-1 fields are active for THIS artist.*
 
-**Core principle:** ONE radar engine, not 70 products. An artist is described by axes; the axes switch fields on/off. No new database per type.
+> ⚠ **SUPERSEDED (7 Jul 2026):** the M1–M8 module / O1–O10 overlay architecture below is v1.0-legacy, replaced by the 6 canonical Artist Families (F1–F6) + 55 subtypes per GIGPROOF-Artist-Taxonomy-Registry-Structure-and-Completion-Brief-v1.1. M-IDs are provenance-only — do not use for new work; the registry is keyed per-Act, not per-artist.
 
-### The taxonomy axes (multi-select; an artist can be more than one)
+*Both GPT taxonomy docs adopted. This is the engine that makes one radar serve every artist type. Sits BELOW Layer 1: the taxonomy decides which Layer-1 fields are active for THIS Act (multi-Act canon: one artist/Person may hold several Acts — the taxonomy row, its evidence, and its Passport are per-Act and non-transferable).*
+
+**Core principle:** ONE radar engine, not 70 products. An Act is described by axes; the axes switch fields on/off. No new database per type.
+
+### The taxonomy axes (multi-select; an Act can be more than one — axes describe the Act, not the Person)
 | Axis | Answers | Example |
 |---|---|---|
-| Primary module (8) | what kind of act | DJ / Producer-DJ |
+| Primary module (8, legacy M-IDs) | what kind of act | DJ / Producer-DJ |
 | Functional subtype | how they operate | wedding DJ, resident, festival, touring, session |
 | Performance format | what's on stage | DJ set + live percussion |
 | Commercial model | what makes revenue | ticket-led / service-led / catalog-led / collaboration-led |
@@ -115,11 +118,10 @@ OPEN (Maria, later — it's a filter): how many radars (A/B/C) · which worlds a
 | Booking context | where it's sold | clubs + festivals / weddings / municipal |
 | Career config | how organized | independent / manager-led / agency roster |
 | Opportunity role | slot filled | warm-up / support / headline |
-| Maturity | career level | developing regional |
 | Geography | valid market context | Israel, Tel Aviv |
 
-### The 8 buildable modules (GPT): M1 DJ/Producer-DJ · M2 Solo Vocal · M3 Instrumentalist/Session · M4 Band/Ensemble · M5 Large Ensemble · M6 Live-Electronic/Hybrid · M7 Service/Event Act · M8 Creator/Non-Performing.
-### 10 overlays (GPT): O1 Ticketed-Touring · O2 Festival · O3 Resident · O4 Content-First · O5 Original-Music · O6 Cover/Tribute · O7 Cultural · O8 International/Export · O9 Brand/Sponsorship · O10 Educational/Family.
+### The 8 buildable modules (GPT, legacy — see supersession banner): M1 DJ/Producer-DJ · M2 Solo Vocal · M3 Instrumentalist/Session · M4 Band/Ensemble · M5 Large Ensemble · M6 Live-Electronic/Hybrid · M7 Service/Event Act · M8 Creator/Non-Performing.
+### 10 overlays (GPT, legacy — see supersession banner): O1 Ticketed-Touring · O2 Festival · O3 Resident · O4 Content-First · O5 Original-Music · O6 Cover/Tribute · O7 Cultural · O8 International/Export · O9 Brand/Sponsorship · O10 Educational/Family.
 
 ### FIELD APPLICABILITY — the four states (GPT, canon-aligned)
 Every Layer-1 field, per module, is one of: **Required · Conditional (activation rule) · Supporting · N/A.**
@@ -159,9 +161,9 @@ Confirmed items enter method-labelled `SELF_CONFIRMED_FROM_WEB`. Trends/changes 
 ---
 
 ## UPDATED DECIDED / OPEN (v2.1)
-DECIDED (canon-aligned): 3-layer model + Layer-0 taxonomy engine · 18-segment data map · certainty labels · N/A≠ZERO applicability · 4th data door (artist-confirmed discovery) · firewall held (no cohort rank, no publish-scraped, no benchmark_cohort field) · 8 modules + 10 overlays · what is/isn't a Proof Unit · the 7 candidate worlds.
-OPEN (Maria, later — filters/build): radar count (A/B/C) · which worlds + which module = Gate-1-core (SHIGAON = M1 DJ/Producer-DJ + psytrance + O1?) · counsel on discovery engine · canon edit for 4th door (command drafted).
+DECIDED (canon-aligned): 3-layer model + Layer-0 taxonomy engine · 18-segment data map · certainty labels · N/A≠ZERO applicability · 4th data door (artist-confirmed discovery) · firewall held (no cohort rank, no publish-scraped, no benchmark_cohort field) · 8 modules + 10 overlays (v1.0-legacy — superseded by F1–F6, see Layer-0 banner) · what is/isn't a Proof Unit · the 7 candidate worlds.
+OPEN (Maria, later — filters/build): radar count (A/B/C) · which worlds + which module = Gate-1-core (SHIGAON = legacy M1 DJ/Producer-DJ + psytrance + O1?) · counsel on discovery engine · canon edit for 4th door (command drafted).
 
-**Next Action** — (1) Approve the one-line canon edit adding the 4th data door (command drafted for GPT). (2) Confirm direction: ONE radar engine + taxonomy switch (not 70 products). Then GPT builds `Artist Taxonomy Registry v1` starting with M1 DJ/Producer-DJ (SHIGAON's type).
+**Next Action** — (1) Approve the one-line canon edit adding the 4th data door (command drafted for GPT). (2) Confirm direction: ONE radar engine + taxonomy switch (not 70 products). Then GPT builds `Artist Taxonomy Registry v1` starting with M1 (legacy ID) DJ/Producer-DJ (SHIGAON's type).
 **Missing Inputs** — SHIGAON's full taxonomy row (M1 + subtype + format + commercial model + genre + context + role) to make the registry concrete on the pilot; counsel on discovery.
 **Business Impact** — This is the differentiator you named: no competitor has a type-aware radar that stays fair by construction (N/A≠ZERO) AND refuses to rank. Taxonomy makes onboarding feel bespoke per artist, kills false weaknesses, and lets GIGPROOF expand across the whole live-music ecosystem on ONE engine. The 4th data door turns enrichment (and future PR) into a growth loop the artist controls — legal because they confirm, firewall-clean because they author.

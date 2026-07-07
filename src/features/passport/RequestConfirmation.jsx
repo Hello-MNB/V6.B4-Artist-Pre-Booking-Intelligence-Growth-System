@@ -19,7 +19,9 @@ export default function RequestConfirmation() {
   const loc = useLocation()
   const [artist, setArtist] = useState(null)
 
-  useEffect(() => { getArtist(id).then(setArtist) }, [id])
+  // Artist fetch only powers the WhatsApp bonus CTA — on failure the page still
+  // confirms the sent request via router state, so swallow rather than break.
+  useEffect(() => { getArtist(id).then(setArtist).catch(() => {}) }, [id])
 
   const artistName = artist?.stage_name || loc.state?.artist_name || T.request.theArtist
   const requesterName = loc.state?.requester_name || ''

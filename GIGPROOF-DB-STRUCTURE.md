@@ -2,7 +2,7 @@
 **Version:** v1.1 · **Date:** 2 July 2026 · PILOT ARTIST NOT LOCKED — chosen from the run · **Owner:** Maria (R00) · **Architect:** R16
 **Subordinate to ★ B4 Master Canon; input to B4-40.10 (Technical/data/schema SSOT).**
 **Firewall reminder:** NOT an EPK/CRM/guarantee. NO score/percentile/rank/prediction. Draw = bands+binaries+method-labels only.
-**Supabase ref:** qexfndiyallwqhhzeerd · Postgres + RLS. Stack: React+Vite+Tailwind+Vercel. AI = concierge (stubbed).
+**Supabase ref:** qexfndiyallwqhhzeerd · Postgres + RLS. Stack: React+Vite+Tailwind+Vercel. AI = fully automated claim pipeline (Anthropic API, best model; deep scan ≈$1 at onboarding; provider fallback: if Opus unavailable, degrade to a cheaper tier with narrower extraction).
 **Rule:** This is the LOCKED TARGET schema so we never migrate the shape later. Build only 🟢 GATE-1 tables now; 🔵 FULL-BETA tables are designed now (cheap), created when their UI is built.
 **Validated against 6 real artist archetypes (pilot artist NOT locked — chosen from the run):** 16-alias artist (entity resolution) · dual-role DJ+producer · zero-catalogue venue-led DJ · service/wedding DJ · multi-relationship pop act (5 rel types) · label-owner producer-DJ. Any of these — or a run-list candidate — can be the pilot.
 
@@ -32,10 +32,12 @@ The firewall is enforced by which columns EXIST and which are FORBIDDEN — not 
 | `artist_access` | id, org_id→, artist_workspace_id→, scope[](`view`/`upload`/`edit`/`share`/`publish`), territory, expiry, consent_at | 🔵 | agency↔artist, artist-owned, revocable |
 
 ## LAYER 2 — ARTIST TRUTH (act, taxonomy, relationships)
+> ⚠ **SUPERSEDED (7 Jul 2026):** the M1–M8 module / O1–O10 overlay architecture below is v1.0-legacy, replaced by the 6 canonical Artist Families (F1–F6) + 55 subtypes per GIGPROOF-Artist-Taxonomy-Registry-Structure-and-Completion-Brief-v1.1. M-IDs are provenance-only — do not use for new work; the registry is keyed per-Act, not per-artist.
+
 | Table | Key columns | Build | Notes |
 |---|---|---|---|
 | `act` | id, artist_workspace_id→, stage_name, alias_of→(self-FK), format, is_primary | 🟢 | 1 workspace → MANY acts (e.g. a 16-alias artist) |
-| `artist_taxonomy` | act_id→, primary_module(M1-M8), secondary_module, functional_subtype[], performance_format[], commercial_model[], genre_primary, genre_secondary[], booking_context[], career_config, opportunity_roles[], maturity_tier🔒internal, geography_home, geography_active[], active_overlays[](O1-O10), languages[], act_size, identity_visibility, taxonomy_confidence | 🟢 | Registry A. Enum VALUES open, structure locked |
+| `artist_taxonomy` | act_id→, primary_module(M1-M8 — legacy), secondary_module, functional_subtype[], performance_format[], commercial_model[], genre_primary, genre_secondary[], booking_context[], career_config, opportunity_roles[], geography_home, geography_active[], active_overlays[](O1-O10 — legacy), languages[], act_size, identity_visibility, taxonomy_confidence | 🟢 | Registry A (per-Act via act_id). Module/overlay IDs are v1.0-legacy — F1–F6 re-key pending (see banner). Enum VALUES open, structure locked |
 | `performance_offer` | id, act_id→, offer_type, description | 🟢 | what's sold (DJ set / live PA / wedding pkg) |
 | `relationship` | id, act_id→, type(`recording-label`/`distributor`/`licensee`/`management`/`booking-agency`/`rights-holder`/`owned-label`), counterparty_name, status, method_label | 🟢 | multi-relationship pop act: NEVER flatten to one "label" |
 | `release` | id, act_id→, title, year, role(`original`/`remix`/`collab`), label, certainty | 🟢 | catalogue (label-owner 40+; venue-led DJ = none, that's fine) |
@@ -45,8 +47,10 @@ The firewall is enforced by which columns EXIST and which are FORBIDDEN — not 
 |---|---|---|---|
 | `evidence_artifact` | id, act_id→, evidence_type(`file`/`link`/`band`), source_door(`api`/`oauth`/`artifact`/`confirmed-discovery`), source_type, value, checksum, source_owner_consent, retention_policy, status, uploaded_at | 🟢 | the 4 doors |
 | `claim` | id, act_id→, value🔒, public_band, public_wording, source_type, **certainty**(10-enum), **verification_status**, verified_by, limitation_text, **visibility**(`mirror-only`/`passport-ok`/`internal`), **passport_eligibility**, model_version, ruleset_version, **reviewed_at**, expires_at, artist_approved | 🟢 | THE core table. Firewall fields bold |
-| `field_applicability` | field_id, artist_module, applicability(`R`/`C`/`S`/`NA`), activation_rule, accepted_sources[], evidence_strength, freshness_window, gap_rule, next_action_rule, passport_eligibility, ruleset_version | 🟢 seed / 🔵 full | Registry B. N/A≠ZERO engine. NO benchmark_cohort col |
+| `field_applicability` | field_id, artist_module, applicability(`R`/`C`/`S`/`NA`), activation_rule, accepted_sources[], evidence_strength, freshness_window, gap_rule, next_action_rule, passport_eligibility, ruleset_version | 🟢 seed / 🔵 full | Registry B (artist_module = legacy M-key — F1–F6 per-Act re-key pending). N/A≠ZERO engine. NO benchmark_cohort col |
 | `gig` | id, act_id→, venue, date, role_at_event, audience_band, band_means, sells_events_self, exact_count🔒mirror-only, closeout_status, attendance_band, settlement_band, repeat_booking_signal | 🟢 | recurring event/residency editions |
+
+*As-built enum note: `mirror-only` (in `claim.visibility` and `gig.exact_count`) is the current DB value for the private Passport — Artist view (rename to `working-only` pending — frozen until real-data gate).*
 
 ## LAYER 4 — PUBLICATION (passport, one truth → per-viewer face)
 | Table | Key columns | Build | Notes |
@@ -85,7 +89,7 @@ The firewall is enforced by which columns EXIST and which are FORBIDDEN — not 
 - HE authored native-first; EN = dev baseline. RU/DE = scaffold rows, not shipped until native-editor pass.
 
 ## RLS / FIREWALL ENFORCEMENT (the non-negotiables)
-- `claim.value`, `gig.exact_count`, `claim.internal_confidence` → NEVER SELECT-able by public/buyer session (mirror-only/internal).
+- `claim.value`, `gig.exact_count`, `claim.internal_confidence` → NEVER SELECT-able by public/buyer session (mirror-only/internal — `mirror-only` = as-built enum, rename to `working-only` pending).
 - `artist.contact` → never SELECT-able by any non-operator.
 - Public passport session → can INSERT professional_reaction + availability_request; can SELECT only passport-ok claims of the viewed passport; nothing else.
 - `reaction_reason.free_text` → owning artist workspace SELECT only.
@@ -97,7 +101,7 @@ The firewall is enforced by which columns EXIST and which are FORBIDDEN — not 
 ## BUILD ORDER (Gate-1 tables only)
 1. person · workspace(artist) · role_assignment(owner) · organization(personal) — the account spine
 2. act · artist_taxonomy · relationship · release — artist truth
-3. evidence_artifact · claim · field_applicability(seed M1) · gig — the proof engine
+3. evidence_artifact · claim · field_applicability(seed M1 — legacy M-key) · gig — the proof engine
 4. passport_version · passport_view_event — publication
 5. professional_reaction · availability_request · reaction_reason — buyer actions
 6. producer_confirmation — the confirmer loop

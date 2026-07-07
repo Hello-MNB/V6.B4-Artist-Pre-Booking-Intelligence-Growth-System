@@ -34,31 +34,37 @@ export default function ArtistReadiness() {
       const verified = claims.filter((c) => c.verification_status === 'verified').length
       const R = T.readiness
 
+      // `next` is either a real ACTION or a satisfied-state note; `actionable`
+      // separates them so the "Your next step" card never echoes a status.
       const axes = [
         {
           key: 'draw', label: R.axisDraw,
           score: (a.lineup_frequency_band ? 35 : 0) + (a.sells_tickets ? 35 : 0) + (verified ? 30 : 0),
           next: !a.lineup_frequency_band ? R.nextAddFrequency : (verified ? R.nextVerifiedExists : R.nextUploadProof),
+          actionable: !a.lineup_frequency_band || !verified,
         },
         {
           key: 'track', label: R.axisTrack,
           score: Math.min(100, exp.length * 25),
           next: exp.length < 3 ? R.nextAddExperience : R.nextGoodBase,
+          actionable: exp.length < 3,
         },
         {
           key: 'reach', label: R.axisReach,
           score: Math.min(100, links.length * 34),
           next: links.length === 0 ? R.nextAddLink : R.nextPresenceExists,
+          actionable: links.length === 0,
         },
         {
           key: 'ready', label: R.axisReady,
           score: (a.set_length ? 40 : 0) + (a.regions ? 30 : 0) + (a.invoice_ready ? 30 : 0),
           next: !a.invoice_ready ? R.nextEnableInvoice : R.nextReady,
+          actionable: !a.invoice_ready,
         },
       ]
-      // single most-impactful next action = lowest-scoring axis
-      const weakest = [...axes].sort((x, y) => x.score - y.score)[0]
-      setData({ a, axes, nextAction: weakest?.next })
+      // single most-impactful next action = weakest axis that still has a real move
+      const weakest = axes.filter((x) => x.actionable).sort((x, y) => x.score - y.score)[0]
+      setData({ a, axes, nextAction: weakest ? weakest.next : R.nextAllCovered })
       setLoading(false)
      } catch {
       setLoadError(true)

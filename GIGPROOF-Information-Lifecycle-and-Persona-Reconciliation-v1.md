@@ -70,9 +70,9 @@ COLLECT  →  REFLECT  →  CONFIRM  →  RE-REFLECT  →  (loops back to COLLEC
 | Stage | What happens | Who acts | Writes / reads | Existing screen(s) |
 |---|---|---|---|---|
 | **COLLECT** | Raw data enters through one of the 4 doors: API/OAuth · artist-provided artifact · web-discovery (opt-in) · counterparty confirmation | Artist, or system (with consent) | `evidence_artifact{...}` created, `certainty_default` = `OBSERVED` / `SELF_REPORTED` / `EXTRACTED` depending on door | A5 (social pull) · A6 (gig draw) · A7 (evidence capture) · P1 (counterparty) |
-| **REFLECT** | The system shows what it found as a **candidate**, never a fact. This is the Smart Review Queue state. | Nobody yet — this is a passive display state | `claim{...}` drafted, `certainty_default` = `EXTRACTED` / `CALCULATED` / `INFERRED` / `SELF_CONFIRMED_FROM_WEB` | A8 (Claim Review — AI-extracted) · A9 (Mirror dimension cards, bounded state) |
+| **REFLECT** | The system shows what it found as a **candidate**, never a fact. This is the Smart Review Queue state. | Nobody yet — this is a passive display state | `claim{...}` drafted, `certainty_default` = `EXTRACTED` / `CALCULATED` / `INFERRED` / `SELF_CONFIRMED_FROM_WEB` | A8 (Claim Review — AI-extracted) · A9 (Passport — Artist view dimension cards, bounded state) |
 | **CONFIRM** | The owner of the data takes an explicit action: confirm / correct / omit / dispute (artist) or yes / partial / no / wrong-person (counterparty) | Artist (A8) or Producer-confirmer (P1) | `claim.artist_approved = true`, `certainty_default` → `HUMAN_REVIEWED` or `COUNTERPARTY_CONFIRMED` | A8 review actions · A10 (publication selection + consent #2) · P1 (4-button response) |
-| **RE-REFLECT** | The confirmed state propagates to every surface that has legitimate visibility into it — Mirror updates immediately, Passport updates only if `passport-ok` + artist-approved, Manager's roster view updates, freshness clock starts | System, automatically | `claim.visibility`, `passport_version.snapshot`, freshness window starts (`claim.expires_at`) | A9 (updated) · A11 (readiness) · A14 (preview) · A15 (public Passport) · AG1/AG4 (roster) |
+| **RE-REFLECT** | The confirmed state propagates to every surface that has legitimate visibility into it — the Passport — Artist view (surfaced in the Artist Radar) updates immediately, the public Buyer view updates only if `passport-ok` + artist-approved, Manager's roster view updates, freshness clock starts | System, automatically | `claim.visibility`, `passport_version.snapshot`, freshness window starts (`claim.expires_at`) | A9 (updated) · A11 (readiness) · A14 (preview) · A15 (public Passport) · AG1/AG4 (roster) |
 
 When a claim's freshness window lapses, it re-enters as `STALE` or `CONFLICTED` — which is not a dead end, it's a **re-entry point into COLLECT** (A16b Gig Evidence Refresh, or a freshness-nudge email). This is the loop that makes the Radar "learn over time" — the one part of the critique's language that is accurate, and it is already built into A16b + the freshness enum. No new architecture needed there — just confirming the loop closes.
 
@@ -90,20 +90,20 @@ This is an architectural recommendation from me, not a canon change — it needs
 
 The critique proposes an 8-state palette that overlaps but does not match your locked enum. Map, don't invent:
 
-| Critique's invented state | Locked equivalent (Localization Matrix §4, Mirror-only) | Verdict |
+| Critique's invented state | Locked equivalent (Localization Matrix §4, Artist-view-only — formerly "Mirror-only") | Verdict |
 |---|---|---|
 | Green — "Supported and current" | `Fresh` (טרי) / `Strong` (חזק) | Use locked term |
 | Amber — "Found for review" | New — not currently named. Closest existing concept: pre-`artist_approved` claim state. | **Gap — genuinely missing a label.** See §1.4. |
 | Purple — "Artist input needed" | `Evidence missing` (חסר הוכחה) | Use locked term |
 | Blue — "Supporting" | Registry B `applicability = S` (Supporting) — already a field-level concept, not a display state | Different layer, don't conflate |
-| Red outline — "Conflicted" | `CONFLICTED` (certainty_default) — no Mirror-facing UI-STATE currently maps to it | **Gap — see §1.4.** |
+| Red outline — "Conflicted" | `CONFLICTED` (certainty_default) — no Artist-view-facing UI-STATE currently maps to it | **Gap — see §1.4.** |
 | Grey — "Not started" | `Developing` (מתפתח) | Use locked term |
 | Hidden — "N/A" | Registry B `applicability = N/A` — field removed from DOM entirely, not a visible state | Correct instinct, wrong layer — this isn't a *display state*, it's a *field-existence* decision made earlier in the pipeline |
 
 ### 1.4 — Two real gaps worth fixing (not from the critique's language, but from this analysis)
 
-1. **No locked UI-STATE for "candidate awaiting artist review."** Today `Evidence missing` covers "nothing was found" and `Strong`/`Developing` cover post-review states — there is no chip for *"we found something, go look at it."* Propose adding `ממתין לאישור` / `Pending review` as a new Mirror-only UI-STATE, distinct from `Evidence missing`. This is a genuinely missing state, not a color swap.
-2. **No locked UI-STATE for `CONFLICTED`.** Two sources disagree (e.g., self-declared community size vs. a producer-confirmed number). Propose `סתירת מקורות` / `Source conflict` as a new Mirror-only state, routed to the operator queue (`/ops/claim-review`) if unresolved after N days.
+1. **No locked UI-STATE for "candidate awaiting artist review."** Today `Evidence missing` covers "nothing was found" and `Strong`/`Developing` cover post-review states — there is no chip for *"we found something, go look at it."* Propose adding `ממתין לאישור` / `Pending review` as a new Working-view-only UI-STATE (private Passport — Artist view), distinct from `Evidence missing`. This is a genuinely missing state, not a color swap.
+2. **No locked UI-STATE for `CONFLICTED`.** Two sources disagree (e.g., self-declared community size vs. a producer-confirmed number). Propose `סתירת מקורות` / `Source conflict` as a new Working-view-only state (private Passport — Artist view), routed to the operator queue (`/ops/claim-review`) if unresolved after N days.
 
 Both are small, additive changes to Localization Matrix §4 — not architecture changes. Flagging as R00-approval items in §5.
 
@@ -117,8 +117,8 @@ You asked for the collect/reflect/confirm/re-reflect loop "לכל 3 הישויו
 
 | Stage | Screens | What actually happens |
 |---|---|---|
-| COLLECT | A5 (identity + social pull) · A6 (gig-scoped draw) · A7 (claim-first evidence capture) | Artist states a goal (A4) before any proof is requested. Social links are pulled as public-metadata-only (no scraping, no automated cron — artist-provided URL or explicit OAuth grant only, per Social OAuth section). Draw is always gig-scoped, never a global number. |
-| REFLECT | A8 (Claim Review) · A9 (Mirror) | AI-extracted claims shown as candidates with source, method, and a plain-language limitation ("what this supports / does not establish"). A9 shows bounded dimension states, never a score. |
+| COLLECT | A5 (identity + social pull) · A6 (gig-scoped draw) · A7 (claim-first evidence capture) | Artist states a goal (A4) before any proof is requested. Social links are pulled as public-metadata-only — collection is consent-gated (artist-provided URL or explicit OAuth grant only, per Social OAuth section; no scraping of non-consented sources); within that consent the pipeline is fully automated — deep scan at onboarding + incremental refresh. Draw is always gig-scoped, never a global number. |
+| REFLECT | A8 (Claim Review) · A9 (Passport — Artist view) | AI-extracted claims shown as candidates with source, method, and a plain-language limitation ("what this supports / does not establish"). A9 shows bounded dimension states, never a score. |
 | CONFIRM | A8 actions (confirm / correct / omit / dispute) · A10 (publication selection + consent #2) | Two separate confirm actions, not one: confirming the *fact* (A8) is different from confirming the *fact may go public* (A10, its own consent). |
 | RE-REFLECT | A9 (updates live) · A11 (readiness gate) · A14 (preview) · A15 (public Passport) · A16b (post-gig refresh re-enters COLLECT) | The loop closes at A16b — the highest-priority "recurring value" screen in the whole build, per your own screen tree annotation. Without it the Radar goes stale after Gate-1. |
 
@@ -170,7 +170,7 @@ If you want to pursue the onboarding motivation mechanic, here is how to build i
 | Element | Firewall-safe implementation |
 |---|---|
 | Trigger | Same moments the critique names: link connected, evidence uploaded, claim confirmed |
-| Surface | A new **Mirror-side "Live Preview" panel** — not a new route, an embedded component inside A9 (Artist Radar), rendering the *same component* A14 uses, but explicitly watermarked "Draft — not shareable" |
+| Surface | A new **Artist-view "Live Preview" panel** — not a new route, an embedded component inside A9 (Artist Radar), rendering the *same component* A14 uses, but explicitly watermarked "Draft — not shareable" |
 | Data shown | Only `claim.artist_approved = true` claims — never raw candidates. This is the critical guardrail: showing an unconfirmed candidate in a "your Passport is growing" moment would be the same overclaim risk the readiness gate exists to prevent. |
 | Publish gate | A11's hard-block (`supported_claims_count == 0` → publish disabled) is completely unaffected — the Live Preview is cosmetic motivation, not an alternate publish path |
 | Method labels | Still rendered in full on the preview — no shortcut on the "claim · context · method-label · review-date" Proof Unit discipline, even in draft mode |
@@ -182,11 +182,11 @@ This gets you the dopamine loop the critique describes without ever letting an u
 ## 4. DATA GOVERNANCE — FULL FIELD LINEAGE (one table, the whole pipeline)
 
 ```
-evidence_artifact (raw)
-   │  source_type, checksum, consent, uploaded_at
+evidence_artifact (raw — act-scoped)
+   │  act_id, source_type, checksum, consent, uploaded_at
    ▼
-claim (candidate)
-   │  certainty_default: OBSERVED/EXTRACTED/CALCULATED/INFERRED/SELF_REPORTED/SELF_CONFIRMED_FROM_WEB
+claim (candidate — act-scoped)
+   │  act_id, certainty_default: OBSERVED/EXTRACTED/CALCULATED/INFERRED/SELF_REPORTED/SELF_CONFIRMED_FROM_WEB
    │  visibility: mirror-only (always, at this stage)
    ▼
 claim (owner-confirmed)
@@ -198,13 +198,15 @@ claim (visibility-assigned)
    │  claim.visibility: mirror-only | passport-ok | internal
    │  only verified/supporting + artist_approved may become passport-ok
    ▼
-passport_version.included_claims[]  (snapshot, immutable per version)
+passport_version.included_claims[]  (snapshot, immutable per version — bound to ONE Act via passport_version.act_id)
    │
    ▼
 claim.expires_at reached → STALE or CONFLICTED
    │
    └──► re-enters COLLECT via A16b (Gig Evidence Refresh) or freshness-nudge email
 ```
+
+*Act binding (multi-Act canon): every row in this lineage is act-scoped — `evidence_artifact.act_id` → `claim.act_id` → `passport_version.act_id`. Evidence is per-Act and non-transferable; a new Act starts empty. Enum as-built note: `mirror-only` above is the current DB value for the private Passport — Artist view (rename to `working-only` pending — frozen until real-data gate).*
 
 Every arrow in this diagram already has a corresponding metafield in Registry B or the Screen-Spec — nothing here requires new tables, only the two new UI-STATE labels from §1.4 and the two derived Manager-facing fields from §2.2a.
 
@@ -216,7 +218,7 @@ Every arrow in this diagram already has a corresponding metafield in Registry B 
 |---|---|---|---|
 | 1 | Radial evidence map / 7-color palette from the critique | **Reject outright.** Build nothing from Critique §3–§4. | It's a locked firewall rule, not a style preference — but you should be the one who formally closes this out, since it may resurface from a future AI review with the same drift pattern. |
 | 2 | Full 10-value `certainty_default` chain vs current 4-value shortcut | **Build the 10-value chain now**, keep 4-value as its display collapse | Touches Registry B directly and the migration sequence — your existing open architectural decision, now with a concrete recommendation attached |
-| 3 | Two new Mirror-only UI-STATEs: "Pending review" and "Source conflict" | **Add both** to Localization Matrix §4 | Any new locked term needs your term-status-register approval (§9 of the Matrix) |
+| 3 | Two new Working-view-only (Artist view) UI-STATEs: "Pending review" and "Source conflict" | **Add both** to Localization Matrix §4 | Any new locked term needs your term-status-register approval (§9 of the Matrix) |
 | 4 | Two new Manager-facing derived fields (`missing_sales_assets[]`, `pitch_angle_suggestion`) | **Add both**, scoped agency-only, read-time derivation only | New Registry B rows need R00 approval per the registry's own governance rule |
 | 5 | Progressive "Live Preview" panel inside A9 | **Build it**, watermarked, confirmed-claims-only, no new route | Adds scope to A9's build — worth confirming priority against A16b (which you've already flagged as the higher-value recurring loop) |
 | 6 | QA check: `actor_role_context` correctly stamped across booking_manager / producer / venue_programmer on every `ProfessionalReaction` write | **Run this check before Gate-1** | Not a design decision — a build-verification item, flagging here so it doesn't get lost |
@@ -225,7 +227,7 @@ Every arrow in this diagram already has a corresponding metafield in Registry B 
 
 ## 6. WHAT THIS DOES NOT CHANGE
 
-To be explicit about scope discipline: nothing in this document proposes new personas, new top-level routes, or changes to the three-entity chain (Artist → Booker → Producer confirms) in your product memory. The Manager and Producer-evaluator "gaps" the critique raised are real screens that already exist in `App-Screen-Tree-v1.md`. This document's actual net-new surface area is: two UI-state labels, two derived read-only fields for the Manager view, one cosmetic preview panel, and a recommendation to build the certainty chain in full rather than the shortcut. Everything else here is a map of what you already have, corrected against a source that wasn't canon.
+To be explicit about scope discipline: nothing in this document proposes new personas, new top-level routes, or changes to the three-entity chain (Artist → Booking Manager → Producer confirms) in your product memory. The Manager and Producer-evaluator "gaps" the critique raised are real screens that already exist in `App-Screen-Tree-v1.md`. This document's actual net-new surface area is: two UI-state labels, two derived read-only fields for the Manager view, one cosmetic preview panel, and a recommendation to build the certainty chain in full rather than the shortcut. Everything else here is a map of what you already have, corrected against a source that wasn't canon.
 
 ---
 

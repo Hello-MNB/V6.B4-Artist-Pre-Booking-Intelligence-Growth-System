@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
-const APP_URL = 'https://app.gigproof.co'
+import { APP_URL } from '@/lib/app-url'
+
 const SITE_URL = 'https://gigproof.co'
 
 export const metadata: Metadata = {
@@ -320,7 +321,7 @@ export default function HomePage() {
                 }}
               >
                 <a
-                  href={APP_URL}
+                  href={`${APP_URL}/signup`}
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
@@ -1343,7 +1344,7 @@ export default function HomePage() {
               Closed beta — Israeli artists only. Early access is limited.
             </p>
             <a
-              href={APP_URL}
+              href={`${APP_URL}/signup`}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',

@@ -54,6 +54,14 @@ export default function Signup() {
 
   return (
     <PageShell max="max-w-sm">
+      {/* CODEX imagery — the artist's world, not a form. Ink overlay keeps text law. */}
+      <div className="relative -mx-4 -mt-6 mb-6 h-40 overflow-hidden sm:mx-0 sm:mt-0 sm:rounded-xl">
+        <img src="/assets/gigproof-persona-artist-v1.webp" alt="" className="h-full w-full object-cover object-top" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0A0D0B]/80 via-[#0A0D0B]/20 to-transparent" />
+        <p className="absolute bottom-3 left-4 right-4 font-mono text-[10px] uppercase tracking-[0.14em] text-[#EEF4E7]">
+          {T.signup.heroLine}
+        </p>
+      </div>
       <div className="text-center mb-8">
         <Wordmark className="justify-center mb-3" />
         <LanguageToggle />

@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description: 'GIGPROOF is always free for booking managers. Artists pay for access to build and publish their Passport. In closed beta — pricing by direct arrangement.',
 }
 
-const APP_URL = 'https://app.gigproof.co'
+import { APP_URL } from '@/lib/app-url'
 
 const bookerIncludes = [
   'View any shared Passport link — no account needed',

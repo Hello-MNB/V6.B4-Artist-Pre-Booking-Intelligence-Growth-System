@@ -47,9 +47,12 @@ function RealAuthProvider({ children }) {
       setLoading(false)
       return
     }
-    supabase.auth.getSession().then(({ data }) => {
+    supabase.auth.getSession().then(async ({ data }) => {
       setSession(data.session)
-      if (data.session?.user) loadProfile(data.session.user.id)
+      // AWAIT the profile: `loading` must cover the ROLE too, or every hard
+      // reload races RequireRole/RoleHome with role=null and bounces the user
+      // to /select ("Who are you?") — the exact broken-refresh Maria hit.
+      if (data.session?.user) await loadProfile(data.session.user.id)
       setLoading(false)
     })
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {

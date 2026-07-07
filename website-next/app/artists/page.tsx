@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   },
 }
 
-const APP_URL = 'https://app.gigproof.co'
+import { APP_URL } from '@/lib/app-url'
 
 const ICON_PATHS: Record<string, string> = {
   arrow:

@@ -39,7 +39,7 @@ export function ToastProvider({ children }) {
       <div className="fixed bottom-4 inset-x-0 z-[60] flex flex-col items-center gap-2 px-4 pointer-events-none">
         {toasts.map((t) => (
           <div key={t.id} role="status"
-            className={`pointer-events-auto rounded-xl px-4 py-2 text-sm font-bold shadow-lg ${t.type === 'warn' ? 'bg-warn text-ink' : 'bg-ok text-ink'}`}>
+            className={`pointer-events-auto rounded px-4 py-2 text-sm font-bold shadow-lg ${t.type === 'warn' ? 'bg-[#FFF2D9] text-[#76501D]' : 'bg-[#E5F5DF] text-[#285B31]'}`}>
             {t.msg}
           </div>
         ))}
@@ -144,11 +144,14 @@ export function Loading({ label }) {
 // color alone — satisfies WCAG 1.4.1 and the firewall (categorical, not a gauge).
 export function StatusChip({ status }) {
   const { T } = useLang()
+  // CODEX v1.2.0 bounded-status tints (design-system-states.css)
   const map = {
-    [STATUS.STRONG]: { t: T.status.strong, c: 'bg-ok/15 text-ok', icon: '●' },
-    [STATUS.DEVELOPING]: { t: T.status.developing, c: 'bg-warn/15 text-warn', icon: '◐' },
-    [STATUS.MISSING]: { t: T.status.missing, c: 'bg-gap/20 text-soft', icon: '○' },
-    [STATUS.NOT_ASSESSABLE]: { t: T.status.notAssessable, c: 'bg-gap/20 text-muted', icon: '–' },
+    [STATUS.STRONG]: { t: T.status.strong, c: 'bg-[#DFF2D8] text-[#295B32]', icon: '●' },
+    [STATUS.DEVELOPING]: { t: T.status.developing, c: 'bg-[#FFF0D9] text-[#8A591B]', icon: '◐' },
+    // warm brown, deliberately NOT error-red: "unknown evidence is never presented
+    // as weak evidence" (canon) — a gap is an invitation, not a failure
+    [STATUS.MISSING]: { t: T.status.missing, c: 'bg-[#F2E6DC] text-[#8A5432]', icon: '○' },
+    [STATUS.NOT_ASSESSABLE]: { t: T.status.notAssessable, c: 'bg-[#E9ECE8] text-[#5F6761]', icon: '–' },
   }
   const s = map[status] ?? map[STATUS.NOT_ASSESSABLE]
   return <span className={`chip ${s.c}`}><span aria-hidden="true">{s.icon}</span> {s.t}</span>
@@ -180,7 +183,7 @@ export function LanguageToggle() {
   return (
     <button
       onClick={() => setLang(lang === 'he' ? 'en' : 'he')}
-      className="text-xs font-semibold text-muted border border-line rounded-full px-3 py-1 hover:text-soft hover:border-soft transition"
+      className="text-xs font-mono font-semibold text-muted border border-line rounded px-3 py-1 hover:text-soft hover:border-soft transition"
       title={T.common.switchLanguage}
       aria-label={T.common.switchLanguage}
     >
@@ -195,7 +198,7 @@ export function Field({ label, hint, error, children }) {
       {label && <label className="label">{label}</label>}
       {children}
       {hint && !error && <p className="mt-1 text-xs text-muted">{hint}</p>}
-      {error && <p role="alert" className="mt-1 text-xs text-red-400">{error}</p>}
+      {error && <p role="alert" className="mt-1 text-xs text-void">{error}</p>}
     </div>
   )
 }
@@ -208,10 +211,58 @@ export function PageShell({ children, max = 'max-w-xl' }) {
   )
 }
 
-export function Wordmark({ className = '' }) {
+// ── CODEX icon sprite (public/assets/gigproof-icons.svg, 18 symbols) ─────────
+export function GpIcon({ id, className = 'h-5 w-5' }) {
   return (
-    <div className={`text-2xl font-extrabold tracking-tight ${className}`}>
-      GIG<span className="text-accent">PROOF</span>
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <use href={`/assets/gigproof-icons.svg#${id}`} />
+    </svg>
+  )
+}
+
+// ── Platform marks — the artist's content world, recognizable at a glance ────
+// Brand color + simplified glyph. Never a metric, purely identity.
+const PLATFORMS = {
+  spotify: { bg: '#1DB954', glyph: <g stroke="#fff" strokeWidth="2" strokeLinecap="round" fill="none"><path d="M7.5 15.2c2.8-.8 6-.7 8.7.7" /><path d="M7 12c3.3-1 7-.8 10 .9" /><path d="M6.5 8.8c3.9-1.2 8.4-.9 11.8 1.1" /></g> },
+  instagram: { bg: '#E1306C', glyph: <g stroke="#fff" strokeWidth="1.8" fill="none"><rect x="5.5" y="5.5" width="13" height="13" rx="3.5" /><circle cx="12" cy="12" r="3" /><circle cx="16.2" cy="7.8" r="0.6" fill="#fff" stroke="none" /></g> },
+  youtube: { bg: '#FF0000', glyph: <path d="M10 8.5v7l6-3.5z" fill="#fff" /> },
+  soundcloud: { bg: '#FF5500', glyph: <g stroke="#fff" strokeWidth="2" strokeLinecap="round"><path d="M6 14v3M9 12v5M12 10v7M15 9v8" /><path d="M15 17h2.5a2.5 2.5 0 0 0 .4-4.97A4.5 4.5 0 0 0 15 9.5" fill="none" /></g> },
+  tiktok: { bg: '#0A0D0B', glyph: <path d="M13 6v8.2a2.8 2.8 0 1 1-2.4-2.77M13 6c.3 1.8 1.6 3.2 3.5 3.5" stroke="#fff" strokeWidth="2" strokeLinecap="round" fill="none" /> },
+  facebook: { bg: '#1877F2', glyph: <path d="M13.5 8H15V5.5h-1.8c-2 0-3.2 1.3-3.2 3.3V11H8v2.5h2V19h2.6v-5.5h2.1l.4-2.5h-2.5V9c0-.6.3-1 .9-1z" fill="#fff" /> },
+  apple: { bg: '#FA243C', glyph: <path d="M15.5 6.5v7.2a2.3 2.3 0 1 1-1.8-2.25V8l-4 1v6.2a2.3 2.3 0 1 1-1.8-2.25V7.5z" fill="#fff" /> },
+  bandcamp: { bg: '#629AA9', glyph: <path d="M6 15.5 10.5 8.5H18L13.5 15.5z" fill="#fff" /> },
+}
+
+export function platformOf(url = '') {
+  const u = url.toLowerCase()
+  for (const k of Object.keys(PLATFORMS)) if (u.includes(k === 'youtube' ? 'youtu' : k)) return k
+  if (u.includes('music.apple')) return 'apple'
+  return null
+}
+
+export function PlatformMark({ platform, size = 'h-7 w-7' }) {
+  const p = PLATFORMS[platform]
+  if (!p) return (
+    <span className={`grid ${size} shrink-0 place-items-center rounded-full bg-surface text-muted`} data-platform="link">
+      <GpIcon id="gp-source" className="h-4 w-4" />
+    </span>
+  )
+  return (
+    <span className={`grid ${size} shrink-0 place-items-center rounded-full`} style={{ background: p.bg }} data-platform={platform} aria-hidden="true">
+      <svg className="h-4.5 w-4.5" viewBox="0 0 24 24">{p.glyph}</svg>
+    </span>
+  )
+}
+
+export function Wordmark({ className = '' }) {
+  // CODEX v1.2.0 logo pattern: lime square + bold name (ds-logo)
+  return (
+    <div className={`flex items-center gap-2 ${className}`}>
+      <span className="grid h-8 w-8 place-items-center rounded-[10px] bg-accent text-[9px] font-black text-[#10150F]" aria-hidden>
+        GP
+      </span>
+      <b className="text-sm font-extrabold tracking-tight text-soft">GIGPROOF</b>
     </div>
   )
 }
@@ -227,7 +278,7 @@ export function EmptyState({ title, action }) {
 
 export function ErrorNote({ children }) {
   if (!children) return null
-  return <p role="alert" className="mb-4 rounded-xl bg-red-500/10 px-4 py-3 text-sm text-red-300">{children}</p>
+  return <p role="alert" className="mb-4 rounded-xl bg-[#FFF0ED] px-4 py-3 text-sm text-void">{children}</p>
 }
 
 // Load-failure state with an optional retry. Use in place of a silent empty list.

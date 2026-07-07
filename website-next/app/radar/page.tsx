@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description: 'The Artist Radar is your private workspace. See every dimension of your professional profile, know what evidence you have and what\'s missing, and take one clear next action.',
 }
 
-const APP_URL = 'https://app.gigproof.co'
+import { APP_URL } from '@/lib/app-url'
 
 const dimensions = [
   {

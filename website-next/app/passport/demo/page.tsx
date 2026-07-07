@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description: 'A sample GIGPROOF Bookability Passport. Method-labeled, producer-confirmed evidence. No score, no ranking — verified strengths only.',
 }
 
-const APP_URL = 'https://app.gigproof.co'
+import { APP_URL } from '@/lib/app-url'
 
 // --- Demo data: fictional artist "Dana Lev" ---
 

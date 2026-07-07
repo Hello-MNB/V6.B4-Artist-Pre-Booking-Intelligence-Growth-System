@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description: 'Every claim in a GIGPROOF Passport carries a method label — the source and process by which it was verified. No bare numbers. No unattributed data.',
 }
 
-const APP_URL = 'https://app.gigproof.co'
+import { APP_URL } from '@/lib/app-url'
 
 const methodLabels = [
   {

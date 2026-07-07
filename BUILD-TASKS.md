@@ -5,6 +5,8 @@
 > Current canon (v3.5+) locks **person → workspace → role** as the FULL-BETA target. The built code is the **Gate-1 proof** — it runs the core loop (artist → evidence → claim → Passport → booker request → producer confirm) and is what we take to Yossi.
 > The **workspace model · artist-agnostic taxonomy engine · active-discovery Radar · discovery_candidate/field_applicability tables** are **NOT built** — they are the FULL-BETA target (see entity map + DB structure), built AFTER Gate-1 validation.
 > Do NOT assume any FULL-BETA feature exists because a task looks done. Tasks 0–10 = org-first Gate-1 build only.
+>
+> ⚠️ **VOCABULARY NOTE (added 7 Jul 2026):** this log predates canon v2.0 — completed entries below keep their as-built wording. Retired vocabulary: **"Mirror"** → Passport **Artist view**; **"booker"** → **booking manager** (אמרגן); the AI **"stub"** is now **demo/QA-only** — the claim pipeline is **fully automated** (Anthropic API); **single-Passport** framing → **multi-Act** (one Passport per Act; evidence per-Act, non-transferable).
 
 
 ## Legend
@@ -127,14 +129,14 @@
 - [ ] BT-16: `evidence/EvidenceCapture.jsx` — after AI processing: show inline outcome ("X claims created — Review in Claims →")
 - [ ] BT-17: `artist/OfferPayment.jsx` — pending state: show "Marked as paid on [date]" + support contact line; add i18n keys
 
-## TASK 14 — Booker flow UX fixes ⬜
+## TASK 14 — Booking-manager flow UX fixes ⬜
 *(Source: BT-18–23)*
 - [ ] BT-18: `passport/Passport.jsx` — add one-line intro above ActionLadder rungs ("Let the artist know your interest without committing"); add i18n keys
 - [ ] BT-19: `passport/Passport.jsx` — add `<LanguageToggle>` to public Passport page header
 - [ ] BT-20: `passport/AvailabilityRequest.jsx` — add descriptive hint labels to capacity_band + budget_band selects (e.g. "עד 100 אנשים"); add i18n keys
 - [ ] BT-21: `passport/AvailabilityRequest.jsx` — add per-field `<ErrorNote>` on validation failure (replace HTML5 browser popups)
 - [ ] BT-22: `passport/RequestConfirmation.jsx` — add "Copy contact info" fallback button for users without WhatsApp
-- [ ] BT-23: `booker/BookerHome.jsx` — add helper copy: "No link? Ask the artist for their GIGPROOF link, then paste it here"
+- [ ] BT-23: `booker/BookerHome.jsx` (folder rename pending) — add helper copy: "No link? Ask the artist for their GIGPROOF link, then paste it here"
 
 ## TASK 15 — Producer flow UX fixes ⬜
 *(Source: BT-24–27)*
@@ -181,7 +183,7 @@
 ## TASK 20 — Localization stubs (RU · DE · AR) ⬜
 *(Source: BT-51–55 — requires native-speaker review before merge; stubs only)*
 - [ ] BT-51: Create `src/lib/i18n/ru.js` from terminology table (SCREEN-AUDIT-PHASE2-4.md §3-A); flag: native RU review required before merge
-- [ ] BT-52: Create `src/lib/i18n/de.js` from terminology table; flag: native DE review required; "Booker" stays EN in DE
+- [ ] BT-52: Create `src/lib/i18n/de.js` from terminology table; flag: native DE review required; the buyer term ("booking manager") stays EN in DE
 - [ ] BT-53: Create `src/lib/i18n/ar.js` from terminology table; AR = RTL; apply same bidi rules as HE; flag: native AR review required
 - [ ] BT-54: `context/LangContext.jsx` — add RU/DE/AR to `dicts`; set `dir="rtl"` when AR is active
 - [ ] BT-55: `components/ui.jsx` LanguageToggle — add RU / DE / AR options

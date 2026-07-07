@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthProvider.jsx'
-import { listAgencyArtists, upsertArtist } from '../../lib/db.js'
+import { listAgencyArtists, listClaimsByArtists, upsertArtist } from '../../lib/db.js'
+import AgencyRadarUniverse from './AgencyRadarUniverse.jsx'
 import { PageShell, Wordmark, Loading, ErrorState, StatusChip, Field, Spinner, LanguageToggle } from '../../components/ui.jsx'
 import { useLang } from '../../context/LangContext.jsx'
 import { useOrg } from '../../context/OrgContext.jsx'
@@ -29,6 +30,7 @@ export default function AgencyDashboard() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const [artists, setArtists] = useState([])
+  const [rosterClaims, setRosterClaims] = useState([])
   const [adding, setAdding] = useState(false)
   const [f, setF] = useState({ stage_name: '', genre: '' })
   const [busy, setBusy] = useState(false)
@@ -37,7 +39,9 @@ export default function AgencyDashboard() {
   async function load() {
     setError(false)
     try {
-      setArtists(await listAgencyArtists(user.id))
+      const roster = await listAgencyArtists(user.id)
+      setArtists(roster)
+      try { setRosterClaims(await listClaimsByArtists(roster.map((a) => a.id))) } catch { setRosterClaims([]) }
     } catch {
       setError(true)
     } finally {
@@ -75,10 +79,13 @@ export default function AgencyDashboard() {
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-xl font-bold text-soft">{T.agency.title}</h1>
         <div className="flex items-center gap-3">
-          <Link to="/agency/radar" className="text-sm text-accent">RADAR ›</Link>
-          <Link to="/agency/requests" className="text-sm text-accent">{T.agency.requests} ›</Link>
+          <Link to="/agency/radar" className="text-sm font-semibold text-[#657530] hover:underline">RADAR ›</Link>
+          <Link to="/agency/requests" className="text-sm font-semibold text-[#657530] hover:underline">{T.agency.requests} ›</Link>
         </div>
       </div>
+
+      {/* ── THE ROSTER UNIVERSE — the manager's home: artists as worlds ── */}
+      <AgencyRadarUniverse artists={artists} claims={rosterClaims} />
 
       {/* first-run checklist — dismissible, non-shaming */}
       {!hideChecklist && (

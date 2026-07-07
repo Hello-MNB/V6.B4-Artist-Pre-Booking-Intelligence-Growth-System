@@ -4,12 +4,13 @@
 **Drive:** update in place only → folder 1QyQtp-vVcqosKplB_zMmtWNweBH_PaS3 · never duplicate.
 
 **WHAT THE APP IS:** Pre-booking proof / risk-reduction tool. Helps IL אמרגנים evaluate an unfamiliar artist via standardized, method-labeled evidence before they risk their name. Talent ≠ bookability. NOT an EPK, NOT a booking CRM, NOT a guarantee.
-**FIREWALL (absolute):** NO score/percentile/rank/"bookability %"/prediction/gauge. Draw = bands + binaries + method labels only. Streaming = secondary context. Mirror (artist, private) = gaps; Passport (public, buyer) = verified strengths only. Artist-vs-artist NEVER. N/A≠ZERO.
+**FIREWALL (absolute):** NO score/percentile/rank/"bookability %"/prediction/gauge. Draw = bands + binaries + method labels only. Streaming = secondary context. One Passport per Act, shown in views — Artist view (private) = gaps; Buyer view (public) = verified strengths only. Artist-vs-artist NEVER. N/A≠ZERO.
 **STAGE:** Pre-validation. Gate = 1 booking manager reacts to a real Passport AND one pays. No price/ICP locked until then.
-**STACK:** React+Vite+Tailwind · Supabase (ref qexfndiyallwqhhzeerd) · Vercel · Anthropic (concierge-stubbed). Codebase C:\Users\user\GIGPROOF synced to Drive app\.
-**AI:** claim-pipeline concierge-processed BY HAND until volume justifies automation (Anthropic stubbed).
+**STACK:** React+Vite+Tailwind · Supabase (ref qexfndiyallwqhhzeerd) · Vercel · Anthropic (fully automated claim pipeline). Codebase C:\Users\user\GIGPROOF synced to Drive app\.
+**AI:** claim-pipeline FULLY AUTOMATED (Anthropic API, best model — deep scan ≈$1 at onboarding, cheap incremental after; provider fallback: if Opus unavailable, degrade to a cheaper tier with narrower extraction).
 
 **★ BUILD LAW:** This map is the LOCKED TARGET (so pricing + goals can be modeled against the whole surface). Only items tagged 🟢 GATE-1 get built now. Everything 🔵 FULL-BETA is schema-designed now, built after the Gate. Building FULL-BETA UI before the Gate = architecture ahead of evidence = forbidden.
+**⚠️ SUPERSEDED (7 Jul 2026):** build scope is now FULL beta with a LOOP-first build order; the 🟢/🔵 tags below remain as historical sequencing markers, not a build gate. See the current canon doc set (README-INDEX).
 
 ---
 
@@ -29,11 +30,11 @@ Workspace  (the subscription-bearing unit)
 └── Event / producer workspace              🔵 FULL-BETA
 
 Artist workspace
-├── Act identities (1 person → many acts)   🟢  (SHIDAPU=16 aliases proves this)
+├── Act identities (1 person → many acts)   🟢  (SHIDAPU=16 aliases proves this; a new Act starts empty)
 ├── Performance offers                      🟢
-├── Evidence                                🟢
-├── Radar (private Mirror)                  🟢
-├── Passport (public)                       🟢
+├── Evidence (per Act, non-transferable)    🟢
+├── Radar (Passport — Artist view, private) 🟢
+├── Passport (Buyer view, public, per Act)  🟢
 └── Opportunities                           🔵
 
 Subscription → attached to workspace/roster/paid resource   🔵 (manual pay 🟢 for the 1 payer)
@@ -62,7 +63,7 @@ Entitlement  → plan × workspace × capability × permission
 ### 2B · HUMAN ROLES × RISK × PAYMENT × RADAR
 | Role | HE | Risk carried | Pays? (hypothesis) | Radar / interface | Build |
 |---|---|---|---|---|---|
-| Artist | אמן | career/income | ✅ primary payer candidate | Artist Radar (private Mirror) | 🟢 |
+| Artist | אמן | career/income | ✅ primary payer candidate | Artist Radar (Passport — Artist view, private) | 🟢 |
 | Booking Manager | אמרגן | reputation | ❌ free (demand engine) | Passport evaluation view | 🟢 (view) |
 | Artist Manager | מנהל אמן | manages artist(s) | via mgmt workspace | dev view + roster intel | 🔵 |
 | Booking Agent / Roster Coord | — | inside agency | via agency workspace | roster views | 🔵 |
@@ -82,10 +83,10 @@ Entitlement  → plan × workspace × capability × permission
 | `act` / `alias` | one bookable identity | 1 person → many acts | 🟢 |
 | `evidence_artifact` | proof (4 doors) | source_type, checksum, consent | 🟢 |
 | `claim` | publishable bounded unit | certainty, reviewed_at, visibility, passport_eligibility | 🟢 |
-| `gig`/`event` | live footprint | audience_band, exact_count(mirror-only 🔒) | 🟢 |
+| `gig`/`event` | live footprint | audience_band, exact_count(working-only 🔒) | 🟢 |
 | `relationship` | label/distributor/mgmt/booking | `type` enum (Noa Kirel: NEVER flatten) | 🟢 |
 | `release` | catalogue item | role: original/remix/collab | 🟢 |
-| `passport_version` | published snapshot (ONE truth, per-viewer interpretation) | — | 🟢 |
+| `passport_version` | published snapshot (ONE truth per Act — act_id binds it to an Act, not a Person; per-viewer interpretation) | — | 🟢 |
 | `professional_reaction` | buyer action | action_type enum | 🟢 |
 | `availability_request` | commercial intent only | bands only | 🟢 |
 | `producer_confirmation` | one-claim confirm | authority_type, name_visibility | 🟢 |
@@ -99,7 +100,7 @@ Entitlement  → plan × workspace × capability × permission
 
 ## 3. CROSSINGS (who touches whom)
 ```
-ARTIST(workspace) ─authors─▶ CLAIM ─publishes─▶ PASSPORT(one truth) ─viewed by─▶ BOOKING MGR / VENUE PROG / PRODUCER
+ARTIST(workspace) ─authors─▶ CLAIM ─publishes─▶ PASSPORT(one truth per Act) ─viewed by─▶ BOOKING MGR / VENUE PROG / PRODUCER
    │                            ▲                     │                                    │
    └─owns─▶ ACT ──has──────────┘             PassportViewEvent                    ProfessionalReaction
                                                      │                                    │
@@ -117,13 +118,13 @@ PERSON ─switches WORKSPACE─▶ different nav/home/radar/passport-interpretat
 One Passport truth layer; interpretation changes by viewing role. One data spine (Layer-1 map); each interface is a filter.
 | Interface | Role | Shows | Build |
 |---|---|---|---|
-| Artist Radar (Mirror) | artist | private growth: evidence states + gaps + ONE next-action | 🟢 |
-| Passport (public) | buyer | verified strengths only, method-labeled, per-viewer read | 🟢 |
+| Artist Radar (Passport — Artist view) | artist | private growth: evidence states + gaps + ONE next-action | 🟢 |
+| Passport — Buyer view (public) | buyer | verified strengths only, method-labeled, per-viewer read | 🟢 |
 | Manager view | manager | what's pitch-ready · commercial story · missing assets · roster intel | 🔵 |
 | Producer event-view | producer | why this artist fits THIS event · supported evidence · what to request · who has booking authority | 🔵 |
-| Ops console | operator | trust + admin + concierge claim-processing queue | 🟢 (minimal) |
+| Ops console | operator | trust + admin + automated claim-pipeline exception queue | 🟢 (minimal) |
 
-**Radar views (all one spine):** Mirror · freshness lens · passport-readiness lens · confirmation queue (4th door) · opportunity lens (temp) 🟢 · roster proof-health · own-roster coverage-compare (matrix only, no totals/score) · shortlist coverage-compare (⚠️ Wave-B, coverage not score) 🔵.
+**Radar views (all one spine):** Artist view · freshness lens · passport-readiness lens · confirmation queue (4th door) · opportunity lens (temp) 🟢 · roster proof-health · own-roster coverage-compare (matrix only, no totals/score) · shortlist coverage-compare (⚠️ Wave-B, coverage not score) 🔵.
 **7 WORLDS (nav grouping):** Identity&Offer · Audience&Draw · Live&Performance · Professional Readiness · Business&Representation · Trust&Relationships · Momentum&Territories.
 
 ---
@@ -154,7 +155,7 @@ Register once (Google/Facebook/email — NO role asked first)     🟢
 |---|---|---|
 | Account terms | at registration | 🟢 |
 | Data-connection consent | when connecting a source/OAuth | 🟢 |
-| Publication consent (Mirror→Passport) | when sharing a Passport | 🟢 |
+| Publication consent (Artist view→Buyer view) | when sharing a Passport | 🟢 |
 | Manager-access consent | when granting agency access | 🔵 |
 | Counterparty-name consent | during confirmation | 🟢 |
 | Marketing consent | separate, optional | 🟢 |
@@ -167,7 +168,7 @@ All BLOCKED for real data until counsel sign-off (SEC-01 + Amendment 13).
 
 | Workspace | FREE | PAID hypothesis | PROHIBITED |
 |---|---|---|---|
-| Artist | Mirror basics, identity, limited evidence, basic Passport, receive requests, export/delete | Artist Growth / Pro: evidence-processing + supported Passport + freshness + confirm-workflow (₪ TBD — NOT locked till Gate) | pay-to-verify, status badge, pay-to-rank |
+| Artist | Artist-view basics, identity, limited evidence, Passport publication (gates on evidence+consent+artist-approval ONLY — never on payment), receive requests, export/delete | Artist Growth / Pro: evidence-processing throughput + freshness + confirm-workflow (₪ TBD — NOT locked till Gate; monetisation measured, not required) | pay-to-verify, pay-to-publish, status badge, pay-to-rank |
 | Management/Agency | roster beta access | Roster / Manager Studio / Agency Scale: throughput + standardized evidence + shared inbox (LATER) | ownership transfer via payment |
 | Event/Producer | free during validation | Producer Intelligence (LATER) | charging a confirmer |
 | Buyer (booking mgr/venue) | Passport view, method inspection, availability request (free, no login) | (only if repeat demand proven) | paywall the reaction (it's the validation signal) |
@@ -179,8 +180,8 @@ All BLOCKED for real data until counsel sign-off (SEC-01 + Amendment 13).
 | Data category | Benefits | Free/Paid | Why |
 |---|---|---|---|
 | Identity/positioning | artist (supply) | FREE | acquisition fuel |
-| Evidence processing (claim pipeline) | artist | PAID | real cost + real value (concierge now) |
-| Method labels/bands | buyer trust | FREE to view / PAID to generate | view=demand fuel |
+| Evidence processing (claim pipeline) | artist | PAID | real cost + real value (fully automated — Anthropic API) |
+| Method labels/bands | buyer trust | FREE to view / PAID processing (hypothesis — never gates publication) | view=demand fuel |
 | Draw / attributed sales | artist proof | PAID | highest-value proof unit |
 | Freshness / refresh | artist recurring | PAID | the subscription hook |
 | Producer confirmation | artist proof + corpus | FREE to confirmer / PAID workflow to artist | never charge confirmer |
@@ -189,20 +190,22 @@ All BLOCKED for real data until counsel sign-off (SEC-01 + Amendment 13).
 | Roster standardization | agency | PAID (later) | throughput value |
 | Discovery/enrichment (4th door) | artist self-knowledge + corpus | PAID (post-consent) | growth loop, artist-authored |
 
-**Rules:** never charge both sides for the same basic request · never sell contact data · never paywall the buyer reaction.
+**Rules:** never charge both sides for the same basic request · never sell contact data · never paywall the buyer reaction · publication gates on evidence+consent+artist-approval ONLY — payment NEVER gates publication (monetisation measured, not required).
 
 ---
 
 ## 8. GATE-1 BUILD SLICE (what actually gets built NOW)
+> ⚠️ **Superseded (7 Jul 2026):** build scope is now FULL beta, LOOP-first build order — this slice list stays as the historical Gate-1 record.
+
 The whole map above is the locked target for pricing/goals. Build ONLY this now:
 1. Person + one artist workspace (schema = full model; UI = artist only) 🟢
 2. Act/alias + evidence + claim (data spine) 🟢
-3. Artist Radar (private Mirror): evidence states + ONE next-action 🟢
-4. Passport (public): verified strengths only, method-labeled, WhatsApp-scannable 🟢
+3. Artist Radar (Passport — Artist view, private): evidence states + ONE next-action 🟢
+4. Passport (Buyer view, public): verified strengths only, method-labeled, WhatsApp-scannable 🟢
 5. Source-confirmer magic-link (ONE claim, bounded) 🟢
 6. Contextual consent (account + connection + publication + counterparty-name) 🟢
 7. Manual payment → entitlement (the 1 payer) 🟢
-8. Concierge claim-processing (by hand) + minimal ops queue 🟢
+8. Automated claim-pipeline + minimal ops exception queue 🟢
 
 Deferred to FULL-BETA (schema-ready, not built): management/agency + event-producer workspaces, workspace switcher, billing centre, subscription families, roster/coverage-compare, opportunities, discovery engine (counsel-gated).
 

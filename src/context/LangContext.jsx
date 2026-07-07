@@ -3,7 +3,28 @@ import { T as he, BANDS as BANDS_he, PROFILE_ITEM_TYPES as TYPES_he } from '../l
 import { T as en, BANDS as BANDS_en, PROFILE_ITEM_TYPES as TYPES_en } from '../lib/i18n/en.js'
 import { setDemoLang } from '../lib/demo.js'
 
-const dicts = { he: { T: he, BANDS: BANDS_he, TYPES: TYPES_he }, en: { T: en, BANDS: BANDS_en, TYPES: TYPES_en } }
+// Build-in-English rule: new strings land in en.js only; he.js is a separate
+// native-authored pass AFTER features are approved. Until that pass, Hebrew
+// falls back to English per-key (deep merge) — a missing HE section must show
+// English, never crash the screen.
+function withEnFallback(heDict, enDict) {
+  const out = { ...enDict, ...heDict }
+  for (const k of Object.keys(enDict)) {
+    if (
+      heDict[k] && enDict[k] &&
+      typeof heDict[k] === 'object' && typeof enDict[k] === 'object' &&
+      !Array.isArray(heDict[k]) && !Array.isArray(enDict[k])
+    ) {
+      out[k] = withEnFallback(heDict[k], enDict[k])
+    }
+  }
+  return out
+}
+
+const dicts = {
+  he: { T: withEnFallback(he, en), BANDS: BANDS_he, TYPES: TYPES_he },
+  en: { T: en, BANDS: BANDS_en, TYPES: TYPES_en },
+}
 
 // English is the PRIMARY/default locale (LTR). Hebrew is the secondary
 // localization (RTL). `dir` + `lang` on <html> flip automatically per locale.

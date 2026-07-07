@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-const APP_URL = 'https://app.gigproof.co'
+import { APP_URL } from '@/lib/app-url'
 
 const FOOTER_LINKS = [
   {
@@ -73,7 +73,7 @@ export function Footer() {
             </p>
           </div>
           <a
-            href={APP_URL}
+            href={`${APP_URL}/signup`}
             style={{
               display: 'inline-block',
               padding: '12px 24px',

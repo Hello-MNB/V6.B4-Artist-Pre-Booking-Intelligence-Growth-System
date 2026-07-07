@@ -18,7 +18,17 @@ export default function AvailabilityRequest() {
   })
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value })
 
-  useEffect(() => { getArtist(id).then((a) => { setArtist(a); setLoading(false) }) }, [id])
+  // Artist lookup is decorative here (name in the title) — the form itself only
+  // needs the route id, so a fetch failure degrades to the generic name, never a
+  // stuck spinner or a dead end for the booking manager.
+  useEffect(() => {
+    let alive = true
+    getArtist(id)
+      .then((a) => { if (alive) setArtist(a) })
+      .catch(() => {})
+      .finally(() => { if (alive) setLoading(false) })
+    return () => { alive = false }
+  }, [id])
 
   async function submit(e) {
     e.preventDefault()

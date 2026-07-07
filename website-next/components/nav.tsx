@@ -6,7 +6,7 @@ import { useLocale } from '@/lib/locale-context'
 import type { Locale } from '@/lib/i18n'
 import { DoorStamp } from '@/components/door-stamp'
 
-const APP_URL = 'https://app.gigproof.co'
+import { APP_URL } from '@/lib/app-url'
 
 const NAV_LINK_KEYS = [
   { href: '/artists',      key: 'artists'      },
@@ -123,7 +123,7 @@ export function Nav() {
           ))}
           <LocaleToggle />
           <a
-            href={APP_URL}
+            href={`${APP_URL}/login`}
             style={{
               fontFamily: 'var(--font-space-mono)',
               fontSize: '0.65rem',
@@ -197,7 +197,7 @@ export function Nav() {
             <LocaleToggle />
           </div>
           <a
-            href={APP_URL}
+            href={`${APP_URL}/login`}
             style={{
               display: 'block',
               marginTop: '12px',

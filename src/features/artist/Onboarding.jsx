@@ -1,22 +1,29 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthProvider.jsx'
-import { getMyArtist, upsertArtist, listProfileItems, addProfileItem, deleteProfileItem, publishPassport, hasConsent, recordConsentScope } from '../../lib/db.js'
+import { getMyArtist, upsertArtist, getMyAct, updateAct, listProfileItems, addProfileItem, deleteProfileItem, publishPassport, hasConsent, recordConsentScope } from '../../lib/db.js'
 import { SOURCE_STATUS } from '../../lib/constants.js'
 import { uploadFile } from '../../lib/storage.js'
 import { PageShell, Wordmark, Field, Spinner, ErrorNote, Loading } from '../../components/ui.jsx'
 import { useLang } from '../../context/LangContext.jsx'
 
-const STEPS = 6
+const STEPS = 7
 
-function ProgressBar({ step }) {
+// Silent position dots — "you are here", never a completion percentage
+// (canon SmartOnboarding: dots, not a progress bar).
+function ProgressDots({ step }) {
   const { T } = useLang()
   return (
     <div className="mb-6">
-      <div className="h-1.5 w-full rounded-full bg-line overflow-hidden">
-        <div className="h-full bg-accent transition-all" style={{ width: `${(step / STEPS) * 100}%` }} />
+      <div className="flex items-center justify-center gap-1.5" aria-hidden>
+        {Array.from({ length: STEPS }, (_, i) => (
+          <span
+            key={i}
+            className={`h-1.5 w-1.5 rounded-full transition-colors ${i + 1 === step ? 'bg-accent' : 'bg-line'}`}
+          />
+        ))}
       </div>
-      <p className="mt-2 text-xs text-muted">{T.onboarding.stepOf(step, STEPS)}</p>
+      <p className="mt-2 text-center text-xs text-muted">{T.onboarding.stepOf(step, STEPS)}</p>
     </div>
   )
 }
@@ -28,6 +35,7 @@ export default function Onboarding() {
   const [loading, setLoading] = useState(true)
   const [step, setStep] = useState(1)
   const [artist, setArtist] = useState(null)
+  const [act, setAct] = useState(null)
   const [items, setItems] = useState([])
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
@@ -39,6 +47,8 @@ export default function Onboarding() {
         let a = await getMyArtist(user.id)
         if (!a) a = await upsertArtist({ created_by: user.id })
         setArtist(a)
+        // Default Act shares the artist id (020 transition model) — goal/format live there.
+        try { setAct(await getMyAct(a.id)) } catch { setAct(null) }
         setItems(await listProfileItems(a.id))
       } catch (e) { setError(e.message) } finally { setLoading(false) }
     })()
@@ -63,18 +73,19 @@ export default function Onboarding() {
   return (
     <PageShell max="max-w-lg">
       <div className="text-center mb-4"><Wordmark className="justify-center" /></div>
-      <ProgressBar step={step} />
+      <ProgressDots step={step} />
       <ErrorNote>{error}</ErrorNote>
       {toast && <p className="mb-3 text-sm text-ok">{toast}</p>}
 
-      {step === 1 && <StepIdentity artist={artist} save={save} user={user} />}
-      {step === 2 && <StepLinks artist={artist} items={items} refresh={refreshItems} />}
-      {step === 3 && <StepDraw artist={artist} save={save} />}
-      {step === 4 && <StepExperience artist={artist} items={items} refresh={refreshItems} />}
-      {step === 5 && <StepReadiness artist={artist} save={save} user={user} />}
-      {step === 6 && <StepReview artist={artist} items={items} save={save} nav={nav} />}
+      {step === 1 && <StepGoal act={act} setAct={setAct} artistId={artist.id} flash={flash} setError={setError} />}
+      {step === 2 && <StepIdentity artist={artist} save={save} user={user} />}
+      {step === 3 && <StepLinks artist={artist} items={items} refresh={refreshItems} />}
+      {step === 4 && <StepDraw artist={artist} save={save} />}
+      {step === 5 && <StepExperience artist={artist} items={items} refresh={refreshItems} />}
+      {step === 6 && <StepReadiness artist={artist} save={save} user={user} />}
+      {step === 7 && <StepReview artist={artist} items={items} save={save} nav={nav} />}
 
-      <div className="sticky bottom-0 -mx-4 mt-6 flex items-center justify-between gap-3 border-t border-line bg-ink/95 px-4 py-3 backdrop-blur">
+      <div className="sticky bottom-0 -mx-4 mt-6 flex items-center justify-between gap-3 border-t border-line bg-paper/95 px-4 py-3 backdrop-blur">
         <button className="btn-ghost" disabled={step === 1 || saving} onClick={() => setStep((s) => s - 1)}>
           {T.common.back}
         </button>
@@ -88,7 +99,50 @@ export default function Onboarding() {
   )
 }
 
-/* ── Step 1: identity ── */
+/* ── Step 1: goal-first (canon A4) — the goal drives which evidence is
+      prioritized; it never changes what is true. Saves on pick. ── */
+function StepGoal({ act, setAct, artistId, flash, setError }) {
+  const { T } = useLang()
+  const goals = ['more-shows', 'new-venues', 'support-slots', 'out-of-town', 'raise-fee', 'prove-community', 'external-bookings', 'not-sure']
+  const current = act?.artist_goal || null
+
+  async function pick(g) {
+    setError('')
+    const prev = act
+    setAct({ ...(act || { id: artistId }), artist_goal: g }) // optimistic
+    try {
+      const updated = await updateAct(artistId, { artist_goal: g })
+      setAct(updated)
+      flash(T.common.saved)
+    } catch (e) { setAct(prev); setError(e.message) }
+  }
+
+  return (
+    <div className="card">
+      <h2 className="text-lg font-bold text-soft mb-1">{T.onboarding.goalTitle}</h2>
+      <p className="text-xs text-muted mb-4">{T.onboarding.goalWhy}</p>
+      <div className="flex flex-wrap gap-2 mb-3">
+        {goals.map((g) => (
+          <button
+            key={g}
+            type="button"
+            onClick={() => pick(g)}
+            className={`rounded border px-3 py-2 text-sm transition-colors ${
+              current === g
+                ? 'border-accent bg-accent text-ink font-bold'
+                : 'border-line text-soft hover:border-accent'
+            }`}
+          >
+            {T.onboarding.goals[g]}
+          </button>
+        ))}
+      </div>
+      <p className="text-[11px] text-muted">{T.onboarding.goalNotSureHint}</p>
+    </div>
+  )
+}
+
+/* ── Step 2: identity ── */
 function StepIdentity({ artist, save, user }) {
   const { T } = useLang()
   const [f, setF] = useState({
@@ -152,7 +206,7 @@ function StepLinks({ artist, items, refresh }) {
         {links.map((l) => (
           <li key={l.id} className="flex items-center justify-between rounded-xl bg-surface px-3 py-2 text-sm">
             <span dir="ltr" className="truncate text-soft">{l.public_url}</span>
-            <button className="text-muted hover:text-red-400" onClick={() => remove(l.id)}>{T.common.remove}</button>
+            <button className="text-muted hover:text-void" onClick={() => remove(l.id)}>{T.common.remove}</button>
           </li>
         ))}
       </ul>
@@ -246,7 +300,7 @@ function StepExperience({ artist, items, refresh }) {
         {exp.map((i) => (
           <li key={i.id} className="flex items-center justify-between rounded-xl bg-surface px-3 py-2 text-sm">
             <span className="text-soft">{i.title}{i.item_date ? ` · ${i.item_date}` : ''}</span>
-            <button className="text-muted hover:text-red-400" onClick={() => remove(i.id)}>{T.common.remove}</button>
+            <button className="text-muted hover:text-void" onClick={() => remove(i.id)}>{T.common.remove}</button>
           </li>
         ))}
       </ul>

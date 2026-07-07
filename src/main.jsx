@@ -10,7 +10,8 @@ import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <BrowserRouter>
+    {/* BASE_URL: '/' standalone · '/app/' when embedded in the public website */}
+    <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '')}>
       <LangProvider>
         <AuthProvider>
           <OrgProvider>

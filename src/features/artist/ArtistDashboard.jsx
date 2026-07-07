@@ -1,25 +1,33 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthProvider.jsx'
-import { getMyArtist, listProfileItems, listClaims, publishPassport, unpublishArtist, hasConsent, recordConsentScope, getEntitlement } from '../../lib/db.js'
-import { PageShell, Wordmark, Loading, EmptyState, ErrorState, SourceLabel, LanguageToggle } from '../../components/ui.jsx'
+import { getMyArtist, upsertArtist, listProfileItems, listClaims, publishPassport, unpublishArtist, hasConsent, recordConsentScope, getEntitlement } from '../../lib/db.js'
+import { PageShell, Wordmark, Loading, EmptyState, ErrorState, LanguageToggle, BottomSheet } from '../../components/ui.jsx'
 import { useLang } from '../../context/LangContext.jsx'
-import { isPassportDirty, clearPassportDirty } from '../../lib/passportState.js'
+import { isPassportDirty, clearPassportDirty, markPassportDirty } from '../../lib/passportState.js'
+import RadarUniverse from './RadarUniverse.jsx'
 
-// Plain, non-shaming next-actions. FIREWALL: never a score/grade/%/rank.
-function buildSuggestions(artist, items, claims, T) {
-  const S = T.dashboard.suggestions
-  const s = []
+// ── A9 Artist Radar (canon LF-A1, linear) ────────────────────────────────────
+// Bounded dimension states + ONE next action. FIREWALL: rule-based states only —
+// no score, no %, no fill bars; a gap renders as an invitation, never a failure.
+
+// ONE prioritized action — a coach's single clearest move, never a list of ten.
+// (The bounded dimension picture now lives in the Universe's planets; the old
+// linear list below the radar was duplication and was removed — R00, 7 Jul.)
+function pickNextAction(artist, items, claims, T) {
+  const A = T.radar.nextActions
   const links = items.filter((i) => i.item_type === 'link')
-  const exp = items.filter((i) => !['link'].includes(i.item_type))
-  if (!artist.photo_url) s.push(S.addPhoto)
-  if (links.length === 0) s.push(S.addLink)
-  if (exp.length < 3) s.push(S.addExperience)
-  if (!artist.lineup_frequency_band) s.push(S.addFrequency)
-  if (artist.sells_tickets == null) s.push(S.markTickets)
-  if (claims.filter((c) => c.verification_status === 'verified').length === 0)
-    s.push(S.uploadProof)
-  return s
+  const exp = items.filter((i) => i.item_type !== 'link')
+  const pending = claims.filter((c) => !c.artist_approved)
+  const supported = claims.filter((c) => ['verified', 'supporting'].includes(c.verification_status))
+
+  if (pending.length > 0) return { ...A.reviewClaims, to: '/artist/claims' }
+  if (supported.length === 0) return { ...A.draw, to: `/evidence/${artist.id}` }
+  if (!artist.photo_url) return { ...A.photo, to: '/onboarding' }
+  if (links.length === 0) return { ...A.links, to: '/onboarding' }
+  if (exp.length < 3) return { ...A.experience, to: '/onboarding' }
+  if (!artist.lineup_frequency_band) return { ...A.bands, to: '/onboarding' }
+  return { ...A.done, to: null }
 }
 
 function DashHeader() {
@@ -49,6 +57,7 @@ export default function ArtistDashboard() {
   const [loadError, setLoadError] = useState(false)
   const [needPubConsent, setNeedPubConsent] = useState(false)
   const [dirty, setDirty] = useState(false)
+  const [pubSheet, setPubSheet] = useState(false)
 
   async function load() {
     setLoadError(false)
@@ -69,9 +78,25 @@ export default function ArtistDashboard() {
   }
   useEffect(() => { load() }, [user.id])
 
+  // in-place fill from the Universe writes through here (no screen swaps)
+  async function saveArtist(patch) {
+    const updated = await upsertArtist({ ...artist, ...patch, id: artist.id, created_by: artist.created_by })
+    setArtist(updated)
+    if (updated.published) { markPassportDirty(updated.id); setDirty(true) }
+    return updated
+  }
+  async function refreshItems() { setItems(await listProfileItems(artist.id)) }
+
+  // A11 readiness HARD-BLOCK (canon): publish is DISABLED at zero supported
+  // claims — an empty public Passport must be impossible, not discouraged.
+  const supportedCount = claims.filter((c) =>
+    ['verified', 'supporting'].includes(c.verification_status) && c.artist_approved).length
+  const canPublish = supportedCount > 0
+
   async function togglePublish() {
     if (publishing) return
     setPubError('')
+    if (!artist.published && !canPublish) { setPubError(T.dashboard.readinessBlock); return }
     if (artist.published) {
       setPublishing(true)
       try {
@@ -138,46 +163,38 @@ export default function ArtistDashboard() {
     )
   }
 
-  const suggestions = buildSuggestions(artist, items, claims, T)
+  const nextAction = pickNextAction(artist, items, claims, T)
 
   return (
     <PageShell>
       <DashHeader />
-      <h1 className="text-xl font-bold text-soft mb-4">{T.dashboard.title}</h1>
+      <h1 className="text-xl font-bold text-soft mb-0.5">{T.radar.artistTitle}</h1>
+      <p className="text-xs text-muted mb-4">{T.radar.artistSubtitle}</p>
 
-      <div className="card mb-4 flex items-center gap-4">
-        {artist.photo_url
-          ? <img src={artist.photo_url} alt="" className="h-16 w-16 rounded-full object-cover" />
-          : <div className="h-16 w-16 rounded-full bg-surface" />}
-        <div>
-          <p className="text-lg font-bold text-soft">{artist.stage_name}</p>
-          <p className="text-sm text-muted">{artist.genre} · {artist.city}</p>
-        </div>
-      </div>
+      {/* ── THE UNIVERSE — artist at center, 6 planets, one-tap confirm.
+            1-SCREEN mobile: the next move lives INSIDE the canvas. ── */}
+      <RadarUniverse artist={artist} items={items} claims={claims} onClaimsChange={setClaims}
+        nextAction={nextAction} onNextAction={(a) => nav(a.to)}
+        onArtistChange={saveArtist} onItemsRefresh={refreshItems} />
 
-      {/* A8 Founding Passport entitlement — persistent status banner (never a dead end) */}
-      {ent?.status === 'active' ? (
-        <div className="card mb-4 border-ok/30 bg-ok/10" role="status">
-          <p className="font-bold text-ok"><span aria-hidden="true">🌐</span> {T.offer.activeTitle}</p>
-        </div>
-      ) : ent?.status === 'pending' ? (
-        <div className="card mb-4 border-warn/30 bg-warn/10" role="status">
-          <p className="font-bold text-warn"><span aria-hidden="true">⏳</span> {T.offer.pendingTitle}</p>
-          <p className="text-xs text-muted mt-1">{T.offer.pendingBody}</p>
-        </div>
-      ) : (
-        <Link to="/artist/offer" className="card mb-4 block border-accent/30 bg-accent/10 hover:border-accent transition">
-          <p className="font-bold text-accent">{T.offer.getPassport}</p>
-          <p className="text-xs text-muted mt-1">{T.offer.price}</p>
-        </Link>
-      )}
+      {/* passport state — ONE line; controls live in a sheet, not on the screen */}
+      <button
+        onClick={() => setPubSheet(true)}
+        className="mb-3 flex w-full items-center justify-between rounded-md border border-line bg-card px-3 py-2.5 text-start">
+        <span className="text-xs text-muted">
+          <span className={`me-2 inline-block h-2 w-2 rounded-full align-middle ${artist.published ? 'bg-[#608C45]' : 'bg-gap'}`} aria-hidden />
+          <span className="font-semibold text-ink">{artist.published ? T.dashboard.statusActive : T.dashboard.statusOff}</span>
+          {dirty && <span className="ms-2 text-warn font-semibold">⚠ {T.dashboard.unpublishedBadge}</span>}
+        </span>
+        <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-[#657530]">{T.dashboard.managePassport} ▸</span>
+      </button>
 
-      {/* publish toggle */}
-      <div className="card mb-4">
+      <BottomSheet open={pubSheet} onClose={() => setPubSheet(false)} title={T.dashboard.managePassport}>
+      <div className="card border-0 p-0">
         <div className="flex items-center justify-between">
           <span className="text-soft">{artist.published ? T.dashboard.publishOn : T.dashboard.publishOff}</span>
-          <button onClick={togglePublish} disabled={publishing}
-            className={`chip min-h-[40px] px-4 py-2 transition ${publishing ? 'opacity-60' : ''} ${artist.published ? 'bg-ok/20 text-ok' : 'bg-surface text-muted'}`}>
+          <button onClick={togglePublish} disabled={publishing || (!artist.published && !canPublish)}
+            className={`chip min-h-[40px] px-4 py-2 transition ${publishing || (!artist.published && !canPublish) ? 'opacity-60' : ''} ${artist.published ? 'bg-ok/20 text-ok' : 'bg-surface text-muted'}`}>
             {publishing ? T.dashboard.publishing : artist.published ? T.dashboard.statusActive : T.dashboard.statusOff}
           </button>
         </div>
@@ -203,45 +220,21 @@ export default function ArtistDashboard() {
           </>
         )}
         {pubError && <p className="mt-2 text-xs text-warn">{pubError}</p>}
+        {/* commercial state folded here — a line, never a wall */}
+        <p className="mt-3 border-t border-line pt-2 text-xs text-muted">
+          {ent?.status === 'active'
+            ? <>🌐 {T.offer.activeTitle}</>
+            : ent?.status === 'pending'
+              ? <>⏳ {T.offer.pendingTitle}</>
+              : <Link to="/artist/offer" className="text-[#657530] font-semibold hover:underline">{T.offer.getPassport} · {T.offer.price}</Link>}
+          {artist.published && (
+            <Link to={`/passport/${artist.id}`} className="ms-3 text-[#657530] font-semibold hover:underline">{T.dashboard.viewPublic} →</Link>
+          )}
+        </p>
       </div>
+      </BottomSheet>
 
-      {/* next-actions (Artist Radar — plain text, no score; Mirror = private view state within the Radar) */}
-      {suggestions.length > 0 && (
-        <div className="card mb-4">
-          <p className="font-bold text-soft mb-3">{T.dashboard.suggestionsTitle}</p>
-          <ul className="space-y-2">
-            {suggestions.map((s, i) => (
-              <li key={i} className="flex items-center gap-2 text-sm text-soft">
-                <span className="text-accent">›</span>{s}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {/* claims summary (Artist Radar private view — mirror-only visibility) */}
-      {claims.length > 0 && (
-        <div className="card mb-4">
-          <p className="font-bold text-soft mb-1">{T.dashboard.claimsTitle}</p>
-          <p className="text-xs text-muted mb-3">{T.dashboard.claimsAccuracyHint}</p>
-          <ul className="space-y-2">
-            {claims.map((c) => (
-              <li key={c.id} className="flex items-center justify-between text-sm">
-                <span className="text-soft">{c.value || c.claim_type}</span>
-                <SourceLabel status={c.verification_status} methodLabel={c.method_label} expiresAt={c.expires_at} />
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      <div className="flex flex-col gap-3">
-        <Link to={`/evidence/${artist.id}`} className="btn-ghost">{T.dashboard.addEvidence}</Link>
-        <Link to="/artist/claims" className="btn-ghost">{T.dashboard.reviewClaims}</Link>
-        <Link to="/onboarding" className="btn-ghost">{T.dashboard.editProfile}</Link>
-        <Link to="/artist/readiness" className="btn-ghost">{T.dashboard.readiness}</Link>
-        <Link to={`/passport/${artist.id}`} className="btn-primary">{T.dashboard.viewPublic}</Link>
-      </div>
+      <p className="mt-6 text-center text-[11px] text-muted">{T.radar.privacyNote}</p>
     </PageShell>
   )
 

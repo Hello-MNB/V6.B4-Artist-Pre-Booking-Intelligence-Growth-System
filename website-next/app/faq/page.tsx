@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description: 'Answers to the most common questions about GIGPROOF — what it is, who it\'s for, how verification works, what a BandPill means, and what GIGPROOF never promises.',
 }
 
-const APP_URL = 'https://app.gigproof.co'
+import { APP_URL } from '@/lib/app-url'
 
 const faqs = [
   {

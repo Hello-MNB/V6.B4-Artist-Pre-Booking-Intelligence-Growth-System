@@ -55,6 +55,36 @@ export async function upsertArtist(artist) {
   return data
 }
 
+// ── Act (multi-Act spine, migration 020) ────────────────────────────────────
+// Transition model: act.id === artists.id for the default Act, so the artist id
+// addresses the Act directly. Act-only fields (artist_goal, format, alias…)
+// live on public.act — never on artists.
+export async function getMyAct(actId) {
+  if (DEMO) return { id: actId, artist_goal: null, format: null, is_default: true }
+  const { data, error } = await supabase.from('act').select('*').eq('id', actId).maybeSingle()
+  if (error) throw error
+  return data
+}
+
+export async function updateAct(actId, patch) {
+  if (DEMO) return { id: actId, ...patch }
+  const { data, error } = await supabase.from('act').update(patch).eq('id', actId).select().single()
+  if (error) throw error
+  return data
+}
+
+// Roster-wide claim states for the agency radar — WORKFLOW facts (what waits),
+// never a cross-artist score. RLS scopes rows to artists this org can access.
+export async function listClaimsByArtists(artistIds) {
+  if (DEMO) return []
+  if (!artistIds?.length) return []
+  const { data, error } = await supabase.from('claims')
+    .select('id, artist_id, artist_approved, verification_status, status')
+    .in('artist_id', artistIds)
+  if (error) throw error
+  return data ?? []
+}
+
 export async function listAgencyArtists(userId) {
   if (DEMO) return [demoArtist, demoArtist2]
   const { data, error } = await supabase
@@ -200,6 +230,64 @@ export async function updateClaimVisibility(id, visibility) {
   if (error) throw error
 }
 
+// A8 review actions — the artist-approval gate. Nothing reaches any view
+// without an explicit artist action (canon: zero claims publish without review).
+export async function updateClaim(id, patch) {
+  if (DEMO) return { id, ...patch }
+  const { data, error } = await supabase.from('claims').update(patch).eq('id', id).select().single()
+  if (error) throw error
+  return data
+}
+
+// Omit = the artist chooses not to use an unpublished claim of their own.
+// Hard delete for now; the operator audit trail arrives with the ops queue.
+export async function deleteClaim(id) {
+  if (DEMO) return
+  const { error } = await supabase.from('claims').delete().eq('id', id)
+  if (error) throw error
+}
+
+// ── Measurement (024) — a VIEW is not a REACTION; never merge them ──────────
+// Anonymous browser session id for first-party measurement (no PII).
+export function publicSessionId() {
+  let s = localStorage.getItem('gp_session')
+  if (!s) { s = crypto.randomUUID(); localStorage.setItem('gp_session', s) }
+  return s
+}
+
+// Opening a Passport writes passport_view_event ONLY (canon P0-5).
+// Fire-and-forget: measurement must never break the page.
+export async function recordPassportView(artistId) {
+  if (DEMO) return
+  try {
+    const { data: pv } = await supabase.from('passport_versions')
+      .select('id').eq('artist_id', artistId)
+      .order('created_at', { ascending: false }).limit(1).maybeSingle()
+    if (!pv) return
+    await supabase.from('passport_view_event').insert({
+      passport_version_id: pv.id,
+      public_session_id: publicSessionId(),
+    })
+  } catch { /* silent — measurement is best-effort */ }
+}
+
+// A professional explicitly taps an action → professional_reaction (019).
+// check_availability / request_price ALSO create an availability_request via
+// the request form; all other actions write the reaction only.
+export async function recordProfessionalReaction(artistId, actionType) {
+  if (DEMO) return { ok: true }
+  const day = new Date().toISOString().slice(0, 10)
+  const { error } = await supabase.from('professional_reaction').insert({
+    artist_id: artistId,
+    action_type: actionType,
+    public_session_id: publicSessionId(),
+    idempotency_key: `${artistId}:${publicSessionId()}:${actionType}:${day}`,
+  })
+  // duplicate same-day tap = already recorded — treat as success (idempotent)
+  if (error && !`${error.message}`.includes('duplicate')) throw error
+  return { ok: true }
+}
+
 // Artist controls whether a track-record item crosses Mirror→Passport.
 // Server buildSafePayload still filters to visibility=passport-ok, so this is
 // the single lever; RLS guarantees only the owner can flip it.
@@ -219,13 +307,27 @@ export async function getPublicPassport(id) {
   if (DEMO) return demoPassportPayload
   const artist = await getArtist(id) // null if not published (RLS hides it from anon)
   if (!artist || !artist.published) return { artist: null, items: [], claims: [] }
+  // Two viewer classes, two firewalls (verified live 8 Jul):
+  // · ANON — the RLS row gate already restricts to published+passport-ok, and the
+  //   016 column grants do NOT include `visibility`, so referencing it in WHERE
+  //   throws 42501. No client filter — the DB is the firewall.
+  // · AUTHENTICATED (owner / agency member) — their RLS shows ALL their rows, so
+  //   the buyer view MUST filter explicitly or private/mirror-only claims leak
+  //   into the "public" view. One Passport = identical for every viewer.
+  const { data: { session } } = await supabase.auth.getSession()
+  let itemsQ = supabase.from('profile_items')
+    .select('id, item_type, title, detail, item_date, public_url, source_status')
+    .eq('artist_id', id)
+  let claimsQ = supabase.from('claims')
+    .select('id, claim_type, value, public_band, public_wording, source_type, verification_status, reason_code, method_label, verified_at, expires_at')
+    .eq('artist_id', id)
+  if (session) {
+    itemsQ = itemsQ.eq('visibility', VISIBILITY.PASSPORT_OK)
+    claimsQ = claimsQ.eq('visibility', VISIBILITY.PASSPORT_OK).in('verification_status', PUBLISHABLE_STATUSES)
+  }
   const [itemsRes, claimsRes] = await Promise.all([
-    supabase.from('profile_items')
-      .select('id, item_type, title, detail, item_date, public_url, source_status')
-      .eq('artist_id', id).order('item_date', { ascending: false, nullsFirst: false }),
-    supabase.from('claims')
-      .select('id, claim_type, value, source_type, verification_status, reason_code, method_label')
-      .eq('artist_id', id),
+    itemsQ.order('item_date', { ascending: false, nullsFirst: false }),
+    claimsQ,
   ])
   if (itemsRes.error) throw itemsRes.error
   if (claimsRes.error) throw claimsRes.error

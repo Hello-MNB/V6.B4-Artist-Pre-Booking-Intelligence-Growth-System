@@ -1,5 +1,6 @@
 ﻿import type { Metadata } from 'next'
 import WaitlistForm from '../../components/waitlist-form'
+import { APP_URL } from '@/lib/app-url'
 
 export const metadata: Metadata = {
   title: 'Contact — Get in Touch | GIGPROOF',
@@ -190,7 +191,7 @@ export default function Contact() {
             Registration is open — go directly to the app.
           </p>
           <a
-            href="https://app.gigproof.co"
+            href={APP_URL}
             style={{
               display: 'inline-block',
               padding: '14px 32px',

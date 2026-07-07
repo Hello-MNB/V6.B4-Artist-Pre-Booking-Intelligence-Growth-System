@@ -5,9 +5,9 @@ artist via standardized, method-labeled evidence — **before** risking your nam
 Not an EPK, not a CRM. Draw is shown as **bands only**; the firewall forbids any
 score / percentile / ranking / exact head-count.
 
-- **Stack:** React + Vite + Tailwind · Supabase (Auth + Postgres + RLS + Storage) · Express API (→ Vercel serverless) · Anthropic Claude (stubbed until a key is added)
-- **Language:** EN + HE (Phase 1); RU + DE (Phase 2). Full scene-native localization, NOT translation. **Hebrew is authored native-first** (scene-native IL terms); English is the dev/string-key baseline. RTL/LTR `dir`/`lang` flip automatically. Per Master Canon v3.5.
-- **Users:** artist · agency · booker · operator (admin)
+- **Stack:** React + Vite + Tailwind · Supabase (Auth + Postgres + RLS + Storage) · Express API (→ Vercel serverless) · Anthropic Claude — fully automated claim pipeline (API key required; mock mode exists for demo/QA only)
+- **Language:** **English is the primary/default UI language (LTR) and the dev baseline** — new strings land in `en.js` only during feature work. **Hebrew is the secondary localization (RTL), native-authored in a dedicated pass after features are approved** — scene-native IL terms, never machine translation, never invented Hebrew. RU + DE (Phase 2). RTL/LTR `dir`/`lang` flip automatically.
+- **Users:** artist · agency · booking manager (אמרגן) · operator (admin)
 
 ## Quick start (local)
 
@@ -38,22 +38,22 @@ Needs a Supabase **Personal Access Token** (`sbp_…`, from supabase.com/dashboa
 |---|---|---|
 | Artist | `artist@gigproof.test` | `/artist/home` |
 | Agency | `agency@gigproof.test` | `/agency` |
-| Booker | `booker@gigproof.test` | `/discover` |
+| Booking manager | `booker@gigproof.test` (as-built account name) | `/discover` |
 | Operator | `operator@gigproof.test` | `/admin` |
 
 ## Flows to verify (QA, once the DB is live)
 
 1. **Auth + routing** — sign in as each persona above → lands on the correct home. Sign up a new email → role select → consent → onboarding.
-2. **Artist spine** — onboarding (identity → links → draw bands → experience → readiness → publish) → dashboard/Mirror (next-actions, no score) → Readiness (bounded status chips) → public Passport renders from the published snapshot (bands only).
-3. **Evidence → AI(stub) → claims** — `/evidence/:artistId`: upload a file or add a band → "Process & verify" → claims appear with source labels (verified / supporting / self-reported). Stub is deterministic and varied.
-4. **Claim review** — `/artist/claims`: flip a claim mirror-only ↔ passport-ok; "Refresh public profile" re-snapshots.
-5. **Booker → request** — open `/passport/<artistId>` (no login) → "Check availability" → submit → confirmation (+ WhatsApp deep-link if the artist set a number).
+2. **Artist spine** — onboarding (identity → links → draw bands → experience → readiness → publish) → dashboard / Passport Artist view (next-actions, no score) → Readiness (bounded status chips) → public Passport renders from the published snapshot (bands only).
+3. **Evidence → automated AI pipeline → claims** — `/evidence/:artistId`: upload a file or add a band → "Process & verify" → claims appear with source labels (verified / supporting / self-reported). The deterministic mock runs in demo/QA mode only (when no API key is present).
+4. **Claim review** — `/artist/claims`: flip a claim mirror-only ↔ passport-ok (as-built enum value; rename to working-only pending — migration frozen until real-data gate); "Refresh public profile" re-snapshots.
+5. **Booking manager → request** — open `/passport/<artistId>` (no login; multi-Act: this route becomes per-Act) → "Check availability" → submit → confirmation (+ WhatsApp deep-link if the artist set a number).
 6. **Agency inbox** — sign in as agency → `/agency/requests` → mark requests replied/closed; roster shows bounded status chips.
 7. **Operator console** — sign in as operator → `/admin` → stats, all artists (publish toggle), all requests, recent claims.
 8. **i18n + RTL** — toggle EN⇄HE on any screen; layout flips LTR⇄RTL; selection persists.
 
 ## Firewall (enforced server-side)
-The public Passport is served by `/api/passport/:id` from an immutable snapshot built with an **explicit safe-column list** — it physically cannot return a score, percentile, exact head-count, gaps, or any private/mirror-only value. Draw is bands/booleans with a method label; statuses are only חזק · מתפתח · חסר-הוכחה · לא-ניתן-להעריך.
+The public Passport is served by `/api/passport/:id` from an immutable snapshot built with an **explicit safe-column list** — it physically cannot return a score, percentile, exact head-count, gaps, or any private/mirror-only value (as-built enum; rename to working-only pending). Draw is bands/booleans with a method label; statuses are only חזק · מתפתח · חסר-הוכחה · לא-ניתן-להעריך.
 
 ## Deploy (config ready; not yet deployed)
 `vercel.json` builds the SPA and routes `/api/*` to `api/index.js` (the same Express app; `server/index.js` skips `listen()` when `VERCEL=1`). To deploy: connect the repo to Vercel and set env vars (`VITE_SUPABASE_*`, `SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_*`) in the dashboard.

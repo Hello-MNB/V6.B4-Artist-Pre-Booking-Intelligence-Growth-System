@@ -128,19 +128,19 @@ export default function Settings() {
       </button>
 
       {/* Delete account */}
-      <div className="card border-red-900/40 mb-4">
-        <h2 className="font-bold text-red-400 mb-1">{T.settings.dangerZone}</h2>
+      <div className="card border-void/30 mb-4">
+        <h2 className="font-bold text-void mb-1">{T.settings.dangerZone}</h2>
         <p className="text-xs text-muted mb-3">{T.settings.deleteWarning}</p>
         {!showDeleteConfirm ? (
-          <button className="w-full rounded-xl border border-red-900 bg-red-950/30 py-2 text-sm text-red-400 hover:bg-red-900/40 transition"
+          <button className="w-full rounded-xl border border-void/40 bg-[#FFF0ED] min-h-[44px] py-2 text-sm text-void hover:bg-[#F7E1DB] transition"
             onClick={() => setShowDeleteConfirm(true)}>
             {T.settings.deleteBtn}
           </button>
         ) : (
           <div className="space-y-2">
-            <p className="text-sm text-red-300 font-bold">{T.settings.deleteSure}</p>
+            <p className="text-sm text-void font-bold">{T.settings.deleteSure}</p>
             <div className="flex gap-2">
-              <button className="flex-1 rounded-xl border border-red-600 bg-red-900/50 py-2 text-sm text-red-300 hover:bg-red-800/50 transition"
+              <button className="flex-1 rounded-xl border border-void bg-void min-h-[44px] py-2 text-sm text-white hover:bg-[#75291F] transition"
                 onClick={handleDeleteAccount} disabled={deleteBusy}>
                 {deleteBusy ? T.common.loading : T.settings.deleteConfirm}
               </button>

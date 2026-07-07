@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from './AuthProvider.jsx'
-import { PageShell, Wordmark, Field, Spinner, ErrorNote, SocialAuthButtons, OrDivider, LanguageToggle } from '../../components/ui.jsx'
+import { PageShell, Wordmark, Field, Spinner, ErrorNote, SocialAuthButtons, LanguageToggle } from '../../components/ui.jsx'
 import { useLang } from '../../context/LangContext.jsx'
 import { ROLES, OAUTH_ENABLED } from '../../lib/constants.js'
 
@@ -63,10 +63,6 @@ export default function Login() {
         <LanguageToggle />
         <h1 className="text-xl font-bold text-soft">{T.login.title}</h1>
       </div>
-      <div className="card">
-        <SocialAuthButtons onOAuth={signInWithOAuth} disabled={!OAUTH_ENABLED} />
-        <OrDivider />
-      </div>
       <form onSubmit={onSubmit} className="card">
         <ErrorNote>{error}</ErrorNote>
         <Field label={T.login.email}>
@@ -84,9 +80,13 @@ export default function Login() {
           <Link to="/forgot-password" className="text-muted hover:text-soft">{T.login.forgot}</Link>
         </p>
         <p className="text-center mt-2 text-sm text-muted">
-          <Link to="/signup" className="text-accent">{T.login.secondary}</Link>
+          <Link to="/signup" className="font-semibold text-[#657530] hover:underline">{T.login.secondary}</Link>
         </p>
       </form>
+      {/* OAuth below the working form — disabled controls never lead the screen */}
+      <div className="card mt-3">
+        <SocialAuthButtons onOAuth={signInWithOAuth} disabled={!OAUTH_ENABLED} />
+      </div>
     </PageShell>
   )
 }

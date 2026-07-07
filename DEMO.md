@@ -1,27 +1,27 @@
 # GIGPROOF — Demo build & deploy (no secrets)
 
-> ⚠️ **CANON NOTE (added 2 Jul):** `netlify.toml` must NOT exist in the repo (canon rule — real app is Vercel). Netlify Drop here is a **throwaway static demo host ONLY** (drag `dist/`, no repo config, no `netlify.toml`). The real app deploys to **Vercel**. Do not add Netlify config to the codebase.
+> ⚠️ **CANON NOTE (added 2 Jul · tightened 7 Jul):** **Vercel is the ONLY deploy target** — for the real app AND for demo hosting. `netlify.toml` must NOT exist in the repo, and Netlify is not a deploy path in any form. Do not add Netlify config to the codebase.
 
 
 A **demo / mock mode** that runs the whole app with **no backend** — no Supabase, no OAuth,
 no token, no secrets. It uses local fixtures (sample Hebrew data) so you can host a public
 URL that shows every screen and persona. Perfect for a quick "see it live" link.
 
-## Deploy in ~30 seconds (Netlify Drop — $0, no account needed)
+## Deploy in ~30 seconds (Vercel — $0)
 1. Build the demo (produces the static site in `dist/`):
    ```
    npm run build:demo
    ```
-2. Open **https://app.netlify.com/drop**
-3. **Drag the `dist` folder** (`C:\Users\user\gigproof\dist`) onto that page.
-4. Netlify returns a public `https://…netlify.app` URL → open it on any phone.
-   *(Optional: sign in to make the URL permanent; otherwise it's a temporary preview.)*
+2. Deploy the prebuilt output:
+   ```
+   npx vercel deploy --prebuilt
+   ```
+3. Vercel returns a public `https://….vercel.app` URL → open it on any phone.
 
-Alternatives (all $0): `npx vercel deploy --prebuilt` after `npm run build:demo`, or GitHub Pages.
-Netlify Drop is fastest because it needs no git and no account.
+Alternative ($0): GitHub Pages.
 
 ## Install it on your phone (PWA) 📱
-The demo is a **Progressive Web App** — once it's on an HTTPS URL (Netlify gives you one),
+The demo is a **Progressive Web App** — once it's on an HTTPS URL (Vercel gives you one),
 you can install it like a native app:
 - **iPhone (Safari):** open the URL → Share → **Add to Home Screen**.
 - **Android (Chrome):** open the URL → you'll get an **Install app** prompt (or menu → Install).
@@ -38,7 +38,7 @@ loads with no console errors.
 - A **persona switcher** on entry (no login): **אמן · אמרגן · מפיק · סוכנות · אופרטור**.
 - **Public Passport** (the buyer/wedge view) with sample data: draw-as-hero **bands** + the
   6 **method-labels** as text+icon (incl. **★ Producer-confirmed**) + the B2 action ladder + sticky CTA.
-- **Artist:** full first-run journey — **consent → 6-step onboarding** → dashboard/Mirror, readiness,
+- **Artist:** full first-run journey — **consent → 6-step onboarding** → dashboard (Passport Artist view), readiness,
   claim review, evidence, the A8 payment banner.
 - **Agency:** roster + availability-requests inbox.
 - **Operator:** the `/admin` console — stats, **pending payments → "אשר והפעל"**, artists/requests/claims.

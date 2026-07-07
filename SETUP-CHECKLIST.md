@@ -18,7 +18,7 @@ In `.env.local`: `VITE_SUPABASE_URL` · `VITE_SUPABASE_ANON_KEY` · `ANTHROPIC_M
 ---
 
 ## ⭐ Absolute minimum to run live locally
-**Phase 1, item 1A only.** Add the access token → the maintainer runs `node scripts/setup-remote.mjs` then `npm run seed`, and all 5 personas work locally. OAuth (Phase 3–4) is only for the Google/Facebook buttons; Deploy (Phase 6) only for a public URL; Anthropic (Phase 5) only for live AI.
+**Phase 1, item 1A only.** Add the access token → the maintainer runs `node scripts/setup-remote.mjs` then `npm run seed`, and all 5 personas work locally. OAuth (Phase 3–4) is only for the Google/Facebook buttons; Deploy (Phase 6) only for a public URL; Anthropic (Phase 5) is REQUIRED for the live claim pipeline (fully automated — the deterministic mock is demo/QA only, never the production path).
 
 ---
 
@@ -96,10 +96,10 @@ In `.env.local`: `VITE_SUPABASE_URL` · `VITE_SUPABASE_ANON_KEY` · `ANTHROPIC_M
 
 ---
 
-## PHASE 5 — Anthropic (optional — real AI instead of the stub)
+## PHASE 5 — Anthropic (REQUIRED — the claim pipeline is fully automated)
 
 ### 5A · `ANTHROPIC_API_KEY`
-- **What/why:** Enables evidence labelling with the real Claude model. **Optional** — without it a deterministic stub runs (per canon).
+- **What/why:** Powers the fully automated claim pipeline (Anthropic API, best model; deep scan ≈$1 at onboarding; provider fallback: if Opus unavailable, degrade to a cheaper tier with narrower extraction). **REQUIRED** — the deterministic mock exists for demo/QA only, never the production path.
 - **Where:** https://console.anthropic.com/settings/keys
 - **Steps:** 1) Create Key. 2) Copy (`sk-ant-…`).
 - **Where it goes:** `.env.local` → `ANTHROPIC_API_KEY=sk-ant-...` (and later as a Vercel env var).
@@ -147,12 +147,12 @@ In `.env.local`: `VITE_SUPABASE_URL` · `VITE_SUPABASE_ANON_KEY` · `ANTHROPIC_M
 2. `SUPABASE_SERVICE_ROLE_KEY` (skipped if 1A is used)
 3. Google **Client Secret**
 4. Facebook **App Secret**
-5. `ANTHROPIC_API_KEY` (only if real AI is wanted)
+5. `ANTHROPIC_API_KEY` (required — powers the fully automated claim pipeline)
 
 **Non-secret (Cowork agent free to configure in-browser):** enable/disable providers + email-confirm, Site/Redirect URLs, Client ID, App ID, connecting Vercel/GitHub, framework settings.
 
 ---
 
 ## Verify after setup
-- Local: `npm run dev` → http://localhost:5173 → sign up → role picker (artist/booker/producer/agency) → role home.
-- Test users after `npm run seed` (password `Gigproof!2026`): `artist@` · `booker@` · `producer@` · `agency@` · `operator@gigproof.test`. Producer confirm demo: `/confirm/seed-confirm-token`.
+- Local: `npm run dev` → http://localhost:5173 → sign up → role picker (artist / booker [= booking manager, אמרגן] / producer / agency; "booker" is the as-built role value) → role home.
+- Test users after `npm run seed` (password `Gigproof!2026`): `artist@` · `booker@` (booking manager) · `producer@` · `agency@` · `operator@gigproof.test`. Producer confirm demo: `/confirm/seed-confirm-token`.

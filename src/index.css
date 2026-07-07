@@ -2,8 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── CODEX Design System v1.2.0 — "Proof Lime" (paper · forest · lime) ─────── */
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 html,
@@ -14,7 +15,7 @@ body,
 
 body {
   margin: 0;
-  background: theme('colors.ink');
+  background: theme('colors.paper');
   color: theme('colors.soft');
   font-family: theme('fontFamily.sans');
   -webkit-font-smoothing: antialiased;
@@ -23,29 +24,42 @@ body {
   font-size: 16px;
 }
 
+@layer base {
+  /* Display headings — Georgia serif (the CODEX editorial voice). Heebo serves
+     Hebrew until the dedicated HE display treatment. */
+  h1, h2, h3 {
+    font-family: theme('fontFamily.display');
+  }
+}
+
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 font-bold
-           transition active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none;
+    /* CODEX buttons: Manrope 800, soft 9px corners, comfortable height */
+    @apply inline-flex items-center justify-center gap-2 rounded-sm px-5 py-3
+           font-extrabold text-sm
+           transition active:scale-[0.99] active:translate-y-px
+           disabled:opacity-50 disabled:pointer-events-none;
   }
   .btn-primary {
+    /* lime with DARK text — never white on lime (contrast) */
     @apply btn bg-accent text-ink hover:bg-accent-700;
   }
   .btn-ghost {
-    @apply btn bg-transparent text-soft hover:bg-card border border-line;
+    @apply btn bg-transparent text-soft hover:bg-surface border border-line;
   }
   .field {
-    @apply w-full rounded-xl bg-surface border border-line px-4 py-3 text-soft
+    @apply w-full rounded bg-card border border-line px-4 py-3 text-soft
            placeholder:text-muted outline-none focus:border-accent transition;
   }
   .label {
-    @apply block text-sm text-muted mb-1.5;
+    @apply block text-[10px] font-mono uppercase tracking-[0.1em] text-muted mb-1.5;
   }
   .card {
     @apply rounded-xl2 bg-card border border-line p-5;
   }
   .chip {
-    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium;
+    /* status pills (gp-status): fully rounded, quiet tints, dark-on-light text */
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold;
   }
 }
 

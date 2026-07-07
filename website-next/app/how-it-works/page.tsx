@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description: 'Three players. Three steps. See how artists build method-labelled evidence, producers verify in 30 seconds, and booking managers evaluate without signing up.',
 }
 
-const APP_URL = 'https://app.gigproof.co'
+import { APP_URL } from '@/lib/app-url'
 
 const players = [
   {

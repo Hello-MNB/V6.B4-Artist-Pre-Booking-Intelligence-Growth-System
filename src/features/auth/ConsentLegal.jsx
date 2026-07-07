@@ -74,6 +74,10 @@ export default function ConsentLegal() {
         />
       </div>
 
+      {/* Consent as education (canon): tell the user which consents arrive later,
+          contextually — never bundled into this gate. */}
+      <p className="mb-4 text-[11px] text-muted">{T.consent.contextualNote}</p>
+
       <div className="card">
         <p className="text-[11px] text-muted mb-4">{T.consent.note.replace('<PolicyLink>', T.consent.policyDraft).replace('<TosLink>', T.consent.tosDraft)}</p>
         <div className="flex gap-3">
@@ -94,7 +98,7 @@ function ConsentBox({ checked, onChange, title, label, required }) {
     <div className={`card flex items-start gap-3 transition ${checked ? 'border-accent/40' : ''}`}>
       <input
         type="checkbox"
-        className="mt-1 h-4 w-4 shrink-0 accent-[#F0C24B]"
+        className="mt-1 h-4 w-4 shrink-0 accent-[#C8F04D]"
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
       />
