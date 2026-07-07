@@ -202,7 +202,6 @@ export default function Contact() {
               letterSpacing: '0.08em',
               textDecoration: 'none',
               borderRadius: 'var(--radius-sm)',
-              fontWeight: 700,
             }}
           >
             BUILD YOUR PASSPORT — FREE →
