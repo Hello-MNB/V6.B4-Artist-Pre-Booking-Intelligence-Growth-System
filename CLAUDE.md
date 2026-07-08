@@ -28,3 +28,8 @@ SOURCE OF TRUTH: ★ START HERE + CLAUDE.md + the CURRENT canon doc set (see REA
 named list). Build only from these — never from older/HTML/score docs.
 
 DRIVE RULE: USE ONLY folder 1QyQtp-vVcqosKplB_zMmtWNweBH_PaS3 — UPDATE files, DO NOT DUPLICATE.
+
+MEMORY RULE (owner directive): after any context compaction, the FIRST task is to refresh
+memory — re-read docs/SESSION-MEMORY.md, docs/TASK-STATUS-BOARD.md, and the session keys
+registry before doing anything else. Every chat reply ends with the priority-sorted task board
+and the open pending-from-owner list. Answer the owner in ENGLISH always.

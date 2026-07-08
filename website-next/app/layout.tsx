@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Script from 'next/script'
 import { Manrope, DM_Mono } from 'next/font/google'
 import './globals.css'
 import { Nav } from '@/components/nav'
@@ -17,6 +18,9 @@ const dmMono = DM_Mono({
   variable: '--font-space-mono',
   display: 'swap',
 })
+
+// GA4 loads only when the measurement id env is set (property GIGPROOF / 544738110)
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID
 
 const SITE_URL = 'https://gigproof.co'
 const OG_IMAGE = `${SITE_URL}/og/og-default.png`
@@ -148,6 +152,20 @@ export default function RootLayout({
           {children}
           <Footer />
         </LocaleProvider>
+        {GA_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga4-init" strategy="afterInteractive">
+              {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${GA_ID}', { anonymize_ip: true });`}
+            </Script>
+          </>
+        )}
       </body>
     </html>
   )

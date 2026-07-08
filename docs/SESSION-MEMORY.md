@@ -1,0 +1,47 @@
+# SESSION MEMORY — durable state anchor
+**Purpose:** first read after ANY context compaction or new session (owner directive, 8 Jul 2026).
+**Rule:** refresh memory BEFORE acting. Reply to owner in ENGLISH. End every reply with the
+priority board (docs/TASK-STATUS-BOARD.md) + open pending-from-owner list.
+
+## Who / what
+- Owner: Maria (Hebrew-speaking, reads English replies; does NOT read code). Decisions only she makes: price, domain, visual direction, migrations approval, counsel.
+- Product: GIGPROOF pre-booking proof tool. Canon firewall in CLAUDE.md (no scores/ranks; bands+binaries+method labels).
+- Demo persona: Shai Perlman — 3 hats: DJ PERLMAN (artist, multi-genre Acts) / artist representative (roster) / INSOMNIA TLV (production company).
+
+## Deployments
+- gigproof-website.vercel.app — Next.js marketing site + committed pre-built /app embed (NO /api).
+- v6-b4-artist-pre-booking-intelligen.vercel.app — full app + API (service-role key). Producer-confirm works ONLY here.
+- Deploy routine: main auto-deploys both; app changes need `npm run build:embed` → commit → push. Gate: vite build + build:demo + lint:i18n (3 known radarUniverse.js violations = accepted baseline) + website-next build.
+- Sandbox proxy blocks vercel.app (403) — live site unverifiable from the container.
+
+## Keys (values in gitignored .env.local + Maria's side; statuses only here)
+- Anthropic: RECEIVED + VERIFIED locally. PENDING: Maria adds to Vercel v6-b4 env + Redeploy.
+- Spotify: client id+secret VERIFIED (token + search OK). Not wired into app yet.
+- Google API key: rescoped YouTube Data v3 only (CSE closed to new signups → Tavily replaces it; Tavily key still MISSING).
+- GA4: property GIGPROOF 544738110 created (account 400389625). PENDING: Web data stream → G-XXXX measurement id.
+
+## Migrations
+- Live DB at 025/026. 021 FROZEN (vocab, needs app lockstep — bootstrapOrg 'booker' latent bug noted).
+- 027 written NOT applied (workspace_type, artist_access scopes/status, can_access_artist fix, SECURITY DEFINER RPCs) — awaiting Maria's approval. Open ruling: 'producer' vs 'production' enum value; consent 4-vs-6.
+- 028 planned bundle: 'discovered' source_type + HE/EN name fields, M1 analytics events, plan capability flags.
+
+## Monetization (APPROVED)
+No booking commission ever. Each entity pays its own plan; artist always owns/pays his evidence-truth layer (portable); office pays roster layer; Billing Sponsor mechanism. Plans: Passport (free) / Momentum (artist) / Roster (manager). Buyer free forever. No prices published until Gate. Payment: Bit 054-4555060, reference GP-XXXX, manual activation.
+
+## Open pending-from-Maria (repeat at end of every reply until resolved)
+1. Anthropic key → Vercel v6-b4 env → Redeploy.
+2. Approve migration 027 (+ ruling: 'producer' vs 'production'; consent 4-vs-6).
+3. Fixed pilot price (rec ₪179).
+4. Buy domain (rec gigproof.co + app.gigproof.co).
+5. Google OAuth client → Supabase providers (redirect https://qexfndiyallwqhhzeerd.supabase.co/auth/v1/callback).
+6. Green Invoice signup.
+7. GA4: property created ✅ — now Web data stream → send G-XXXX measurement id.
+8. Send counsel email (docs/COUNSEL-EMAIL-DRAFT.md).
+9. Tavily key (free tier).
+10. Later, low urgency: rotate the Anthropic key (was pasted in chat).
+
+## Standing instructions from Maria
+- Answer ALWAYS in English. Task board at end of EVERY chat reply, sorted by priority.
+- Pending-from-her items repeated at end of every answer until resolved.
+- After compaction: FIRST refresh memory (this file + board + keys registry).
+- Docs-first; no invented data (META-FIELD LAW); QA PASS before any live deploy; cheap agents with clear handoffs; professional restraint in design (Live Intelligence style, ≥85% neutral).
