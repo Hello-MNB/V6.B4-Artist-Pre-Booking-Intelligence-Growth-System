@@ -7,12 +7,38 @@ import {
   adminListConsents, adminExportArtist, adminDeleteArtist, adminListAudit,
 } from '../../lib/db.js'
 import { listUpgradeRequests, approveUpgrade } from '../../lib/orgs.js'
-import { PageShell, Wordmark, Loading, EmptyState, ErrorState, SourceLabel, LanguageToggle } from '../../components/ui.jsx'
+import {
+  PageShell, Wordmark, Loading, EmptyState, ErrorState, SourceLabel,
+  LanguageToggle, BottomSheet,
+} from '../../components/ui.jsx'
 import { useLang } from '../../context/LangContext.jsx'
 
-// Operator / Admin console — platform oversight.
+// Operator / Admin console — platform oversight. Calm, dense, dark.
 // FIREWALL: shows bounded statuses, bands and provenance only. The record
 // COUNTS here are platform ops metadata, never a per-artist score / head-count.
+
+const PAGE = 20
+
+// Simple client-side pagination: show 20, then "Show more".
+function usePaged(items) {
+  const [n, setN] = useState(PAGE)
+  return {
+    slice: items.slice(0, n),
+    hasMore: items.length > n,
+    more: () => setN((x) => x + PAGE),
+  }
+}
+
+function ShowMore({ paged, total }) {
+  if (!paged.hasMore) return null
+  return (
+    <button onClick={paged.more}
+      className="btn-ghost w-full text-sm">
+      Show more <span className="font-mono text-xs text-faint">({paged.slice.length}/{total})</span>
+    </button>
+  )
+}
+
 export default function AdminDashboard() {
   const { T } = useLang()
   const { signOut } = useAuth()
@@ -46,6 +72,12 @@ export default function AdminDashboard() {
     }
   }, [])
   useEffect(() => { load() }, [load])
+
+  const pagedArtists = usePaged(artists)
+  const pagedRequests = usePaged(requests)
+  const pagedClaims = usePaged(claims)
+  const pagedConsents = usePaged(consents)
+  const pagedAudit = usePaged(audit)
 
   async function togglePublished(artist) {
     if (toggling) return
@@ -111,188 +143,220 @@ export default function AdminDashboard() {
   const statusLabel = (s) =>
     s === 'replied' ? T.agency.statusReplied : s === 'closed' ? T.agency.statusClosed : T.agency.statusNew
 
+  const anchors = [
+    ['payments', 'Payments'], ['upgrades', 'Upgrades'], ['artists', 'Artists'],
+    ['requests', 'Requests'], ['claims', 'Claims'], ['consents', 'Consents'], ['audit', 'Audit'],
+  ]
+
   return (
-    <PageShell>
-      <div className="flex items-center justify-between mb-6">
+    <PageShell max="max-w-2xl">
+      <div className="mb-6 flex items-center justify-between">
         <Wordmark />
         <div className="flex items-center gap-3">
           <LanguageToggle />
-          <button onClick={signOut} className="text-sm text-muted hover:text-soft">{T.settings.logout}</button>
+          <button onClick={signOut} className="text-sm text-muted transition hover:text-ink">{T.settings.logout}</button>
         </div>
       </div>
 
-      <h1 className="text-xl font-bold text-soft mb-1">{T.admin.title}</h1>
-      <p className="text-sm text-muted mb-5">{T.admin.subtitle}</p>
+      <p className="mb-1 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-gold">Operator console</p>
+      <h1 className="mb-1 text-2xl font-bold text-ink">{T.admin.title}</h1>
+      <p className="mb-4 text-sm text-muted">{T.admin.subtitle}</p>
 
       {loading ? <Loading /> : error ? <ErrorState title={T.admin.loadError} onRetry={load} /> : (
         <>
-          <div className="grid grid-cols-3 gap-2 mb-6">
+          {/* sticky section nav — calm mono mini-tabs */}
+          <nav aria-label="Sections"
+            className="sticky top-0 z-20 -mx-4 mb-5 overflow-x-auto bg-bg/85 px-4 py-2 backdrop-blur border-b border-line">
+            <div className="flex gap-1.5 whitespace-nowrap">
+              {anchors.map(([id, label]) => (
+                <a key={id} href={`#${id}`}
+                  className="rounded-full border border-line px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.08em] text-muted transition hover:border-line2 hover:text-ink">
+                  {label}
+                </a>
+              ))}
+            </div>
+          </nav>
+
+          {/* stat cards — auto-fit grid, no orphan card */}
+          <div className="mb-6 grid gap-2 [grid-template-columns:repeat(auto-fit,minmax(140px,1fr))]">
             <Stat n={artists.length} label={T.admin.statArtists} />
             <Stat n={artists.filter((a) => a.published).length} label={T.admin.statPublished} />
             <Stat n={requests.length} label={T.admin.statRequests} />
-            <Stat n={requests.filter((r) => r.status === 'new').length} label={T.admin.statNew} />
+            <Stat n={requests.filter((r) => r.status === 'new').length} label={T.admin.statNew} tone="amber" />
             <Stat n={claims.length} label={T.admin.statClaims} />
           </div>
 
           {/* OP4 — SEC-01 compliance posture (read-only status) */}
           <SectionTitle>{T.admin.sec01Title}</SectionTitle>
-          <div className="card mb-6 space-y-1.5">
+          <div className="card mb-7 space-y-1.5">
             {T.admin.sec01Items.map((item, i) => (
               <div key={i} className="flex items-center gap-2 text-sm">
-                <span className="text-ok" aria-hidden="true">✓</span><span className="text-soft">{item}</span>
+                <span className="text-accent" aria-hidden="true">✓</span><span className="text-ink">{item}</span>
               </div>
             ))}
           </div>
 
           {/* pending payments (A8) */}
-          <SectionTitle>{T.admin.paymentsTitle}</SectionTitle>
-          {payments.length === 0 ? (
-            <EmptyState title={T.admin.noPayments} />
-          ) : (
-            <div className="space-y-2 mb-6">
-              {payments.map((p) => (
-                <div key={p.id} className="card flex items-center justify-between gap-3">
-                  <span className="text-soft text-sm truncate">{p.artists?.stage_name || '—'}</span>
-                  <button onClick={() => activate(p.id)}
-                    className="chip min-h-[40px] px-3 py-1.5 text-xs font-bold bg-ok/20 text-ok hover:bg-ok/30">
-                    {T.admin.markActive}
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
+          <Section id="payments" title={T.admin.paymentsTitle} count={payments.length}>
+            {payments.length === 0 ? (
+              <EmptyState title={T.admin.noPayments} />
+            ) : (
+              <div className="space-y-2">
+                {payments.map((p) => (
+                  <div key={p.id} className="card flex items-center justify-between gap-3 py-3">
+                    <span className="truncate text-sm text-ink">{p.artists?.stage_name || '—'}</span>
+                    <button onClick={() => activate(p.id)}
+                      className="btn-primary min-h-[40px] shrink-0 px-4 py-1.5 text-xs">
+                      {T.admin.markActive}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </Section>
 
           {/* agency upgrade queue — founder confirms Solo→Agency on the SAME org */}
-          <SectionTitle>{T.admin.upgradesTitle}</SectionTitle>
-          {upgrades.length === 0 ? (
-            <EmptyState title={T.admin.noUpgrades} />
-          ) : (
-            <div className="space-y-2 mb-6">
-              {upgrades.map((u) => (
-                <div key={u.organization_id} className="card flex items-center justify-between gap-3">
-                  <span className="text-soft text-sm truncate">{u.organization?.name || u.organization_id}</span>
-                  <button onClick={() => approve(u.organization_id)}
-                    className="chip min-h-[40px] px-3 py-1.5 text-xs font-bold bg-accent/20 text-accent hover:bg-accent/30">
-                    {T.admin.approveUpgrade}
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
+          <Section id="upgrades" title={T.admin.upgradesTitle} count={upgrades.length}>
+            {upgrades.length === 0 ? (
+              <EmptyState title={T.admin.noUpgrades} />
+            ) : (
+              <div className="space-y-2">
+                {upgrades.map((u) => (
+                  <div key={u.organization_id} className="card flex items-center justify-between gap-3 py-3">
+                    <span className="truncate text-sm text-ink">{u.organization?.name || u.organization_id}</span>
+                    <button onClick={() => approve(u.organization_id)}
+                      className="btn-primary min-h-[40px] shrink-0 px-4 py-1.5 text-xs">
+                      {T.admin.approveUpgrade}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </Section>
 
           {/* artists — with OP12 export / erasure */}
-          <SectionTitle>{T.admin.artistsTitle}</SectionTitle>
-          {actionError && <p className="text-xs text-warn mb-2" role="alert">{actionError}</p>}
-          {artists.length === 0 ? (
-            <EmptyState title={T.admin.noArtists} />
-          ) : (
-            <div className="space-y-2 mb-6">
-              {artists.map((a) => (
-                <div key={a.id} className="card">
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="text-soft font-medium truncate">{a.stage_name || '—'}</p>
-                      <p className="text-xs text-muted truncate">{[a.genre, a.city].filter(Boolean).join(' · ') || '—'}</p>
+          <Section id="artists" title={T.admin.artistsTitle} count={artists.length}>
+            {actionError && <p className="mb-2 text-xs text-amber" role="alert">{actionError}</p>}
+            {artists.length === 0 ? (
+              <EmptyState title={T.admin.noArtists} />
+            ) : (
+              <div className="space-y-2">
+                {pagedArtists.slice.map((a) => (
+                  <div key={a.id} className="card py-3.5">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="truncate font-medium text-ink">{a.stage_name || '—'}</p>
+                        <p className="truncate text-xs text-muted">{[a.genre, a.city].filter(Boolean).join(' · ') || '—'}</p>
+                      </div>
+                      <div className="flex shrink-0 items-center gap-2">
+                        <Link to={`/passport/${a.id}`} className="text-xs text-accent hover:underline">{T.admin.viewPassport}</Link>
+                        <button
+                          onClick={() => togglePublished(a)}
+                          disabled={toggling === a.id}
+                          className={`chip px-3 py-1.5 text-xs font-bold transition ${toggling === a.id ? 'opacity-60' : ''} ${
+                            a.published ? 'bg-accent/15 text-accent hover:bg-accent/25' : 'bg-surface2 text-muted hover:bg-raise'
+                          }`}>
+                          {a.published ? T.admin.publishToggleOn : T.admin.publishToggleOff}
+                        </button>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2 shrink-0">
-                      <Link to={`/passport/${a.id}`} className="text-xs text-accent hover:underline">{T.admin.viewPassport}</Link>
-                      <button
-                        onClick={() => togglePublished(a)}
-                        disabled={toggling === a.id}
-                        className={`chip px-3 py-1.5 text-xs font-bold transition ${toggling === a.id ? 'opacity-60' : ''} ${
-                          a.published ? 'bg-ok/20 text-ok hover:bg-ok/30' : 'bg-surface text-muted hover:bg-line'
-                        }`}>
-                        {a.published ? T.admin.publishToggleOn : T.admin.publishToggleOff}
-                      </button>
+                    <div className="mt-2 flex items-center gap-4 border-t border-line pt-2">
+                      <button onClick={() => exportArtist(a)} className="text-xs text-muted transition hover:text-ink">{T.admin.exportData}</button>
+                      <button onClick={() => { setDeleteTarget(a); setDeleteReason('') }} className="text-xs text-amber hover:underline">{T.admin.deleteData}</button>
                     </div>
                   </div>
-                  <div className="flex items-center gap-4 mt-2 pt-2 border-t border-line">
-                    <button onClick={() => exportArtist(a)} className="text-xs text-muted hover:text-soft">{T.admin.exportData}</button>
-                    <button onClick={() => { setDeleteTarget(a); setDeleteReason('') }} className="text-xs text-warn hover:underline">{T.admin.deleteData}</button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+                <ShowMore paged={pagedArtists} total={artists.length} />
+              </div>
+            )}
+          </Section>
 
           {/* requests */}
-          <SectionTitle>{T.admin.requestsTitle}</SectionTitle>
-          {requests.length === 0 ? (
-            <EmptyState title={T.admin.noRequests} />
-          ) : (
-            <div className="space-y-2 mb-6">
-              {requests.map((r) => (
-                <div key={r.id} className="card flex items-center justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="text-soft text-sm font-medium truncate">{r.requester_name}{r.requester_org ? ` · ${r.requester_org}` : ''}</p>
-                    <p className="text-xs text-muted truncate">{T.admin.forArtist} {r.artists?.stage_name || '—'}</p>
+          <Section id="requests" title={T.admin.requestsTitle} count={requests.length}>
+            {requests.length === 0 ? (
+              <EmptyState title={T.admin.noRequests} />
+            ) : (
+              <div className="space-y-2">
+                {pagedRequests.slice.map((r) => (
+                  <div key={r.id} className="card flex items-center justify-between gap-3 py-3">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium text-ink">{r.requester_name}{r.requester_org ? ` · ${r.requester_org}` : ''}</p>
+                      <p className="truncate text-xs text-muted">{T.admin.forArtist} {r.artists?.stage_name || '—'}</p>
+                    </div>
+                    <span className={`chip shrink-0 px-2.5 py-1 text-xs ${
+                      r.status === 'new' ? 'bg-amber/15 text-amber' : r.status === 'replied' ? 'bg-accent/15 text-accent' : 'bg-surface2 text-muted'
+                    }`}>{statusLabel(r.status)}</span>
                   </div>
-                  <span className={`chip shrink-0 px-2.5 py-1 text-xs ${
-                    r.status === 'new' ? 'bg-accent/15 text-accent' : r.status === 'replied' ? 'bg-ok/15 text-ok' : 'bg-gap/20 text-muted'
-                  }`}>{statusLabel(r.status)}</span>
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+                <ShowMore paged={pagedRequests} total={requests.length} />
+              </div>
+            )}
+          </Section>
 
           {/* recent claims */}
-          <SectionTitle>{T.admin.claimsTitle}</SectionTitle>
-          {claims.length === 0 ? (
-            <EmptyState title={T.admin.noClaims} />
-          ) : (
-            <div className="space-y-2 mb-6">
-              {claims.map((c) => (
-                <div key={c.id} className="card flex items-center justify-between gap-3">
-                  <span className="text-soft text-sm truncate">{c.value || c.claim_type || '—'}</span>
-                  <SourceLabel status={c.verification_status} methodLabel={c.method_label} expiresAt={c.expires_at} />
-                </div>
-              ))}
-            </div>
-          )}
+          <Section id="claims" title={T.admin.claimsTitle} count={claims.length}>
+            {claims.length === 0 ? (
+              <EmptyState title={T.admin.noClaims} />
+            ) : (
+              <div className="space-y-2">
+                {pagedClaims.slice.map((c) => (
+                  <div key={c.id} className="card flex items-center justify-between gap-3 py-3">
+                    <span className="truncate text-sm text-ink">{c.value || c.claim_type || '—'}</span>
+                    <SourceLabel status={c.verification_status} methodLabel={c.method_label} expiresAt={c.expires_at} />
+                  </div>
+                ))}
+                <ShowMore paged={pagedClaims} total={claims.length} />
+              </div>
+            )}
+          </Section>
 
           {/* OP3 — consent records viewer */}
-          <SectionTitle>{T.admin.consentsTitle}</SectionTitle>
-          {consents.length === 0 ? (
-            <EmptyState title={T.admin.noConsents} />
-          ) : (
-            <div className="space-y-2">
-              {consents.map((c) => (
-                <div key={c.id} className="card flex items-center justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="text-soft text-sm truncate">{c.scope} <span className="text-muted">· {c.version}</span></p>
-                    <p className="text-xs text-muted">{new Date(c.timestamp).toLocaleDateString()}{c.marketing_opt_in ? ` · ${T.admin.consentMarketing}` : ''}</p>
+          <Section id="consents" title={T.admin.consentsTitle} count={consents.length}>
+            {consents.length === 0 ? (
+              <EmptyState title={T.admin.noConsents} />
+            ) : (
+              <div className="space-y-2">
+                {pagedConsents.slice.map((c) => (
+                  <div key={c.id} className="card flex items-center justify-between gap-3 py-3">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm text-ink">{c.scope} <span className="text-muted">· {c.version}</span></p>
+                      <p className="font-mono text-xs text-faint">{new Date(c.timestamp).toLocaleDateString()}{c.marketing_opt_in ? ` · ${T.admin.consentMarketing}` : ''}</p>
+                    </div>
+                    <span className="chip shrink-0 bg-accent/15 px-2.5 py-1 text-xs text-accent">{c.status}</span>
                   </div>
-                  <span className="chip shrink-0 px-2.5 py-1 text-xs bg-ok/15 text-ok">{c.status}</span>
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+                <ShowMore paged={pagedConsents} total={consents.length} />
+              </div>
+            )}
+          </Section>
 
           {/* audit log — recent admin / destructive actions */}
-          <SectionTitle>{T.admin.auditTitle}</SectionTitle>
-          {audit.length === 0 ? (
-            <EmptyState title={T.admin.noAudit} />
-          ) : (
-            <div className="space-y-2">
-              {audit.map((row) => (
-                <div key={row.id} className="card">
-                  <p className="text-soft text-sm">{row.action} <span className="text-muted">· {row.target_type}</span></p>
-                  <p className="text-xs text-muted">{new Date(row.created_at).toLocaleString()}{row.reason ? ` · ${row.reason}` : ''}</p>
-                </div>
-              ))}
-            </div>
-          )}
+          <Section id="audit" title={T.admin.auditTitle} count={audit.length}>
+            {audit.length === 0 ? (
+              <EmptyState title={T.admin.noAudit} />
+            ) : (
+              <div className="space-y-2">
+                {pagedAudit.slice.map((row) => (
+                  <div key={row.id} className="card py-3">
+                    <p className="text-sm text-ink">{row.action} <span className="text-muted">· {row.target_type}</span></p>
+                    <p className="font-mono text-xs text-faint">{new Date(row.created_at).toLocaleString()}{row.reason ? ` · ${row.reason}` : ''}</p>
+                  </div>
+                ))}
+                <ShowMore paged={pagedAudit} total={audit.length} />
+              </div>
+            )}
+          </Section>
         </>
       )}
 
       {/* OP12 erasure confirm — reason required; written to the audit log */}
-      {deleteTarget && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 p-4" role="dialog" aria-modal="true">
-          <div className="card w-full max-w-sm">
-            <h2 className="font-bold text-warn mb-1">{T.admin.deleteConfirmTitle}</h2>
-            <p className="text-sm text-soft mb-1">{deleteTarget.stage_name || deleteTarget.id}</p>
-            <p className="text-xs text-muted mb-3">{T.admin.deleteAuditNote}</p>
-            <input className="field mb-3" placeholder={T.admin.deleteReasonPlaceholder}
+      <BottomSheet open={!!deleteTarget} onClose={() => !busy && setDeleteTarget(null)} title={T.admin.deleteConfirmTitle}>
+        {deleteTarget && (
+          <>
+            <p className="mb-1 text-sm font-medium text-ink">{deleteTarget.stage_name || deleteTarget.id}</p>
+            <p className="mb-3 text-xs text-muted">{T.admin.deleteAuditNote}</p>
+            <label className="label" htmlFor="delete-reason">Reason (required — recorded in the audit log)</label>
+            <input id="delete-reason" className="field mb-3" placeholder={T.admin.deleteReasonPlaceholder}
               value={deleteReason} onChange={(e) => setDeleteReason(e.target.value)} />
             <div className="flex gap-2">
               <button className="btn-primary flex-1" onClick={confirmDelete} disabled={busy || !deleteReason.trim()}>
@@ -300,22 +364,34 @@ export default function AdminDashboard() {
               </button>
               <button className="btn-ghost" onClick={() => setDeleteTarget(null)} disabled={busy}>{T.common.cancel}</button>
             </div>
-          </div>
-        </div>
-      )}
+          </>
+        )}
+      </BottomSheet>
     </PageShell>
   )
 }
 
-function Stat({ n, label }) {
+function Stat({ n, label, tone }) {
   return (
-    <div className="card text-center py-3">
-      <p className="text-2xl font-extrabold text-soft">{n}</p>
-      <p className="text-[11px] text-muted mt-0.5">{label}</p>
+    <div className="card py-3 text-center">
+      <p className={`text-2xl font-extrabold ${tone === 'amber' && n > 0 ? 'text-amber' : 'text-ink'}`}>{n}</p>
+      <p className="mt-0.5 font-mono text-[10.5px] uppercase tracking-[0.08em] text-muted">{label}</p>
     </div>
   )
 }
 
 function SectionTitle({ children }) {
-  return <h2 className="text-sm font-bold uppercase tracking-wide text-muted mb-2">{children}</h2>
+  return <h2 className="mb-2 font-mono text-xs font-semibold uppercase tracking-[0.1em] text-muted">{children}</h2>
+}
+
+function Section({ id, title, count, children }) {
+  return (
+    <section id={id} className="mb-7 scroll-mt-16">
+      <div className="mb-2 flex items-baseline justify-between">
+        <SectionTitle>{title}</SectionTitle>
+        {Number.isFinite(count) && <span className="font-mono text-[11px] text-faint">{count}</span>}
+      </div>
+      {children}
+    </section>
+  )
 }

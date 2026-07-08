@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../auth/AuthProvider.jsx'
 import { useOrg } from '../../context/OrgContext.jsx'
 import { getOrg, updateOrg, deleteOrg, getMembers, transferOwnership } from '../../lib/orgs.js'
 import { PageShell, Wordmark, Field, Spinner, ErrorNote, Loading, BottomSheet, useToast } from '../../components/ui.jsx'
@@ -12,6 +13,8 @@ const planLabel = (plan, T) => ({ solo: T.org.planSolo, agency: T.org.planAgency
 export default function OrgSettings() {
   const { T } = useLang()
   const toast = useToast()
+  const nav = useNavigate()
+  const { signOut } = useAuth()
   const { activeOrgId, isOwner, isAdmin, isAgency, reload } = useOrg()
   const [org, setOrg] = useState(null)
   const [name, setName] = useState('')
@@ -45,7 +48,12 @@ export default function OrgSettings() {
   }
   async function doDelete() {
     setBusy(true); setError('')
-    try { await deleteOrg(activeOrgId); window.location.href = '/' } catch (e) { setError(e.message || T.common.error); setBusy(false) }
+    try {
+      await deleteOrg(activeOrgId)
+      // the org is gone — end the session properly instead of leaving a stale one
+      try { await signOut() } catch { /* session already invalid */ }
+      nav('/login')
+    } catch (e) { setError(e.message || T.common.error); setBusy(false) }
   }
 
   if (loading) return <Loading />
@@ -54,8 +62,8 @@ export default function OrgSettings() {
 
   return (
     <PageShell>
-      <div className="flex items-center justify-between mb-6"><Wordmark /><Link to="/" className="text-sm text-muted">{T.common.back}</Link></div>
-      <h1 className="text-xl font-bold text-soft mb-4">{isAgency ? T.org.settingsTitleAgency : T.org.settingsTitleSolo}</h1>
+      <div className="flex items-center justify-between mb-6"><Wordmark /><Link to="/" className="text-sm text-muted hover:text-ink">{T.common.back}</Link></div>
+      <h1 className="font-display text-xl font-bold text-ink mb-4">{isAgency ? T.org.settingsTitleAgency : T.org.settingsTitleSolo}</h1>
       <ErrorNote>{error}</ErrorNote>
 
       <div className="card mb-4">
@@ -63,23 +71,23 @@ export default function OrgSettings() {
           <input className="field" value={name} onChange={(e) => setName(e.target.value)} disabled={!isAdmin} />
         </Field>
         <div className="flex flex-wrap gap-2 text-xs text-muted mt-2">
-          <span className="chip bg-card text-soft">{T.org.planLabel}: {planLabel(org?.plan, T)}</span>
-          {org?.slug && <span className="chip bg-card text-soft">{T.org.slugLabel}: {org.slug}</span>}
-          {org?.created_at && <span className="chip bg-card text-soft">{T.org.createdLabel}: {new Date(org.created_at).toLocaleDateString()}</span>}
+          <span className="chip border border-line bg-surface2 font-mono text-[11px] text-ink">{T.org.planLabel}: {planLabel(org?.plan, T)}</span>
+          {org?.slug && <span className="chip border border-line bg-surface2 font-mono text-[11px] text-ink">{T.org.slugLabel}: {org.slug}</span>}
+          {org?.created_at && <span className="chip border border-line bg-surface2 font-mono text-[11px] text-ink">{T.org.createdLabel}: {new Date(org.created_at).toLocaleDateString()}</span>}
         </div>
         {isAdmin && <button className="btn-primary w-full mt-4" onClick={save} disabled={busy}>{busy ? <Spinner /> : T.org.save}</button>}
       </div>
 
       {/* owner-only zone */}
-      <div className="card border border-warn/30">
+      <div className="card border border-amber/40">
         {isOwner ? (
           <>
             <button className="btn-ghost w-full mb-2" onClick={() => transferable.length ? setTransferOpen(true) : toast.show(T.org.transferNoMembers, 'warn')}>{T.org.transferOwnership}</button>
             {!confirmDelete ? (
-              <button className="btn-ghost w-full text-warn" onClick={() => setConfirmDelete(true)}>🔴 {T.org.deleteOrg}</button>
+              <button className="btn-ghost w-full text-amber" onClick={() => setConfirmDelete(true)}>{T.org.deleteOrg}</button>
             ) : (
               <div>
-                <p className="text-sm text-warn mb-2">{T.org.deleteConfirm}</p>
+                <p className="text-sm text-amber mb-2">{T.org.deleteConfirm}</p>
                 <input className="field mb-2" placeholder={T.org.deleteReason} value={reason} onChange={(e) => setReason(e.target.value)} />
                 <div className="flex gap-2">
                   <button className="btn-primary flex-1" onClick={doDelete} disabled={busy || !reason.trim()}>{T.org.deleteOrg}</button>

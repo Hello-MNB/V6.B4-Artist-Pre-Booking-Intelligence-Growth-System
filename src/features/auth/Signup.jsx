@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from './AuthProvider.jsx'
-import { PageShell, Wordmark, Field, Spinner, ErrorNote, SocialAuthButtons, OrDivider, LanguageToggle } from '../../components/ui.jsx'
+import { Field, Spinner, ErrorNote, SocialAuthButtons, OrDivider } from '../../components/ui.jsx'
 import { useLang } from '../../context/LangContext.jsx'
 import { OAUTH_ENABLED } from '../../lib/constants.js'
+import AuthScene from './AuthScene.jsx'
 
 export default function Signup() {
   const { T } = useLang()
@@ -38,61 +39,50 @@ export default function Signup() {
 
   if (confirmPending) {
     return (
-      <PageShell max="max-w-sm">
-        <div className="text-center mb-8">
-          <Wordmark className="justify-center mb-3" />
-        </div>
+      <AuthScene>
         <div className="card text-center">
-          <div className="text-4xl mb-3">📧</div>
-          <h2 className="text-lg font-bold text-soft mb-2">{T.signup.confirmTitle}</h2>
-          <p className="text-sm text-muted mb-4">{T.signup.confirmBody(email)}</p>
+          <span className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-full bg-surface2 text-2xl" aria-hidden>✉️</span>
+          <h2 className="mb-2 text-lg font-bold text-ink">{T.signup.confirmTitle}</h2>
+          <p className="mb-5 text-sm text-muted">{T.signup.confirmBody(email)}</p>
           <Link to="/login" className="btn-primary block">{T.signup.backToLogin}</Link>
         </div>
-      </PageShell>
+      </AuthScene>
     )
   }
 
   return (
-    <PageShell max="max-w-sm">
-      {/* CODEX imagery — the artist's world, not a form. Ink overlay keeps text law. */}
-      <div className="relative -mx-4 -mt-6 mb-6 h-40 overflow-hidden sm:mx-0 sm:mt-0 sm:rounded-xl">
-        <img src="/assets/gigproof-persona-artist-v1.webp" alt="" className="h-full w-full object-cover object-top" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0A0D0B]/80 via-[#0A0D0B]/20 to-transparent" />
-        <p className="absolute bottom-3 left-4 right-4 font-mono text-[10px] uppercase tracking-[0.14em] text-[#EEF4E7]">
-          {T.signup.heroLine}
-        </p>
-      </div>
-      <div className="text-center mb-8">
-        <Wordmark className="justify-center mb-3" />
-        <LanguageToggle />
-        <h1 className="text-xl font-bold text-soft">{T.signup.title}</h1>
-      </div>
+    <AuthScene tagline="Your nights, made provable.">
+      <h1 className="mb-1 text-2xl font-bold text-ink">{T.signup.title}</h1>
+      <p className="mb-6 text-sm text-muted">{T.signup.heroLine}</p>
       {OAUTH_ENABLED && (
-        <div className="card">
+        <>
           <SocialAuthButtons onOAuth={signInWithOAuth} />
           <OrDivider />
-        </div>
+        </>
       )}
-      <form onSubmit={onSubmit} className="card">
+      <form onSubmit={onSubmit}>
         <ErrorNote>{error}</ErrorNote>
         <Field label={T.signup.name}>
-          <input className="field" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
+          <input className="field" placeholder="Your name"
+            value={fullName} onChange={(e) => setFullName(e.target.value)} required />
         </Field>
         <Field label={T.signup.email}>
           <input className="field" type="email" dir="ltr" autoComplete="email"
+            placeholder="you@stage.com"
             value={email} onChange={(e) => setEmail(e.target.value)} required />
         </Field>
         <Field label={T.signup.password} hint={T.common.minChars}>
           <input className="field" type="password" autoComplete="new-password" minLength={6}
+            placeholder="••••••••"
             value={password} onChange={(e) => setPassword(e.target.value)} required />
         </Field>
         <button className="btn-primary w-full" disabled={loading}>
           {loading ? <><Spinner /> {T.common.loading}</> : T.signup.cta}
         </button>
-        <p className="text-center mt-4 text-sm text-muted">
-          <Link to="/login" className="text-accent">{T.signup.secondary}</Link>
+        <p className="mt-4 text-center text-sm text-muted">
+          <Link to="/login" className="font-semibold text-accent hover:underline">{T.signup.secondary}</Link>
         </p>
       </form>
-    </PageShell>
+    </AuthScene>
   )
 }

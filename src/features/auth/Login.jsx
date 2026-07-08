@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from './AuthProvider.jsx'
-import { PageShell, Wordmark, Field, Spinner, ErrorNote, SocialAuthButtons, LanguageToggle } from '../../components/ui.jsx'
+import { Field, Spinner, ErrorNote, SocialAuthButtons } from '../../components/ui.jsx'
 import { useLang } from '../../context/LangContext.jsx'
 import { ROLES, OAUTH_ENABLED } from '../../lib/constants.js'
+import AuthScene from './AuthScene.jsx'
 
 export default function Login() {
   const { T } = useLang()
@@ -28,7 +29,7 @@ export default function Login() {
     }
   }
 
-  // DEMO: persona switcher instead of a real login.
+  // DEMO: persona switcher instead of a real login — subtle chips, same scene.
   if (demo) {
     // Artist starts at /consent → onboarding (the real first-run journey, so the
     // demo shows the full flow). Other personas go to their home via RoleHome ('/').
@@ -38,55 +39,53 @@ export default function Login() {
       [ROLES.OPERATOR, T.roleSelect.operator, '/'],
     ]
     return (
-      <PageShell max="max-w-md">
-        <div className="text-center mb-6">
-          <Wordmark className="justify-center mb-3" />
-          <div className="flex justify-center mb-2"><LanguageToggle /></div>
-          <h1 className="text-xl font-bold text-soft">{T.demo.title}</h1>
-          <p className="text-xs text-muted mt-1">{T.demo.subtitle}</p>
-        </div>
-        <div className="space-y-3">
+      <AuthScene>
+        <p className="mb-1 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-gold">{T.demo.sampleData}</p>
+        <h1 className="mb-1 text-2xl font-bold text-ink">{T.demo.title}</h1>
+        <p className="mb-6 text-sm text-muted">{T.demo.subtitle}</p>
+        <div className="mb-4 flex flex-wrap gap-2">
           {personas.map(([role, label, route]) => (
             <button key={role} onClick={() => { setDemoRole(role); nav(route) }}
-              className="card w-full text-start text-lg font-bold text-soft hover:border-accent transition">{label}</button>
+              className="rounded-full border border-line bg-surface2 px-4 py-2.5 text-sm font-semibold text-ink transition hover:border-accent/60 hover:bg-raise">
+              {label}
+            </button>
           ))}
-          <Link to="/passport/demo-artist" className="btn-ghost w-full block text-center">{T.demo.viewPassport}</Link>
         </div>
-      </PageShell>
+        <Link to="/passport/demo-artist" className="btn-ghost block w-full text-center">{T.demo.viewPassport}</Link>
+      </AuthScene>
     )
   }
 
   return (
-    <PageShell max="max-w-sm">
-      <div className="text-center mb-8">
-        <Wordmark className="justify-center mb-3" />
-        <LanguageToggle />
-        <h1 className="text-xl font-bold text-soft">{T.login.title}</h1>
-      </div>
-      <form onSubmit={onSubmit} className="card">
+    <AuthScene>
+      <h1 className="mb-1 text-2xl font-bold text-ink">{T.login.title}</h1>
+      <p className="mb-6 text-sm text-muted">Sign in to your proof workspace.</p>
+      <form onSubmit={onSubmit}>
         <ErrorNote>{error}</ErrorNote>
         <Field label={T.login.email}>
           <input className="field" type="email" dir="ltr" autoComplete="email"
+            placeholder="you@stage.com"
             value={email} onChange={(e) => setEmail(e.target.value)} required />
         </Field>
         <Field label={T.login.password}>
           <input className="field" type="password" autoComplete="current-password"
+            placeholder="••••••••"
             value={password} onChange={(e) => setPassword(e.target.value)} required />
         </Field>
         <button className="btn-primary w-full" disabled={loading}>
           {loading ? <><Spinner /> {T.common.loading}</> : T.login.cta}
         </button>
-        <p className="text-center mt-3 text-sm text-muted">
-          <Link to="/forgot-password" className="text-muted hover:text-soft">{T.login.forgot}</Link>
+        <p className="mt-4 text-center text-sm">
+          <Link to="/forgot-password" className="text-muted transition hover:text-ink">{T.login.forgot}</Link>
         </p>
-        <p className="text-center mt-2 text-sm text-muted">
-          <Link to="/signup" className="font-semibold text-[#657530] hover:underline">{T.login.secondary}</Link>
+        <p className="mt-2 text-center text-sm text-muted">
+          <Link to="/signup" className="font-semibold text-accent hover:underline">{T.login.secondary}</Link>
         </p>
       </form>
       {/* OAuth below the working form — disabled controls never lead the screen */}
-      <div className="card mt-3">
+      <div className="mt-6 border-t border-line pt-5">
         <SocialAuthButtons onOAuth={signInWithOAuth} disabled={!OAUTH_ENABLED} />
       </div>
-    </PageShell>
+    </AuthScene>
   )
 }
