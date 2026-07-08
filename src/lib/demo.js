@@ -170,7 +170,7 @@ export const demoRequests = [
   { id: 'dr2', artist_id: 'demo-artist-2', get requester_name() { return L('Yoav Ben-David', 'יואב בן-דוד') }, get requester_org() { return L('InDNegev Festival', 'פסטיבל אינדנגב') }, event_date: '2026-09-05', get event_type() { return L('Festival', 'פסטיבל') }, get location() { return L('Mitzpe Ramon', 'מצפה רמון') }, capacity_band: '800+', budget_band: '₪20,000+', get message() { return L('Sunset set', 'סט שקיעה') }, status: 'new', created_date: '2026-06-22T00:00:00Z', artists: { get stage_name() { return L('Idan Raz', 'עידן רז') } } },
 ]
 
-export const demoEntitlement = { id: 'dent1', status: 'pending', kind: 'founding_passport', created_at: '2026-06-25T00:00:00Z', artists: { stage_name: 'PERLMAN' } }
+export const demoEntitlement = { id: 'dent1', status: 'pending', kind: 'founding_passport', amount_note: 'GP-DEMO · ₪199 · Bit', created_at: '2026-06-25T00:00:00Z', subject_id: 'demo-user', subject_email: 'demo@gigproof.test', artists: { stage_name: 'PERLMAN' } }
 
 // The shape the public Passport (/api/passport) returns — getters so the language
 // is resolved at access time (not frozen at module load).
@@ -197,5 +197,51 @@ export const demoNotifications = [
   { id: 'dn2', type: 'confirmation_arrived', get body() { return L('Gagarin TLV confirmed: "Produced 10+ recurring INSOMNIA TLV techno nights"', 'Gagarin TLV אישרו: "הפיק 10+ ערבי טכנו קבועים של INSOMNIA TLV"') }, link: '/artist/claims', read: false, created_at: '2026-07-07T19:40:00Z' },
   { id: 'dn3', type: 'passport_published', get body() { return L('Your profile was published successfully!', 'הפספורט שלך פורסם בהצלחה!') }, link: '/artist/home', read: true, created_at: '2026-07-05T11:00:00Z' },
 ]
+
+// ── artist_access consent handshake (migration 027 target) — DEMO fixture.
+// Seeded with ONE realistic three-hat case (ENTITY-SPEC-ORG §6.1): Shai's own
+// representation workspace (INSOMNIA TLV / demo-org-2) has requested access to
+// Shai's own artist (PERLMAN / demo-artist) — "same grant, same scopes, same
+// revocability" as any other roster member, no special-case "it's me" path.
+// Mutable (like demoEntitlement) so the demo Add-artist/Representation screens
+// can drive the full pending→active→revoked lifecycle end-to-end with no backend.
+let _daaSeq = 2
+export const demoAccessRequests = [
+  {
+    id: 'daa1', artist_id: DEMO_ARTIST_ID, get artist_stage_name() { return 'PERLMAN' },
+    organization_id: 'demo-org-2', organization_name: 'INSOMNIA TLV',
+    scope: ['view'], territory: null, status: 'pending', consent_at: null,
+    expires_at: null, created_at: '2026-07-01T00:00:00Z',
+  },
+]
+export function demoRequestArtistAccess(orgId, artistId, scope, territory) {
+  const artist = artistId === demoArtist2.id ? demoArtist2 : demoArtist
+  const row = {
+    id: `daa${_daaSeq++}`, artist_id: artistId, artist_stage_name: artist.stage_name,
+    organization_id: orgId, organization_name: orgId === demoOrg.id ? demoOrg.name : 'INSOMNIA TLV',
+    scope: scope?.length ? scope : ['view'], territory: territory || null,
+    status: 'pending', consent_at: null, expires_at: null, created_at: new Date().toISOString(),
+  }
+  demoAccessRequests.push(row)
+  return { ok: true, id: row.id }
+}
+export function demoRespondToAccessRequest(id, approve, scope) {
+  const row = demoAccessRequests.find((r) => r.id === id)
+  if (!row) return { ok: false }
+  if (approve) {
+    row.status = 'active'
+    row.consent_at = new Date().toISOString()
+    if (scope?.length) row.scope = scope
+  } else {
+    row.status = 'revoked'
+    row.consent_at = null
+  }
+  return { ok: true }
+}
+export function demoRevokeArtistAccess(id) {
+  const row = demoAccessRequests.find((r) => r.id === id)
+  if (row) row.status = 'revoked'
+  return { ok: true }
+}
 
 export { DEMO_ARTIST_ID }

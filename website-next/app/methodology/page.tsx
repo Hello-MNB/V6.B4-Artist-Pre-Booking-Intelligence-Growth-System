@@ -5,8 +5,6 @@ export const metadata: Metadata = {
   description: 'Every claim in a GIGPROOF Passport carries a method label — the source and process by which it was verified. No bare numbers. No unattributed data.',
 }
 
-import { APP_URL } from '@/lib/app-url'
-
 const methodLabels = [
   {
     label: 'PRODUCER-CONFIRMED',
@@ -27,10 +25,10 @@ const methodLabels = [
     strength: 'Contextual — not draw evidence',
   },
   {
-    label: 'SELF-REPORTED · UNVERIFIED',
+    label: 'SELF-REPORTED',
     title: 'Artist stated; not yet confirmed by a third party.',
-    body: 'The artist logged the gig but no external party has confirmed it. This appears on the private Artist Radar only. It never reaches the public Passport until a producer confirms or a document is reviewed.',
-    strength: 'Private to the artist — never public',
+    body: 'The artist logged the gig but no external party has confirmed it. It always appears on the private Artist Radar. If the artist chooses to publish it, it can appear on the public Passport too — but only under the explicit SELF-REPORTED label, never disguised as verified.',
+    strength: 'Weakest — always labelled if published',
   },
 ]
 
@@ -66,7 +64,7 @@ const firewallItems = [
   'Audience draw is always expressed as a band (e.g. 70–150) — never an exact count.',
   'Every public claim shows its method label. "Verified" never stands alone.',
   'Every claim shows a date and geographic area. Evidence from 2023 ≠ evidence from 2026.',
-  'Self-reported and unverified claims never appear on the public Passport.',
+  'Self-reported data appears only with an explicit SELF-REPORTED label — never disguised as verified.',
   'Streaming figures appear as secondary context only — never as draw evidence.',
   'GIGPROOF publishes no score, ranking, percentile, prediction, or guarantee.',
   'A domain with no supported, verified claim is removed from the Passport entirely — never shown as "developing" or "missing".',
@@ -76,9 +74,30 @@ export default function Methodology() {
   return (
     <main style={{ backgroundColor: 'var(--color-paper)', color: 'var(--color-ink)', fontFamily: 'var(--font-heebo)' }}>
 
-      {/* PAGE HEADER */}
-      <section style={{ padding: '72px 24px 56px', borderBottom: '1px solid rgba(10,13,11,0.08)' }}>
-        <div style={{ maxWidth: '720px', margin: '0 auto' }}>
+      {/* PAGE HEADER — image hero */}
+      <section
+        style={{
+          margin: '28px max(24px, 4vw) 0',
+          border: '1px solid #2a362c',
+          borderRadius: '20px',
+          overflow: 'hidden',
+          minHeight: '420px',
+          background: `
+            linear-gradient(180deg,
+              rgba(10,13,11,0.55) 0%,
+              rgba(10,13,11,0.88) 65%,
+              rgba(10,13,11,0.98) 100%
+            ),
+            url('/gigproof-evidence-review.webp') center 25% / cover no-repeat
+          `,
+          color: 'var(--color-paper)',
+          position: 'relative',
+          display: 'flex',
+          alignItems: 'flex-end',
+          padding: 'clamp(2rem, 5vw, 3.5rem)',
+        }}
+      >
+        <div style={{ maxWidth: '720px', position: 'relative' }}>
           <p style={{
             fontFamily: 'var(--font-space-mono)',
             fontSize: '0.7rem',
@@ -90,19 +109,21 @@ export default function Methodology() {
             METHODOLOGY · HOW CLAIMS ARE VERIFIED
           </p>
           <h1 style={{
-            fontFamily: 'var(--font-archivo)',
+            fontFamily: 'Georgia, "Times New Roman", serif',
+            fontWeight: 400,
             fontSize: 'clamp(2rem, 5vw, 3.25rem)',
             lineHeight: 1.05,
-            letterSpacing: '-0.02em',
+            letterSpacing: '-0.03em',
+            color: 'var(--color-paper)',
             margin: '0 0 20px',
           }}>
             The method is the claim.
           </h1>
-          <p style={{ fontSize: '1.05rem', color: 'var(--color-tally)', maxWidth: '540px', lineHeight: 1.6, margin: '0 0 20px' }}>
+          <p style={{ fontSize: '1.05rem', color: 'rgba(243,245,239,0.68)', maxWidth: '540px', lineHeight: 1.6, margin: '0 0 20px' }}>
             Every piece of evidence in a GIGPROOF Passport carries a method label — the source and process by which it was verified.
             A number without a method is an assertion. A method-labelled claim is evidence.
           </p>
-          <p style={{ fontSize: '0.9rem', color: 'var(--color-tally)', maxWidth: '540px', lineHeight: 1.6, margin: 0 }}>
+          <p style={{ fontSize: '0.9rem', color: 'rgba(243,245,239,0.5)', maxWidth: '540px', lineHeight: 1.6, margin: 0 }}>
             No bare numbers. No unattributed data. No scores.
           </p>
         </div>
@@ -115,7 +136,7 @@ export default function Methodology() {
             fontFamily: 'var(--font-space-mono)',
             fontSize: '0.7rem',
             letterSpacing: '0.12em',
-            color: 'var(--color-tally)',
+            color: 'var(--color-tally-onlight)',
             textTransform: 'uppercase',
             marginBottom: '16px',
           }}>
@@ -134,6 +155,7 @@ export default function Methodology() {
             {methodLabels.map((m, i) => (
               <div
                 key={i}
+                className="method-label-row"
                 style={{
                   display: 'grid',
                   gridTemplateColumns: 'minmax(200px, 260px) 1fr',
@@ -150,7 +172,7 @@ export default function Methodology() {
                     fontFamily: 'var(--font-space-mono)',
                     fontSize: '0.65rem',
                     letterSpacing: '0.1em',
-                    color: 'var(--color-stamp)',
+                    color: 'var(--color-stamp-onlight)',
                     backgroundColor: 'rgba(200,240,77,0.08)',
                     display: 'inline-block',
                     padding: '4px 8px',
@@ -163,7 +185,7 @@ export default function Methodology() {
                     fontFamily: 'var(--font-space-mono)',
                     fontSize: '0.65rem',
                     letterSpacing: '0.08em',
-                    color: 'var(--color-tally)',
+                    color: 'var(--color-tally-onlight)',
                     margin: 0,
                   }}>
                     WEIGHT: {m.strength}
@@ -177,7 +199,7 @@ export default function Methodology() {
                   }}>
                     {m.title}
                   </h3>
-                  <p style={{ fontSize: '0.9rem', color: 'var(--color-tally)', lineHeight: 1.65, margin: 0 }}>
+                  <p style={{ fontSize: '0.9rem', color: 'var(--color-tally-onlight)', lineHeight: 1.65, margin: 0 }}>
                     {m.body}
                   </p>
                 </div>
@@ -185,6 +207,12 @@ export default function Methodology() {
             ))}
           </div>
         </div>
+
+        <style>{`
+          @media (max-width: 640px) {
+            .method-label-row { grid-template-columns: 1fr !important; }
+          }
+        `}</style>
       </section>
 
       {/* CLAIM PIPELINE — dark */}
@@ -284,7 +312,7 @@ export default function Methodology() {
             fontFamily: 'var(--font-space-mono)',
             fontSize: '0.7rem',
             letterSpacing: '0.12em',
-            color: 'var(--color-tally)',
+            color: 'var(--color-tally-onlight)',
             textTransform: 'uppercase',
             marginBottom: '16px',
           }}>
@@ -298,7 +326,7 @@ export default function Methodology() {
           }}>
             What is always true about every public claim.
           </h2>
-          <p style={{ color: 'var(--color-tally)', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '40px' }}>
+          <p style={{ color: 'var(--color-tally-onlight)', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '40px' }}>
             These rules are not guidelines. They are structural. A claim that violates any rule is never published.
           </p>
 
@@ -319,7 +347,7 @@ export default function Methodology() {
                 <span style={{
                   fontFamily: 'var(--font-space-mono)',
                   fontSize: '0.75rem',
-                  color: 'var(--color-stamp)',
+                  color: 'var(--color-stamp-onlight)',
                   flexShrink: 0,
                   paddingTop: '2px',
                 }}>
@@ -378,7 +406,7 @@ export default function Methodology() {
                 }}>
                   ✗
                 </span>
-                <p style={{ fontSize: '0.875rem', color: 'var(--color-tally)', margin: 0, lineHeight: 1.5 }}>
+                <p style={{ fontSize: '0.875rem', color: 'var(--color-tally-onlight)', margin: 0, lineHeight: 1.5 }}>
                   {item}
                 </p>
               </div>
@@ -398,7 +426,7 @@ export default function Methodology() {
           }}>
             See it in practice.
           </h2>
-          <p style={{ color: 'var(--color-tally)', marginBottom: '32px', lineHeight: 1.6 }}>
+          <p style={{ color: 'var(--color-tally-onlight)', marginBottom: '32px', lineHeight: 1.6 }}>
             The demo Passport shows a real claim pipeline — method labels, dates, bands, all visible.
           </p>
           <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>

@@ -27,7 +27,7 @@ const labelStyle: React.CSSProperties = {
   fontFamily: 'var(--font-space-mono)',
   fontSize: '0.65rem',
   letterSpacing: '0.1em',
-  color: 'var(--color-tally)',
+  color: 'var(--color-tally-onlight)',
   textTransform: 'uppercase',
 }
 
@@ -70,9 +70,9 @@ export default function WaitlistForm() {
       <div
         style={{
           padding: '28px 24px',
-          border: '1px solid rgba(91,63,214,0.25)',
+          border: '1px solid rgba(200,240,77,0.25)',
           borderRadius: 'var(--radius-sm)',
-          backgroundColor: 'rgba(91,63,214,0.05)',
+          backgroundColor: 'rgba(200,240,77,0.05)',
         }}
         role="status"
       >
@@ -82,17 +82,17 @@ export default function WaitlistForm() {
             fontSize: '0.75rem',
             fontWeight: 700,
             letterSpacing: '0.08em',
-            color: 'var(--color-stamp)',
+            color: 'var(--color-stamp-onlight)',
             textTransform: 'uppercase',
             margin: '0 0 8px',
           }}
         >
           {state === 'done' ? "✓ You're on the list" : "✓ You're already on the list"}
         </p>
-        <p style={{ fontSize: '0.9rem', color: 'var(--color-tally)', margin: 0, lineHeight: 1.6 }}>
+        <p style={{ fontSize: '0.9rem', color: 'var(--color-tally-onlight)', margin: 0, lineHeight: 1.6 }}>
           {state === 'done'
             ? "We'll only use your email to contact you about GIGPROOF beta access. No spam, no third parties."
-            : "This email is already registered - we'll be in touch about beta access."}
+            : "This email is already registered — we'll be in touch about beta access."}
         </p>
       </div>
     )
@@ -171,7 +171,7 @@ export default function WaitlistForm() {
           fontFamily: 'var(--font-space-mono)',
           fontSize: '0.65rem',
           letterSpacing: '0.06em',
-          color: 'var(--color-tally)',
+          color: 'var(--color-tally-onlight)',
           margin: 0,
         }}
       >

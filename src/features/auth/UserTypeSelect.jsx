@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from './AuthProvider.jsx'
 import { upsertProfile } from '../../lib/db.js'
@@ -6,6 +6,7 @@ import { bootstrapOrg } from '../../lib/orgs.js'
 import { PageShell, Wordmark, GpIcon } from '../../components/ui.jsx'
 import { useLang } from '../../context/LangContext.jsx'
 import { ROLES } from '../../lib/constants.js'
+import { PENDING_ROLE_KEY, JOB_ROLES } from './roleHint.js'
 
 export default function UserTypeSelect() {
   const { T } = useLang()
@@ -13,10 +14,14 @@ export default function UserTypeSelect() {
   const nav = useNavigate()
   const [busy, setBusy] = useState(false)
 
-  // S2 "what do you do?" — three self-select roles:
+  // Jobs-first framing (canon §5): the question is "what would you like to do
+  // first?", never a role list. Same underlying role values are written
+  // unchanged — this is a copy/IA swap only, no schema/route-target change
+  // beyond ARTIST now going straight to onboarding (see item 1, contextual
+  // consent replaces the /consent wall).
   //   ARTIST  = אמן            (supply side, self-serve Passport builder)
-  //   BOOKER  = מזמין/מפיק אירוע (demand side, trust-receiver — evaluates Passports)
   //   AGENCY  = אמרגן/סוכנות    (talent agency, primary payer — manages artist roster)
+  //   BOOKER  = מזמין/מפיק אירוע (demand side, trust-receiver — evaluates Passports)
   //
   // NOTE: PRODUCER (claim-confirmer / מפיק מאשר) is NOT self-selected here.
   // Claim-confirmers arrive via a one-time magic link (/confirm/:token) and never
@@ -28,16 +33,16 @@ export default function UserTypeSelect() {
   // Mapping אמרגן → BOOKER was a critical domain inversion (fixed BT-56–58).
   const ROLE_OPTIONS = [
     {
-      key: ROLES.ARTIST, label: T.roleSelect.artist, route: '/consent', icon: 'gp-artist',
+      key: ROLES.ARTIST, label: T.roleSelect.jobArtist, route: '/onboarding', icon: 'gp-artist',
       what: 'Build a Passport of provable evidence — bands and confirmed facts, never a score.',
     },
     {
-      key: ROLES.BOOKER, label: T.roleSelect.booker, route: '/discover', icon: 'gp-booking',
-      what: 'Evaluate an unfamiliar artist on method-labeled evidence before you risk your name.',
+      key: ROLES.AGENCY, label: T.roleSelect.jobAgency, route: '/agency', icon: 'gp-manager',
+      what: 'Keep your whole roster’s proof in one place — ready to send, always current.',
     },
     {
-      key: ROLES.AGENCY, label: T.roleSelect.agency, route: '/agency', icon: 'gp-manager',
-      what: 'Keep your whole roster’s proof in one place — ready to send, always current.',
+      key: ROLES.BOOKER, label: T.roleSelect.jobBooker, route: '/discover', icon: 'gp-booking',
+      what: 'Evaluate an unfamiliar artist on method-labeled evidence before you risk your name.',
     },
   ]
 
@@ -57,12 +62,32 @@ export default function UserTypeSelect() {
     nav(route)
   }
 
+  // Cross-funnel seam: if the visitor arrived via a persona-specific CTA on
+  // the website (e.g. /artists → /app/signup?role=artist), Signup.jsx left a
+  // hint in sessionStorage. Auto-resolve this "what would you like to do
+  // first?" question instead of making them re-answer it by clicking the
+  // card they already implied by their entry point. Runs once; a plain
+  // organic visit to /select (no hint) is untouched and still asks.
+  const autoChoseRef = useRef(false)
+  useEffect(() => {
+    if (autoChoseRef.current) return
+    const hint = sessionStorage.getItem(PENDING_ROLE_KEY)
+    if (!hint) return
+    sessionStorage.removeItem(PENDING_ROLE_KEY)
+    if (!JOB_ROLES.includes(hint)) return
+    const match = ROLE_OPTIONS.find((r) => r.key === hint)
+    if (!match) return
+    autoChoseRef.current = true
+    choose(match.key, match.route)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <PageShell max="max-w-md">
       <div className="mb-8 text-center">
         <Wordmark className="mb-4 justify-center" />
         <p className="mb-1 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-gold">One quick question</p>
-        <h1 className="text-2xl font-bold text-ink">{T.roleSelect.title}</h1>
+        <h1 className="text-2xl font-bold text-ink">{T.roleSelect.jobTitle}</h1>
       </div>
       <div className="space-y-3">
         {ROLE_OPTIONS.map((r) => (

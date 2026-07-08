@@ -334,7 +334,7 @@ app.post('/api/confirm/:token', async (req, res) => {
     const { token } = req.params
     const { response, revoke } = req.body || {}
     const { data: pc, error } = await admin
-      .from('producer_confirmations').select('id, claim_id, artist_id').eq('token', token).maybeSingle()
+      .from('producer_confirmations').select('id, claim_id').eq('token', token).maybeSingle()
     if (error) throw error
     if (!pc) return res.status(404).json({ error: 'Invalid or expired link.' })
 
@@ -350,15 +350,15 @@ app.post('/api/confirm/:token', async (req, res) => {
     await admin.from('producer_confirmations').update({
       response, revoked: false, responded_at: new Date().toISOString(),
     }).eq('id', pc.id)
-    // Trust rule: ONLY an unqualified YES earns 'producer-confirmed'.
-    // A partial confirmation must never present as a full one on the Passport;
-    // no/wrong_person/partial clear the label.
+    // Only an unqualified "yes" earns the strongest label. A "partial" reply
+    // means the wording needs correction — it must NOT read as fully confirmed
+    // until the fix is reviewed (canon: correction-pending, not confirmed).
     const method = response === 'yes' ? 'producer-confirmed' : null
     await admin.from('claims').update({ method_label: method }).eq('id', pc.claim_id)
 
     // P1-1 — notify the artist owner a producer confirmation arrived (best-effort,
-    // never blocks the response below). Server has no user-language preference to
-    // read, so the body is authored in English (T.notifications.confirmationArrived).
+    // never blocks the response). Server has no user-language preference to read,
+    // so the body is authored in English (T.notifications.confirmationArrived).
     const { data: claimRow } = await admin.from('claims').select('value, claim_type').eq('id', pc.claim_id).maybeSingle()
     const claimText = claimRow?.value || claimRow?.claim_type || 'your claim'
     notifyArtistOwner(pc.artist_id, {

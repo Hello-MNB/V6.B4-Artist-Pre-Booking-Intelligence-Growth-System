@@ -46,6 +46,7 @@ export const T = {
     facebookCta: 'Sign in with Facebook',
     socialError: 'Social sign-in failed.',
     oauthComingSoon: 'Google & Facebook sign-in — coming soon. Use email for now.',
+    oauthDemoNotice: 'This is a sample-data demo — social sign-in isn’t connected here.',
   },
   signup: {
     title: "Let's build your professional profile",
@@ -87,6 +88,12 @@ export const T = {
     producer: "I'm a producer",  // kept for magic-link edge-case fallback; NOT shown in UserTypeSelect
     agency: "I'm an agency / artist manager",
     operator: "I'm an operator (internal)",
+    // Jobs-first framing (canon §5) — UserTypeSelect asks the JOB, not the role;
+    // the same role values are written underneath, unchanged.
+    jobTitle: 'What would you like to do first?',
+    jobArtist: 'Build my artist world',
+    jobAgency: 'Manage artists',
+    jobBooker: 'Evaluate artists for an event',
   },
   demo: {
     title: 'Demo — choose a role',
@@ -132,6 +139,11 @@ export const T = {
     howToPay: 'How to pay',
     payMethods: 'Bit / bank transfer / invoice',
     payInstructions: 'Pay via Bit or transfer, then mark "I\'ve paid" — we\'ll confirm and activate your Passport.',
+    bitNumberLabel: 'Bit number',
+    copyBit: 'Copy number',
+    referenceLabel: 'Payment reference — add to the Bit note',
+    amountLabel: 'Amount you sent (₪)',
+    verifyNote: 'The operator verifies the transfer in Bit and activates — usually within a few hours.',
     paidCta: "I've paid — submit for review",
     pendingTitle: 'Your payment is under review',
     pendingBody: "We received your confirmation. We'll verify the payment and activate your official Passport soon.",
@@ -140,6 +152,17 @@ export const T = {
     getPassport: 'Issue official Passport',
   },
   onboarding: {
+    // ── Minimum viable entry (owner order, 8 Jul): 2 screens, 4 fields.
+    // The Radar collects everything else — these keys carry that promise.
+    entryStepLabels: ['Who you are', 'Strongest link'],
+    entryTitle: 'Your name on the flyer',
+    entryHint: 'Two quick questions and your Radar takes over — it collects everything else with you, at your pace.',
+    entryOptional: 'optional',
+    entryLinkTitle: 'Your strongest link',
+    entryLinkHint: 'One link that shows you best — Instagram or SoundCloud. The Radar scans it and starts building your proof.',
+    entryDeferNote: 'Photo, gigs, numbers, the rest of your links — nothing else is asked now. Your Radar surfaces each one as a quiet next step, when it matters.',
+    entryStart: 'Open my Radar',
+    entryStartScan: 'Scan it — open my Radar',
     goalTitle: 'What are you trying to achieve?',
     goalWhy: 'Your goal decides which evidence we prioritize — it never changes what is true.',
     goalNotSureHint: '"Not sure yet" is a completely valid answer — we\'ll suggest evidence paths anyway.',
@@ -327,12 +350,29 @@ export const T = {
     budget: 'Budget:',
     loadError: 'Failed to load requests.',
     saveError: 'Save failed. Try again.',
+    inviteTabInvite: 'Invite existing artist',
+    inviteTabOwn: 'Create roster placeholder',
+    inviteFieldLabel: "Artist's Passport link or GIGPROOF ID",
+    inviteFieldHint: 'Paste the link you already have — GIGPROOF never surfaces a cold directory of artists to browse.',
+    inviteTerritoryLabel: 'Territory (optional)',
+    inviteScopeLabel: 'Access to request',
+    inviteSend: 'Send invite',
+    inviteSent: 'Invite sent — awaiting artist approval.',
+    quickAddHint: "Use this only if the artist doesn't have their own GIGPROOF account yet — this creates a roster entry with no separate artist login or approval control.",
+    accessRequestsTitle: 'Representation — access you requested',
+    accessRequestsEmpty: 'No access requests sent yet.',
+    pendingArtistLabel: 'Pending invite',
+    awaitingApproval: 'Awaiting artist approval — no content visible',
+    accessRevoked: 'Access revoked',
+    migration027Note: 'This feature needs a database update (migration 027). Not saved — see console for details.',
   },
   booker: {
     title: 'Open an artist Passport',
     subtitle: 'Paste a Passport link you received to view the proof and check availability.',
     inputLabel: 'Passport link / ID',
     openCta: 'Open',
+    noLinkYet: "Don't have a link yet?",
+    sampleCta: 'See a sample Passport',
   },
   admin: {
     title: 'Operator console',
@@ -379,6 +419,8 @@ export const T = {
     paymentsTitle: 'Pending payments',
     noPayments: 'No pending payments',
     markActive: 'Confirm & activate',
+    noAmountNote: 'No reference on file',
+    noEmailOnFile: 'No email on file',
   },
   consent: {
     title: 'Consent & Privacy',
@@ -398,6 +440,8 @@ export const T = {
     tosDraft: 'Terms of Service (DRAFT)',
     allRequired: 'You must agree to the two required consents to continue.',
     contextualNote: 'Two more consents will be asked for later, each in its own context — third-party evidence (when you add such evidence) and public publication (before your Passport goes live). Nothing is ever bundled.',
+    inlineTitle: 'Privacy & data use',
+    inlineAgree: 'I agree to the GIGPROOF Privacy Policy and to the processing of the information I provide to build my profile.',
     publishTitle: 'Publish to your public Passport',
     publishBody: 'I approve publishing the strengths I selected to a public Passport that booking managers can view. I can unpublish at any time.',
     publishAgree: 'I approve & publish',
@@ -541,6 +585,7 @@ export const T = {
     seatLimit: 'No seats available.',
     seatUpsell: 'Upgrade to agency to add team seats.',
     switchOrg: 'Switch account / agency',
+    switchNote: 'Switching context — never re-registration.',
     acceptTitle: 'Accept invitation',
     acceptBody: (name, role) => `You have been invited to join ${name} as ${role}.`,
     join: 'Join',
@@ -639,6 +684,7 @@ export const T = {
     // ── A9 Artist Radar (the artist's private surface — LF-A1) ──
     artistTitle: 'Artist Radar',
     artistSubtitle: 'Private to you and approved collaborators.',
+    scanKickoff: 'Your Radar is live — strengths appear first; anything that needs you waits quietly below.',
     nextMove: 'Your clearest next move',
     nextActionEyebrow: 'Recommended next action',
     timeHint: (m) => `About ${m} minutes · your input is saved`,
@@ -752,6 +798,14 @@ export const T = {
         streaming: 'Streaming profile',
         community: 'Community size (band)',
         ticketExport: 'Ticket / settlement export',
+        // deferred from the shortened onboarding (owner order, 8 Jul)
+        genre: 'Genre',
+        goal: 'Your goal',
+        regions: 'Regions you play',
+        whatsapp: 'WhatsApp for coordination',
+        freqBand: 'Performance frequency (band)',
+        sellsTickets: 'Sells own tickets',
+        priceBand: 'Price / guarantee (band)',
       },
     },
     rule: {
@@ -845,6 +899,35 @@ export const T = {
     'artist-declared': 'Artist-declared',
     'unable-to-verify': 'Unable to verify',
     'stale': 'Not recently updated',
+  },
+  // Shared artist_access scope vocabulary — the exact 5 values DB-STRUCTURE.md
+  // locks (view/upload/edit/share/publish). Reused by both the agency's invite
+  // sheet and the artist's Representation approve sheet, so the words never drift.
+  access: {
+    scopeView: 'View',
+    scopeUpload: 'Upload',
+    scopeEdit: 'Edit',
+    scopeShare: 'Share',
+    scopePublish: 'Publish',
+    publishHint: 'Publish scope is propose only — you approve every publication.',
+  },
+  // Artist-side "who wants access to me" — REPRESENTATION-CANON §1.1/§1.5.
+  representation: {
+    title: 'Representation',
+    subtitle: 'Agencies and production companies that have — or want — access to your Passport.',
+    empty: 'No access requests yet.',
+    wantsAccess: (org) => `${org} wants access`,
+    approve: 'Approve',
+    decline: 'Decline',
+    revoke: 'Revoke access',
+    revokeConfirm: (org) => `Revoke ${org}'s access? They will lose access immediately.`,
+    activeLabel: 'Active access',
+    revokedLabel: 'Access revoked',
+    approveTitle: 'Approve access',
+    approveScopeHint: 'Choose what this organization may do. You can change or revoke this at any time.',
+    approveCta: 'Approve & grant access',
+    declineConfirm: (org) => `Decline ${org}'s request?`,
+    migrationNote: 'This feature needs a database update (migration 027) to fully activate.',
   },
 }
 

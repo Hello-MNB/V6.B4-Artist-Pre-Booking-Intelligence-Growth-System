@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { updateClaim, updateAct, addProfileItem } from '../../lib/db.js'
+import { updateClaim, updateAct, addProfileItem, addEvidence, processEvidence, listClaims } from '../../lib/db.js'
 import { uploadFile } from '../../lib/storage.js'
-import { BottomSheet, Spinner, GpIcon, PlatformMark, platformOf } from '../../components/ui.jsx'
+import { BottomSheet, Spinner, GpIcon } from '../../components/ui.jsx'
+import { PlatformLogo, detectPlatform } from '../../components/PlatformLogo.jsx'
 import { MethodLabel } from './proofBits.jsx'
 import { useLang } from '../../context/LangContext.jsx'
 import { methodLabelFor, VISIBILITY } from '../../lib/constants.js'
@@ -29,10 +30,10 @@ const RING = {
 }
 // Bounded state chips — low-saturation tints (≤10% alpha), text does the work.
 const NODE_CHIP = {
-  [NODE.CONFIRMED]: { icon: '✓', c: 'bg-good-bg text-good' },
-  [NODE.FOUND]: { icon: '✦', c: 'bg-found-bg text-found' },
-  [NODE.REVIEW]: { icon: '?', c: 'bg-need-bg text-need' },
-  [NODE.MISSING]: { icon: '+', c: 'bg-na-bg text-na' },
+  [NODE.CONFIRMED]: { icon: '✓', c: 'bg-[rgba(190,226,78,0.10)] text-[#CBEE72]' },
+  [NODE.FOUND]: { icon: '✦', c: 'bg-[rgba(242,192,99,0.10)] text-gold' },
+  [NODE.REVIEW]: { icon: '?', c: 'bg-[rgba(227,154,75,0.10)] text-[#F0B478]' },
+  [NODE.MISSING]: { icon: '+', c: 'bg-na-bg text-[#9AA29B]' },
 }
 
 const hostOf = (u = '') => { try { return new URL(u).hostname.replace(/^www\./, '') } catch { return '' } }
@@ -56,7 +57,7 @@ function destinationOf(claim) {
   return publicBound ? 'your Passport view' : 'your private record'
 }
 
-export default function RadarUniverse({ artist, items, claims, onClaimsChange, nextAction, onNextAction, onArtistChange, onItemsRefresh, reviewSignal = 0 }) {
+export default function RadarUniverse({ artist, act, items, claims, onClaimsChange, nextAction, onNextAction, onArtistChange, onActChange, onItemsRefresh, reviewSignal = 0, focusPlanet = null, focusSignal = 0 }) {
   const { T } = useLang()
   const S = T.radar.universe
   const nav = useNavigate()
@@ -77,7 +78,7 @@ export default function RadarUniverse({ artist, items, claims, onClaimsChange, n
     flashRef.current = setTimeout(() => setFlashMsg(''), 3200)
   }
 
-  const uni = useMemo(() => buildUniverse({ artist, items, claims, T }), [artist, items, claims, T])
+  const uni = useMemo(() => buildUniverse({ artist, act, items, claims, T }), [artist, act, items, claims, T])
   const worlds = useMemo(() => deriveWorlds({ artist, items }), [artist, items])
   const evidenceRoute = `/evidence/${artist.id}`
 
@@ -95,6 +96,12 @@ export default function RadarUniverse({ artist, items, claims, onClaimsChange, n
 
   // The dashboard's Next-step card can open the review mode without leaving the radar.
   useEffect(() => { if (reviewSignal > 0) setReview(true) }, [reviewSignal])
+
+  // …and it can open a SPECIFIC planet panel (deferred-field fills: "Add your
+  // photo" → Identity planet) — same panel a tap on the planet opens.
+  useEffect(() => {
+    if (focusSignal > 0 && focusPlanet) { setReview(false); setSelected(focusPlanet) }
+  }, [focusSignal, focusPlanet])
 
   // lock body scroll while a panel is open (mobile flawlessness)
   useEffect(() => {
@@ -173,7 +180,7 @@ export default function RadarUniverse({ artist, items, claims, onClaimsChange, n
   const rowProps = {
     S, T,
     onEvidence: goEvidence,
-    artist, onArtistChange, onItemsRefresh,
+    artist, onArtistChange, onActChange, onItemsRefresh, onClaimsChange,
   }
 
   return (
@@ -187,7 +194,7 @@ export default function RadarUniverse({ artist, items, claims, onClaimsChange, n
         {FILTERS.map((f) => (
           <button key={f.key} role="tab" aria-selected={filter === f.key} onClick={() => pickFilter(f.key)}
             className={`relative flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] transition-colors ${
-              filter === f.key ? 'border-line2 bg-raise text-ink' : 'border-transparent bg-surface2 text-muted hover:bg-raise'
+              filter === f.key ? 'border-line2 bg-line text-ink' : 'border-transparent bg-surface2 text-muted hover:bg-raise'
             }`}>
             {f.label}
             {/* found-items live here — a quiet gold dot on the Needs-you lens */}
@@ -238,7 +245,7 @@ export default function RadarUniverse({ artist, items, claims, onClaimsChange, n
                 style={{ left: `${x}%`, top: `${y}%` }}
                 className={`absolute -translate-x-1/2 -translate-y-1/2 text-center transition-all duration-300 ${dimmed ? 'opacity-25' : 'opacity-100'}`}
                 aria-label={`${S.planets[p.key]} — ${S.state[info.state]}${complete ? ` · ${S.complete}` : ''}`}>
-                <span className={`relative mx-auto grid h-14 w-14 place-items-center rounded-full border bg-surface2 transition-transform hover:scale-105 ${RING[info.state]} ${info.foundCount > 0 ? 'shadow-glow-gold' : ''}`}>
+                <span className={`relative mx-auto grid h-14 w-14 place-items-center rounded-full border bg-surface2 transition-transform hover:scale-105 ${RING[info.state]} ${info.foundCount > 0 ? 'shadow-[0_0_16px_rgba(242,192,99,0.14)]' : ''}`}>
                   <GpIcon id={p.icon} className="h-6 w-6 text-ink/90" />
                   {/* found — a small gold dot, not a badge shouting */}
                   {info.foundCount > 0 && (
@@ -246,7 +253,7 @@ export default function RadarUniverse({ artist, items, claims, onClaimsChange, n
                   )}
                   {/* accomplishment — deliberately quiet: a small settled ✓ */}
                   {complete && (
-                    <span aria-hidden className="absolute -bottom-0.5 -right-0.5 grid h-4 w-4 place-items-center rounded-full bg-good-bg text-[8px] text-good ring-1 ring-bg2">✓</span>
+                    <span aria-hidden className="absolute -bottom-0.5 -right-0.5 grid h-4 w-4 place-items-center rounded-full bg-[rgba(190,226,78,0.10)] text-[8px] text-[#CBEE72] ring-1 ring-bg2">✓</span>
                   )}
                 </span>
                 <span className="mt-1.5 block w-20 font-mono text-[8px] uppercase tracking-[0.08em] text-faint leading-tight">
@@ -276,7 +283,7 @@ export default function RadarUniverse({ artist, items, claims, onClaimsChange, n
       {/* named receipt + undo — dark green card, lime dot, says WHAT landed WHERE */}
       {undo && (
         <div role="status" tabIndex={0} onMouseEnter={pauseUndo} onMouseLeave={resumeUndo} onFocus={pauseUndo} onBlur={resumeUndo}
-          className="fixed inset-x-4 bottom-4 z-[70] mx-auto flex max-w-md items-center justify-between gap-3 rounded-xl border border-accent/25 bg-surface px-3.5 py-2.5 text-xs text-ink shadow-card">
+          className="fixed inset-x-4 bottom-4 z-[70] mx-auto flex max-w-md items-center justify-between gap-3 rounded-xl border border-accent/25 bg-surface px-3.5 py-2.5 text-xs text-ink shadow-[0_24px_60px_-24px_rgba(0,0,0,0.75)]">
           <span className="flex min-w-0 items-center gap-2">
             <span aria-hidden className="mt-px h-2 w-2 shrink-0 rounded-full bg-accent" />
             <span className="min-w-0">
@@ -292,7 +299,7 @@ export default function RadarUniverse({ artist, items, claims, onClaimsChange, n
 
       {/* generic saved / bulk receipt */}
       {flashMsg && !undo && (
-        <div role="status" className="fixed inset-x-4 bottom-4 z-[70] mx-auto flex max-w-md items-center gap-2 rounded-xl border border-accent/25 bg-surface px-3.5 py-2.5 text-xs font-semibold text-ink shadow-card">
+        <div role="status" className="fixed inset-x-4 bottom-4 z-[70] mx-auto flex max-w-md items-center gap-2 rounded-xl border border-accent/25 bg-surface px-3.5 py-2.5 text-xs font-semibold text-ink shadow-[0_24px_60px_-24px_rgba(0,0,0,0.75)]">
           <span aria-hidden className="h-2 w-2 shrink-0 rounded-full bg-accent" />
           <span className="truncate">{flashMsg}</span>
         </div>
@@ -356,7 +363,7 @@ export default function RadarUniverse({ artist, items, claims, onClaimsChange, n
 // identifiable reference), (3) the honest proves / doesn't-prove line. The
 // button names what it confirms. Non-claim rows keep the inline expander +
 // in-place fill form. Never a second modal above the panel.
-function PlanetRow({ node: n, planet, S, T, busy, onConfirm, onEvidence, artist, onArtistChange, onItemsRefresh, onSaved }) {
+function PlanetRow({ node: n, planet, S, T, busy, onConfirm, onEvidence, artist, onArtistChange, onActChange, onItemsRefresh, onClaimsChange, onSaved }) {
   const [open, setOpen] = useState(false)
   const chip = NODE_CHIP[n.state]
   const actionable = (n.state === NODE.FOUND || n.state === NODE.REVIEW) && !!n.claim
@@ -365,8 +372,12 @@ function PlanetRow({ node: n, planet, S, T, busy, onConfirm, onEvidence, artist,
   const ref = sourceRef(n)
   const wording = c ? (c.value || human(c.claim_type)) : n.label
 
-  const icon = n.url
-    ? <PlatformMark platform={platformOf(n.url)} />
+  // Recognized platform first (link URL, or the claim's source_type / label —
+  // covers non-link sources like a ticket export or a WhatsApp field); falls
+  // back to the planet's own icon only when nothing is recognized.
+  const platform = detectPlatform(n.url) || detectPlatform(c?.source_type) || detectPlatform(n.label)
+  const icon = platform
+    ? <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full border border-line bg-surface2 text-ink/80"><PlatformLogo name={platform} size={16} /></span>
     : <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-na-bg text-muted"><GpIcon id={PLANETS.find((p) => p.key === planet)?.icon || 'gp-source'} className="h-4 w-4" /></span>
 
   if (actionable) {
@@ -435,7 +446,9 @@ function PlanetRow({ node: n, planet, S, T, busy, onConfirm, onEvidence, artist,
             <MissingFill
               node={n} artist={artist} S={S}
               onArtistChange={onArtistChange}
+              onActChange={onActChange}
               onItemsRefresh={onItemsRefresh}
+              onClaimsChange={onClaimsChange}
               onDone={() => { setOpen(false); onSaved() }}
             />
           )}
@@ -449,8 +462,9 @@ function PlanetRow({ node: n, planet, S, T, busy, onConfirm, onEvidence, artist,
 // One node = one tiny form. Saving updates the data and the node flips to ✓
 // without ever leaving the panel. (Ticket exports stay in the evidence flow —
 // they carry the third-party consent gate.)
-function MissingFill({ node, artist, S, onArtistChange, onItemsRefresh, onDone }) {
-  const { kind, field, max, placeholder } = node.fill
+function MissingFill({ node, artist, S, onArtistChange, onActChange, onItemsRefresh, onClaimsChange, onDone }) {
+  const { T, BANDS } = useLang() // band options + goal labels are localized
+  const { kind, field, max, placeholder, set } = node.fill
   const [v, setV] = useState('')
   const [v2, setV2] = useState('')
   const [busy, setBusy] = useState(false)
@@ -479,6 +493,49 @@ function MissingFill({ node, artist, S, onArtistChange, onItemsRefresh, onDone }
         <button className="btn-ghost w-full" disabled={busy} onClick={() => saveArtist({ [field]: true })}>
           {busy ? <Spinner /> : S.fill.invoiceYes}
         </button>
+      )}
+
+      {/* band — the deferred draw bands (firewall: a BAND is the only public
+          form; chips reuse the old wizard's picker pattern, in place) */}
+      {kind === 'band' && (
+        <div className="flex flex-wrap gap-2">
+          {(BANDS[set] || []).map((o) => (
+            <button key={o} disabled={busy} onClick={() => saveArtist({ [field]: o })}
+              className="chip min-h-[44px] border border-line2 bg-surface2 px-4 py-2 font-mono text-ink/85 transition-colors hover:border-line2">
+              {o}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* yes/no — deferred booleans that carry information either way (e.g.
+          sells own tickets); an honest "no" is a valid, saveable answer */}
+      {kind === 'yesno' && (
+        <div className="flex gap-2">
+          {[[T.common.yes, true], [T.common.no, false]].map(([t, val]) => (
+            <button key={t} disabled={busy} onClick={() => saveArtist({ [field]: val })}
+              className="chip min-h-[44px] border border-line2 bg-surface2 px-5 py-2 font-mono text-ink/85 transition-colors hover:border-line2">
+              {t}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* goal (Act-level, canon A4) — guidance only: prioritizes evidence
+          paths, never changes what is true. "Not sure" is a valid answer. */}
+      {kind === 'goal' && (
+        <div className="flex flex-wrap gap-2">
+          {Object.entries(T.onboarding.goals).map(([g, label]) => (
+            <button key={g} disabled={busy}
+              onClick={() => run(async () => {
+                if (onActChange) await onActChange({ artist_goal: g })
+                else await updateAct(artist.id, { artist_goal: g })
+              })}
+              className="chip min-h-[44px] border border-line2 bg-surface2 px-3 py-2 text-sm font-semibold text-ink/85 transition-colors hover:border-line2">
+              {label}
+            </button>
+          ))}
+        </div>
       )}
 
       {(kind === 'text' || kind === 'url') && (
@@ -539,8 +596,20 @@ function MissingFill({ node, artist, S, onArtistChange, onItemsRefresh, onDone }
           <input className="field" dir="ltr" placeholder={S.fill.urlPlaceholder} value={v} onChange={(e) => setV(e.target.value)} />
           <button className="btn-ghost w-full" disabled={busy || !/^https?:\/\//i.test(v.trim())}
             onClick={() => run(async () => {
-              await addProfileItem({ artist_id: artist.id, item_type: 'link', title: 'link', public_url: v.trim(), visibility: 'passport-ok', source_status: 'artist-provided' })
+              const value = v.trim()
+              await addProfileItem({ artist_id: artist.id, item_type: 'link', title: 'link', public_url: value, visibility: 'passport-ok', source_status: 'artist-provided' })
               await onItemsRefresh?.()
+              // Same source also becomes evidence → runs through the AI claim
+              // pipeline right here so the resulting found/review node appears
+              // in this same radar session, not only after a reload.
+              try {
+                await addEvidence({
+                  artist_id: artist.id, evidence_type: 'link', source_type: 'public-profile',
+                  value, public_url: value, claim_intent: 'consistent-frequency', source_owner_consent: true,
+                })
+                await processEvidence(artist.id)
+                if (onClaimsChange) onClaimsChange(await listClaims(artist.id))
+              } catch { /* evidence mirror is best-effort — the profile link itself is already saved */ }
             })}>
             {busy ? <Spinner /> : S.fill.save}
           </button>
@@ -557,8 +626,8 @@ function CenterStar({ artist, T, dim }) {
   return (
     <div className={`text-center transition-opacity ${dim ? 'opacity-50' : ''}`}>
       {artist.photo_url
-        ? <img src={artist.photo_url} alt="" className="mx-auto h-20 w-20 rounded-full border border-gold/70 object-cover shadow-glow-gold" />
-        : <span className="mx-auto grid h-20 w-20 place-items-center rounded-full border border-gold/70 bg-surface2 font-display text-xl text-ink shadow-glow-gold">
+        ? <img src={artist.photo_url} alt="" className="mx-auto h-20 w-20 rounded-full border border-gold/70 object-cover shadow-[0_0_28px_rgba(242,192,99,0.25)]" />
+        : <span className="mx-auto grid h-20 w-20 place-items-center rounded-full border border-gold/70 bg-surface2 font-display text-xl text-ink shadow-[0_0_28px_rgba(242,192,99,0.18)]">
             {(artist.stage_name || '★').slice(0, 1)}
           </span>}
       <span className="font-display mt-2 block text-sm font-bold tracking-[-0.01em] text-ink">

@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { useLocale } from '@/lib/locale-context'
 import type { Locale } from '@/lib/i18n'
@@ -47,11 +48,15 @@ export function Nav() {
   const [open, setOpen] = useState(false)
   const { messages } = useLocale()
   const nav = messages.nav
+  const pathname = usePathname()
 
   const navLinks = NAV_LINK_KEYS.map(({ href, key }) => ({
     href,
     label: nav[key as keyof typeof nav] as string,
   }))
+
+  const isActive = (href: string) =>
+    href === '/' ? pathname === '/' : pathname === href || pathname?.startsWith(`${href}/`)
 
   return (
     <nav
@@ -106,24 +111,34 @@ export function Nav() {
           }}
           className="nav-desktop"
         >
-          {navLinks.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              style={{
-                fontFamily: 'var(--font-heebo)',
-                fontSize: '0.875rem',
-                color: 'var(--color-tally)',
-                textDecoration: 'none',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {label}
-            </Link>
-          ))}
+          {navLinks.map(({ href, label }) => {
+            const active = isActive(href)
+            return (
+              <Link
+                key={href}
+                href={href}
+                aria-current={active ? 'page' : undefined}
+                style={{
+                  fontFamily: 'var(--font-heebo)',
+                  fontSize: '0.875rem',
+                  fontWeight: active ? 700 : 400,
+                  color: active ? 'var(--color-paper)' : 'var(--color-tally)',
+                  textDecoration: 'none',
+                  whiteSpace: 'nowrap',
+                  position: 'relative',
+                  paddingBottom: '4px',
+                  borderBottom: active
+                    ? '2px solid var(--color-stamp)'
+                    : '2px solid transparent',
+                }}
+              >
+                {label}
+              </Link>
+            )
+          })}
           <LocaleToggle />
           <a
-            href={`${APP_URL}/login`}
+            href={`${APP_URL}/signup`}
             style={{
               fontFamily: 'var(--font-space-mono)',
               fontSize: '0.65rem',
@@ -141,7 +156,7 @@ export function Nav() {
           </a>
         </div>
 
-        {/* Mobile hamburger */}
+        {/* Mobile hamburger — 44px min touch target */}
         <button
           aria-label={open ? nav.closeMenu : nav.openMenu}
           aria-expanded={open}
@@ -153,8 +168,12 @@ export function Nav() {
             border: 'none',
             cursor: 'pointer',
             padding: '8px',
+            minWidth: '44px',
+            minHeight: '44px',
             display: 'none',
             flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
             gap: '5px',
           }}
         >
@@ -175,29 +194,36 @@ export function Nav() {
           }}
           className="nav-mobile-menu"
         >
-          {navLinks.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              onClick={() => setOpen(false)}
-              style={{
-                display: 'block',
-                fontFamily: 'var(--font-heebo)',
-                fontSize: '1rem',
-                color: 'var(--color-paper)',
-                textDecoration: 'none',
-                padding: '12px 0',
-                borderBottom: '1px solid rgba(255,255,255,0.06)',
-              }}
-            >
-              {label}
-            </Link>
-          ))}
+          {navLinks.map(({ href, label }) => {
+            const active = isActive(href)
+            return (
+              <Link
+                key={href}
+                href={href}
+                onClick={() => setOpen(false)}
+                aria-current={active ? 'page' : undefined}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  fontFamily: 'var(--font-heebo)',
+                  fontSize: '1rem',
+                  fontWeight: active ? 700 : 400,
+                  color: active ? 'var(--color-stamp)' : 'var(--color-paper)',
+                  textDecoration: 'none',
+                  padding: '14px 0',
+                  borderBottom: '1px solid rgba(255,255,255,0.06)',
+                }}
+              >
+                {label}
+              </Link>
+            )
+          })}
           <div style={{ paddingTop: '16px', paddingBottom: '4px' }}>
             <LocaleToggle />
           </div>
           <a
-            href={`${APP_URL}/login`}
+            href={`${APP_URL}/signup`}
             style={{
               display: 'block',
               marginTop: '12px',

@@ -4,11 +4,12 @@ import { useAuth } from './AuthProvider.jsx'
 import { Field, Spinner, ErrorNote, SocialAuthButtons, OrDivider } from '../../components/ui.jsx'
 import { useLang } from '../../context/LangContext.jsx'
 import { OAUTH_ENABLED } from '../../lib/constants.js'
+import { PENDING_ROLE_KEY, JOB_ROLES } from './roleHint.js'
 import AuthScene from './AuthScene.jsx'
 
 export default function Signup() {
   const { T } = useLang()
-  const { signUp, signInWithOAuth } = useAuth()
+  const { signUp, signInWithOAuth, demo } = useAuth()
   const nav = useNavigate()
   const loc = useLocation()
   const [fullName, setFullName] = useState('')
@@ -17,6 +18,15 @@ export default function Signup() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [confirmPending, setConfirmPending] = useState(false)
+
+  // Persona-page handoff (cross-funnel seam): the website's /artists page
+  // links here as `/signup?role=artist`. Stash the hint in sessionStorage —
+  // not query/state alone — so it survives the email-confirmation
+  // interruption too; UserTypeSelect reads it once the account exists.
+  const roleHint = new URLSearchParams(loc.search).get('role')
+  if (roleHint && JOB_ROLES.includes(roleHint)) {
+    sessionStorage.setItem(PENDING_ROLE_KEY, roleHint)
+  }
 
   async function onSubmit(e) {
     e.preventDefault()
@@ -59,9 +69,9 @@ export default function Signup() {
     <AuthScene tagline="Your nights, made provable.">
       <h1 className="mb-1 text-2xl font-bold text-ink">{T.signup.title}</h1>
       <p className="mb-6 text-sm text-muted">{T.signup.heroLine}</p>
-      {OAUTH_ENABLED && (
+      {(OAUTH_ENABLED || demo) && (
         <>
-          <SocialAuthButtons onOAuth={signInWithOAuth} />
+          <SocialAuthButtons onOAuth={signInWithOAuth} disabled={!OAUTH_ENABLED} demo={demo} />
           <OrDivider />
         </>
       )}

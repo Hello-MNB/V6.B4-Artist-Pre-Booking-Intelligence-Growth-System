@@ -31,22 +31,23 @@ export default function Contact() {
             fontFamily: 'var(--font-space-mono)',
             fontSize: '0.7rem',
             letterSpacing: '0.12em',
-            color: 'var(--color-stamp)',
+            color: 'var(--color-stamp-onlight)',
             textTransform: 'uppercase',
             marginBottom: '16px',
           }}>
             CONTACT · צור קשר
           </p>
           <h1 style={{
-            fontFamily: 'var(--font-archivo)',
+            fontFamily: 'Georgia, "Times New Roman", serif',
+            fontWeight: 400,
             fontSize: 'clamp(2rem, 5vw, 3.25rem)',
             lineHeight: 1.05,
-            letterSpacing: '-0.02em',
+            letterSpacing: '-0.03em',
             margin: '0 0 20px',
           }}>
             Questions? Ideas? Collaboration?
           </h1>
-          <p style={{ fontSize: '1.05rem', color: 'var(--color-tally)', maxWidth: '500px', lineHeight: 1.6, margin: 0 }}>
+          <p style={{ fontSize: '1.05rem', color: 'var(--color-tally-onlight)', maxWidth: '500px', lineHeight: 1.6, margin: 0 }}>
             GIGPROOF is in closed beta. We always want to hear from artists, booking managers, and producers.
           </p>
         </div>
@@ -54,14 +55,17 @@ export default function Contact() {
 
       {/* CONTACT GRID */}
       <section style={{ padding: '64px 24px 80px' }}>
-        <div style={{
-          maxWidth: '960px',
-          margin: '0 auto',
-          display: 'grid',
-          gridTemplateColumns: 'minmax(0, 1.4fr) minmax(0, 1fr)',
-          gap: '48px',
-          alignItems: 'start',
-        }}>
+        <div
+          className="contact-grid"
+          style={{
+            maxWidth: '960px',
+            margin: '0 auto',
+            display: 'grid',
+            gridTemplateColumns: 'minmax(0, 1.4fr) minmax(0, 1fr)',
+            gap: '48px',
+            alignItems: 'start',
+          }}
+        >
 
           {/* FORM COLUMN */}
           <div>
@@ -69,7 +73,7 @@ export default function Contact() {
               fontFamily: 'var(--font-space-mono)',
               fontSize: '0.7rem',
               letterSpacing: '0.12em',
-              color: 'var(--color-tally)',
+              color: 'var(--color-tally-onlight)',
               textTransform: 'uppercase',
               marginBottom: '24px',
             }}>
@@ -95,7 +99,7 @@ export default function Contact() {
                 fontFamily: 'var(--font-space-mono)',
                 fontSize: '0.65rem',
                 letterSpacing: '0.12em',
-                color: 'var(--color-tally)',
+                color: 'var(--color-tally-onlight)',
                 textTransform: 'uppercase',
                 marginBottom: '20px',
               }}>
@@ -117,7 +121,7 @@ export default function Contact() {
                       fontFamily: 'var(--font-space-mono)',
                       fontSize: '0.65rem',
                       letterSpacing: '0.08em',
-                      color: 'var(--color-tally)',
+                      color: 'var(--color-tally-onlight)',
                       textTransform: 'uppercase',
                     }}>
                       {d.label}
@@ -141,7 +145,7 @@ export default function Contact() {
                 fontFamily: 'var(--font-space-mono)',
                 fontSize: '0.65rem',
                 letterSpacing: '0.12em',
-                color: 'var(--color-stamp)',
+                color: 'var(--color-stamp-onlight)',
                 textTransform: 'uppercase',
                 marginBottom: '20px',
               }}>
@@ -153,13 +157,13 @@ export default function Contact() {
                     <span style={{
                       fontFamily: 'var(--font-space-mono)',
                       fontSize: '0.7rem',
-                      color: 'var(--color-stamp)',
+                      color: 'var(--color-stamp-onlight)',
                       flexShrink: 0,
                       paddingTop: '2px',
                     }}>
                       ✓
                     </span>
-                    <p style={{ fontSize: '0.875rem', color: 'var(--color-tally)', margin: 0, lineHeight: 1.5 }}>
+                    <p style={{ fontSize: '0.875rem', color: 'var(--color-tally-onlight)', margin: 0, lineHeight: 1.5 }}>
                       {item}
                     </p>
                   </div>
@@ -169,6 +173,12 @@ export default function Contact() {
 
           </div>
         </div>
+
+        <style>{`
+          @media (max-width: 640px) {
+            .contact-grid { grid-template-columns: 1fr !important; }
+          }
+        `}</style>
       </section>
 
       {/* CTA BAND */}
@@ -191,7 +201,7 @@ export default function Contact() {
             Registration is open — go directly to the app.
           </p>
           <a
-            href={APP_URL}
+            href={`${APP_URL}/signup`}
             style={{
               display: 'inline-block',
               padding: '14px 32px',

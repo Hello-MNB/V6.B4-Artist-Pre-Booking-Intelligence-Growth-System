@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthProvider.jsx'
-import { getMyArtist, upsertArtist, listProfileItems, listClaims, publishPassport, unpublishArtist, hasConsent, recordConsentScope, getEntitlement } from '../../lib/db.js'
-import { PageShell, Wordmark, Loading, EmptyState, ErrorState, LanguageToggle, BottomSheet } from '../../components/ui.jsx'
+import { getMyArtist, upsertArtist, getMyAct, updateAct, listProfileItems, listClaims, publishPassport, unpublishArtist, hasConsent, recordConsentScope, getEntitlement } from '../../lib/db.js'
+import { PageShell, Wordmark, Loading, EmptyState, ErrorState, LanguageToggle, BottomSheet, useToast } from '../../components/ui.jsx'
 import { useLang } from '../../context/LangContext.jsx'
 import { isPassportDirty, clearPassportDirty, markPassportDirty } from '../../lib/passportState.js'
 import RadarUniverse from './RadarUniverse.jsx'
@@ -12,9 +12,10 @@ import RadarUniverse from './RadarUniverse.jsx'
 // no score, no %, no fill bars; a gap renders as an invitation, never a failure.
 
 // ONE prioritized action — a coach's single clearest move, never a list of ten.
-// Deep links go to the SPECIFIC surface: claims → claim review, evidence-shaped
-// work → evidence capture. /onboarding is ONLY for identity fields (photo) —
-// never a wizard restart for evidence chores.
+// Deep links go to the SPECIFIC surface: claims → claim review (a radar panel),
+// evidence-shaped work → evidence capture, deferred identity fields (photo) →
+// the radar's own Identity planet fill (the shortened onboarding no longer
+// collects them — a wizard restart is never the answer).
 function pickNextAction(artist, items, claims, T) {
   const A = T.radar.nextActions
   const links = items.filter((i) => i.item_type === 'link')
@@ -25,10 +26,10 @@ function pickNextAction(artist, items, claims, T) {
 
   if (pending.length > 0) return { ...A.reviewClaims, to: '/artist/claims' }
   if (supported.length === 0) return { ...A.draw, to: evidenceRoute }
-  if (!artist.photo_url) return { ...A.photo, to: '/onboarding' } // identity field → wizard
+  if (!artist.photo_url) return { ...A.photo, planet: 'identity' } // deferred field → radar fill, in place
   if (links.length === 0) return { ...A.links, to: evidenceRoute }
   if (exp.length < 3) return { ...A.experience, to: evidenceRoute }
-  if (!artist.lineup_frequency_band) return { ...A.bands, to: evidenceRoute }
+  if (!artist.lineup_frequency_band) return { ...A.bands, planet: 'proof' } // deferred band → radar fill
   return { ...A.done, to: null }
 }
 
@@ -49,8 +50,11 @@ export default function ArtistDashboard() {
   const { T } = useLang()
   const { user } = useAuth()
   const nav = useNavigate()
+  const loc = useLocation()
+  const toast = useToast()
   const [loading, setLoading] = useState(true)
   const [artist, setArtist] = useState(null)
+  const [act, setAct] = useState(null)
   const [items, setItems] = useState([])
   const [claims, setClaims] = useState([])
   const [ent, setEnt] = useState(null)
@@ -63,6 +67,10 @@ export default function ArtistDashboard() {
   // IA: claim review is a MODE of the Radar — incrementing this opens the
   // radar's "Needs you" review panel in place (no navigation).
   const [reviewSignal, setReviewSignal] = useState(0)
+  // Deferred-field next actions open a SPECIFIC planet panel in place.
+  const [focusPlanet, setFocusPlanet] = useState(null)
+  const [focusSignal, setFocusSignal] = useState(0)
+  const arrivalShown = useRef(false)
 
   async function load() {
     setLoadError(false)
@@ -70,6 +78,7 @@ export default function ArtistDashboard() {
       const a = await getMyArtist(user.id)
       setArtist(a)
       if (a) {
+        try { setAct(await getMyAct(a.id)) } catch { setAct(null) }
         setItems(await listProfileItems(a.id))
         setClaims(await listClaims(a.id))
         setEnt(await getEntitlement(a.id))
@@ -83,11 +92,26 @@ export default function ArtistDashboard() {
   }
   useEffect(() => { load() }, [user.id])
 
+  // Landing here straight from the shortened entry — the "we're scanning /
+  // here's what needs you" moment (one quiet toast, once per arrival).
+  useEffect(() => {
+    if (loading || !loc.state?.fromEntry || arrivalShown.current) return
+    arrivalShown.current = true
+    toast.show(T.radar.scanKickoff)
+    window.history.replaceState({}, '') // don't re-fire on refresh
+  }, [loading, loc.state])
+
   // in-place fill from the Universe writes through here (no screen swaps)
   async function saveArtist(patch) {
     const updated = await upsertArtist({ ...artist, ...patch, id: artist.id, created_by: artist.created_by })
     setArtist(updated)
     if (updated.published) { markPassportDirty(updated.id); setDirty(true) }
+    return updated
+  }
+  // Act-level fills (goal) — same in-place pattern, different table.
+  async function saveAct(patch) {
+    const updated = await updateAct(artist.id, patch)
+    setAct((prev) => ({ ...(prev || { id: artist.id }), ...(updated || patch) }))
     return updated
   }
   async function refreshItems() { setItems(await listProfileItems(artist.id)) }
@@ -171,9 +195,11 @@ export default function ArtistDashboard() {
   const nextAction = pickNextAction(artist, items, claims, T)
 
   // IA correction: claim review is NOT a destination — it opens as a panel
-  // inside the Radar. Evidence capture keeps its route for compatibility but is
+  // inside the Radar. Deferred-field actions (photo, bands) open their planet
+  // panel in place. Evidence capture keeps its route for compatibility but is
   // reached contextually (from the radar or from this next-step card).
   function runNextAction(a) {
+    if (a?.planet) { setFocusPlanet(a.planet); setFocusSignal((s) => s + 1); return }
     if (!a?.to) return
     if (a.to === '/artist/claims') { setReviewSignal((s) => s + 1); return }
     nav(a.to)
@@ -192,8 +218,9 @@ export default function ArtistDashboard() {
 
       {/* ── THE UNIVERSE — the Radar IS evidence collection; review/confirm
             open as panels inside it (reviewSignal). ── */}
-      <RadarUniverse artist={artist} items={items} claims={claims} onClaimsChange={setClaims}
-        onArtistChange={saveArtist} onItemsRefresh={refreshItems} reviewSignal={reviewSignal} />
+      <RadarUniverse artist={artist} act={act} items={items} claims={claims} onClaimsChange={setClaims}
+        onArtistChange={saveArtist} onActChange={saveAct} onItemsRefresh={refreshItems}
+        reviewSignal={reviewSignal} focusPlanet={focusPlanet} focusSignal={focusSignal} />
 
       {/* ── ONE dominant next step — the coach's single clearest move ── */}
       <div className="mb-4 rounded-2xl border border-line bg-surface p-5 shadow-card">
@@ -203,7 +230,7 @@ export default function ArtistDashboard() {
         {nextAction.time != null && (
           <p className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-faint">{T.radar.timeHint(nextAction.time)}</p>
         )}
-        {nextAction.to && (
+        {(nextAction.to || nextAction.planet) && (
           <button className="btn-primary mt-3 w-full sm:w-auto" onClick={() => runNextAction(nextAction)}>
             {T.common.continue}
           </button>

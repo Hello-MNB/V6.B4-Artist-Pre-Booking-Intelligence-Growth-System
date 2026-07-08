@@ -106,7 +106,7 @@ function MethodLabel({ method, reviewed }: { method: string; reviewed: string })
       fontFamily: 'var(--font-space-mono)',
       fontSize: '0.6rem',
       letterSpacing: '0.12em',
-      color: 'var(--color-stamp)',
+      color: 'var(--color-stamp-onlight)',
       margin: '0 0 4px',
       textTransform: 'uppercase',
     }}>
@@ -136,7 +136,7 @@ function ProofUnitBlock({ unit, isDrawUnit = false }: { unit: ProofUnitData; isD
       <p style={{
         fontFamily: 'var(--font-heebo)',
         fontSize: '0.85rem',
-        color: 'var(--color-tally)',
+        color: 'var(--color-tally-onlight)',
         margin: 0,
         lineHeight: 1.5,
       }}>{unit.context}</p>
@@ -151,7 +151,7 @@ function SectionHeader({ label, title }: { label: string; title: string }) {
         fontFamily: 'var(--font-space-mono)',
         fontSize: '0.65rem',
         letterSpacing: '0.14em',
-        color: 'var(--color-tally)',
+        color: 'var(--color-tally-onlight)',
         margin: '0 0 4px',
         textTransform: 'uppercase',
       }}>{label}</p>
@@ -168,7 +168,7 @@ function SectionHeader({ label, title }: { label: string; title: string }) {
 
 export default function PassportDemo() {
   return (
-    <div style={{ backgroundColor: 'var(--color-paper)', minHeight: '100vh' }}>
+    <div style={{ backgroundColor: 'var(--color-night)', minHeight: '100vh' }}>
 
       {/* DEMO BANNER */}
       <div style={{
@@ -182,6 +182,16 @@ export default function PassportDemo() {
       }}>
         SAMPLE PASSPORT — FICTIONAL ARTIST FOR ILLUSTRATION ONLY
       </div>
+
+      {/* PASSPORT DOCUMENT — floats as a card on wide viewports, full-bleed on mobile */}
+      <div
+        className="passport-doc"
+        style={{
+          backgroundColor: 'var(--color-paper)',
+          maxWidth: '560px',
+          margin: '0 auto',
+        }}
+      >
 
       {/* PASSPORT HEADER */}
       <div style={{
@@ -201,7 +211,7 @@ export default function PassportDemo() {
             fontFamily: 'var(--font-space-mono)',
             fontSize: '0.65rem',
             letterSpacing: '0.14em',
-            color: 'var(--color-stamp)',
+            color: 'var(--color-stamp-onlight)',
             textTransform: 'uppercase',
           }}>
             GIGPROOF · BOOKABILITY PASSPORT
@@ -210,9 +220,10 @@ export default function PassportDemo() {
 
         {/* Artist identity */}
         <h1 style={{
-          fontFamily: 'var(--font-archivo)',
+          fontFamily: 'Georgia, "Times New Roman", serif',
+          fontWeight: 400,
           fontSize: 'clamp(1.75rem, 6vw, 2.5rem)',
-          letterSpacing: '-0.02em',
+          letterSpacing: '-0.03em',
           margin: '0 0 4px',
           color: 'var(--color-ink)',
           lineHeight: 1,
@@ -220,14 +231,14 @@ export default function PassportDemo() {
         <p style={{
           fontFamily: 'var(--font-heebo)',
           fontSize: '0.85rem',
-          color: 'var(--color-tally)',
+          color: 'var(--color-tally-onlight)',
           margin: '4px 0 12px',
         }}>{artist.nameHe}</p>
         <p style={{
           fontFamily: 'var(--font-space-mono)',
           fontSize: '0.65rem',
           letterSpacing: '0.1em',
-          color: 'var(--color-tally)',
+          color: 'var(--color-tally-onlight)',
           margin: 0,
         }}>
           {artist.genre} · {artist.base} · Active since {artist.since}
@@ -244,7 +255,7 @@ export default function PassportDemo() {
             fontFamily: 'var(--font-space-mono)',
             fontSize: '0.6rem',
             letterSpacing: '0.08em',
-            color: 'var(--color-tally)',
+            color: 'var(--color-tally-onlight)',
             margin: '6px 0 0',
           }}>
             FIGURES SHOWN AS BAND — NO EXACT HEADCOUNT
@@ -279,7 +290,7 @@ export default function PassportDemo() {
             fontFamily: 'var(--font-space-mono)',
             fontSize: '0.6rem',
             letterSpacing: '0.08em',
-            color: 'var(--color-tally)',
+            color: 'var(--color-tally-onlight)',
             margin: '6px 0 0',
           }}>
             CONTEXTUAL — NOT DRAW EVIDENCE
@@ -313,7 +324,7 @@ export default function PassportDemo() {
             fontFamily: 'var(--font-space-mono)',
             fontSize: '0.6rem',
             letterSpacing: '0.08em',
-            color: 'var(--color-tally)',
+            color: 'var(--color-tally-onlight)',
             margin: '0 0 8px',
             lineHeight: 1.7,
           }}>
@@ -326,7 +337,7 @@ export default function PassportDemo() {
             fontFamily: 'var(--font-space-mono)',
             fontSize: '0.6rem',
             letterSpacing: '0.08em',
-            color: 'var(--color-stamp)',
+            color: 'var(--color-stamp-onlight)',
             margin: 0,
           }}>
             GIGPROOF · gigproof.co
@@ -346,7 +357,7 @@ export default function PassportDemo() {
             fontFamily: 'var(--font-space-mono)',
             fontSize: '0.65rem',
             letterSpacing: '0.1em',
-            color: 'var(--color-stamp)',
+            color: 'var(--color-stamp-onlight)',
             margin: '0 0 8px',
           }}>
             READY TO BUILD YOURS?
@@ -354,14 +365,14 @@ export default function PassportDemo() {
           <p style={{
             fontFamily: 'var(--font-heebo)',
             fontSize: '0.9rem',
-            color: 'var(--color-tally)',
+            color: 'var(--color-tally-onlight)',
             margin: '0 0 16px',
             lineHeight: 1.5,
           }}>
             Build your own Passport. Get verified. Share with booking managers.
           </p>
           <a
-            href={APP_URL}
+            href={`${APP_URL}/signup`}
             style={{
               display: 'inline-block',
               padding: '12px 28px',
@@ -379,6 +390,20 @@ export default function PassportDemo() {
           </a>
         </div>
       </div>
+      </div>
+
+      <style>{`
+        @media (min-width: 700px) {
+          .passport-doc {
+            margin-top: 48px;
+            margin-bottom: 64px;
+            border-radius: 20px;
+            box-shadow: 0 32px 80px -30px rgba(0,0,0,0.55);
+            border: 1px solid rgba(10,13,11,0.08);
+            overflow: hidden;
+          }
+        }
+      `}</style>
     </div>
   )
 }

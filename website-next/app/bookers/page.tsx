@@ -66,7 +66,7 @@ export default function BookersPage() {
           borderRadius: '20px',
           overflow: 'hidden',
           minHeight: '620px',
-          background: `linear-gradient(160deg, rgba(10,13,11,0.97) 0%, rgba(10,13,11,0.84) 55%, rgba(10,13,11,0.52) 100%), url('/gigproof-persona-manager-v1.webp') center/cover no-repeat`,
+          background: `linear-gradient(180deg, rgba(10,13,11,0.55) 0%, rgba(10,13,11,0.86) 55%, rgba(10,13,11,0.97) 100%), url('/gigproof-persona-manager-v1.webp') center/cover no-repeat`,
           color: 'var(--color-paper)',
           position: 'relative',
           display: 'flex',
@@ -200,7 +200,7 @@ export default function BookersPage() {
             style={{
               fontFamily: 'var(--font-space-mono), monospace',
               fontSize: '0.65rem',
-              color: 'var(--color-tally)',
+              color: 'var(--color-tally-onlight)',
               letterSpacing: '0.1em',
               textTransform: 'uppercase',
               marginBottom: '0.5rem',
@@ -236,7 +236,7 @@ export default function BookersPage() {
                   style={{
                     fontFamily: 'var(--font-space-mono), monospace',
                     fontSize: '0.65rem',
-                    color: 'var(--color-tally)',
+                    color: 'var(--color-tally-onlight)',
                     opacity: 0.5,
                     display: 'block',
                     marginBottom: '0.75rem',
@@ -258,7 +258,7 @@ export default function BookersPage() {
                   style={{
                     fontFamily: 'var(--font-heebo), system-ui, sans-serif',
                     fontSize: '0.875rem',
-                    color: 'var(--color-tally)',
+                    color: 'var(--color-tally-onlight)',
                     lineHeight: 1.6,
                   }}
                 >
@@ -277,7 +277,7 @@ export default function BookersPage() {
             style={{
               fontFamily: 'var(--font-space-mono), monospace',
               fontSize: '0.65rem',
-              color: 'var(--color-tally)',
+              color: 'var(--color-tally-onlight)',
               letterSpacing: '0.1em',
               textTransform: 'uppercase',
               marginBottom: '0.5rem',
@@ -308,7 +308,7 @@ export default function BookersPage() {
                   style={{
                     fontFamily: 'var(--font-space-mono), monospace',
                     fontSize: '0.6rem',
-                    color: 'var(--color-stamp)',
+                    color: 'var(--color-stamp-onlight)',
                     letterSpacing: '0.1em',
                     textTransform: 'uppercase',
                     display: 'block',
@@ -331,7 +331,7 @@ export default function BookersPage() {
                   style={{
                     fontFamily: 'var(--font-heebo), system-ui, sans-serif',
                     fontSize: '0.875rem',
-                    color: 'var(--color-tally)',
+                    color: 'var(--color-tally-onlight)',
                     lineHeight: 1.65,
                     maxWidth: '52rem',
                   }}
@@ -431,7 +431,7 @@ export default function BookersPage() {
             style={{
               fontFamily: 'var(--font-heebo), system-ui, sans-serif',
               fontSize: '0.9rem',
-              color: 'var(--color-tally)',
+              color: 'var(--color-tally-onlight)',
               marginBottom: '2rem',
               lineHeight: 1.6,
             }}

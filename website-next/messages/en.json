@@ -25,7 +25,7 @@
     "hero": {
       "badge": "CLOSED BETA · TEL AVIV",
       "headline": "Before a booking manager risks their name, they need proof.",
-      "sub": "GIGPROOF turns your live-performance evidence into a verified, method-labelled Bookability Passport — so booking managers can evaluate without guessing.",
+      "sub": "GIGPROOF turns your live-performance evidence into a method-labelled Bookability Passport — so booking managers can evaluate without guessing.",
       "ctaBuild": "BUILD YOUR PASSPORT →",
       "ctaDemo": "SEE A SAMPLE PASSPORT"
     },
@@ -36,7 +36,7 @@
       "artist": {
         "tag": "אמן · ARTIST",
         "title": "Build your proof profile",
-        "body": "Collect evidence, invite producers to confirm a single claim, and publish a verified Passport that speaks for you before the first call.",
+        "body": "Collect evidence, invite producers to confirm a single claim, and publish a method-labelled Passport that speaks for you before the first call.",
         "cta": "FOR ARTISTS →"
       },
       "booker": {
