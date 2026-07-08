@@ -130,6 +130,7 @@ export default function ArtistsPage() {
     <main>
       {/* ── HERO — floating dark card ──────────────────────────────────── */}
       <section
+        className="persona-hero-artist"
         style={{
           margin: '28px max(24px, 4vw) 0',
           border: '1px solid #2a362c',

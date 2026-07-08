@@ -189,12 +189,12 @@ export default function FAQ() {
                       gap: '16px',
                     }}>
                       <span>{item.q}</span>
-                      <span style={{
+                      <span className="faq-glyph" aria-hidden style={{
                         fontFamily: 'var(--font-space-mono)',
                         fontSize: '0.8rem',
                         color: 'var(--color-stamp-onlight)',
                         flexShrink: 0,
-                      }}>+</span>
+                      }} />
                     </summary>
                     <p style={{
                       padding: '0 0 24px 0',

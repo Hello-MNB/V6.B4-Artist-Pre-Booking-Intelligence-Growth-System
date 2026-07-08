@@ -86,3 +86,29 @@ button:active {
     transition: none;
   }
 }
+
+/* FAQ accordion state glyph — flips + to − when open (QA finding #10) */
+.faq-glyph::before { content: '+'; }
+details[open] .faq-glyph::before { content: '\2212'; }
+
+/* Mobile-only swipe hint for wide comparison tables (QA finding #5) */
+.table-swipe-hint {
+  display: none;
+  font-family: var(--font-space-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-tally-onlight);
+  margin: 0 0 8px;
+}
+@media (max-width: 640px) {
+  .table-swipe-hint { display: block; }
+}
+
+/* Artists hero mobile art-direction: shift focal point so the subject's face
+   clears the bottom-left headline (QA finding #6); desktop keeps center. */
+@media (max-width: 640px) {
+  .persona-hero-artist {
+    background-position: 0 0, 72% 30% !important;
+  }
+}

@@ -368,10 +368,13 @@ export default function Radar() {
             The Radar and the Passport share the same underlying claims — but show very different things.
           </p>
 
-          {/* Table */}
+          {/* Table — scrolls horizontally on narrow screens; the hint below
+              only renders under 640px (see .table-swipe-hint in globals.css) */}
+          <p className="table-swipe-hint">Swipe to compare →</p>
           <div style={{ overflowX: 'auto' }}>
             <table style={{
               width: '100%',
+              minWidth: '520px',
               borderCollapse: 'collapse',
               fontFamily: 'var(--font-heebo)',
               fontSize: '0.875rem',

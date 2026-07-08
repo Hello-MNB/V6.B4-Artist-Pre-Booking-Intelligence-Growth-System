@@ -1,7 +1,16 @@
 import type { NextConfig } from 'next'
+import path from 'node:path'
 
 const nextConfig: NextConfig = {
   trailingSlash: false,
+  // Two lockfiles exist (repo root + this dir) — without an explicit root,
+  // Turbopack INFERS the workspace root, and the inference can differ between
+  // machines (local vs Vercel CI). A wrong root yields page HTML referencing
+  // chunk filenames that were never emitted → every page 500s on a script and
+  // hydration dies site-wide (dead locale toggle, dead mobile menu, flaky
+  // consent banner). Pinning the root makes chunk naming deterministic.
+  turbopack: { root: path.join(__dirname) },
+  outputFileTracingRoot: path.join(__dirname),
   // the /app/[[...slug]] route handler reads the SPA shell from public/ at
   // runtime — make sure the file ships inside the serverless bundle
   outputFileTracingIncludes: {
