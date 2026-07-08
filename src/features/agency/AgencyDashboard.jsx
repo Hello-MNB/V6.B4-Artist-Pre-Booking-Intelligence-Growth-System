@@ -2,11 +2,60 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthProvider.jsx'
 import { listAgencyArtists, listClaimsByArtists, listRequestsForAgency, upsertArtist } from '../../lib/db.js'
+import { requestArtistAccess, listOutgoingAccessRequests } from '../../lib/orgs.js'
 import AgencyRadarUniverse from './AgencyRadarUniverse.jsx'
 import { PageShell, Wordmark, Loading, ErrorState, StatusChip, Field, Spinner, LanguageToggle, useToast } from '../../components/ui.jsx'
 import { useLang } from '../../context/LangContext.jsx'
 import { useOrg } from '../../context/OrgContext.jsx'
 import { STATUS } from '../../lib/constants.js'
+import { DEMO } from '../../lib/demo.js'
+
+// The exact 5 canon scope values (DB-STRUCTURE.md Layer 1) minus `view`, which
+// is always included and never opted out of — every grant carries at least
+// read access, that's the floor.
+const OPTIONAL_SCOPES = ['upload', 'edit', 'share', 'publish']
+
+function parseArtistId(raw) {
+  const t = (raw || '').trim()
+  const m = t.match(/\/passport\/([^/?#]+)/)
+  return m ? m[1] : t
+}
+
+// ── Access-requests card — grants THIS org has requested against artists it
+// does not own. Firewall/canon: a pending grant shows NOTHING about the
+// artist beyond identification — RLS itself hides the artists row until the
+// artist approves, so there is literally no content to leak here.
+function AccessRequestsCard({ requests, T }) {
+  if (!requests || requests.length === 0) return null
+  return (
+    <div className="mb-4">
+      <p className="mb-2 font-mono text-[10.5px] uppercase tracking-[0.1em] text-muted">{T.agency.accessRequestsTitle}</p>
+      <div className="space-y-2">
+        {requests.map((r) => (
+          <div key={r.id} className="card flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p className="truncate font-bold text-ink">{r.artist?.stage_name || r.artist_stage_name || T.agency.pendingArtistLabel}</p>
+              {r.status === 'pending' && <p className="text-xs text-amber">{T.agency.awaitingApproval}</p>}
+              {r.status === 'active' && (
+                <div className="mt-1 flex flex-wrap gap-1">
+                  {(r.scope || []).map((s) => (
+                    <span key={s} className="chip border border-line bg-surface2 px-2 py-0.5 text-[10px] text-ink">
+                      {T.access[`scope${s.charAt(0).toUpperCase()}${s.slice(1)}`] || s}
+                    </span>
+                  ))}
+                </div>
+              )}
+              {r.status === 'revoked' && <p className="text-xs text-muted">{T.agency.accessRevoked}</p>}
+            </div>
+            <span className={`shrink-0 font-mono text-[10px] uppercase tracking-[0.08em] ${r.status === 'active' ? 'text-accent' : r.status === 'pending' ? 'text-amber' : 'text-faint'}`}>
+              {r.status === 'active' ? T.representation.activeLabel : r.status === 'pending' ? T.agency.pendingArtistLabel : T.representation.revokedLabel}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
 
 function ChecklistRow({ done, label, to }) {
   const inner = (<><span className={done ? 'text-accent' : 'text-muted'} aria-hidden="true">{done ? '✓' : '○'}</span><span className={done ? 'text-muted line-through' : 'text-ink'}>{label}</span></>)
@@ -66,7 +115,17 @@ function RequestsSideCard({ requests, T }) {
 export default function AgencyDashboard() {
   const { T } = useLang()
   const { user, signOut } = useAuth()
-  const { isAgency } = useOrg()
+  const { isAgency, activeOrgId, memberships } = useOrg()
+  // DEMO ONLY: OrgContext's activeOrgId defaults to the solo/artist org even
+  // on this screen (the already-documented "context switcher is a no-op"
+  // gap — ENTITY-SPEC-ORG §3/§6.1 item 5). This screen inherently represents
+  // the agency workspace, so resolve it directly from the demo memberships
+  // rather than depend on a switch the user hasn't necessarily made. Real
+  // accounts use activeOrgId as-is — switching context there is the real,
+  // still-open fix tracked separately.
+  const orgIdForThisScreen = DEMO
+    ? (memberships.find((m) => ['agency', 'agency_plus'].includes(m.organization?.plan))?.organization?.id || activeOrgId)
+    : activeOrgId
   const nav = useNavigate()
   const toast = useToast()
   const [hideChecklist, setHideChecklist] = useState(() => { try { return localStorage.getItem('gigproof_hide_checklist') === '1' } catch { return false } })
@@ -75,8 +134,13 @@ export default function AgencyDashboard() {
   const [artists, setArtists] = useState([])
   const [rosterClaims, setRosterClaims] = useState([])
   const [requests, setRequests] = useState([])
+  const [accessRequests, setAccessRequests] = useState([])
   const [adding, setAdding] = useState(false)
+  const [addMode, setAddMode] = useState('invite') // 'invite' (canon-correct, default) | 'own' (legacy placeholder)
   const [f, setF] = useState({ stage_name: '', genre: '' })
+  const [inviteInput, setInviteInput] = useState('')
+  const [inviteTerritory, setInviteTerritory] = useState('')
+  const [inviteScope, setInviteScope] = useState(() => Object.fromEntries(OPTIONAL_SCOPES.map((s) => [s, false])))
   const [busy, setBusy] = useState(false)
   const [saveError, setSaveError] = useState('')
   const [justAddedId, setJustAddedId] = useState(null)
@@ -89,13 +153,14 @@ export default function AgencyDashboard() {
       setArtists(roster)
       try { setRosterClaims(await listClaimsByArtists(roster.map((a) => a.id))) } catch { setRosterClaims([]) }
       try { setRequests(await listRequestsForAgency(user.id)) } catch { setRequests(null) }
+      try { setAccessRequests(orgIdForThisScreen ? await listOutgoingAccessRequests(orgIdForThisScreen) : []) } catch { setAccessRequests([]) }
     } catch {
       setError(true)
     } finally {
       setLoading(false)
     }
   }
-  useEffect(() => { load() }, [user.id])
+  useEffect(() => { load() }, [user.id, orgIdForThisScreen])
   useEffect(() => () => clearTimeout(highlightTimer.current), [])
 
   async function addArtist(e) {
@@ -113,6 +178,33 @@ export default function AgencyDashboard() {
         setJustAddedId(created.id)
         clearTimeout(highlightTimer.current)
         highlightTimer.current = setTimeout(() => setJustAddedId(null), 4000)
+      }
+    } catch {
+      setSaveError(T.agency.saveError)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  // Invite an EXISTING artist by Passport link/id — creates a status='pending'
+  // artist_access row. Nothing about the artist is visible to this org until
+  // they approve (REPRESENTATION-CANON §1.1 — grant requires artist consent).
+  async function sendInvite(e) {
+    e.preventDefault()
+    const artistId = parseArtistId(inviteInput)
+    if (!artistId || !orgIdForThisScreen) return
+    setSaveError(''); setBusy(true)
+    try {
+      const scope = ['view', ...OPTIONAL_SCOPES.filter((s) => inviteScope[s])]
+      const res = await requestArtistAccess(orgIdForThisScreen, artistId, { scope, territory: inviteTerritory.trim() || null })
+      if (res?.ok === false) {
+        setSaveError(T.agency.migration027Note)
+      } else {
+        setInviteInput(''); setInviteTerritory('')
+        setInviteScope(Object.fromEntries(OPTIONAL_SCOPES.map((s) => [s, false])))
+        setAdding(false)
+        await load()
+        toast.show(T.agency.inviteSent)
       }
     } catch {
       setSaveError(T.agency.saveError)
@@ -143,6 +235,11 @@ export default function AgencyDashboard() {
 
       {/* ── THE ROSTER UNIVERSE — the manager's home: artists as worlds ── */}
       <AgencyRadarUniverse artists={artists} claims={rosterClaims} />
+
+      {/* ── Representation — the artist_access consent handshake this org has
+            requested (pending/active/revoked). Separate from the owned roster
+            below: this is ACCESS, not ownership. ── */}
+      <AccessRequestsCard requests={accessRequests} T={T} />
 
       {/* first-run checklist — dismissible, non-shaming */}
       {!hideChecklist && (
@@ -194,17 +291,58 @@ export default function AgencyDashboard() {
                 })}
               </div>
               {adding ? (
-                <form onSubmit={addArtist} className="card">
-                  <Field label={T.onboarding.stageName}><input className="field" value={f.stage_name} onChange={(e) => setF({ ...f, stage_name: e.target.value })} /></Field>
-                  <Field label={T.onboarding.genre}><input className="field" value={f.genre} onChange={(e) => setF({ ...f, genre: e.target.value })} /></Field>
-                  {saveError && <p className="text-xs text-amber mb-2">{saveError}</p>}
-                  <div className="flex gap-2">
-                    <button className="btn-primary flex-1" disabled={busy}>{busy ? <Spinner /> : T.common.save}</button>
-                    <button type="button" className="btn-ghost" onClick={() => setAdding(false)}>{T.common.cancel}</button>
+                <div className="card">
+                  {/* mode toggle — invite (canon-correct, artist keeps their own
+                      account + approval control) vs. legacy owned placeholder */}
+                  <div className="mb-3 flex gap-1 rounded-full border border-line bg-surface2 p-1">
+                    <button type="button"
+                      className={`flex-1 rounded-full py-1.5 text-xs font-semibold transition ${addMode === 'invite' ? 'bg-accent text-[#12160A]' : 'text-muted'}`}
+                      onClick={() => setAddMode('invite')}>{T.agency.inviteTabInvite}</button>
+                    <button type="button"
+                      className={`flex-1 rounded-full py-1.5 text-xs font-semibold transition ${addMode === 'own' ? 'bg-accent text-[#12160A]' : 'text-muted'}`}
+                      onClick={() => setAddMode('own')}>{T.agency.inviteTabOwn}</button>
                   </div>
-                </form>
+
+                  {addMode === 'invite' ? (
+                    <form onSubmit={sendInvite}>
+                      <Field label={T.agency.inviteFieldLabel} hint={T.agency.inviteFieldHint}>
+                        <input className="field" dir="ltr" value={inviteInput} onChange={(e) => setInviteInput(e.target.value)} placeholder="https://…/passport/…" />
+                      </Field>
+                      <Field label={T.agency.inviteTerritoryLabel}>
+                        <input className="field" value={inviteTerritory} onChange={(e) => setInviteTerritory(e.target.value)} />
+                      </Field>
+                      <Field label={T.agency.inviteScopeLabel}>
+                        <div className="flex flex-wrap gap-2">
+                          {OPTIONAL_SCOPES.map((s) => (
+                            <label key={s} className="flex items-center gap-1.5 rounded-full border border-line bg-surface2 px-2.5 py-1 text-xs text-ink">
+                              <input type="checkbox" checked={inviteScope[s]} onChange={(e) => setInviteScope({ ...inviteScope, [s]: e.target.checked })} />
+                              {T.access[`scope${s.charAt(0).toUpperCase()}${s.slice(1)}`]}
+                            </label>
+                          ))}
+                        </div>
+                        {inviteScope.publish && <p className="mt-1.5 text-xs text-muted">{T.access.publishHint}</p>}
+                      </Field>
+                      {saveError && <p className="text-xs text-amber mb-2">{saveError}</p>}
+                      <div className="flex gap-2">
+                        <button className="btn-primary flex-1" disabled={busy || !inviteInput.trim()}>{busy ? <Spinner /> : T.agency.inviteSend}</button>
+                        <button type="button" className="btn-ghost" onClick={() => setAdding(false)}>{T.common.cancel}</button>
+                      </div>
+                    </form>
+                  ) : (
+                    <form onSubmit={addArtist}>
+                      <p className="mb-3 text-xs text-muted">{T.agency.quickAddHint}</p>
+                      <Field label={T.onboarding.stageName}><input className="field" value={f.stage_name} onChange={(e) => setF({ ...f, stage_name: e.target.value })} /></Field>
+                      <Field label={T.onboarding.genre}><input className="field" value={f.genre} onChange={(e) => setF({ ...f, genre: e.target.value })} /></Field>
+                      {saveError && <p className="text-xs text-amber mb-2">{saveError}</p>}
+                      <div className="flex gap-2">
+                        <button className="btn-primary flex-1" disabled={busy}>{busy ? <Spinner /> : T.common.save}</button>
+                        <button type="button" className="btn-ghost" onClick={() => setAdding(false)}>{T.common.cancel}</button>
+                      </div>
+                    </form>
+                  )}
+                </div>
               ) : (
-                <button className="btn-ghost w-full" onClick={() => setAdding(true)}>+ {T.agency.addArtist}</button>
+                <button className="btn-ghost w-full" onClick={() => { setSaveError(''); setAdding(true) }}>+ {T.agency.addArtist}</button>
               )}
             </>
           )}

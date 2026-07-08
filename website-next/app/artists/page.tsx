@@ -847,7 +847,7 @@ export default function ArtistsPage() {
             }}
           >
             Early access is limited. Israeli artists only.
-            Artists pay — booking managers are always free.
+            Free to build and publish. Momentum plan for those who want more — booking managers stay free, always.
           </p>
           <div
             style={{

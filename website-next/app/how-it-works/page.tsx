@@ -32,7 +32,7 @@ const steps = [
   {
     num: '01',
     title: 'Artist signs up and builds a profile',
-    body: 'Sign up with email or social login. Add name, genre, geographic area. That\'s the foundation.',
+    body: 'Sign up with email. Add name, genre, geographic area. That\'s the foundation.',
   },
   {
     num: '02',
@@ -351,7 +351,7 @@ export default function HowItWorks() {
             Ready to start?
           </h2>
           <p style={{ color: 'var(--color-tally-onlight)', marginBottom: '32px', lineHeight: 1.6 }}>
-            Build your Passport. Free for artists.
+            Free to build and publish. Momentum plan for those who want more.
           </p>
           <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
             <a

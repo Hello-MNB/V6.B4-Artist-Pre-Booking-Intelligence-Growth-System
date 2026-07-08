@@ -8,7 +8,7 @@ const SITE_URL = 'https://gigproof.co'
 export const metadata: Metadata = {
   title: 'GIGPROOF — Booking Proof for Independent Artists',
   description:
-    'GIGPROOF turns live-performance evidence into a verified Bookability Passport — so booking managers can evaluate before they risk their reputation.',
+    'GIGPROOF turns live-performance evidence into a method-labelled Bookability Passport — so booking managers can evaluate before they risk their reputation.',
   openGraph: {
     title: 'GIGPROOF — Booking Proof for Independent Artists',
     description:
@@ -51,7 +51,7 @@ const jsonLd = {
           name: 'Is GIGPROOF free for booking managers?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Yes. Booking managers (אמרגנים) view Bookability Passports at no cost. Artists pay to build and publish their proof profile.',
+            text: 'Yes. Booking managers (אמרגנים) view Bookability Passports at no cost — always. Artists can build and publish a Passport for free; Momentum is an optional paid plan for artists who want ongoing freshness, incremental scans, and guidance.',
           },
         },
         {
@@ -307,7 +307,7 @@ export default function HomePage() {
                   marginBottom: '2.25rem',
                 }}
               >
-                Turn live-performance evidence into a verified Bookability Passport —
+                Turn live-performance evidence into a method-labelled Bookability Passport —
                 so booking managers can evaluate before they risk their name.
               </p>
 

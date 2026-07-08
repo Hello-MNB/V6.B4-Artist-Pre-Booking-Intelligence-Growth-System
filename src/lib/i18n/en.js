@@ -330,6 +330,21 @@ export const T = {
     budget: 'Budget:',
     loadError: 'Failed to load requests.',
     saveError: 'Save failed. Try again.',
+    inviteTabInvite: 'Invite existing artist',
+    inviteTabOwn: 'Create roster placeholder',
+    inviteFieldLabel: "Artist's Passport link or GIGPROOF ID",
+    inviteFieldHint: 'Paste the link you already have — GIGPROOF never surfaces a cold directory of artists to browse.',
+    inviteTerritoryLabel: 'Territory (optional)',
+    inviteScopeLabel: 'Access to request',
+    inviteSend: 'Send invite',
+    inviteSent: 'Invite sent — awaiting artist approval.',
+    quickAddHint: "Use this only if the artist doesn't have their own GIGPROOF account yet — this creates a roster entry with no separate artist login or approval control.",
+    accessRequestsTitle: 'Representation — access you requested',
+    accessRequestsEmpty: 'No access requests sent yet.',
+    pendingArtistLabel: 'Pending invite',
+    awaitingApproval: 'Awaiting artist approval — no content visible',
+    accessRevoked: 'Access revoked',
+    migration027Note: 'This feature needs a database update (migration 027). Not saved — see console for details.',
   },
   booker: {
     title: 'Open an artist Passport',
@@ -846,6 +861,35 @@ export const T = {
     'artist-declared': 'Artist-declared',
     'unable-to-verify': 'Unable to verify',
     'stale': 'Not recently updated',
+  },
+  // Shared artist_access scope vocabulary — the exact 5 values DB-STRUCTURE.md
+  // locks (view/upload/edit/share/publish). Reused by both the agency's invite
+  // sheet and the artist's Representation approve sheet, so the words never drift.
+  access: {
+    scopeView: 'View',
+    scopeUpload: 'Upload',
+    scopeEdit: 'Edit',
+    scopeShare: 'Share',
+    scopePublish: 'Publish',
+    publishHint: 'Publish scope is propose only — you approve every publication.',
+  },
+  // Artist-side "who wants access to me" — REPRESENTATION-CANON §1.1/§1.5.
+  representation: {
+    title: 'Representation',
+    subtitle: 'Agencies and production companies that have — or want — access to your Passport.',
+    empty: 'No access requests yet.',
+    wantsAccess: (org) => `${org} wants access`,
+    approve: 'Approve',
+    decline: 'Decline',
+    revoke: 'Revoke access',
+    revokeConfirm: (org) => `Revoke ${org}'s access? They will lose access immediately.`,
+    activeLabel: 'Active access',
+    revokedLabel: 'Access revoked',
+    approveTitle: 'Approve access',
+    approveScopeHint: 'Choose what this organization may do. You can change or revoke this at any time.',
+    approveCta: 'Approve & grant access',
+    declineConfirm: (org) => `Decline ${org}'s request?`,
+    migrationNote: 'This feature needs a database update (migration 027) to fully activate.',
   },
 }
 

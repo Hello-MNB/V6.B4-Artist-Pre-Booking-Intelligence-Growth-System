@@ -69,7 +69,7 @@ const evidenceStates = [
 
 const radarVsPassport = [
   { dimension: 'Audience', radar: 'Radar — exact estimate you logged', passport: 'Passport — band range only (e.g. 70–150)' },
-  { dimension: 'Verification status', radar: 'Radar — all states, including pending', passport: 'Passport — confirmed only' },
+  { dimension: 'Verification status', radar: 'Radar — all states, including pending', passport: 'Passport — confirmed states, or self-reported if explicitly labelled' },
   { dimension: 'Gaps', radar: 'Radar — what\'s missing, next action', passport: 'Passport — gaps are omitted entirely' },
   { dimension: 'Score / ranking', radar: 'Radar — never exists', passport: 'Passport — never exists' },
   { dimension: 'Who sees it', radar: 'Radar — artist only (private)', passport: 'Passport — anyone with the link' },

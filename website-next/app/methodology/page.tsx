@@ -25,10 +25,10 @@ const methodLabels = [
     strength: 'Contextual — not draw evidence',
   },
   {
-    label: 'SELF-REPORTED · UNVERIFIED',
+    label: 'SELF-REPORTED',
     title: 'Artist stated; not yet confirmed by a third party.',
-    body: 'The artist logged the gig but no external party has confirmed it. This appears on the private Artist Radar only. It never reaches the public Passport until a producer confirms or a document is reviewed.',
-    strength: 'Mirror only — never public',
+    body: 'The artist logged the gig but no external party has confirmed it. It always appears on the private Artist Radar. If the artist chooses to publish it, it can appear on the public Passport too — but only under the explicit SELF-REPORTED label, never disguised as verified.',
+    strength: 'Weakest — always labelled if published',
   },
 ]
 
@@ -64,7 +64,7 @@ const firewallItems = [
   'Audience draw is always expressed as a band (e.g. 70–150) — never an exact count.',
   'Every public claim shows its method label. "Verified" never stands alone.',
   'Every claim shows a date and geographic area. Evidence from 2023 ≠ evidence from 2026.',
-  'Self-reported and unverified claims never appear on the public Passport.',
+  'Self-reported data appears only with an explicit SELF-REPORTED label — never disguised as verified.',
   'Streaming figures appear as secondary context only — never as draw evidence.',
   'GIGPROOF publishes no score, ranking, percentile, prediction, or guarantee.',
   'A domain with no supported, verified claim is removed from the Passport entirely — never shown as "developing" or "missing".',

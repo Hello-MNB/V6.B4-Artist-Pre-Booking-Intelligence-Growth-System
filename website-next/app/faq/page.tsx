@@ -19,7 +19,7 @@ const faqs = [
       },
       {
         q: 'What is a Bookability Passport?',
-        a: 'The Bookability Passport is the public-facing document a booking manager receives. It contains only verified, method-labelled evidence. No self-reported claims appear on the Passport. Each item shows what was claimed, the verification method, the geographic area, and the date of review. There are no scores, no rankings, and no predictions.',
+        a: 'The Bookability Passport is the public-facing document a booking manager receives. Every item carries a method label — TICKET EXPORT, PRODUCER-CONFIRMED, PLATFORM DATA, OPERATOR-REVIEWED, or SELF-REPORTED. Self-reported data appears only with an explicit SELF-REPORTED label — never disguised as verified. Each item shows what was claimed, the verification method, the geographic area, and the date of review. There are no scores, no rankings, and no predictions.',
       },
       {
         q: 'What is the Artist Radar?',
