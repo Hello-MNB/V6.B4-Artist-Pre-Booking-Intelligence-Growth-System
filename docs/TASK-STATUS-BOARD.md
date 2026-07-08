@@ -13,7 +13,7 @@
 | P0-4 | 8 | Manual payment (Bit + reference code + activation) | ✅ | ✅ LIVE mechanics | No migration. **YOU:** fixed price (rec ₪179) + Green Invoice signup for receipts. |
 | P0-5 | 22 | Domain + auth email URLs | ⬜ | 🔴 | No migration. **YOU:** pick domain (rec gigproof.co) → **ME:** wire Vercel + Supabase Site URL. |
 | P0-6 | 7 | Producer confirmation ceremony (magic link) | ✅ | 🟡 works only on v6-b4 URL; dead on site /app embed | No migration. Resolves with #22: app.gigproof.co → v6-b4 becomes the canonical app. |
-| P0-7 | 11 | Analytics events (funnel + Gate measurement) | 🔴 | 🔴 partial (passport views + reactions record) | Small migration (M1 event types → bundle 028). Property GIGPROOF 544738110 created ✅. **YOU:** Web data stream → send G-XXXX. **ME:** site wired (env-gated) ✅ + event writers. |
+| P0-7 | 11 | Analytics events (funnel + Gate measurement) | 🔴 | 🔴 partial (passport views + reactions record) | Small migration (M1 event types → bundle 028). GA4 fully wired ✅ (G-ZX907M2NY8, site + app). Remaining: **ME:** M1 event writers. |
 
 ## P1 — STRONG-LAUNCH BUILDS (my queue; start as P0 clears)
 

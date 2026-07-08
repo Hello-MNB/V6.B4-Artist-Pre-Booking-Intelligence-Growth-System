@@ -19,7 +19,7 @@ priority board (docs/TASK-STATUS-BOARD.md) + open pending-from-owner list.
 - Spotify: client id+secret VERIFIED (token + search OK). Not wired into app yet.
 - Google API key: rescoped YouTube Data v3 only (CSE closed → Tavily replaces it).
 - Tavily: RECEIVED + VERIFIED 8 Jul (EN+HE live searches OK). In .env.local; pending → Vercel env. Discovery build unblocked (counsel sign-off still gates go-live).
-- GA4: property GIGPROOF 544738110 created (account 400389625). PENDING: Web data stream → G-XXXX measurement id.
+- GA4: RESOLVED — property 544738110, stream 'GIGPROOF App' (app.gigproof.co), measurement id G-ZX907M2NY8 wired into site (layout.tsx default) + app (index.html). Stream URL is a label only — works pre-domain.
 
 ## Migrations
 - Live DB at 025/026. 021 FROZEN (vocab, needs app lockstep — bootstrapOrg 'booker' latent bug noted).
@@ -36,7 +36,6 @@ No booking commission ever. Each entity pays its own plan; artist always owns/pa
 4. Buy domain (rec gigproof.co + app.gigproof.co).
 5. Google OAuth client → Supabase providers (redirect https://qexfndiyallwqhhzeerd.supabase.co/auth/v1/callback).
 6. Green Invoice signup.
-7. GA4: property created ✅ — now Web data stream → send G-XXXX measurement id.
 8. Send counsel email (docs/COUNSEL-EMAIL-DRAFT.md).
 9. Later, low urgency: rotate Anthropic + Tavily keys (both pasted in chat).
 

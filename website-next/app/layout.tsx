@@ -19,8 +19,8 @@ const dmMono = DM_Mono({
   display: 'swap',
 })
 
-// GA4 loads only when the measurement id env is set (property GIGPROOF / 544738110)
-const GA_ID = process.env.NEXT_PUBLIC_GA_ID
+// GA4 — property GIGPROOF (544738110), stream GIGPROOF App; env can override
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID ?? 'G-ZX907M2NY8'
 
 const SITE_URL = 'https://gigproof.co'
 const OG_IMAGE = `${SITE_URL}/og/og-default.png`
