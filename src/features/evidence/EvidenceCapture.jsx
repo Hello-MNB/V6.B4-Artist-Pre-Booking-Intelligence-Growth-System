@@ -9,9 +9,32 @@ import { useLang } from '../../context/LangContext.jsx'
 
 // ── Claim-first evidence capture (canon A7) ──────────────────────────────────
 // The artist starts from WHAT THEY WANT TO PROVE; the system requests the
-// matching evidence. Not "upload a file" — "what do you want to show?"
+// matching evidence. Three capture paths, presented as cards:
+//   UPLOAD a document · CONNECT a source · DECLARE a band.
 // Each intent maps to its evidence ask + source_type (canon claim→source table).
-const INTENTS = ['drew-crowd', 'sold-via-link', 'rebooked', 'community', 'produced-event', 'consistent-frequency', 'producer-confirm']
+const PATHS = [
+  {
+    key: 'upload',
+    icon: '⇪',
+    title: 'Upload proof',
+    desc: 'Ticket exports, settlements, posters — the strongest evidence.',
+    intents: ['drew-crowd', 'sold-via-link', 'produced-event'],
+  },
+  {
+    key: 'connect',
+    icon: '↗',
+    title: 'Connect a source',
+    desc: 'Public links and producer references that can be checked.',
+    intents: ['rebooked', 'consistent-frequency', 'producer-confirm'],
+  },
+  {
+    key: 'declare',
+    icon: '✎',
+    title: 'Declare a band',
+    desc: 'Your own numbers — shown only as a bounded band, never a raw count.',
+    intents: ['community'],
+  },
+]
 
 export default function EvidenceCapture() {
   const { T, BANDS } = useLang()
@@ -25,7 +48,7 @@ export default function EvidenceCapture() {
   const [toast, setToast] = useState('')
   const [processing, setProcessing] = useState(false)
 
-  // claim-first: which claim the artist wants to prove (null = picker)
+  // claim-first: which claim the artist wants to prove (null = path cards)
   const [intent, setIntent] = useState(null)
 
   // Third-party evidence consent gate (collected inline here, not upfront).
@@ -134,14 +157,14 @@ export default function EvidenceCapture() {
   if (!evConsent) {
     return (
       <PageShell>
-        <div className="flex items-center justify-between mb-6">
-          <Wordmark /><Link to="/artist/home" className="text-sm text-muted">{T.common.back}</Link>
+        <div className="mb-6 flex items-center justify-between">
+          <Wordmark /><Link to="/artist/home" className="text-sm text-muted transition-colors hover:text-ink">{T.common.back}</Link>
         </div>
-        <h1 className="text-xl font-bold text-soft mb-1">{T.evidence.title}</h1>
+        <h1 className="font-display mb-1 text-2xl font-bold tracking-[-0.01em] text-ink">{T.evidence.title}</h1>
         <ErrorNote>{error}</ErrorNote>
         <div className="card">
-          <p className="font-bold text-soft mb-1">{T.consent.evidenceTitle}</p>
-          <p className="text-sm text-muted mb-4">{T.consent.evidence}</p>
+          <p className="mb-1 font-bold text-ink">{T.consent.evidenceTitle}</p>
+          <p className="mb-4 text-sm text-muted">{T.consent.evidence}</p>
           <button className="btn-primary w-full" onClick={acceptEvidenceConsent} disabled={consentBusy}>
             {consentBusy ? <Spinner /> : T.consent.evidenceGateCta}
           </button>
@@ -154,54 +177,67 @@ export default function EvidenceCapture() {
 
   return (
     <PageShell>
-      <div className="flex items-center justify-between mb-6">
-        <Wordmark /><Link to="/artist/home" className="text-sm text-muted">{T.common.back}</Link>
+      <div className="mb-6 flex items-center justify-between">
+        <Wordmark /><Link to="/artist/home" className="text-sm text-muted transition-colors hover:text-ink">{T.common.back}</Link>
       </div>
-      <h1 className="text-xl font-bold text-soft mb-1">{T.evidence.title}</h1>
-      <p className="text-sm text-muted mb-4">{T.evidence.subtitle}</p>
+      <h1 className="font-display mb-1 text-2xl font-bold tracking-[-0.01em] text-ink">{T.evidence.title}</h1>
+      <p className="mb-4 text-sm text-muted">{T.evidence.subtitle}</p>
       <ErrorNote>{error}</ErrorNote>
-      {toast && <p className="mb-3 text-sm text-ok">{toast}</p>}
+      {toast && (
+        <p className="mb-3 flex items-center gap-2 text-sm font-semibold text-ink" role="status">
+          <span aria-hidden className="h-2 w-2 rounded-full bg-accent" />{toast}
+        </p>
+      )}
 
-      {/* ── Step 1: what do you want to prove? ── */}
+      {/* ── Step 1: three capture paths, as cards ── */}
       {!intent && (
-        <div className="card mb-4">
-          <p className="font-bold text-soft mb-1">{T.evidence.intentTitle}</p>
-          <p className="text-xs text-muted mb-3">{T.evidence.intentHelp}</p>
-          <div className="flex flex-wrap gap-2">
-            {INTENTS.map((k) => (
-              <button key={k} type="button" onClick={() => { setIntent(k); setError('') }}
-                className="rounded-lg border border-line px-3 py-2 text-sm text-soft transition-colors hover:border-accent/40">
-                {T.evidence.intents[k]}
-              </button>
-            ))}
-          </div>
+        <div className="mb-4 space-y-3">
+          {PATHS.map((p) => (
+            <div key={p.key} className="card">
+              <div className="mb-2 flex items-center gap-3">
+                <span aria-hidden className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-gold/40 font-mono text-sm text-gold">{p.icon}</span>
+                <div className="min-w-0">
+                  <p className="font-display text-base font-bold text-ink">{p.title}</p>
+                  <p className="text-xs text-muted">{p.desc}</p>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {p.intents.map((k) => (
+                  <button key={k} type="button" onClick={() => { setIntent(k); setError('') }}
+                    className="min-h-[44px] rounded-xl border border-white/[0.12] bg-surface2 px-3 py-2 text-sm font-semibold text-ink/90 transition-colors hover:border-accent/50">
+                    {T.evidence.intents[k]}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       )}
 
       {/* ── Step 2: the matching evidence request ── */}
       {intent && (
         <div className="card mb-4">
-          <div className="flex items-center justify-between mb-1">
-            <p className="font-bold text-soft">{T.evidence.intents[intent]}</p>
-            <button type="button" className="text-xs text-muted hover:text-soft" onClick={() => { setIntent(null); resetForms() }}>
+          <div className="mb-1 flex items-center justify-between">
+            <p className="font-display text-base font-bold text-ink">{T.evidence.intents[intent]}</p>
+            <button type="button" className="min-h-[40px] text-xs text-muted transition-colors hover:text-gold" onClick={() => { setIntent(null); resetForms() }}>
               {T.evidence.changeIntent}
             </button>
           </div>
-          <p className="text-xs text-muted mb-4">{T.evidence.intentAsk[intent]}</p>
+          <p className="mb-4 text-xs text-muted">{T.evidence.intentAsk[intent]}</p>
 
           {/* drew-crowd: strongest = export/settlement file; also band + public link */}
           {intent === 'drew-crowd' && (
             <>
-              <p className="text-sm font-semibold text-soft mb-1">{T.evidence.uploadFile}</p>
-              <input type="file" accept={EVIDENCE.ACCEPT} onChange={(e) => onFile(e, 'ticket-export')} className="text-sm text-muted mb-1" />
-              <p className="text-xs text-muted mb-4">{T.evidence.fileHint}</p>
+              <p className="mb-1 text-sm font-semibold text-ink">{T.evidence.uploadFile}</p>
+              <input type="file" accept={EVIDENCE.ACCEPT} onChange={(e) => onFile(e, 'ticket-export')} className="mb-1 text-sm text-muted" />
+              <p className="mb-4 text-xs text-muted">{T.evidence.fileHint}</p>
               {uploading && <Spinner />}
-              <p className="text-sm font-semibold text-soft mb-1">{T.evidence.bandEntry}</p>
+              <p className="mb-1 text-sm font-semibold text-ink">{T.evidence.bandEntry}</p>
               <Field label={T.onboarding.freqBand}>
                 <div className="flex flex-wrap gap-2">
                   {BANDS.frequency.map((o) => (
                     <button key={o} onClick={() => setBand(o)}
-                      className={`chip min-h-[44px] px-4 py-2 ${band === o ? 'bg-accent text-ink' : 'bg-surface text-soft'}`}>{o}</button>
+                      className={`chip min-h-[44px] px-4 py-2 font-mono transition-colors ${band === o ? 'bg-accent text-[#12160A]' : 'border border-white/15 bg-surface2 text-ink/85 hover:border-accent/40'}`}>{o}</button>
                   ))}
                 </div>
               </Field>
@@ -215,7 +251,7 @@ export default function EvidenceCapture() {
           {/* sold-via-link: UTM/coupon export upload */}
           {intent === 'sold-via-link' && (
             <>
-              <input type="file" accept={EVIDENCE.ACCEPT} onChange={(e) => onFile(e, 'ticket-export')} className="text-sm text-muted mb-1" />
+              <input type="file" accept={EVIDENCE.ACCEPT} onChange={(e) => onFile(e, 'ticket-export')} className="mb-1 text-sm text-muted" />
               <p className="text-xs text-muted">{T.evidence.fileHint}</p>
               {uploading && <Spinner />}
             </>
@@ -237,7 +273,7 @@ export default function EvidenceCapture() {
               <Field label={T.evidence.communityLabel}>
                 <input className="field" type="number" min="1" inputMode="numeric" value={numVal} onChange={(e) => setNumVal(e.target.value)} placeholder="1200" />
               </Field>
-              <p className="text-xs text-warn mb-3">{T.evidence.communityPII}</p>
+              <p className="mb-3 text-xs text-[#F0B478]">{T.evidence.communityPII}</p>
               <button className="btn-ghost w-full" onClick={addCommunityCount}>{T.common.add}</button>
             </>
           )}
@@ -248,8 +284,8 @@ export default function EvidenceCapture() {
               <Field label={T.evidence.publicUrl}>
                 <input className="field" dir="ltr" value={textVal} onChange={(e) => setTextVal(e.target.value)} placeholder="https://…" />
               </Field>
-              <button className="btn-ghost w-full mb-4" onClick={() => addLink('public-profile')}>{T.common.add}</button>
-              <p className="text-sm font-semibold text-soft mb-1">{T.evidence.uploadFile}</p>
+              <button className="btn-ghost mb-4 w-full" onClick={() => addLink('public-profile')}>{T.common.add}</button>
+              <p className="mb-1 text-sm font-semibold text-ink">{T.evidence.uploadFile}</p>
               <input type="file" accept={EVIDENCE.ACCEPT} onChange={(e) => onFile(e, 'screenshot')} className="text-sm text-muted" />
               {uploading && <Spinner />}
             </>
@@ -282,12 +318,12 @@ export default function EvidenceCapture() {
       {/* submitted evidence */}
       {evidence.length > 0 && (
         <div className="card mb-4">
-          <p className="font-bold text-soft mb-2">{T.evidence.collected}</p>
+          <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-gold">{T.evidence.collected}</p>
           <ul className="space-y-2">
             {evidence.map((e) => (
-              <li key={e.id} className="flex items-center justify-between text-sm">
-                <span className="text-soft">{e.value || e.evidence_type} · {e.source_type}</span>
-                <span className={`chip ${e.status === 'processed' ? 'bg-ok/15 text-ok' : 'bg-surface text-muted'}`}>
+              <li key={e.id} className="flex items-center justify-between gap-3 rounded-xl border border-white/[0.06] bg-surface2 px-3 py-2 text-sm">
+                <span className="min-w-0 truncate text-ink/90">{e.value || e.evidence_type} <span className="font-mono text-[10px] text-faint">· {e.source_type}</span></span>
+                <span className={`chip shrink-0 ${e.status === 'processed' ? 'bg-[rgba(190,226,78,0.12)] text-[#CBEE72]' : 'bg-white/[0.06] text-muted'}`}>
                   {e.status === 'processed' ? T.evidence.processed : T.evidence.pending}
                 </span>
               </li>
@@ -296,14 +332,33 @@ export default function EvidenceCapture() {
         </div>
       )}
 
+      {/* processing — skeleton shimmer, never a bare spinner */}
+      {processing && (
+        <div className="card mb-4" role="status" aria-live="polite">
+          <p className="mb-1 flex items-center gap-2 text-sm font-semibold text-ink">
+            <span aria-hidden className="h-2 w-2 animate-pulse rounded-full bg-accent" />
+            AI is labeling your evidence
+          </p>
+          <p className="mb-3 text-xs text-muted">Nothing publishes without you — every claim waits for your confirmation.</p>
+          <div className="space-y-2">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="animate-pulse rounded-xl border border-white/[0.06] bg-surface2 px-3 py-3">
+                <div className="mb-2 h-3 w-2/3 rounded bg-white/[0.08]" />
+                <div className="h-2.5 w-1/3 rounded bg-white/[0.05]" />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* resulting claims */}
-      {claims.length > 0 && (
+      {!processing && claims.length > 0 && (
         <div className="card mb-4">
-          <p className="font-bold text-soft mb-2">{T.evidence.results}</p>
+          <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-[#CBEE72]">{T.evidence.results}</p>
           <ul className="space-y-2">
             {claims.map((c) => (
-              <li key={c.id} className="flex items-center justify-between text-sm">
-                <span className="text-soft">{c.value || c.claim_type}</span>
+              <li key={c.id} className="flex items-center justify-between gap-3 rounded-xl border border-white/[0.06] bg-surface2 px-3 py-2 text-sm">
+                <span className="min-w-0 truncate text-ink/90">{c.value || c.claim_type}</span>
                 <SourceLabel status={c.verification_status} methodLabel={c.method_label} expiresAt={c.expires_at} />
               </li>
             ))}

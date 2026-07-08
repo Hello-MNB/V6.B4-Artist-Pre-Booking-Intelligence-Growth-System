@@ -33,6 +33,10 @@ export default {
         line2: 'rgba(255,255,255,.15)',
 
         // ── Bounded-status pairs (fg + bg) — categorical, never a gauge ──
+        // The 5-state data-collection vocabulary (MASTER-CLASS MANDATE §1):
+        // ✦ found · ✓ confirmed (good) · ◌ developing (dev) · + needs-you (need) · ○ not-assessable (na)
+        found: '#F2C063',
+        'found-bg': 'rgba(242,192,99,.12)',
         good: '#CBEE72',
         'good-bg': 'rgba(190,226,78,.12)',
         dev: '#82E8D6',
@@ -81,11 +85,14 @@ export default {
       },
       boxShadow: {
         card: '0 24px 60px -24px rgba(0,0,0,.75)',
-        glow: '0 10px 26px -10px rgba(190,226,78,.6)', // lime glow — primary CTA only
+        glow: '0 10px 26px -10px rgba(190,226,78,.6)',    // lime glow — primary CTA only
+        'glow-gold': '0 0 18px 2px rgba(242,192,99,.35)', // found-state / gold aura edge
       },
       keyframes: {
         'fade-in': { '0%': { opacity: 0, transform: 'translateY(6px)' }, '100%': { opacity: 1, transform: 'translateY(0)' } },
         shimmer: { '0%': { backgroundPosition: '200% 0' }, '100%': { backgroundPosition: '-200% 0' } },
+        // state-motion keyframes (found-glow, bloom) live in src/index.css as
+        // adoptable utility classes: .glow-found · .bloom-confirm · .aura-gold
       },
       animation: {
         'fade-in': 'fade-in 220ms ease-out both',

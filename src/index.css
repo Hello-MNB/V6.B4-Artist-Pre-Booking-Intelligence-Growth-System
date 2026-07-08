@@ -87,7 +87,7 @@ body {
     font-size: 12.5px;
   }
   .card {
-    @apply rounded-xl2 bg-surface border border-line p-5;
+    @apply rounded-xl2 bg-surface border border-line p-5 shadow-card;
   }
   .chip {
     /* status pills: fully rounded, quiet tints, icon + text — never a gauge */
