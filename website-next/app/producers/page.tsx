@@ -4,7 +4,7 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: 'For Producers — Verify One Show in 30 Seconds',
   description:
-    'Verify one artist claim via a magic link — no account, no signup, fully bounded. Your confirmation turns a self-reported gig into verified evidence.',
+    'An artist sends you a link about one show. Confirm it in 30 seconds — no account, no signup, nothing else asked of you.',
   openGraph: {
     title: 'For Producers | LOCK',
     description: 'You confirm what happened. We make sure that confirmation means something.',
@@ -26,8 +26,8 @@ const whyItMatters = [
     body: 'An audience estimate from the artist themselves is useful context. The same data confirmed by the producer who ran the show is evidence. Your confirmation creates that distinction.',
   },
   {
-    title: 'Method-labelled, always',
-    body: 'Every claim on the Passport carries a visible method label. When you confirm, it reads "✓ Confirmed by producer · [Your name, Venue]". The booking manager sees exactly what it is.',
+    title: 'Your confirmation is always labelled, clearly',
+    body: 'Every claim on the Passport shows how it was checked. When you confirm, it reads "✓ Confirmed by producer · [Your name, Venue]". The booking manager sees exactly what it is.',
   },
   {
     title: 'You can decline or flag',

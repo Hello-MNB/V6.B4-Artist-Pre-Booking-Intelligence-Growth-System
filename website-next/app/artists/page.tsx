@@ -2,9 +2,9 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'For Artists — Build Verifiable Live-Performance Proof | LOCK',
+  title: 'Prove You Draw a Crowd — Before the Call | LOCK',
   description:
-    'LOCK gives independent artists method-labelled evidence that booking managers can actually trust — not a link, not a bio. Build your Bookability Passport.',
+    'You played the gig. Now put proof in front of the booking manager before they ever call you — not a link, not a bio, evidence they can check.',
   openGraph: {
     title: 'For Artists | LOCK',
     description:
@@ -112,17 +112,17 @@ const steps = [
 ]
 
 const radarFeatures = [
-  'Gig log with verification status',
-  'Evidence gap indicators',
-  'Producer invite flow',
-  'Privacy controls — nothing public without your OK',
+  'Every gig you\'ve logged, and whether it\'s been verified yet',
+  'Clear flags on what evidence is still missing',
+  'One-click links to invite a producer to confirm a show',
+  'Nothing public without your OK',
 ]
 
 const passportFeatures = [
-  'Method-labelled claims only',
-  'Audience draw as a band (e.g., 200–350)',
-  'Each claim shows its review date',
-  'Free for booking managers to view',
+  'Only claims that have been checked — and labelled with how',
+  'Audience size shown as a range, e.g. 200–350 — never one exact number',
+  'Every claim dated, so a manager knows how current it is',
+  'Free for booking managers to view, always',
 ]
 
 export default function ArtistsPage() {
@@ -478,9 +478,9 @@ export default function ArtistsPage() {
                   marginBottom: '1.5rem',
                 }}
               >
-                Your private workspace — see what evidence you have, what&apos;s
-                missing, and the single highest-value next action. A growth
-                tool. Never exposed publicly.
+                Your private workspace. See what evidence you have, what&apos;s
+                missing, and exactly what to do next. Nobody sees it unless you
+                choose to publish.
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
                 {radarFeatures.map((f) => (
@@ -794,8 +794,9 @@ export default function ArtistsPage() {
               lineHeight: 1.6,
             }}
           >
-            The producer (מפיק) confirms one claim via a bounded magic link —
-            no account, no ongoing access. אמרגן ≠ מפיק — they are distinct roles.
+            The producer (מפיק) confirms one claim through a link — no account,
+            no ongoing access. A booking manager (אמרגן) is a different role
+            entirely: they read the finished Passport and decide.
           </p>
         </div>
       </section>

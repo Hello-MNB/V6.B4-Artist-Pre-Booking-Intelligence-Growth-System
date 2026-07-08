@@ -1,8 +1,8 @@
 ﻿import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'FAQ — Frequently Asked Questions | LOCK',
-  description: 'Answers to the most common questions about LOCK — what it is, who it\'s for, how verification works, what a BandPill means, and what LOCK never promises.',
+  title: 'FAQ — What LOCK Does (and Doesn\'t) Promise',
+  description: 'Straight answers on how verification works, what a Passport shows, and why there\'s no score, rank, or guarantee — ever.',
 }
 
 const faqs = [
@@ -11,7 +11,7 @@ const faqs = [
     questions: [
       {
         q: 'What is LOCK?',
-        a: 'LOCK is a pre-booking evidence tool for the live music industry. It helps independent artists turn fragmented live-performance data into a method-labelled Passport — a structured, verifiable record that booking managers can evaluate without asking for favours or guessing from follower counts.',
+        a: 'LOCK helps independent artists prove their live draw before a booking manager ever calls. Instead of a bio or a follower count, you get a Passport — a record of what actually happened on stage, with each claim showing how it was checked.',
       },
       {
         q: 'What problem does it solve?',

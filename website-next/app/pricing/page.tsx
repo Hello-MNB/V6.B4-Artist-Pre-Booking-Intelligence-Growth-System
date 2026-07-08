@@ -2,17 +2,17 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Pricing — Free to Publish, Plans for More | LOCK',
-  description: 'Publishing a Passport is free — always. Momentum keeps an artist\'s proof fresh; Roster gives a management office one readiness view across artists. Pilot pricing on request — no locked numbers yet.',
+  description: 'Publishing your Passport is always free. Paid plans just keep your proof current and give management offices one view across a roster.',
 }
 
 import { APP_URL } from '@/lib/app-url'
 
 const artistAlwaysFree = [
-  'Identity & positioning — name, act, genre, geography',
-  'A first deep scan of your professional universe',
-  'Limited evidence logging in your Artist Radar',
-  'Passport publication — never paywalled, ever',
-  'Availability request inbox',
+  'Your basic profile — name, act, genre, city',
+  'A first full scan of your gig and platform history',
+  'Evidence logging in your private workspace (limited)',
+  'Publishing your Passport — never paywalled, ever',
+  'An inbox for booking requests',
   'Full export and delete, any time',
 ]
 
@@ -24,16 +24,16 @@ const buyerAlwaysFree = [
 ]
 
 const momentumFeatures = [
-  'Deep re-scans as your universe grows',
+  'A fresh scan every time your career grows',
   'Freshness — nothing goes stale before the next call',
-  'Incremental scans after every new gig',
-  'Private guidance — your one next move, never public',
+  'A quick re-scan after every new gig you log',
+  'Private guidance on your one next move — never shown to anyone else',
 ]
 
 const rosterFeatures = [
-  'Multi-artist booking-readiness view, one screen',
+  "See every artist's proof status on one screen",
   'Team seats included — the plan is per workspace, not per head',
-  'Pitch-prep tools for sending artists forward',
+  'Tools to package an artist for a pitch',
   "Your artists' own plans stay theirs — no double billing",
 ]
 
@@ -72,9 +72,9 @@ export default function Pricing() {
             Publication is free. It always will be.
           </h1>
           <p style={{ fontSize: '1.05rem', color: 'var(--color-tally-onlight)', maxWidth: '560px', lineHeight: 1.6, margin: '0 0 16px' }}>
-            A plan buys the work behind your proof — a deep scan of your universe, a private
-            reflection of what you actually have, guidance on the next move, and the freshness
-            that keeps it all alive. It never buys publication, a badge, or a ranking. Those don&apos;t exist to sell.
+            A paid plan buys the ongoing work behind your proof — rescanning your gig
+            history as it grows, telling you what to do next, and keeping it all current.
+            It never buys publication, a badge, or a better spot in line. Those aren&apos;t for sale.
           </p>
         </div>
       </section>
@@ -224,7 +224,7 @@ export default function Pricing() {
                   </span>
                 </div>
                 <p style={{ color: 'var(--color-tally-onlight)', fontSize: '0.875rem', lineHeight: 1.6, margin: 0 }}>
-                  Your career, provable. Your universe scanned, your radar live, your passport published — free.
+                  Get scanned, get organized, get published — free, permanently.
                 </p>
               </div>
 
@@ -301,7 +301,7 @@ export default function Pricing() {
                   </span>
                 </div>
                 <p style={{ color: 'var(--color-tally-onlight)', fontSize: '0.875rem', lineHeight: 1.6, margin: 0 }}>
-                  Your career, provable. It never goes stale — every gig lands in your passport before the next call.
+                  Keep your proof current. Every new gig updates your Passport before your next call.
                 </p>
               </div>
 
@@ -378,7 +378,7 @@ export default function Pricing() {
                   </span>
                 </div>
                 <p style={{ color: 'var(--color-tally-onlight)', fontSize: '0.875rem', lineHeight: 1.6, margin: 0 }}>
-                  Your roster, sellable. See every artist&apos;s booking-readiness on one screen — your team included.
+                  One screen showing where every artist on your roster stands — your team included.
                 </p>
               </div>
 

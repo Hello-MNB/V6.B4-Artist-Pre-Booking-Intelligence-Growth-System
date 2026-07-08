@@ -6,13 +6,13 @@ import { APP_URL } from '@/lib/app-url'
 const SITE_URL = 'https://lock.show'
 
 export const metadata: Metadata = {
-  title: 'LOCK — Booking Proof for Independent Artists',
+  title: 'LOCK — Proof a Booking Manager Can Actually Check',
   description:
-    'LOCK turns live-performance evidence into a method-labelled Bookability Passport — so booking managers can evaluate before they risk their reputation.',
+    'Turn your gig history into evidence a booking manager can verify before they risk their name on you. No scores, no rankings — just checked claims.',
   openGraph: {
-    title: 'LOCK — Booking Proof for Independent Artists',
+    title: 'LOCK — Proof a Booking Manager Can Actually Check',
     description:
-      'Method-labelled performance evidence. Built for booking managers who need to verify before they risk their name.',
+      'Every claim shows how it was checked and when. Built for booking managers who need to verify before they risk their name.',
     type: 'website',
     url: `${SITE_URL}/`,
   },
@@ -308,8 +308,8 @@ export default function HomePage() {
                   marginBottom: '2.25rem',
                 }}
               >
-                Turn live-performance evidence into a method-labelled Bookability Passport —
-                so booking managers can evaluate before they risk their name.
+                Every claim on your Passport shows how it was checked and when —
+                so a booking manager can decide before they risk their name on you.
               </p>
 
               {/* CTAs */}
@@ -675,8 +675,8 @@ export default function HomePage() {
                 lineHeight: 1.6,
               }}
             >
-              Booking manager ≠ producer. These are distinct roles with distinct interests —
-              and LOCK keeps them separate at every level.
+              A booking manager decides whether to book you. A producer ran the show
+              you played. LOCK keeps those roles separate — so no one confirms their own claim.
             </p>
 
             <div
@@ -862,7 +862,7 @@ export default function HomePage() {
                     textTransform: 'uppercase',
                   }}
                 >
-                  The Proof Unit
+                  What A Claim Looks Like
                 </p>
                 <h2
                   style={{
@@ -875,7 +875,7 @@ export default function HomePage() {
                     lineHeight: 1.15,
                   }}
                 >
-                  Every claim shows how it was verified
+                  Every claim shows how it was checked
                 </h2>
                 <p
                   style={{
@@ -885,9 +885,10 @@ export default function HomePage() {
                     marginBottom: '1.5rem',
                   }}
                 >
-                  No bare numbers. No unexplained assertions. Every piece of evidence on
-                  a Bookability Passport carries a method label and a review date —
-                  so a booking manager can judge the strength of each claim, not just its value.
+                  No bare numbers. No unexplained claims. Every line on a Passport says
+                  who checked it and when — a producer, a ticket export, an operator, or the
+                  artist themselves — so a booking manager can judge how much to trust it,
+                  not just what it says.
                 </p>
                 <Link
                   href="/methodology"

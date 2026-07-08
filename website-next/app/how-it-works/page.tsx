@@ -2,7 +2,7 @@
 
 export const metadata: Metadata = {
   title: 'How It Works — From Gig to Verified Evidence | LOCK',
-  description: 'Three players. Three steps. See how artists build method-labelled evidence, producers verify in 30 seconds, and booking managers evaluate without signing up.',
+  description: 'See exactly how a gig becomes evidence a booking manager can trust — three people, three simple steps, no signup required to view.',
 }
 
 import { APP_URL } from '@/lib/app-url'
@@ -185,7 +185,7 @@ export default function HowItWorks() {
               color: 'var(--color-stamp-onlight)',
               margin: 0,
             }}>
-              אמרגן ≠ מפיק — Booking manager ≠ producer. They are distinct roles that are never merged in this system.
+              A booking manager (אמרגן) decides whether to book. A producer (מפיק) ran the show. Different jobs — LOCK never mixes them up.
             </p>
           </div>
         </div>

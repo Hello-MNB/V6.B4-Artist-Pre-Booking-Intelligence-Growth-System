@@ -5,7 +5,7 @@ import { DoorStamp } from '@/components/door-stamp'
 export const metadata: Metadata = {
   title: 'For Booking Managers — Evaluate Before You Commit',
   description:
-    'LOCK is free for booking managers. An artist sends you a link; you open method-labelled performance evidence — no account, no signup.',
+    'An artist sends you a link. Open it and see exactly how each claim was checked — no account, no signup, free for booking managers, always.',
   openGraph: {
     title: 'For Booking Managers | LOCK',
     description: 'Your reputation is on the line. Evaluate before you commit.',
@@ -145,8 +145,8 @@ export default function BookersPage() {
             }}
           >
             LOCK is free for booking managers. An artist sends you a link;
-            you open it in a browser and get clear, method-labelled context —
-            no speculation, no signup, no account.
+            you open it in a browser and see exactly how each claim was
+            checked — no speculation, no signup, no account.
           </p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
             <Link

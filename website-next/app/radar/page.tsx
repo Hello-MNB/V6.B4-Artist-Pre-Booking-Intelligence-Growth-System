@@ -2,7 +2,7 @@
 
 export const metadata: Metadata = {
   title: 'Artist Radar — Your Private Evidence Workspace | LOCK',
-  description: 'The Artist Radar is your private workspace. See every dimension of your professional profile, know what evidence you have and what\'s missing, and take one clear next action.',
+  description: 'Your private workspace to see what proof you have, what\'s missing, and exactly what to do next — visible only to you, never public.',
 }
 
 import { APP_URL } from '@/lib/app-url'
@@ -100,11 +100,11 @@ export default function Radar() {
             letterSpacing: '-0.03em',
             margin: '0 0 20px',
           }}>
-            Your professional profile — organized by evidence.
+            See what you&apos;ve got. See what you&apos;re missing.
           </h1>
           <p style={{ fontSize: '1.05rem', color: 'var(--color-tally-onlight)', maxWidth: '540px', lineHeight: 1.6, margin: '0 0 16px' }}>
-            The Artist Radar is the private workspace where you build, manage, and verify your professional evidence.
-            It is visible only to you. Nothing leaves it without your explicit approval.
+            The Radar is where you build and check your evidence before anyone
+            else sees it. Nothing leaves it without your OK.
           </p>
           <p style={{
             fontFamily: 'var(--font-space-mono)',
@@ -113,7 +113,7 @@ export default function Radar() {
             color: 'var(--color-tally-onlight)',
             margin: 0,
           }}>
-            NOT a chart. NOT a score. A navigation surface organized by dimension.
+            NOT a chart. NOT a score. Just a clear list of what you have and what you need.
           </p>
         </div>
       </section>
@@ -220,11 +220,11 @@ export default function Radar() {
             letterSpacing: '-0.02em',
             marginBottom: '12px',
           }}>
-            Six dimensions. One engine. Every artist type.
+            Six things booking managers want to know.
           </h2>
           <p style={{ color: 'var(--color-tally-onlight)', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '48px', maxWidth: '560px' }}>
-            The Radar adapts to you — not to a fixed genre or format. Dimensions that don&apos;t apply to your
-            artist type are switched off. An absent field is not a gap.
+            The Radar adapts to your act, not to a fixed genre or format. If a category
+            doesn&apos;t apply to you, it&apos;s simply switched off — that&apos;s not a gap in your evidence.
           </p>
 
           <div style={{
@@ -286,7 +286,7 @@ export default function Radar() {
             letterSpacing: '-0.02em',
             marginBottom: '12px',
           }}>
-            Every dimension shows a state, not a score.
+            Every category shows where it stands, not a score.
           </h2>
           <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '48px', maxWidth: '520px' }}>
             The Radar doesn&apos;t grade you. It shows you where your evidence stands, and what to do next.
