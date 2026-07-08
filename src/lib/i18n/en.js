@@ -476,7 +476,7 @@ export const T = {
   nav: {
     radar: 'Radar',
     readiness: 'Readiness',
-    claims: 'Claims',
+    claims: 'Passport',
     roster: 'Roster',
     requests: 'Requests',
     received: 'Received',
