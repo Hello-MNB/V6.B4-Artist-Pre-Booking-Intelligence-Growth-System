@@ -3,7 +3,6 @@ import { useAuth } from '../../features/auth/AuthProvider.jsx'
 import { useOrg } from '../../context/OrgContext.jsx'
 import { useLang } from '../../context/LangContext.jsx'
 import { Wordmark } from '../ui.jsx'
-import ContextSwitcher from '../../features/org/ContextSwitcher.jsx'
 import { getNavTabs, NavIcon } from './navItems.jsx'
 
 export default function SideNav() {
@@ -37,10 +36,6 @@ export default function SideNav() {
           </NavLink>
         ))}
       </nav>
-
-      <div className="mt-4 pt-4 border-t border-line">
-        <ContextSwitcher />
-      </div>
     </div>
   )
 }

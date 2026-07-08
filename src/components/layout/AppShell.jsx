@@ -2,10 +2,14 @@ import { Outlet } from 'react-router-dom'
 import { useAuth } from '../../features/auth/AuthProvider.jsx'
 import BottomNav from './BottomNav.jsx'
 import SideNav from './SideNav.jsx'
+import ContextSwitcher from '../../features/org/ContextSwitcher.jsx'
 
 // Layout route wrapper — renders persistent nav shell around all authenticated screens.
-// Mobile: fixed bottom tab nav. Desktop (md+): fixed 248px inline-start sidebar
-// (logical CSS — start/border-e/ps — so a future RTL pass flips it for free).
+// Mobile: fixed bottom tab nav + a slim top bar. Desktop (md+): fixed 248px inline-start
+// sidebar (logical CSS — start/border-e/ps — so a future RTL pass flips it for free).
+// The top bar's only job is the workspace switcher, top-right, on EVERY breakpoint
+// (canon ROUND 4: person → workspace → role; switching lives top-right, never
+// bottom-left, never a re-registration).
 // Public routes (Passport, confirm, login) are NOT wrapped — they use separate Route entries.
 export default function AppShell() {
   const { user, loading } = useAuth()
@@ -19,6 +23,11 @@ export default function AppShell() {
       <aside className="hidden md:flex fixed start-0 top-0 bottom-0 w-[248px] flex-col bg-bg2 border-e border-line z-30">
         <SideNav />
       </aside>
+
+      {/* Top bar — workspace switcher only, top-right, every breakpoint */}
+      <header className="sticky top-0 z-20 flex h-14 items-center justify-end border-b border-line bg-bg/95 px-4 backdrop-blur md:ps-[248px]">
+        <ContextSwitcher />
+      </header>
 
       {/* Scrollable content — offset for sidebar on desktop, padded bottom for nav on mobile */}
       <main className="md:ps-[248px] pb-16 md:pb-0">

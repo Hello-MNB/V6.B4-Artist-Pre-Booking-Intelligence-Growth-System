@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from './AuthProvider.jsx'
-import { upsertProfile, requestAccountDeletion } from '../../lib/db.js'
+import { upsertProfile, requestAccountDeletion, hasConsent, recordConsentScope } from '../../lib/db.js'
 import { ROLES } from '../../lib/constants.js'
 import { PageShell, Wordmark, Field, ErrorNote, LanguageToggle } from '../../components/ui.jsx'
 import { useLang } from '../../context/LangContext.jsx'
@@ -21,8 +21,34 @@ export default function Settings() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleteSubmitted, setDeleteSubmitted] = useState(false)
   const [deleteBusy, setDeleteBusy] = useState(false)
+  // Marketing consent (4th, optional purpose) — moved here per canon; privacy +
+  // processing fire inline at onboarding, publication fires at publish time.
+  const [marketing, setMarketing] = useState(false)
+  const [marketingLoaded, setMarketingLoaded] = useState(false)
+  const [marketingBusy, setMarketingBusy] = useState(false)
 
   logEvent(EVENTS.SETTINGS_OPENED, { role })
+
+  useEffect(() => {
+    (async () => {
+      try { setMarketing(await hasConsent(user.id, 'marketing')) } catch { /* default false */ }
+      finally { setMarketingLoaded(true) }
+    })()
+  }, [user.id])
+
+  async function toggleMarketing() {
+    if (marketingBusy) return
+    const next = !marketing
+    setMarketingBusy(true)
+    try {
+      await recordConsentScope(user.id, 'marketing', { status: next ? 'accepted' : 'declined', marketing_opt_in: next })
+      setMarketing(next)
+    } catch (e) {
+      setError(e.message || T.common.error)
+    } finally {
+      setMarketingBusy(false)
+    }
+  }
 
   async function saveProfile() {
     setSaving(true); setError(''); setSaved(false)
@@ -120,6 +146,24 @@ export default function Settings() {
           <p><span className="text-accent" aria-hidden>✓</span> Data Processing (v2) — {T.settings.accepted}</p>
           <p><span className="text-accent" aria-hidden>✓</span> Evidence Storage (v2) — {T.settings.accepted}</p>
         </div>
+
+        {/* 4th purpose — optional, its own toggle, separate from the required pair */}
+        <div className="mt-3 flex items-center justify-between gap-3 border-t border-line pt-3">
+          <div className="min-w-0">
+            <p className="text-sm font-semibold text-ink">{T.consent.marketingTitle}</p>
+            <p className="text-xs text-muted">{T.consent.marketing}</p>
+          </div>
+          <button
+            onClick={toggleMarketing}
+            disabled={marketingBusy || !marketingLoaded}
+            aria-pressed={marketing}
+            className={`chip min-h-[40px] shrink-0 px-3 py-1.5 text-xs font-bold transition ${
+              marketing ? 'bg-[rgba(190,226,78,0.10)] text-[#CBEE72]' : 'border border-white/15 bg-white/[0.04] text-muted'
+            }`}>
+            {marketingBusy ? T.common.loading : marketing ? T.common.yes : T.common.no}
+          </button>
+        </div>
+
         <p className="mt-3 text-[11px] italic text-faint">{T.settings.consentsContact}</p>
       </div>
 
