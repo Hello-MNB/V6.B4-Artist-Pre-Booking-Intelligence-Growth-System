@@ -15,7 +15,7 @@ priority board (docs/TASK-STATUS-BOARD.md) + open pending-from-owner list.
 - Sandbox proxy blocks vercel.app (403) — live site unverifiable from the container.
 
 ## Keys (values in gitignored .env.local + Maria's side; statuses only here)
-- Anthropic: RECEIVED + VERIFIED locally. PENDING: Maria adds to Vercel v6-b4 env + Redeploy.
+- Anthropic: VERIFIED + Maria added to Vercel (8 Jul, via Cowork). Remaining: verify real AI labeling on v6-b4 after redeploy.
 - Spotify: client id+secret VERIFIED (token + search OK). Not wired into app yet.
 - Google API key: rescoped YouTube Data v3 only (CSE closed → Tavily replaces it).
 - Tavily: RECEIVED + VERIFIED 8 Jul (EN+HE live searches OK). In .env.local; pending → Vercel env. Discovery build unblocked (counsel sign-off still gates go-live).
@@ -36,11 +36,11 @@ No booking commission ever. Each entity pays its own plan; artist always owns/pa
 - Vocabulary flag: Terms draft uses "Mirror" — canon retired it (one Passport, views). Counsel draft should be aligned before publication.
 
 ## Open pending-from-Maria (repeat at end of every reply until resolved)
-1. Anthropic key → Vercel v6-b4 env → Redeploy.
+1. Verify real AI labeling works on v6-b4 (key now in Vercel ✅ — needs a live test after redeploy).
 2. Approve migration 027 (+ ruling: 'producer' vs 'production'; consent 4-vs-6).
 3. Fixed pilot price (rec ₪179).
 4. Buy domain (rec gigproof.co + app.gigproof.co).
-5. Google OAuth client → Supabase providers (redirect https://qexfndiyallwqhhzeerd.supabase.co/auth/v1/callback).
+5. Google OAuth: client CREATED ✅ ('GIGPROOF Supabase', redirect verified). Final step (Maria): paste Client ID+Secret into Supabase Google provider, toggle ON, Save → then ME: VITE_OAUTH_ENABLED=1 (Vercel env + .env.embed) + rebuild.
 6. Green Invoice signup.
 8. Send counsel email (docs/COUNSEL-EMAIL-DRAFT.md).
 9. Later, low urgency: rotate Anthropic + Tavily keys (both pasted in chat).

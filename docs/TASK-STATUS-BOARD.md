@@ -9,7 +9,7 @@
 |---|---|---|---|---|---|
 | P0-1 | 23 | Legal gate (counsel sign-off) | ⬜ | 🟡 drafts exist, unreviewed | No migration. HE drafts for terms/privacy/accessibility now in docs/legal/ ✅. **YOU:** send counsel email + fill placeholders (entity/ח.פ., city, refund policy, accessibility coordinator). |
 | P0-8 | 24 | Cookie-consent banner (GA4 Consent Mode v2) | ✅ | ✅ built, deploys with next live push | No migration. Implemented on app + site, bilingual EN/HE, analytics fire only after consent. |
-| P0-2 | 3 | Pasted link → evidence → real AI labeling | ✅ (stub AI) | 🟡 LIVE but stub AI | No migration. **YOU:** add Anthropic key to Vercel v6-b4 env → Redeploy. Key already verified. |
+| P0-2 | 3 | Pasted link → evidence → real AI labeling | ✅ (stub AI) | 🟡 key in Vercel ✅ | No migration. Key added to Vercel by Maria (8 Jul). Remaining: live test that labeling is real, not stub. |
 | P0-3 | 5 | Consent handshake (invite → artist approves w/ scopes → revoke) | ✅ full | 🟡 UI live, degrades gracefully | **MIGRATION 027 — awaiting YOUR approval.** One approval also unlocks #16 + #17. |
 | P0-4 | 8 | Manual payment (Bit + reference code + activation) | ✅ | ✅ LIVE mechanics | No migration. **YOU:** fixed price (rec ₪179) + Green Invoice signup for receipts. |
 | P0-5 | 22 | Domain + auth email URLs | ⬜ | 🔴 | No migration. **YOU:** pick domain (rec gigproof.co) → **ME:** wire Vercel + Supabase Site URL. |
@@ -22,7 +22,7 @@
 |---|---|---|---|---|---|
 | P1-1 | 10 | Notifications (confirmation arrived / payment activated / request received) | 🔴 | 🔴 | No migration (table since 002). Pure build — highest-value P1. |
 | P1-2 | 4 | Deep discovery scan (web search by name HE/EN) | 🔴 | 🔴 | Small migration ('discovered' source + HE/EN names → 028). Tavily key verified ✅ (EN+HE). **ME:** Phase-A build (~2-3 days) — unblocked. |
-| P1-3 | 12 | Google/Facebook login | ✅ (demo notice) | 🔴 OFF (safe) | No migration. **YOU:** Google OAuth client → Supabase providers. **ME:** flag ON + redeploy. |
+| P1-3 | 12 | Google/Facebook login | ✅ (demo notice) | 🟡 client created ✅ | No migration. **YOU:** paste ID+secret in Supabase → Enable → Save. **ME (on your word):** VITE_OAUTH_ENABLED=1 + rebuild both surfaces. |
 | P1-4 | 16 | Representation workspace (roster as consented grants) | ✅ prototype | 🔴 in app | Needs 027 (P0-3) → then UI build from prototype. |
 | P1-5 | 17 | Production-company workspace (INSOMNIA: team, events, lineup) | ✅ prototype | 🔴 in app | Needs 027 (P0-3) → then UI build. gigs table exists unused. |
 | P1-6 | 6 | Workspace switcher actually swaps the screen-set | ✅ | 🟡 visible, switch is a no-op | No migration. Routing refactor (pairs naturally with #16/#17). |
