@@ -176,12 +176,13 @@ export default function HomePage() {
             border: '1px solid #2a362c',
             borderRadius: '20px',
             background: `
-              linear-gradient(135deg,
-                rgba(10,13,11,0.97) 0%,
-                rgba(10,13,11,0.88) 52%,
-                rgba(10,13,11,0.5)  100%
+              linear-gradient(100deg,
+                rgba(10,13,11,0.95) 0%,
+                rgba(10,13,11,0.82) 30%,
+                rgba(10,13,11,0.4)  62%,
+                rgba(10,13,11,0.62) 100%
               ),
-              url('/gigproof-live-hero.webp') center/cover no-repeat
+              url('/gigproof-live-hero.webp') center 35%/cover no-repeat
             `,
             color: 'var(--color-paper)',
             minHeight: '620px',
@@ -403,12 +404,13 @@ export default function HomePage() {
             <div
               className="hero-passport-card"
               style={{
-                background: 'rgba(243,245,239,0.04)',
-                border: '1px solid rgba(243,245,239,0.1)',
+                background: 'rgba(10,13,11,0.62)',
+                border: '1px solid rgba(243,245,239,0.14)',
                 borderRadius: 'var(--radius-sm)',
                 padding: '1.5rem',
-                backdropFilter: 'blur(10px)',
-                WebkitBackdropFilter: 'blur(10px)',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+                boxShadow: '0 24px 60px -20px rgba(0,0,0,0.75)',
               }}
             >
               {/* Passport header */}

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthProvider.jsx'
 import { PageShell, Wordmark, Field, LanguageToggle } from '../../components/ui.jsx'
 import { useLang } from '../../context/LangContext.jsx'
@@ -62,6 +62,14 @@ export default function BookerHome() {
             >
               {T.booker.openCta}
             </button>
+            {/* Empty-state escape hatch — a booker who arrived with no link in
+                hand yet should never be stuck staring at a blank field. */}
+            <p className="mt-3 text-center text-[13px] text-muted">
+              {T.booker.noLinkYet}{' '}
+              <Link to="/passport/demo-artist" className="font-semibold text-accent hover:underline">
+                {T.booker.sampleCta}
+              </Link>
+            </p>
           </div>
         </div>
 

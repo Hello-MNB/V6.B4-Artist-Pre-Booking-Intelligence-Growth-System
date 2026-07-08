@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from './AuthProvider.jsx'
 import { upsertProfile } from '../../lib/db.js'
@@ -6,6 +6,7 @@ import { bootstrapOrg } from '../../lib/orgs.js'
 import { PageShell, Wordmark, GpIcon } from '../../components/ui.jsx'
 import { useLang } from '../../context/LangContext.jsx'
 import { ROLES } from '../../lib/constants.js'
+import { PENDING_ROLE_KEY, JOB_ROLES } from './roleHint.js'
 
 export default function UserTypeSelect() {
   const { T } = useLang()
@@ -60,6 +61,26 @@ export default function UserTypeSelect() {
     }
     nav(route)
   }
+
+  // Cross-funnel seam: if the visitor arrived via a persona-specific CTA on
+  // the website (e.g. /artists → /app/signup?role=artist), Signup.jsx left a
+  // hint in sessionStorage. Auto-resolve this "what would you like to do
+  // first?" question instead of making them re-answer it by clicking the
+  // card they already implied by their entry point. Runs once; a plain
+  // organic visit to /select (no hint) is untouched and still asks.
+  const autoChoseRef = useRef(false)
+  useEffect(() => {
+    if (autoChoseRef.current) return
+    const hint = sessionStorage.getItem(PENDING_ROLE_KEY)
+    if (!hint) return
+    sessionStorage.removeItem(PENDING_ROLE_KEY)
+    if (!JOB_ROLES.includes(hint)) return
+    const match = ROLE_OPTIONS.find((r) => r.key === hint)
+    if (!match) return
+    autoChoseRef.current = true
+    choose(match.key, match.route)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <PageShell max="max-w-md">

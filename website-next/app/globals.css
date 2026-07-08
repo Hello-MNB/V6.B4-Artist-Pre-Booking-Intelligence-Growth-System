@@ -36,8 +36,53 @@ html {
   font-family: var(--font-heebo), Manrope, system-ui, sans-serif;
   color: var(--color-ink);
   background-color: var(--color-night);
+  scroll-behavior: smooth;
 }
 
 * {
   box-sizing: border-box;
+}
+
+/* ─── Interaction layer — ONE duration/easing site-wide ───────────────── */
+/* Applies to every link/button uniformly via `filter`/`transform`, which no
+   inline style in this codebase sets — so it layers cleanly over any
+   component without needing !important or per-file edits. */
+a,
+button {
+  transition: filter 0.18s ease, transform 0.18s ease, opacity 0.18s ease,
+    box-shadow 0.18s ease, background-color 0.18s ease, border-color 0.18s ease;
+}
+
+a:hover,
+button:hover {
+  filter: brightness(1.14);
+}
+
+a:active,
+button:active {
+  transform: translateY(1px);
+  filter: brightness(0.97);
+}
+
+/* Accessible focus ring — lime, consistent everywhere */
+:focus-visible {
+  outline: 2px solid var(--color-stamp);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Text selection */
+::selection {
+  background: rgba(200, 240, 77, 0.35);
+  color: var(--color-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  a,
+  button {
+    transition: none;
+  }
 }

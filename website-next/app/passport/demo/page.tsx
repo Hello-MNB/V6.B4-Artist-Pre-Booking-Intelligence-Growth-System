@@ -168,7 +168,7 @@ function SectionHeader({ label, title }: { label: string; title: string }) {
 
 export default function PassportDemo() {
   return (
-    <div style={{ backgroundColor: 'var(--color-paper)', minHeight: '100vh' }}>
+    <div style={{ backgroundColor: 'var(--color-night)', minHeight: '100vh' }}>
 
       {/* DEMO BANNER */}
       <div style={{
@@ -182,6 +182,16 @@ export default function PassportDemo() {
       }}>
         SAMPLE PASSPORT — FICTIONAL ARTIST FOR ILLUSTRATION ONLY
       </div>
+
+      {/* PASSPORT DOCUMENT — floats as a card on wide viewports, full-bleed on mobile */}
+      <div
+        className="passport-doc"
+        style={{
+          backgroundColor: 'var(--color-paper)',
+          maxWidth: '560px',
+          margin: '0 auto',
+        }}
+      >
 
       {/* PASSPORT HEADER */}
       <div style={{
@@ -380,6 +390,20 @@ export default function PassportDemo() {
           </a>
         </div>
       </div>
+      </div>
+
+      <style>{`
+        @media (min-width: 700px) {
+          .passport-doc {
+            margin-top: 48px;
+            margin-bottom: 64px;
+            border-radius: 20px;
+            box-shadow: 0 32px 80px -30px rgba(0,0,0,0.55);
+            border: 1px solid rgba(10,13,11,0.08);
+            overflow: hidden;
+          }
+        }
+      `}</style>
     </div>
   )
 }

@@ -56,7 +56,7 @@ function destinationOf(claim) {
   return publicBound ? 'your Passport view' : 'your private record'
 }
 
-export default function RadarUniverse({ artist, items, claims, onClaimsChange, nextAction, onNextAction, onArtistChange, onItemsRefresh, reviewSignal = 0 }) {
+export default function RadarUniverse({ artist, act, items, claims, onClaimsChange, nextAction, onNextAction, onArtistChange, onActChange, onItemsRefresh, reviewSignal = 0, focusPlanet = null, focusSignal = 0 }) {
   const { T } = useLang()
   const S = T.radar.universe
   const nav = useNavigate()
@@ -77,7 +77,7 @@ export default function RadarUniverse({ artist, items, claims, onClaimsChange, n
     flashRef.current = setTimeout(() => setFlashMsg(''), 3200)
   }
 
-  const uni = useMemo(() => buildUniverse({ artist, items, claims, T }), [artist, items, claims, T])
+  const uni = useMemo(() => buildUniverse({ artist, act, items, claims, T }), [artist, act, items, claims, T])
   const worlds = useMemo(() => deriveWorlds({ artist, items }), [artist, items])
   const evidenceRoute = `/evidence/${artist.id}`
 
@@ -95,6 +95,12 @@ export default function RadarUniverse({ artist, items, claims, onClaimsChange, n
 
   // The dashboard's Next-step card can open the review mode without leaving the radar.
   useEffect(() => { if (reviewSignal > 0) setReview(true) }, [reviewSignal])
+
+  // …and it can open a SPECIFIC planet panel (deferred-field fills: "Add your
+  // photo" → Identity planet) — same panel a tap on the planet opens.
+  useEffect(() => {
+    if (focusSignal > 0 && focusPlanet) { setReview(false); setSelected(focusPlanet) }
+  }, [focusSignal, focusPlanet])
 
   // lock body scroll while a panel is open (mobile flawlessness)
   useEffect(() => {
@@ -173,7 +179,7 @@ export default function RadarUniverse({ artist, items, claims, onClaimsChange, n
   const rowProps = {
     S, T,
     onEvidence: goEvidence,
-    artist, onArtistChange, onItemsRefresh, onClaimsChange,
+    artist, onArtistChange, onActChange, onItemsRefresh, onClaimsChange,
   }
 
   return (
@@ -356,7 +362,7 @@ export default function RadarUniverse({ artist, items, claims, onClaimsChange, n
 // identifiable reference), (3) the honest proves / doesn't-prove line. The
 // button names what it confirms. Non-claim rows keep the inline expander +
 // in-place fill form. Never a second modal above the panel.
-function PlanetRow({ node: n, planet, S, T, busy, onConfirm, onEvidence, artist, onArtistChange, onItemsRefresh, onClaimsChange, onSaved }) {
+function PlanetRow({ node: n, planet, S, T, busy, onConfirm, onEvidence, artist, onArtistChange, onActChange, onItemsRefresh, onClaimsChange, onSaved }) {
   const [open, setOpen] = useState(false)
   const chip = NODE_CHIP[n.state]
   const actionable = (n.state === NODE.FOUND || n.state === NODE.REVIEW) && !!n.claim
@@ -435,6 +441,7 @@ function PlanetRow({ node: n, planet, S, T, busy, onConfirm, onEvidence, artist,
             <MissingFill
               node={n} artist={artist} S={S}
               onArtistChange={onArtistChange}
+              onActChange={onActChange}
               onItemsRefresh={onItemsRefresh}
               onClaimsChange={onClaimsChange}
               onDone={() => { setOpen(false); onSaved() }}

@@ -104,7 +104,9 @@ function nodeWorlds({ artist, text = '' }) {
 }
 
 // Build the whole universe. Returns { planets: {key → {nodes, state, foundCount}}, foundTotal }
-export function buildUniverse({ artist = {}, items = [], claims = [], T }) {
+// `act` carries the Act-level fields (artist_goal — migration 020); optional so
+// callers without an Act loaded keep working (the goal node simply won't show).
+export function buildUniverse({ artist = {}, act = null, items = [], claims = [], T }) {
   const S = T.radar.universe
   const nodes = { identity: [], music: [], live: [], audience: [], prokit: [], proof: [] }
   const push = (planet, node) => nodes[planet].push({
@@ -140,23 +142,55 @@ export function buildUniverse({ artist = {}, items = [], claims = [], T }) {
     })
   }
 
-  // ── identity / pro-kit fields → presence or IN-PLACE fill (no screen swaps) ──
+  // Snapshot BEFORE the deferred-field nodes below: the curated suggestions at
+  // the end key off "does this planet have any REAL signal yet" (claims/links),
+  // not off the always-present field nodes.
+  const musicHadSignal = nodes.music.length > 0
+
+  // ── identity / pro-kit fields → presence or IN-PLACE fill (no screen swaps).
+  //    Onboarding no longer collects these (owner order, 8 Jul — entry is
+  //    stage name + city + one link only): every field the old wizard asked
+  //    for lives HERE as a quiet fillable node. A gap is an invitation. ──
   const idBits = [
     { ok: !!artist.photo_url, label: S.src.photo, fill: { kind: 'photo', field: 'photo_url' } },
     { ok: !!artist.one_line, label: S.src.positioning, fill: { kind: 'text', field: 'one_line', max: 120 } },
+    { ok: !!artist.genre, label: S.src.genre, fill: { kind: 'text', field: 'genre' } },
   ]
+  // Goal (Act-level, canon A4): guidance data — it prioritizes evidence paths,
+  // never changes what is true. Only offered when the caller loaded the Act.
+  if (act) idBits.push({ ok: !!act.artist_goal, label: S.src.goal, fill: { kind: 'goal' } })
   for (const b of idBits) push('identity', b.ok
     ? { state: NODE.CONFIRMED, label: b.label, sub: S.inPlace }
     : { state: NODE.MISSING, label: b.label, sub: S.addIt, fill: b.fill })
 
   const kitBits = [
     { ok: !!artist.set_length, label: S.src.setLength, fill: { kind: 'text', field: 'set_length', placeholder: '90 min' } },
+    { ok: !!artist.regions, label: S.src.regions, fill: { kind: 'text', field: 'regions' } },
     { ok: !!artist.rider_url, label: S.src.rider, fill: { kind: 'url', field: 'rider_url' } },
     { ok: artist.invoice_ready === true, label: S.src.invoice, fill: { kind: 'boolean', field: 'invoice_ready' } },
+    { ok: !!artist.whatsapp_number, label: S.src.whatsapp, fill: { kind: 'text', field: 'whatsapp_number', placeholder: '05…' } },
   ]
   for (const b of kitBits) push('prokit', b.ok
     ? { state: NODE.CONFIRMED, label: b.label, sub: S.inPlace }
     : { state: NODE.MISSING, label: b.label, sub: S.addIt, fill: b.fill })
+
+  // ── draw bands (firewall: bands + booleans ONLY — deferred from the old
+  //    onboarding StepDraw). Career Proof carries them; a ticket export in the
+  //    evidence flow stays the stronger path for the same facts. ──
+  const drawBits = [
+    { ok: !!artist.lineup_frequency_band, label: S.src.freqBand, fill: { kind: 'band', field: 'lineup_frequency_band', set: 'frequency' } },
+    { ok: artist.sells_tickets != null, label: S.src.sellsTickets, fill: { kind: 'yesno', field: 'sells_tickets' } },
+    { ok: !!artist.price_band, label: S.src.priceBand, fill: { kind: 'band', field: 'price_band', set: 'price' } },
+  ]
+  for (const b of drawBits) push('proof', b.ok
+    ? { state: NODE.CONFIRMED, label: b.label, sub: S.inPlace }
+    : { state: NODE.MISSING, label: b.label, sub: S.addIt, fill: b.fill })
+
+  // Community size — always offered (deferred from onboarding): the integer
+  // stays working-only; only the derived band goes anywhere (firewall).
+  push('audience', artist.community_size_band
+    ? { state: NODE.CONFIRMED, label: S.src.community, sub: S.inPlace }
+    : { state: NODE.MISSING, label: S.src.community, sub: S.addIt, fill: { kind: 'number' } })
 
   // ── experience items → Live/Proof presence ──
   const exp = items.filter((i) => i.item_type !== 'link')
@@ -166,15 +200,10 @@ export function buildUniverse({ artist = {}, items = [], claims = [], T }) {
     push('live', { state: NODE.MISSING, label: S.src.trackRecord, sub: S.addIt, fill: { kind: 'event' } })
   }
 
-  // ── curated missing suggestions (spec source inventory) when a planet is thin ──
-  const suggest = {
-    music: { label: S.src.streaming, fill: { kind: 'link' } },
-    audience: { label: S.src.community, fill: { kind: 'number' } },
-    proof: { label: S.src.ticketExport, evidence: true }, // needs the evidence+consent flow
-  }
-  for (const [planet, s] of Object.entries(suggest)) {
-    if (nodes[planet].length === 0) push(planet, { state: NODE.MISSING, label: s.label, sub: S.addIt, fill: s.fill, evidence: s.evidence })
-  }
+  // ── curated missing suggestions (spec source inventory) when a planet has
+  //    no real signal yet (claims/links — field nodes don't count) ──
+  if (!musicHadSignal) push('music', { state: NODE.MISSING, label: S.src.streaming, sub: S.addIt, fill: { kind: 'link' } })
+  if (!nodes.proof.some((n) => n.claim)) push('proof', { state: NODE.MISSING, label: S.src.ticketExport, sub: S.addIt, evidence: true }) // needs the evidence+consent flow
 
   // ── planet rollup: bounded state, never a number ──
   const planets = {}
