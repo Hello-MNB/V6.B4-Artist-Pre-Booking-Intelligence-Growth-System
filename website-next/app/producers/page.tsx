@@ -75,7 +75,7 @@ export default function ProducersPage() {
           borderRadius: '20px',
           overflow: 'hidden',
           minHeight: '620px',
-          background: `linear-gradient(160deg, rgba(10,13,11,0.97) 0%, rgba(10,13,11,0.84) 55%, rgba(10,13,11,0.52) 100%), url('/gigproof-persona-producer-v1.webp') center/cover no-repeat`,
+          background: `linear-gradient(180deg, rgba(10,13,11,0.55) 0%, rgba(10,13,11,0.86) 55%, rgba(10,13,11,0.97) 100%), url('/gigproof-persona-producer-v1.webp') center/cover no-repeat`,
           color: 'var(--color-paper)',
           position: 'relative',
           display: 'flex',

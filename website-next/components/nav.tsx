@@ -123,7 +123,7 @@ export function Nav() {
           ))}
           <LocaleToggle />
           <a
-            href={`${APP_URL}/login`}
+            href={`${APP_URL}/signup`}
             style={{
               fontFamily: 'var(--font-space-mono)',
               fontSize: '0.65rem',
@@ -141,7 +141,7 @@ export function Nav() {
           </a>
         </div>
 
-        {/* Mobile hamburger */}
+        {/* Mobile hamburger — 44px min touch target */}
         <button
           aria-label={open ? nav.closeMenu : nav.openMenu}
           aria-expanded={open}
@@ -153,8 +153,12 @@ export function Nav() {
             border: 'none',
             cursor: 'pointer',
             padding: '8px',
+            minWidth: '44px',
+            minHeight: '44px',
             display: 'none',
             flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
             gap: '5px',
           }}
         >
@@ -186,7 +190,7 @@ export function Nav() {
                 fontSize: '1rem',
                 color: 'var(--color-paper)',
                 textDecoration: 'none',
-                padding: '12px 0',
+                padding: '14px 0',
                 borderBottom: '1px solid rgba(255,255,255,0.06)',
               }}
             >
@@ -197,7 +201,7 @@ export function Nav() {
             <LocaleToggle />
           </div>
           <a
-            href={`${APP_URL}/login`}
+            href={`${APP_URL}/signup`}
             style={{
               display: 'block',
               marginTop: '12px',
