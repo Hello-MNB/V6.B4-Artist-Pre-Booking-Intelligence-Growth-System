@@ -476,7 +476,7 @@ export const T = {
   nav: {
     radar: 'Radar',
     readiness: 'Readiness',
-    claims: 'Claims',
+    claims: 'Passport',
     roster: 'Roster',
     requests: 'Requests',
     received: 'Received',
@@ -816,9 +816,11 @@ export const T = {
     results: 'Labelling results',
   },
   status: {
-    strong: 'Strong',
+    // The 5-state vocabulary — ONE verb per state, everywhere (master-class §1)
+    found: 'Found',
+    strong: 'Confirmed',
     developing: 'Developing',
-    missing: 'No proof',
+    missing: 'Needs you',
     notAssessable: 'Not assessable',
   },
   methodLabel: {

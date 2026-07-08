@@ -8,13 +8,13 @@ export function BottomSheet({ open, onClose, title, children }) {
   if (!open) return null
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center" role="dialog" aria-modal="true">
-      <div className="absolute inset-0 bg-black/60" onClick={onClose} />
-      <div className="relative w-full sm:max-w-sm bg-card border-t sm:border border-line rounded-t-2xl sm:rounded-2xl p-5"
+      <div className="absolute inset-0 bg-black/70" onClick={onClose} />
+      <div className="relative w-full sm:max-w-sm bg-surface border-t sm:border border-line2 rounded-t-2xl sm:rounded-2xl p-5 shadow-card"
         style={{ paddingBottom: 'max(1.25rem, env(safe-area-inset-bottom))' }}>
         {title && (
           <div className="flex items-center justify-between mb-3">
-            <h2 className="font-bold text-soft">{title}</h2>
-            <button onClick={onClose} aria-label="close" className="text-muted text-2xl leading-none min-h-[40px] px-2">×</button>
+            <h2 className="font-bold text-ink">{title}</h2>
+            <button onClick={onClose} aria-label="close" className="text-muted hover:text-ink text-2xl leading-none min-h-[40px] px-2">×</button>
           </div>
         )}
         {children}
@@ -39,7 +39,8 @@ export function ToastProvider({ children }) {
       <div className="fixed bottom-4 inset-x-0 z-[60] flex flex-col items-center gap-2 px-4 pointer-events-none">
         {toasts.map((t) => (
           <div key={t.id} role="status"
-            className={`pointer-events-auto rounded px-4 py-2 text-sm font-bold shadow-lg ${t.type === 'warn' ? 'bg-[#FFF2D9] text-[#76501D]' : 'bg-[#E5F5DF] text-[#285B31]'}`}>
+            className="pointer-events-auto flex items-center gap-2.5 rounded bg-[#131A14] border border-line2 px-4 py-2.5 text-sm font-bold text-ink shadow-card animate-fade-in">
+            <span aria-hidden="true" className={`h-2 w-2 shrink-0 rounded-full ${t.type === 'warn' ? 'bg-amber' : 'bg-accent'}`} />
             {t.msg}
           </div>
         ))}
@@ -84,8 +85,8 @@ export function SocialAuthButtons({ onOAuth, disabled = false }) {
     }
   }
 
-  const btnClass = `w-full flex items-center justify-center gap-3 py-3 px-4 rounded-xl border border-line bg-surface text-sm font-medium transition-colors ${
-    disabled ? 'opacity-50 cursor-not-allowed text-muted' : 'hover:bg-card text-soft'
+  const btnClass = `w-full flex items-center justify-center gap-3 py-3 px-4 rounded-sm border border-line2 bg-surface2 text-sm font-medium transition-colors ${
+    disabled ? 'opacity-50 cursor-not-allowed text-muted' : 'hover:bg-raise text-ink'
   }`
 
   return (
@@ -132,40 +133,130 @@ export function Spinner({ className = '' }) {
 
 export function Loading({ label }) {
   const { T } = useLang()
+  // Skeleton shimmer, not a spinner — the screen "arrives", it doesn't churn.
   return (
-    <div className="flex items-center justify-center gap-3 py-16 text-muted">
-      <Spinner /> <span>{label ?? T.common.loading}</span>
+    <div className="py-10 space-y-3" role="status" aria-live="polite">
+      <div className="skeleton h-5 w-2/5" />
+      <div className="skeleton h-4 w-4/5" />
+      <div className="skeleton h-4 w-3/5" />
+      <span className="sr-only">{label ?? T.common.loading}</span>
     </div>
   )
 }
 
-// Bounded status pill — the ONLY status vocabulary the firewall permits.
-// UX §15.1: text + a distinct SHAPE icon (filled/half/empty/dash), never
-// color alone — satisfies WCAG 1.4.1 and the firewall (categorical, not a gauge).
-export function StatusChip({ status }) {
+// ── THE 5-STATE DATA-COLLECTION VOCABULARY (master-class mandate §1) ─────────
+// Every state = ONE color + ONE icon + ONE verb, everywhere. Text + a distinct
+// SHAPE icon, never color alone (WCAG 1.4.1) — categorical, never a gauge.
+//   ✦ found          gold  — "we discovered something for you" (gentle glow)
+//   ✓ confirmed      lime  — "locked into your proof"
+//   ◌ developing     teal  — "growing, more to surface"
+//   + needs-you      amber — "one small step, big value" (invitation, never shame)
+//   ○ not-assessable grey  — "not relevant to you" (removed weight, never a gap)
+const STATE_DEF = {
+  found: { icon: '✦', c: 'bg-found-bg text-found glow-found', key: 'found' },
+  confirmed: { icon: '✓', c: 'bg-good-bg text-good', key: 'strong' },
+  developing: { icon: '◌', c: 'bg-dev-bg text-dev', key: 'developing' },
+  'needs-you': { icon: '+', c: 'bg-need-bg text-need', key: 'missing' },
+  'not-assessable': { icon: '○', c: 'bg-na-bg text-na', key: 'notAssessable' },
+}
+
+// Legacy status values (STATUS.* and older chip vocab) → canonical state.
+const STATE_ALIAS = {
+  [STATUS.STRONG]: 'confirmed',
+  [STATUS.DEVELOPING]: 'developing',
+  [STATUS.MISSING]: 'needs-you',
+  [STATUS.NOT_ASSESSABLE]: 'not-assessable',
+  ok: 'confirmed',
+  warn: 'developing',
+  gap: 'needs-you',
+  na: 'not-assessable',
+}
+
+// Canonical state badge. <StateBadge state="found" /> — or pass children to
+// override the verb ("6 gigs found"). Accepts canonical states AND legacy
+// STATUS.* values, so existing call sites can migrate gradually.
+export function StateBadge({ state, children, className = '' }) {
   const { T } = useLang()
-  // CODEX v1.2.0 bounded-status tints (design-system-states.css)
-  const map = {
-    [STATUS.STRONG]: { t: T.status.strong, c: 'bg-[#DFF2D8] text-[#295B32]', icon: '●' },
-    [STATUS.DEVELOPING]: { t: T.status.developing, c: 'bg-[#FFF0D9] text-[#8A591B]', icon: '◐' },
-    // warm brown, deliberately NOT error-red: "unknown evidence is never presented
-    // as weak evidence" (canon) — a gap is an invitation, not a failure
-    [STATUS.MISSING]: { t: T.status.missing, c: 'bg-[#F2E6DC] text-[#8A5432]', icon: '○' },
-    [STATUS.NOT_ASSESSABLE]: { t: T.status.notAssessable, c: 'bg-[#E9ECE8] text-[#5F6761]', icon: '–' },
-  }
-  const s = map[status] ?? map[STATUS.NOT_ASSESSABLE]
-  return <span className={`chip ${s.c}`}><span aria-hidden="true">{s.icon}</span> {s.t}</span>
+  const s = STATE_DEF[state] ?? STATE_DEF[STATE_ALIAS[state]] ?? STATE_DEF['not-assessable']
+  return (
+    <span className={`chip ${s.c} ${className}`}>
+      <span aria-hidden="true">{s.icon}</span> {children ?? T.status[s.key]}
+    </span>
+  )
+}
+
+// Bounded status pill — the ONLY status vocabulary the firewall permits.
+// Back-compat wrapper: keeps accepting the STATUS.* prop values used across
+// the app, now rendered through the canonical 5-state vocabulary above.
+export function StatusChip({ status }) {
+  return <StateBadge state={status} />
+}
+
+// ── MethodLabel — trust jewelry, not debug metadata (mandate §3). Mono,
+// uppercase, small and precise; gold border/text on transparent;
+// producer-confirmed (strongest) in lime.
+// <MethodLabel variant="lime">PRODUCER-CONFIRMED</MethodLabel>
+export function MethodLabel({ children, variant = 'gold' }) {
+  const v = variant === 'lime' || variant === 'producer'
+    ? 'border-accent/30 text-accent'
+    : 'border-gold/30 text-gold'
+  return (
+    <span className={`inline-flex items-center gap-1 whitespace-nowrap rounded-full border bg-transparent px-2 py-0.5 font-mono text-[10.5px] font-semibold uppercase tracking-[0.1em] ${v}`}>
+      {children}
+    </span>
+  )
+}
+
+// ── BandPill — a bounded range that reads human: numbers only WITH context
+// words, e.g. <BandPill context="paid heads">180–300</BandPill> →
+// "180–300 paid heads". Bordered mono capsule — NEVER a progress bar/gauge.
+export function BandPill({ children, context }) {
+  return (
+    <span className="inline-flex items-baseline gap-1 rounded-full border border-line2 bg-surface2 px-2.5 py-1 font-mono text-xs text-ink">
+      {children}
+      {context && <span className="text-muted">{context}</span>}
+    </span>
+  )
+}
+
+// ── reviewedDate — dates as humans say them: "Reviewed June 2026" (mandate §3).
+// Returns '' for missing/invalid input so callers can render-or-skip.
+export function reviewedDate(dateStr) {
+  if (!dateStr) return ''
+  const d = new Date(dateStr)
+  if (Number.isNaN(d.getTime())) return ''
+  return `Reviewed ${d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`
+}
+
+// ── NextMove — the artist's ONE next move (mandate §3): what → why it matters
+// → one action. Neutral surface (restraint: no tinted card, no aura) — the
+// lime primary button IS the view's single accent moment. Renders `action`
+// (any node) if given, else a primary button from cta/onAction. Use at most
+// one per view.
+export function NextMove({ label = 'Next move', what, why, cta, onAction, action, className = '' }) {
+  return (
+    <section className={`card ${className}`}>
+      <p className="mb-2 font-mono text-[10.5px] font-semibold uppercase tracking-[0.1em] text-muted">{label}</p>
+      <h3 className="font-display text-[19px] leading-snug text-ink">{what}</h3>
+      {why && <p className="mt-1 text-sm text-muted">{why}</p>}
+      {(action || cta) && (
+        <div className="mt-4">
+          {action ?? <button type="button" className="btn-primary" onClick={onAction}>{cta}</button>}
+        </div>
+      )}
+    </section>
+  )
 }
 
 // The 6 METHOD LABELS (firewall §3) — distinct SHAPE icon each (UX §15.1).
 // Producer-confirmed is strongest. Categorical icons, never a gauge.
 const METHOD_ICON = {
-  'producer-confirmed': { icon: '★', c: 'text-accent' },
-  'evidence-supported': { icon: '✓', c: 'text-ok' },
-  'source-linked': { icon: '↗', c: 'text-soft' },
-  'artist-declared': { icon: '✎', c: 'text-muted' },
-  'unable-to-verify': { icon: '?', c: 'text-muted' },
-  stale: { icon: '↻', c: 'text-warn' },
+  'producer-confirmed': { icon: '★', variant: 'lime' }, // strongest — lime
+  'evidence-supported': { icon: '✓', variant: 'gold' },
+  'source-linked': { icon: '↗', variant: 'gold' },
+  'artist-declared': { icon: '✎', variant: 'gold' },
+  'unable-to-verify': { icon: '?', variant: 'gold' },
+  stale: { icon: '↻', variant: 'gold' },
 }
 
 // Method label for a fact (the 6-label SSOT). Pass a claim's verification_status
@@ -174,7 +265,11 @@ export function SourceLabel({ status, methodLabel, expiresAt }) {
   const { T } = useLang()
   const key = methodLabelFor({ method_label: methodLabel, verification_status: status, expires_at: expiresAt })
   const m = METHOD_ICON[key] ?? METHOD_ICON['artist-declared']
-  return <span className={`text-[11px] ${m.c}`}><span aria-hidden="true">{m.icon}</span> {T.methodLabel[key]}</span>
+  return (
+    <MethodLabel variant={m.variant}>
+      <span aria-hidden="true">{m.icon}</span> {T.methodLabel[key]}
+    </MethodLabel>
+  )
 }
 
 // Language toggle pill — place in any header.
@@ -183,11 +278,11 @@ export function LanguageToggle() {
   return (
     <button
       onClick={() => setLang(lang === 'he' ? 'en' : 'he')}
-      className="text-xs font-mono font-semibold text-muted border border-line rounded px-3 py-1 hover:text-soft hover:border-soft transition"
+      className="text-xs font-mono font-semibold text-muted border border-line rounded-full px-3 py-1 hover:text-ink hover:border-line2 transition"
       title={T.common.switchLanguage}
       aria-label={T.common.switchLanguage}
     >
-      <span aria-hidden="true">🌐 </span>{T.common.langCode}
+      {T.common.langCode}
     </button>
   )
 }
@@ -198,14 +293,15 @@ export function Field({ label, hint, error, children }) {
       {label && <label className="label">{label}</label>}
       {children}
       {hint && !error && <p className="mt-1 text-xs text-muted">{hint}</p>}
-      {error && <p role="alert" className="mt-1 text-xs text-void">{error}</p>}
+      {error && <p role="alert" className="mt-1 text-xs text-need">{error}</p>}
     </div>
   )
 }
 
 export function PageShell({ children, max = 'max-w-xl' }) {
+  // Spacing rhythm: 16px gutters on mobile → 32/44 on desktop (spec layout)
   return (
-    <div className="min-h-full px-4 py-6">
+    <div className="min-h-full px-4 py-6 sm:px-8 md:py-11">
       <div className={`mx-auto ${max} animate-fade-in`}>{children}</div>
     </div>
   )
@@ -256,29 +352,61 @@ export function PlatformMark({ platform, size = 'h-7 w-7' }) {
 }
 
 export function Wordmark({ className = '' }) {
-  // CODEX v1.2.0 logo pattern: lime square + bold name (ds-logo)
+  // "Live Intelligence" brand mark: lime "G" square (30px, rounded) + wordmark
   return (
     <div className={`flex items-center gap-2 ${className}`}>
-      <span className="grid h-8 w-8 place-items-center rounded-[10px] bg-accent text-[9px] font-black text-[#10150F]" aria-hidden>
-        GP
+      <span className="grid h-[30px] w-[30px] place-items-center rounded-[9px] bg-accent font-display text-[15px] font-black text-bg" aria-hidden>
+        G
       </span>
-      <b className="text-sm font-extrabold tracking-tight text-soft">GIGPROOF</b>
+      <b className="text-sm font-extrabold tracking-tight text-ink">GIGPROOF</b>
     </div>
   )
 }
 
-export function EmptyState({ title, action }) {
+// ── HeroImage / PhotoCard — photography is structural (mandate §2). Image +
+// gradient veil + optional warm gold radial aura behind it; children overlay
+// the veil at the bottom (text always readable). Gold = atmosphere, lime = action.
+// <HeroImage src={photo} alt="…" className="h-56"><h2>…</h2></HeroImage>
+export function HeroImage({ src, alt = '', aura = true, className = '', children }) {
   return (
-    <div className="card text-center">
-      <p className="text-muted">{title}</p>
-      {action && <div className="mt-4">{action}</div>}
+    <div className={`relative min-h-40 overflow-hidden rounded-xl bg-surface ${className}`}>
+      {aura && <div aria-hidden="true" className="pointer-events-none absolute -inset-10 aura-gold" />}
+      {src && <img src={src} alt={alt} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 veil-photo" />
+      {children && <div className="absolute inset-x-0 bottom-0 p-5">{children}</div>}
+    </div>
+  )
+}
+export const PhotoCard = HeroImage
+
+// ── EmptyState — never a grey box (mandate §2). With `image` it sells the
+// dream: photo + display headline ("Your proof starts here") + next action.
+// Back-compat: <EmptyState title action /> still renders the plain dark card.
+export function EmptyState({ title, action, image, imageAlt = '', headline }) {
+  if (!image) {
+    return (
+      <div className="card text-center">
+        {headline && <h3 className="mb-1 font-display text-xl text-ink">{headline}</h3>}
+        <p className="text-muted">{title}</p>
+        {action && <div className="mt-4">{action}</div>}
+      </div>
+    )
+  }
+  return (
+    <div className="overflow-hidden rounded-xl border border-line bg-surface text-center shadow-card">
+      <HeroImage src={image} alt={imageAlt} className="h-44 sm:h-56 rounded-none" />
+      <div className="relative -mt-10 px-6 pb-6">
+        {headline && <h3 className="font-display text-2xl text-ink">{headline}</h3>}
+        {title && <p className="mt-1 text-muted">{title}</p>}
+        {action && <div className="mt-5">{action}</div>}
+      </div>
     </div>
   )
 }
 
 export function ErrorNote({ children }) {
   if (!children) return null
-  return <p role="alert" className="mb-4 rounded-xl bg-[#FFF0ED] px-4 py-3 text-sm text-void">{children}</p>
+  return <p role="alert" className="mb-4 rounded-lg bg-need-bg border border-need/25 px-4 py-3 text-sm text-need">{children}</p>
 }
 
 // Load-failure state with an optional retry. Use in place of a silent empty list.
@@ -286,7 +414,7 @@ export function ErrorState({ title, onRetry }) {
   const { T } = useLang()
   return (
     <div className="card text-center" role="alert">
-      <p className="text-soft">{title ?? T.common.error}</p>
+      <p className="text-ink">{title ?? T.common.error}</p>
       {onRetry && (
         <button onClick={onRetry} className="btn-ghost mt-4">{T.common.continue}</button>
       )}

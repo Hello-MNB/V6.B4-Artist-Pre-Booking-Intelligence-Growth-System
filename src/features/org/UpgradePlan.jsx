@@ -50,10 +50,12 @@ export default function UpgradePlan() {
   return (
     <PageShell>
       <div className="flex items-center justify-between mb-6">
-        <Wordmark /><Link to="/" className="text-sm text-muted">{T.common.back}</Link>
+        <Wordmark /><Link to="/" className="text-sm text-muted hover:text-ink">{T.common.back}</Link>
       </div>
-      <h1 className="text-xl font-bold text-soft mb-1">{T.org.planCompareTitle}</h1>
-      <p className="text-xs text-muted mb-5">{T.org.manualNote}</p>
+      <h1 className="font-display text-xl font-bold text-ink mb-1">{T.org.planCompareTitle}</h1>
+      <p className="text-xs text-muted mb-1">{T.org.manualNote}</p>
+      {/* why there is no price on this page — honest, not evasive */}
+      <p className="font-mono text-[10.5px] uppercase tracking-[0.1em] text-gold mb-5">Pricing on request · we'll contact you</p>
       <ErrorNote>{error}</ErrorNote>
 
       {/* Plan comparison grid */}
@@ -64,7 +66,7 @@ export default function UpgradePlan() {
               <th className="text-start pb-3 pe-3 w-2/5" />
               {PLANS.map((p) => (
                 <th key={p.key} className="pb-3 px-2 text-center align-top">
-                  <div className={`font-bold text-base ${plan === p.key ? 'text-accent' : 'text-soft'}`}>{p.label}</div>
+                  <div className={`font-bold text-base ${plan === p.key ? 'text-accent' : 'text-ink'}`}>{p.label}</div>
                   <div className="text-xs text-muted font-normal mt-0.5">{p.desc}</div>
                   {plan === p.key && (
                     <div className="mt-1">
@@ -78,11 +80,11 @@ export default function UpgradePlan() {
           <tbody className="divide-y divide-line/40">
             {FEATURES.map((feat, i) => (
               <tr key={i}>
-                <td className="py-2.5 pe-3 text-soft text-xs">{feat}</td>
+                <td className="py-2.5 pe-3 text-ink text-xs">{feat}</td>
                 {PLANS.map((p) => (
                   <td key={p.key} className="py-2.5 px-2 text-center">
                     {p.features[i]
-                      ? <span className="text-ok font-bold text-base" aria-label="included">✓</span>
+                      ? <span className="text-accent font-bold text-base" aria-label="included">✓</span>
                       : <span className="text-muted text-lg" aria-label="not included">—</span>}
                   </td>
                 ))}
@@ -95,8 +97,9 @@ export default function UpgradePlan() {
       {!isOwner ? (
         <p className="text-xs text-muted">{T.org.ownerOnly}</p>
       ) : pending ? (
-        <div className="card border border-warn/30 bg-warn/10">
-          <p className="text-warn font-bold"><span aria-hidden="true">⏳ </span>{T.org.upgradePendingPay}</p>
+        <div className="card border border-amber/40">
+          <p className="text-amber font-bold">{T.org.upgradePendingPay}</p>
+          <p className="mt-1 text-xs text-muted">Pricing on request · we'll contact you</p>
         </div>
       ) : plan === 'agency_plus' ? (
         <Link to="/org/billing" className="btn-ghost w-full block text-center">{T.org.addSeats}</Link>
@@ -107,7 +110,8 @@ export default function UpgradePlan() {
       )}
 
       <BottomSheet open={showModal} onClose={() => setShowModal(false)} title={T.org.notifyTitle}>
-        <p className="text-sm text-soft mb-4">{T.org.notifyBody}</p>
+        <p className="text-sm text-ink mb-2">{T.org.notifyBody}</p>
+        <p className="text-xs text-muted mb-4">Pricing on request — we'll contact you to agree terms before anything is charged.</p>
         <button className="btn-primary w-full" onClick={() => setShowModal(false)}>{T.org.notifyDismiss}</button>
       </BottomSheet>
     </PageShell>
