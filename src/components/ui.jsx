@@ -192,27 +192,58 @@ export function StatusChip({ status }) {
   return <StateBadge state={status} />
 }
 
-// ── MethodLabel — the transparency badge (firewall §3). Mono, uppercase,
-// gold border/text on transparent; producer-confirmed (strongest) in lime.
+// ── MethodLabel — trust jewelry, not debug metadata (mandate §3). Mono,
+// uppercase, small and precise; gold border/text on transparent;
+// producer-confirmed (strongest) in lime.
 // <MethodLabel variant="lime">PRODUCER-CONFIRMED</MethodLabel>
 export function MethodLabel({ children, variant = 'gold' }) {
   const v = variant === 'lime' || variant === 'producer'
     ? 'border-accent/40 text-accent'
     : 'border-gold/40 text-gold'
   return (
-    <span className={`inline-flex items-center gap-1 rounded-full border bg-transparent px-2 py-0.5 font-mono text-[10.5px] font-semibold uppercase tracking-[0.1em] ${v}`}>
+    <span className={`inline-flex items-center gap-1 whitespace-nowrap rounded-full border bg-transparent px-2 py-0.5 font-mono text-[10.5px] font-semibold uppercase tracking-[0.1em] ${v}`}>
       {children}
     </span>
   )
 }
 
-// ── BandPill — a bounded range, e.g. "180–300 heads". Bordered mono capsule.
-// NEVER a progress bar / gauge (firewall).
-export function BandPill({ children }) {
+// ── BandPill — a bounded range that reads human: numbers only WITH context
+// words, e.g. <BandPill context="paid heads">180–300</BandPill> →
+// "180–300 paid heads". Bordered mono capsule — NEVER a progress bar/gauge.
+export function BandPill({ children, context }) {
   return (
-    <span className="inline-flex items-center rounded-full border border-line2 bg-surface2 px-2.5 py-1 font-mono text-xs text-ink">
+    <span className="inline-flex items-baseline gap-1 rounded-full border border-line2 bg-surface2 px-2.5 py-1 font-mono text-xs text-ink">
       {children}
+      {context && <span className="text-muted">{context}</span>}
     </span>
+  )
+}
+
+// ── reviewedDate — dates as humans say them: "Reviewed June 2026" (mandate §3).
+// Returns '' for missing/invalid input so callers can render-or-skip.
+export function reviewedDate(dateStr) {
+  if (!dateStr) return ''
+  const d = new Date(dateStr)
+  if (Number.isNaN(d.getTime())) return ''
+  return `Reviewed ${d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`
+}
+
+// ── NextMove — the artist's ONE next move (mandate §3): what → why it matters
+// → one action. Renders `action` (any node) if given, else a primary button
+// from cta/onAction. One dominant action per screen — use at most one per view.
+export function NextMove({ label = 'Next move', what, why, cta, onAction, action, className = '' }) {
+  return (
+    <section className={`relative overflow-hidden rounded-xl border border-accent/20 bg-surface p-5 shadow-card ${className}`}>
+      <div aria-hidden="true" className="pointer-events-none absolute -top-16 -end-16 h-52 w-52 aura-gold" />
+      <p className="mb-2 font-mono text-[10.5px] font-semibold uppercase tracking-[0.1em] text-accent">{label}</p>
+      <h3 className="font-display text-[19px] leading-snug text-ink">{what}</h3>
+      {why && <p className="mt-1 text-sm text-muted">{why}</p>}
+      {(action || cta) && (
+        <div className="relative mt-4">
+          {action ?? <button type="button" className="btn-primary" onClick={onAction}>{cta}</button>}
+        </div>
+      )}
+    </section>
   )
 }
 
@@ -267,8 +298,9 @@ export function Field({ label, hint, error, children }) {
 }
 
 export function PageShell({ children, max = 'max-w-xl' }) {
+  // Spacing rhythm: 16px gutters on mobile → 32/44 on desktop (spec layout)
   return (
-    <div className="min-h-full px-4 py-6">
+    <div className="min-h-full px-4 py-6 sm:px-8 md:py-11">
       <div className={`mx-auto ${max} animate-fade-in`}>{children}</div>
     </div>
   )
@@ -330,11 +362,43 @@ export function Wordmark({ className = '' }) {
   )
 }
 
-export function EmptyState({ title, action }) {
+// ── HeroImage / PhotoCard — photography is structural (mandate §2). Image +
+// gradient veil + optional warm gold radial aura behind it; children overlay
+// the veil at the bottom (text always readable). Gold = atmosphere, lime = action.
+// <HeroImage src={photo} alt="…" className="h-56"><h2>…</h2></HeroImage>
+export function HeroImage({ src, alt = '', aura = true, className = '', children }) {
   return (
-    <div className="card text-center">
-      <p className="text-muted">{title}</p>
-      {action && <div className="mt-4">{action}</div>}
+    <div className={`relative min-h-40 overflow-hidden rounded-xl bg-surface ${className}`}>
+      {aura && <div aria-hidden="true" className="pointer-events-none absolute -inset-10 aura-gold" />}
+      {src && <img src={src} alt={alt} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 veil-photo" />
+      {children && <div className="absolute inset-x-0 bottom-0 p-5">{children}</div>}
+    </div>
+  )
+}
+export const PhotoCard = HeroImage
+
+// ── EmptyState — never a grey box (mandate §2). With `image` it sells the
+// dream: photo + display headline ("Your proof starts here") + next action.
+// Back-compat: <EmptyState title action /> still renders the plain dark card.
+export function EmptyState({ title, action, image, imageAlt = '', headline }) {
+  if (!image) {
+    return (
+      <div className="card text-center">
+        {headline && <h3 className="mb-1 font-display text-xl text-ink">{headline}</h3>}
+        <p className="text-muted">{title}</p>
+        {action && <div className="mt-4">{action}</div>}
+      </div>
+    )
+  }
+  return (
+    <div className="overflow-hidden rounded-xl border border-line bg-surface text-center shadow-card">
+      <HeroImage src={image} alt={imageAlt} className="h-44 sm:h-56 rounded-none" />
+      <div className="relative -mt-10 px-6 pb-6">
+        {headline && <h3 className="font-display text-2xl text-ink">{headline}</h3>}
+        {title && <p className="mt-1 text-muted">{title}</p>}
+        {action && <div className="mt-5">{action}</div>}
+      </div>
     </div>
   )
 }

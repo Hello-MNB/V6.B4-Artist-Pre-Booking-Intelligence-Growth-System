@@ -30,13 +30,16 @@ export const colors = {
   line2: 'rgba(255,255,255,.15)',
 } as const
 
-// Bounded-status pairs (fg on tinted bg) — categorical words + shape icons,
-// NEVER a score/gauge (firewall).
+// The 5-state data-collection vocabulary (master-class §1) — fg on tinted bg,
+// ONE color + ONE icon + ONE verb per state, everywhere. Categorical words +
+// shape icons, NEVER a score/gauge (firewall). Motion utilities live in
+// src/index.css: .glow-found · .bloom-confirm · .aura-gold · .veil-photo
 export const status = {
-  good: { fg: '#CBEE72', bg: 'rgba(190,226,78,.12)' }, // Established
-  dev:  { fg: '#82E8D6', bg: 'rgba(70,220,194,.12)' }, // Developing
-  need: { fg: '#F0B478', bg: 'rgba(227,154,75,.15)' }, // Needs you
-  na:   { fg: '#9AA29B', bg: 'rgba(255,255,255,.06)' }, // Not assessed
+  found: { fg: '#F2C063', bg: 'rgba(242,192,99,.12)' }, // ✦ Found (gentle gold glow)
+  good:  { fg: '#CBEE72', bg: 'rgba(190,226,78,.12)' }, // ✓ Confirmed
+  dev:   { fg: '#82E8D6', bg: 'rgba(70,220,194,.12)' }, // ◌ Developing
+  need:  { fg: '#F0B478', bg: 'rgba(227,154,75,.15)' }, // + Needs you
+  na:    { fg: '#9AA29B', bg: 'rgba(255,255,255,.06)' }, // ○ Not assessable
 } as const
 
 export const fontFamily = {

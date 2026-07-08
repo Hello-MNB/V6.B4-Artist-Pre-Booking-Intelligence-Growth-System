@@ -816,10 +816,12 @@ export const T = {
     results: 'Labelling results',
   },
   status: {
-    strong: 'Established',
+    // The 5-state vocabulary — ONE verb per state, everywhere (master-class §1)
+    found: 'Found',
+    strong: 'Confirmed',
     developing: 'Developing',
     missing: 'Needs you',
-    notAssessable: 'Not assessed',
+    notAssessable: 'Not assessable',
   },
   methodLabel: {
     'producer-confirmed': 'Producer-confirmed',
