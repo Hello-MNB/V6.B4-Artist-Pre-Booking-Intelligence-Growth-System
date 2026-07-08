@@ -1,13 +1,19 @@
 import { useState, useCallback, createContext, useContext } from 'react'
+import { createPortal } from 'react-dom'
 import { useLang } from '../context/LangContext.jsx'
 import { STATUS, methodLabelFor } from '../lib/constants.js'
 
 // ── BottomSheet — mobile-first sheet (slides from the bottom in the thumb zone;
 // centered card on desktop). Controlled: <BottomSheet open onClose title>…</BottomSheet>.
+// PORTALED to <body>: an ancestor with backdrop-filter/transform (e.g. the shell
+// header's backdrop-blur) creates a containing block that clamps fixed children —
+// audit E4 found the workspace sheet trapped inside the 56px header, making
+// switching impossible on mobile. The portal makes `fixed inset-0` mean the
+// real viewport regardless of where the sheet is mounted.
 export function BottomSheet({ open, onClose, title, children }) {
   if (!open) return null
-  return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center" role="dialog" aria-modal="true">
+  return createPortal(
+    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center" role="dialog" aria-modal="true">
       <div className="absolute inset-0 bg-bg/70" onClick={onClose} />
       <div className="relative w-full sm:max-w-sm bg-surface border-t sm:border border-line2 rounded-t-2xl sm:rounded-2xl p-5 shadow-card"
         style={{ paddingBottom: 'max(1.25rem, env(safe-area-inset-bottom))' }}>
@@ -19,7 +25,8 @@ export function BottomSheet({ open, onClose, title, children }) {
         )}
         {children}
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }
 
