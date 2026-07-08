@@ -36,7 +36,8 @@ export function ToastProvider({ children }) {
   return (
     <ToastCtx.Provider value={{ show }}>
       {children}
-      <div className="fixed bottom-4 inset-x-0 z-[60] flex flex-col items-center gap-2 px-4 pointer-events-none">
+      {/* bottom-20 on mobile clears the fixed BottomNav (h-16); desktop has no bottom bar */}
+      <div className="fixed bottom-20 sm:bottom-4 inset-x-0 z-[60] flex flex-col items-center gap-2 px-4 pointer-events-none">
         {toasts.map((t) => (
           <div key={t.id} role="status"
             className="pointer-events-auto flex items-center gap-2.5 rounded bg-surface border border-line2 px-4 py-2.5 text-sm font-bold text-ink shadow-card animate-fade-in">
