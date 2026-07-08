@@ -198,8 +198,8 @@ export function StatusChip({ status }) {
 // <MethodLabel variant="lime">PRODUCER-CONFIRMED</MethodLabel>
 export function MethodLabel({ children, variant = 'gold' }) {
   const v = variant === 'lime' || variant === 'producer'
-    ? 'border-accent/40 text-accent'
-    : 'border-gold/40 text-gold'
+    ? 'border-accent/30 text-accent'
+    : 'border-gold/30 text-gold'
   return (
     <span className={`inline-flex items-center gap-1 whitespace-nowrap rounded-full border bg-transparent px-2 py-0.5 font-mono text-[10.5px] font-semibold uppercase tracking-[0.1em] ${v}`}>
       {children}
@@ -229,17 +229,18 @@ export function reviewedDate(dateStr) {
 }
 
 // ── NextMove — the artist's ONE next move (mandate §3): what → why it matters
-// → one action. Renders `action` (any node) if given, else a primary button
-// from cta/onAction. One dominant action per screen — use at most one per view.
+// → one action. Neutral surface (restraint: no tinted card, no aura) — the
+// lime primary button IS the view's single accent moment. Renders `action`
+// (any node) if given, else a primary button from cta/onAction. Use at most
+// one per view.
 export function NextMove({ label = 'Next move', what, why, cta, onAction, action, className = '' }) {
   return (
-    <section className={`relative overflow-hidden rounded-xl border border-accent/20 bg-surface p-5 shadow-card ${className}`}>
-      <div aria-hidden="true" className="pointer-events-none absolute -top-16 -end-16 h-52 w-52 aura-gold" />
-      <p className="mb-2 font-mono text-[10.5px] font-semibold uppercase tracking-[0.1em] text-accent">{label}</p>
+    <section className={`card ${className}`}>
+      <p className="mb-2 font-mono text-[10.5px] font-semibold uppercase tracking-[0.1em] text-muted">{label}</p>
       <h3 className="font-display text-[19px] leading-snug text-ink">{what}</h3>
       {why && <p className="mt-1 text-sm text-muted">{why}</p>}
       {(action || cta) && (
-        <div className="relative mt-4">
+        <div className="mt-4">
           {action ?? <button type="button" className="btn-primary" onClick={onAction}>{cta}</button>}
         </div>
       )}
@@ -281,7 +282,7 @@ export function LanguageToggle() {
       title={T.common.switchLanguage}
       aria-label={T.common.switchLanguage}
     >
-      <span aria-hidden="true">🌐 </span>{T.common.langCode}
+      {T.common.langCode}
     </button>
   )
 }

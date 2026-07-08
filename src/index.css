@@ -90,8 +90,9 @@ body {
     @apply rounded-xl2 bg-surface border border-line p-5 shadow-card;
   }
   .chip {
-    /* status pills: fully rounded, quiet tints, icon + text — never a gauge */
-    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold;
+    /* status pills: small (≤24px tall), quiet tints (≤10% alpha), text does
+       the work — color is punctuation, never a gauge, never a big fill */
+    @apply inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium leading-4;
   }
   .skeleton {
     /* skeleton loading shimmer (prefer over spinners) */
@@ -107,28 +108,29 @@ body {
   }
 }
 
-/* ── MASTER-CLASS state motion & atmosphere ──────────────────────────────────
+/* ── State motion & atmosphere (PROFESSIONAL RESTRAINT dosage) ───────────────
    Adoptable utility classes — one vocabulary for every agent:
-   .glow-found     ✦ gentle gold pulse — "we discovered something for you"
+   .glow-found     ✦ barely-there gold pulse — "we discovered something for you"
    .bloom-confirm  ✓ ~400ms fill-to-lime bloom — the moment proof is minted
-   .aura-gold      warm radial gold light behind heroes/photos (atmosphere)
+   .aura-gold      warm radial gold light — ONE hero aura per view, nowhere else
    .veil-photo     bottom gradient veil over photography (text sits on it)
-   Micro-delights ONLY (pulse/glow/bloom) — NO confetti/streaks/counters. */
+   Micro-delights ONLY, kept subtle — NO confetti/streaks/counters.
+   Neutral surfaces dominate; color is punctuation, not paragraph. */
 
 @keyframes found-glow {
   0%, 100% { box-shadow: 0 0 0 0 rgba(242, 192, 99, 0); }
-  50% { box-shadow: 0 0 18px 2px rgba(242, 192, 99, 0.35); }
+  50% { box-shadow: 0 0 10px 0 rgba(242, 192, 99, 0.22); }
 }
 
 @keyframes bloom {
-  0% { background-color: rgba(242, 192, 99, 0.15); transform: scale(0.96); }
-  60% { transform: scale(1.03); }
-  100% { background-color: rgba(190, 226, 78, 0.16); transform: scale(1); }
+  0% { background-color: rgba(242, 192, 99, 0.09); transform: scale(0.98); }
+  60% { transform: scale(1.01); }
+  100% { background-color: rgba(190, 226, 78, 0.09); transform: scale(1); }
 }
 
 @layer utilities {
   .glow-found {
-    animation: found-glow 2.6s ease-in-out infinite;
+    animation: found-glow 3.2s ease-in-out infinite;
   }
   .bloom-confirm {
     animation: bloom 400ms ease-out both;
@@ -136,7 +138,7 @@ body {
   .aura-gold {
     background: radial-gradient(
       60% 60% at 50% 40%,
-      rgba(242, 192, 99, 0.18),
+      rgba(242, 192, 99, 0.1),
       transparent 70%
     );
   }

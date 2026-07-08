@@ -35,16 +35,18 @@ export default {
         // ── Bounded-status pairs (fg + bg) — categorical, never a gauge ──
         // The 5-state data-collection vocabulary (MASTER-CLASS MANDATE §1):
         // ✦ found · ✓ confirmed (good) · ◌ developing (dev) · + needs-you (need) · ○ not-assessable (na)
+        // RESTRAINT (owner round 2): tints ≤10% alpha, small elements only —
+        // dots, chips, thin rings, text accents. NEVER large fills or tinted cards.
         found: '#F2C063',
-        'found-bg': 'rgba(242,192,99,.12)',
+        'found-bg': 'rgba(242,192,99,.08)',
         good: '#CBEE72',
-        'good-bg': 'rgba(190,226,78,.12)',
+        'good-bg': 'rgba(190,226,78,.08)',
         dev: '#82E8D6',
-        'dev-bg': 'rgba(70,220,194,.12)',
+        'dev-bg': 'rgba(70,220,194,.08)',
         need: '#F0B478',
-        'need-bg': 'rgba(227,154,75,.15)',
+        'need-bg': 'rgba(227,154,75,.09)',
         na: '#9AA29B',
-        'na-bg': 'rgba(255,255,255,.06)',
+        'na-bg': 'rgba(255,255,255,.05)',
 
         // ── LEGACY ALIASES (CODEX v1.2.0 light-theme names) ─────────────────
         // Remapped onto the dark palette so unrefactored screens still render
@@ -59,13 +61,13 @@ export default {
         mist: 'rgba(255,255,255,.08)',   // hairlines → line
         tally: '#98A19A',                // secondary text → muted
         ok: '#CBEE72',                   // strong/success fg → good pair fg
-        'ok-bg': 'rgba(190,226,78,.12)',
+        'ok-bg': 'rgba(190,226,78,.08)',
         warn: '#F0B478',                 // caution fg → need pair fg
-        'warn-bg': 'rgba(227,154,75,.15)',
+        'warn-bg': 'rgba(227,154,75,.09)',
         gap: '#9AA29B',                  // neutral/not-assessable fg → na pair fg
-        'gap-bg': 'rgba(255,255,255,.06)',
+        'gap-bg': 'rgba(255,255,255,.05)',
         void: '#F0B478',                 // danger fg → warm amber (never harsh red on the dark stage)
-        'void-bg': 'rgba(227,154,75,.15)',
+        'void-bg': 'rgba(227,154,75,.09)',
       },
       fontFamily: {
         display: ['"Frank Ruhl Libre"', 'Georgia', 'serif'],  // headings — editorial serif voice
@@ -85,8 +87,8 @@ export default {
       },
       boxShadow: {
         card: '0 24px 60px -24px rgba(0,0,0,.75)',
-        glow: '0 10px 26px -10px rgba(190,226,78,.6)',    // lime glow — primary CTA only
-        'glow-gold': '0 0 18px 2px rgba(242,192,99,.35)', // found-state / gold aura edge
+        glow: '0 10px 26px -10px rgba(190,226,78,.5)',    // lime glow — THE one primary CTA per view
+        'glow-gold': '0 0 12px 0 rgba(242,192,99,.22)',   // found-state edge — subtle, never loud
       },
       keyframes: {
         'fade-in': { '0%': { opacity: 0, transform: 'translateY(6px)' }, '100%': { opacity: 1, transform: 'translateY(0)' } },
