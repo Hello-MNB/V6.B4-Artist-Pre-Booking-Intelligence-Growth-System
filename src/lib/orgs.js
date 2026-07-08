@@ -2,7 +2,10 @@
 // Bootstrap, memberships, members/invites, subscription/seats. Demo-guarded.
 // RLS (008) + RPCs (009) enforce tenancy + seat limits server-side; these are thin wrappers.
 import { supabase } from './supabase.js'
-import { DEMO, demoOrg, demoSubscription, demoMemberships, demoMembers, demoRadarRecords, demoUpgradeRequests, demoInviteInfo } from './demo.js'
+import {
+  DEMO, demoOrg, demoSubscription, demoMemberships, demoMembers, demoRadarRecords, demoUpgradeRequests, demoInviteInfo,
+  demoAccessRequests, demoRequestArtistAccess, demoRespondToAccessRequest, demoRevokeArtistAccess,
+} from './demo.js'
 
 // ── Bootstrap a personal solo org at signup (§19.5) ──
 export async function bootstrapOrg({ name, functionalRole, email, displayName }) {
@@ -154,6 +157,95 @@ export async function approveUpgrade(orgId, seats = 5) {
   if (DEMO) return
   const { error } = await supabase.rpc('approve_agency_upgrade', { p_org: orgId, p_seats: seats })
   if (error) throw error
+}
+
+// ── ARTIST_ACCESS consent handshake (migration 027 target — REPRESENTATION-CANON
+//    §1.1/§1.5, ENTITY-SPEC-ORG §2.5/§4(1)). Feature-detected: the scope/status
+//    columns and the RPCs below only exist once 027 is applied to the live DB.
+//    Until then every call here fails SOFT (console note + a typed {ok:false}
+//    result) instead of throwing into the UI, so the screens can render a
+//    "needs migration 027" state rather than crash. ──
+const MIGRATION_027_NOTE =
+  '[artist_access] migration 027 not applied yet — run supabase/migrations/027_workspace_types_and_access_scopes.sql (owner-approved) to enable the access handshake.'
+function isPreMigration027(err) {
+  const code = err?.code
+  const msg = `${err?.message || ''} ${err?.details || ''} ${err?.hint || ''}`.toLowerCase()
+  return code === 'PGRST202' || code === '42883' || code === '42703' || code === '23514'
+    || msg.includes('could not find') || msg.includes('does not exist') || msg.includes('violates check constraint')
+}
+
+// Agency/production side — invite (or re-invite) an EXISTING artist by id.
+// Never a cold directory (Amendment-13): the caller must already have the
+// artist's Passport link/id. Starts status='pending' — no content is visible
+// to the requesting org until the artist approves (RLS: can_access_artist()
+// requires status='active').
+export async function requestArtistAccess(orgId, artistId, { scope = ['view'], territory = null } = {}) {
+  if (DEMO) return demoRequestArtistAccess(orgId, artistId, scope, territory)
+  const { data, error } = await supabase.rpc('request_artist_access', {
+    p_org: orgId, p_artist: artistId, p_scope: scope, p_territory: territory,
+  })
+  if (error) {
+    if (isPreMigration027(error)) { console.warn(MIGRATION_027_NOTE); return { ok: false, reason: 'migration-027-required' } }
+    throw error
+  }
+  return { ok: true, id: data }
+}
+
+// Agency side — requests THIS org has sent (pending/active/revoked). The
+// embedded artist name only resolves once a grant is active — RLS hides the
+// artists row entirely while pending, which is the "no content visible" rule
+// enforced at the data layer, not just in the UI copy.
+export async function listOutgoingAccessRequests(orgId) {
+  if (DEMO) return demoAccessRequests.filter((r) => r.organization_id === orgId)
+  const { data, error } = await supabase
+    .from('artist_access')
+    .select('id, artist_id, scope, territory, status, consent_at, expires_at, created_at, artist:artist_id(stage_name)')
+    .eq('organization_id', orgId)
+    .order('created_at', { ascending: false })
+  if (error) {
+    if (isPreMigration027(error)) { console.warn(MIGRATION_027_NOTE); return [] }
+    throw error
+  }
+  return data ?? []
+}
+
+// Artist side — incoming requests/grants targeting artists the caller's own
+// active org(s) own. Uses the SECURITY DEFINER RPC because plain RLS never
+// lets one org read another org's `name` — without it there'd be no safe way
+// to show the artist WHO is asking.
+export async function listIncomingAccessRequests() {
+  if (DEMO) return demoAccessRequests
+  const { data, error } = await supabase.rpc('list_incoming_access_requests')
+  if (error) {
+    if (isPreMigration027(error)) { console.warn(MIGRATION_027_NOTE); return [] }
+    throw error
+  }
+  return data ?? []
+}
+
+// Artist side — approve (optionally narrowing scope) or decline a pending
+// request. Approving stamps consent_at (the artist's explicit consent, per
+// REPRESENTATION-CANON §1.1 — "grant requires the ARTIST's acceptance").
+export async function respondToAccessRequest(id, approve, scope = null) {
+  if (DEMO) return demoRespondToAccessRequest(id, approve, scope)
+  const { error } = await supabase.rpc('respond_to_access_request', { p_id: id, p_approve: approve, p_scope: scope })
+  if (error) {
+    if (isPreMigration027(error)) { console.warn(MIGRATION_027_NOTE); return { ok: false, reason: 'migration-027-required' } }
+    throw error
+  }
+  return { ok: true }
+}
+
+// Either side may revoke an active grant — "takes immediate effect... without
+// revealing future artist data" (Screen-Spec AG2 acceptance criterion).
+export async function revokeArtistAccess(id) {
+  if (DEMO) return demoRevokeArtistAccess(id)
+  const { error } = await supabase.rpc('revoke_artist_access', { p_id: id })
+  if (error) {
+    if (isPreMigration027(error)) { console.warn(MIGRATION_027_NOTE); return { ok: false, reason: 'migration-027-required' } }
+    throw error
+  }
+  return { ok: true }
 }
 
 // ── RADAR inputs (O5 agencies): per-roster-artist record for the §20 rules engine. ──

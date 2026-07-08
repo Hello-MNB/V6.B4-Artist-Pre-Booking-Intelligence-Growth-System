@@ -188,4 +188,50 @@ export const demoConfirm = { get claimText() { return L('Produced 10+ recurring 
 // team member into his INSOMNIA TLV production workspace.
 export const demoInviteInfo = { org_name: 'INSOMNIA TLV', get inviter_name() { return L('Shai Perlman', 'שי פרלמן') }, org_role: 'member', invited_email: null }
 
+// ── artist_access consent handshake (migration 027 target) — DEMO fixture.
+// Seeded with ONE realistic three-hat case (ENTITY-SPEC-ORG §6.1): Shai's own
+// representation workspace (INSOMNIA TLV / demo-org-2) has requested access to
+// Shai's own artist (PERLMAN / demo-artist) — "same grant, same scopes, same
+// revocability" as any other roster member, no special-case "it's me" path.
+// Mutable (like demoEntitlement) so the demo Add-artist/Representation screens
+// can drive the full pending→active→revoked lifecycle end-to-end with no backend.
+let _daaSeq = 2
+export const demoAccessRequests = [
+  {
+    id: 'daa1', artist_id: DEMO_ARTIST_ID, get artist_stage_name() { return 'PERLMAN' },
+    organization_id: 'demo-org-2', organization_name: 'INSOMNIA TLV',
+    scope: ['view'], territory: null, status: 'pending', consent_at: null,
+    expires_at: null, created_at: '2026-07-01T00:00:00Z',
+  },
+]
+export function demoRequestArtistAccess(orgId, artistId, scope, territory) {
+  const artist = artistId === demoArtist2.id ? demoArtist2 : demoArtist
+  const row = {
+    id: `daa${_daaSeq++}`, artist_id: artistId, artist_stage_name: artist.stage_name,
+    organization_id: orgId, organization_name: orgId === demoOrg.id ? demoOrg.name : 'INSOMNIA TLV',
+    scope: scope?.length ? scope : ['view'], territory: territory || null,
+    status: 'pending', consent_at: null, expires_at: null, created_at: new Date().toISOString(),
+  }
+  demoAccessRequests.push(row)
+  return { ok: true, id: row.id }
+}
+export function demoRespondToAccessRequest(id, approve, scope) {
+  const row = demoAccessRequests.find((r) => r.id === id)
+  if (!row) return { ok: false }
+  if (approve) {
+    row.status = 'active'
+    row.consent_at = new Date().toISOString()
+    if (scope?.length) row.scope = scope
+  } else {
+    row.status = 'revoked'
+    row.consent_at = null
+  }
+  return { ok: true }
+}
+export function demoRevokeArtistAccess(id) {
+  const row = demoAccessRequests.find((r) => r.id === id)
+  if (row) row.status = 'revoked'
+  return { ok: true }
+}
+
 export { DEMO_ARTIST_ID }
