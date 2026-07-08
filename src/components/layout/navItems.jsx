@@ -5,11 +5,15 @@ import { ROLES } from '../../lib/constants.js'
 // `end` mirrors NavLink's `end` prop (exact-match active state).
 export function getNavTabs(role, isAgency, T) {
   const n = T.nav
+  // IA correction (canon): artist nav = Radar · Passport · Requests · Account.
+  // Readiness left the nav (content lives inside the Radar's readiness surface);
+  // claim review is a panel/flow reached FROM the radar, not a nav destination —
+  // "Passport" now opens the artist's own real passport preview, not claim review.
   if (role === ROLES.ARTIST) return [
-    { key: 'radar',     label: n.radar,     to: '/artist/home',      end: true },
-    { key: 'readiness', label: n.readiness, to: '/artist/readiness', end: true },
-    { key: 'claims',    label: n.claims,    to: '/artist/claims',    end: true },
-    { key: 'account',   label: n.account,   to: '/settings',         end: true },
+    { key: 'radar',    label: n.radar,    to: '/artist/home',     end: true },
+    { key: 'passport', label: n.passport, to: '/artist/passport', end: true },
+    { key: 'requests', label: n.requests, to: '/artist/requests', end: true },
+    { key: 'account',  label: n.account,  to: '/settings',        end: true },
   ]
   if (role === ROLES.AGENCY || isAgency) return [
     { key: 'roster',   label: n.roster,   to: '/agency',          end: true },
@@ -37,9 +41,7 @@ export function NavIcon({ name }) {
   switch (name) {
     case 'radar':
       return <svg {...p}><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-    case 'readiness':
-      return <svg {...p}><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-    case 'claims':
+    case 'passport':
       return <svg {...p}><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/><polyline points="9 12 11 14 15 10"/></svg>
     case 'roster':
       return <svg {...p}><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>

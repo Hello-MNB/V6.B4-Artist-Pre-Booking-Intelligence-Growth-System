@@ -30,6 +30,9 @@ export default function ClaimReview() {
   const [dirty, setDirty] = useState(false)
   const [republishing, setRepublishing] = useState(false)
   const [receipt, setReceipt] = useState('') // named confirmation receipt (evidence integrity)
+  // Confirm bloom (Master-Class Pillar 1: the moment of confirmation must feel
+  // like progress being minted) — claim id currently mid-bloom (~400ms).
+  const [bloomId, setBloomId] = useState(null)
 
   function flashReceipt(msg) {
     setReceipt(msg)
@@ -83,6 +86,8 @@ export default function ClaimReview() {
     try {
       await updateClaim(claim.id, { artist_approved: true })
       setClaims((prev) => prev.map((c) => c.id === claim.id ? { ...c, artist_approved: true } : c))
+      setBloomId(claim.id)
+      setTimeout(() => setBloomId((cur) => (cur === claim.id ? null : cur)), 420)
       // The receipt names what was confirmed and where it now appears.
       flashReceipt(`Added to ${destinationOf(claim)}: “${claim.public_wording || claim.value || human(claim.claim_type)}”`)
     } finally { setToggling(null) }
@@ -221,7 +226,7 @@ export default function ClaimReview() {
           <p className="mb-2 text-xs text-muted">{T.claims.needsReviewHint}</p>
           <div className="space-y-2">
             {pendingReview.map((c) => (
-              <ClaimRow key={c.id} claim={c} onToggle={toggle} toggling={toggling} T={T}
+              <ClaimRow key={c.id} claim={c} onToggle={toggle} toggling={toggling} T={T} bloom={bloomId === c.id}
                 canPublish={canPublish(c)} onApprove={approve} onCorrect={correctValue} onOmit={omit} onFlag={flag} />
             ))}
           </div>
@@ -234,7 +239,7 @@ export default function ClaimReview() {
           <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted">{T.claims.passportOk} ({passportOk.length})</p>
           <div className="space-y-2">
             {passportOk.map((c) => (
-              <ClaimRow key={c.id} claim={c} onToggle={toggle} toggling={toggling} T={T}
+              <ClaimRow key={c.id} claim={c} onToggle={toggle} toggling={toggling} T={T} bloom={bloomId === c.id}
                 canPublish={canPublish(c)} onApprove={approve} onCorrect={correctValue} onOmit={omit} onFlag={flag} />
             ))}
           </div>
@@ -247,7 +252,7 @@ export default function ClaimReview() {
           <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted">{T.claims.mirrorOnly} ({mirrorOnly.length})</p>
           <div className="space-y-2">
             {mirrorOnly.map((c) => (
-              <ClaimRow key={c.id} claim={c} onToggle={toggle} toggling={toggling} T={T}
+              <ClaimRow key={c.id} claim={c} onToggle={toggle} toggling={toggling} T={T} bloom={bloomId === c.id}
                 canPublish={canPublish(c)} onApprove={approve} onCorrect={correctValue} onOmit={omit} onFlag={flag} />
             ))}
           </div>
@@ -337,7 +342,7 @@ function ItemRow({ item, onToggle, toggling, T }) {
   )
 }
 
-function ClaimRow({ claim, onToggle, toggling, T, canPublish, onApprove, onCorrect, onOmit, onFlag }) {
+function ClaimRow({ claim, onToggle, toggling, T, bloom, canPublish, onApprove, onCorrect, onOmit, onFlag }) {
   const isPassportOk = claim.visibility === VISIBILITY.PASSPORT_OK
   const busy = toggling === claim.id
   const isConfirmed = claim.method_label === 'producer-confirmed'
@@ -397,7 +402,7 @@ function ClaimRow({ claim, onToggle, toggling, T, canPublish, onApprove, onCorre
   const reviewedOn = fmtDate(claim.reviewed_at || claim.updated_at || claim.created_at)
 
   return (
-    <div className={`card transition ${busy ? 'opacity-60' : ''}`}>
+    <div className={`card transition ${busy ? 'opacity-60' : ''} ${bloom ? 'bloom-confirm' : ''}`}>
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           {/* (1) the exact claim wording — what will appear, verbatim */}

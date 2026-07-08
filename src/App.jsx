@@ -15,6 +15,8 @@ import Onboarding from './features/artist/Onboarding.jsx'
 import ArtistDashboard from './features/artist/ArtistDashboard.jsx'
 import ArtistReadiness from './features/artist/ArtistReadiness.jsx'
 import ClaimReview from './features/artist/ClaimReview.jsx'
+import PassportSelf from './features/artist/PassportSelf.jsx'
+import ArtistRequests from './features/artist/ArtistRequests.jsx'
 import OfferPayment from './features/artist/OfferPayment.jsx'
 import EvidenceCapture from './features/evidence/EvidenceCapture.jsx'
 import Passport from './features/passport/Passport.jsx'
@@ -47,10 +49,13 @@ function RequireAuth({ children }) {
 
 // Auth + role gate. A logged-in user on the wrong role's screen is bounced to
 // "/" (RoleHome), which redirects them to their OWN home — no dead-ends, no loop.
+// `role` comes from useOrg() (ROUND 4: the ACTIVE workspace's derived role), NOT
+// the static useAuth() profile role — so a workspace switch actually re-gates.
 function RequireRole({ role: need, children }) {
-  const { user, role, loading } = useAuth()
+  const { user, loading: authLoading } = useAuth()
+  const { role, loading: orgLoading } = useOrg()
   const loc = useLocation()
-  if (loading) return <Loading />
+  if (authLoading || orgLoading) return <Loading />
   if (!user) return <Navigate to="/login" replace state={{ from: loc.pathname }} />
   if (!role) return <Navigate to={DEMO ? '/login' : '/select'} replace />
   const ok = Array.isArray(need) ? need.includes(role) : role === need
@@ -59,22 +64,25 @@ function RequireRole({ role: need, children }) {
 }
 
 // Agency-feature gate: an agency is a grown booker-org. Access is granted by org
-// PLAN (isAgency) OR the legacy agency role — so an upgraded booker reaches the
-// agency screens on the SAME account, no migration, no role swap.
+// PLAN (isAgency) OR the (org-derived) agency role — so an upgraded booker
+// reaches the agency screens on the SAME account, no migration, no role swap.
 function RequireAgency({ children }) {
-  const { user, role, loading } = useAuth()
-  const { isAgency } = useOrg()
+  const { user, loading: authLoading } = useAuth()
+  const { role, isAgency, loading: orgLoading } = useOrg()
   const loc = useLocation()
-  if (loading) return <Loading />
+  if (authLoading || orgLoading) return <Loading />
   if (!user) return <Navigate to="/login" replace state={{ from: loc.pathname }} />
   if (role === ROLES.AGENCY || isAgency) return children
   return <Navigate to="/" replace />
 }
 
-// Sends a logged-in user to the right home based on role.
+// Sends a logged-in user to the right home based on role. `role` is the
+// EFFECTIVE (org-derived) role from useOrg() — this is what makes a workspace
+// switch (OrgContext.switchOrg navigates here) land on the NEW workspace's home.
 function RoleHome() {
-  const { user, role, loading } = useAuth()
-  if (loading) return <Loading />
+  const { user, loading: authLoading } = useAuth()
+  const { role, loading: orgLoading } = useOrg()
+  if (authLoading || orgLoading) return <Loading />
   if (!user) return <Navigate to="/login" replace />
   if (!role) return <Navigate to={DEMO ? '/login' : '/select'} replace />
   if (role === ROLES.OPERATOR) return <Navigate to="/admin" replace />
@@ -124,8 +132,19 @@ export default function App() {
         <Route path="/consent" element={<RequireRole role={ROLES.ARTIST}><Navigate to="/onboarding" replace /></RequireRole>} />
         <Route path="/onboarding" element={<RequireRole role={ROLES.ARTIST}><Onboarding /></RequireRole>} />
         <Route path="/artist/home" element={<RequireRole role={ROLES.ARTIST}><ArtistDashboard /></RequireRole>} />
+        {/* IA correction: Readiness left the nav (its content lives inside the
+            Radar's own readiness surface) — the route stays for deep links. */}
         <Route path="/artist/readiness" element={<RequireRole role={ROLES.ARTIST}><ArtistReadiness /></RequireRole>} />
+        {/* Claim review is a panel/flow (reached from the radar next-action card
+            and notifications), NOT a nav destination — the route stays for
+            those deep links only; it is no longer in the artist tab bar. */}
         <Route path="/artist/claims" element={<RequireRole role={ROLES.ARTIST}><ClaimReview /></RequireRole>} />
+        {/* Artist nav "Passport" tab — redirects to the artist's own real
+            public passport surface (/passport/:id), the same reused pattern
+            ArtistDashboard/ClaimReview already link out to. */}
+        <Route path="/artist/passport" element={<RequireRole role={ROLES.ARTIST}><PassportSelf /></RequireRole>} />
+        {/* Artist nav "Requests" tab — incoming availability requests. */}
+        <Route path="/artist/requests" element={<RequireRole role={ROLES.ARTIST}><ArtistRequests /></RequireRole>} />
         <Route path="/artist/offer" element={<RequireRole role={ROLES.ARTIST}><OfferPayment /></RequireRole>} />
         <Route path="/evidence/:artistId" element={<RequireRole role={ROLES.ARTIST}><EvidenceCapture /></RequireRole>} />
 

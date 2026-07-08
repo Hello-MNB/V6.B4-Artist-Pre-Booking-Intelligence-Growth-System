@@ -1,12 +1,12 @@
 import { NavLink } from 'react-router-dom'
-import { useAuth } from '../../features/auth/AuthProvider.jsx'
 import { useOrg } from '../../context/OrgContext.jsx'
 import { useLang } from '../../context/LangContext.jsx'
 import { getNavTabs, NavIcon } from './navItems.jsx'
 
 export default function BottomNav() {
-  const { role } = useAuth()
-  const { isAgency } = useOrg()
+  // role: the ACTIVE workspace's effective role (ROUND 4) — NOT the static
+  // useAuth() profile role — so switching workspace recomputes the tab set.
+  const { role, isAgency } = useOrg()
   const { T } = useLang()
   const tabs = getNavTabs(role, isAgency, T)
   if (tabs.length === 0) return null

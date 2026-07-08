@@ -70,9 +70,14 @@ export const demoArtist2 = {
 // plan 'agency' — the schema has no dedicated "production brand" org type). ──
 export const demoOrg = { id: 'demo-org', get name() { return L('Shai Perlman', 'שי פרלמן') }, slug: 'shai-perlman', plan: 'solo', created_by: 'demo-user', created_at: '2026-01-01T00:00:00Z' }
 export const demoSubscription = { id: 'demo-sub', organization_id: 'demo-org', plan: 'solo', seats_included: 3, seats_used: 1, status: 'active', current_period_end: null }
+// `functional_role` mirrors role_assignment.functional_role (migration 008) —
+// the ACTIVE membership's functional_role is what OrgContext now derives the
+// effective nav/routing role from (canon ROUND 4: switching workspace recomputes
+// role), not a single global profile role. Two real hats on one demo person:
+// Shai's own artist workspace, and his INSOMNIA TLV production/booking brand.
 export const demoMemberships = [
-  { id: 'dm-self', org_role: 'owner', status: 'active', organization: { id: 'demo-org', get name() { return L('Shai Perlman', 'שי פרלמן') }, slug: 'shai-perlman', plan: 'solo' } },
-  { id: 'dm-2', org_role: 'owner', status: 'active', organization: { id: 'demo-org-2', name: 'INSOMNIA TLV', slug: 'insomnia-tlv', plan: 'agency' } },
+  { id: 'dm-self', org_role: 'owner', status: 'active', functional_role: 'artist', organization: { id: 'demo-org', get name() { return L('Shai Perlman', 'שי פרלמן') }, slug: 'shai-perlman', plan: 'solo' } },
+  { id: 'dm-2', org_role: 'owner', status: 'active', functional_role: 'agency', organization: { id: 'demo-org-2', name: 'INSOMNIA TLV', slug: 'insomnia-tlv', plan: 'agency' } },
 ]
 export const demoMembers = [
   { id: 'dm-self', org_role: 'owner', status: 'active', invited_email: null, person: { id: 'demo-user', email: 'demo@lock.test', get display_name() { return L('Shai Perlman', 'שי פרלמן') } } },
@@ -157,6 +162,54 @@ export const demoClaims = [
   // Honest gap on display: community claimed, zero numbers documented → artist view only.
   { id: 'dc8', artist_id: DEMO_ARTIST_ID, claim_type: 'community', get value() { return L('Owned community around INSOMNIA TLV — no audience numbers documented', 'קהילה סביב INSOMNIA TLV — ללא נתוני קהל מתועדים') }, source_type: 'self-reported', verification_status: 'self-reported', visibility: 'mirror-only', method_label: null, reason_code: null, expires_at: null },
 ]
+
+// ── Acts (multi-Act spine, migration 020) — DEMO fixtures ────────────────────
+// Canon: one Person may hold several Acts (e.g. a psytrance Act + a techno
+// Act), each with its OWN Passport and its OWN evidence, per-Act
+// non-transferable. PERLMAN's default (techno) Act reuses artists.id
+// (migration 020's transition rule: act.id === artists.id for the default
+// Act) — the psytrance Act below is a genuinely SEPARATE act row, same person,
+// with its own (much newer, much lighter) evidence universe. Switching never
+// carries the techno Act's INSOMNIA TLV history into it.
+const DEMO_ACT_PSY_ID = 'demo-act-psy'
+
+export const demoActs = [
+  {
+    id: DEMO_ARTIST_ID, person_id: 'demo-user', is_default: true,
+    stage_name: 'PERLMAN',
+    get genre() { return L('Underground Techno', 'טכנו אנדרגראונד') },
+    get city() { return L('Tel Aviv', 'תל אביב') },
+    get positioning() { return L('Underground techno · resident @ INSOMNIA TLV', 'טכנו אנדרגראונד · תושב קבע ב-INSOMNIA TLV') },
+    photo_url: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&q=80',
+  },
+  {
+    id: DEMO_ACT_PSY_ID, person_id: 'demo-user', is_default: false,
+    get stage_name() { return L('PERLMAN PSY', 'פרלמן פסיי') },
+    get genre() { return L('Psytrance', 'פסיטראנס') },
+    get city() { return L('Tel Aviv', 'תל אביב') },
+    get positioning() { return L('A newer side-project — forest-floor sets, just getting started', 'פרויקט צדדי חדש — סטים ביער, רק בהתחלה') },
+    photo_url: 'https://images.unsplash.com/photo-1518972734183-1e4f5b6b0b1b?w=800&q=80',
+  },
+]
+
+// The psytrance Act's OWN evidence universe — deliberately sparse (a brand-new
+// Act) and NEVER the techno Act's items/claims. One organic public link exists
+// (so the radar isn't the pre-evidence blossom screen); nothing else is
+// confirmed yet — every other node stays an honest "needs you" invitation.
+export const demoItemsPsy = [
+  { id: 'dip1', artist_id: DEMO_ACT_PSY_ID, act_id: DEMO_ACT_PSY_ID, item_type: 'link', title: 'SoundCloud', public_url: 'https://soundcloud.com/perlman-psy', source_status: 'public-verified', visibility: 'passport-ok', item_date: null },
+]
+export const demoClaimsPsy = []
+
+// listActs(artistId) fixture — every Act the same demo Person holds.
+// switchAct(actId) fixture — the picked Act's own record + its own evidence
+// (never another Act's), matching the real switchAct() contract in db.js.
+export function demoSwitchAct(actId) {
+  const a = demoActs.find((x) => x.id === actId) || demoActs[0]
+  return a.id === DEMO_ARTIST_ID
+    ? { act: a, items: demoItems, claims: demoClaims }
+    : { act: a, items: demoItemsPsy, claims: demoClaimsPsy }
+}
 
 // ── Evidence uploads — only what really exists: public links. No ticket export
 // yet (evidence candidate #8 stays pending until a Selector/GO-OUT export lands). ──

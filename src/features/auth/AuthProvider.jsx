@@ -6,6 +6,18 @@ import { DEMO } from '../../lib/demo.js'
 const AuthCtx = createContext(null)
 export const useAuth = () => useContext(AuthCtx)
 
+// NOTE on `role` (ROUND 4 IA fix): this provider only ever knows the person's
+// BASE/global role (profiles.role in real mode; the persona picked at the demo
+// login chooser in DEMO mode). It intentionally does NOT know which workspace
+// is active — OrgProvider is mounted BELOW this one (see main.jsx) precisely so
+// the org/membership lookups can read `user` from here without a circular
+// dependency. The EFFECTIVE role that should drive nav + RoleHome routing after
+// a workspace switch lives in OrgContext.jsx (`useOrg().role`), derived from the
+// ACTIVE workspace's role_assignment — NOT this `role`. Read useOrg().role for
+// anything nav/route-related; this `role` remains the right value only for
+// identity-level operations that must never change on a workspace switch (e.g.
+// saving profiles.role itself in Settings).
+
 // DEMO: pick a persona (stored in localStorage) — no real auth, no Supabase.
 function DemoAuthProvider({ children }) {
   const [role, setRole] = useState(() => localStorage.getItem('gigproof_demo_role') || null)

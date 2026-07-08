@@ -1,7 +1,7 @@
 import { supabase } from './supabase.js'
 import { VISIBILITY, PUBLISHABLE_STATUSES } from './constants.js'
 import { StubClaimProcessor } from './ai/stub.js'
-import { DEMO, demoArtist, demoArtist2, demoItems, demoEvidence, demoClaims, demoRequests, demoEntitlement, demoConsents, demoAudit, demoPassportPayload } from './demo.js'
+import { DEMO, demoArtist, demoArtist2, demoActs, demoItems, demoEvidence, demoClaims, demoRequests, demoEntitlement, demoConsents, demoAudit, demoPassportPayload, demoSwitchAct } from './demo.js'
 
 // In DEMO mode every function returns local fixtures (no Supabase client exists).
 
@@ -71,6 +71,46 @@ export async function updateAct(actId, patch) {
   const { data, error } = await supabase.from('act').update(patch).eq('id', actId).select().single()
   if (error) throw error
   return data
+}
+
+// One Person may hold several Acts (canon: a psytrance Act + a techno Act),
+// each with its OWN Passport and its OWN evidence, per-Act non-transferable.
+// The default Act shares its id with `artists` (migration 020's transition
+// rule) — listActs resolves that Act's person_id first, then returns every
+// Act the same Person holds (radar center-star Act-switch, Design Spec §MULTI-ACT).
+export async function listActs(artistId) {
+  if (DEMO) return demoActs
+  const { data: mine, error: e1 } = await supabase.from('act').select('person_id').eq('id', artistId).maybeSingle()
+  if (e1) throw e1
+  if (!mine?.person_id) return []
+  const { data, error } = await supabase.from('act')
+    .select('id, stage_name, genre, city, positioning, photo_url, is_default, created_at')
+    .eq('person_id', mine.person_id)
+    .order('created_at', { ascending: true })
+  if (error) throw error
+  return data ?? []
+}
+
+// Switching Acts swaps the WHOLE evidence universe. Reads are act_id-scoped —
+// migration 020 threaded act_id through every evidence table and backfilled it
+// for existing rows, so the default Act's own history still resolves here too.
+// A genuinely NEW Act has no rows yet: items/claims come back empty, which is
+// the correct, honest "new Act starts empty" behaviour — never inherited from
+// another Act. Real-DB depth gap (documented, not fixed here): a non-default
+// Act has no matching `artists` row, so artists-only fields (draw bands,
+// sells_tickets, rider, WhatsApp…) aren't yet act-scoped in the schema; callers
+// should treat those as honestly absent for a non-default Act.
+export async function switchAct(actId) {
+  if (DEMO) return demoSwitchAct(actId)
+  const [actRes, itemsRes, claimsRes] = await Promise.all([
+    supabase.from('act').select('*').eq('id', actId).maybeSingle(),
+    supabase.from('profile_items').select('*').eq('act_id', actId).order('created_at', { ascending: false }),
+    supabase.from('claims').select('*').eq('act_id', actId).order('created_at', { ascending: false }),
+  ])
+  if (actRes.error) throw actRes.error
+  if (itemsRes.error) throw itemsRes.error
+  if (claimsRes.error) throw claimsRes.error
+  return { act: actRes.data, items: itemsRes.data ?? [], claims: claimsRes.data ?? [] }
 }
 
 // Roster-wide claim states for the agency radar — WORKFLOW facts (what waits),
@@ -175,6 +215,20 @@ export async function updateRequestStatus(id, status) {
   if (DEMO) return
   const { error } = await supabase.from('availability_requests').update({ status }).eq('id', id)
   if (error) throw error
+}
+
+// Artist-facing — incoming availability requests for the artist's OWN Passport
+// (canon IA: artist nav "Requests" tab). Scoped by artist_id, unlike
+// listRequestsForAgency which resolves via created_by across a whole roster.
+export async function listRequestsForArtist(artistId) {
+  if (DEMO) return demoRequests.filter((r) => r.artist_id === artistId)
+  const { data, error } = await supabase
+    .from('availability_requests')
+    .select('*')
+    .eq('artist_id', artistId)
+    .order('created_date', { ascending: false })
+  if (error) throw error
+  return data ?? []
 }
 
 // ── Evidence → method-labeled Claims ──────────────────────────────

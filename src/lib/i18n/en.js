@@ -534,8 +534,7 @@ export const T = {
   },
   nav: {
     radar: 'Radar',
-    readiness: 'Readiness',
-    claims: 'Passport',
+    passport: 'Passport',
     roster: 'Roster',
     requests: 'Requests',
     received: 'Received',
@@ -771,6 +770,16 @@ export const T = {
       },
       state: { established: 'Established', developing: 'Developing', needs: 'Needs you' },
       you: 'You',
+      // Act-switch at the center-star (Design Spec §MULTI-ACT) — switching Acts
+      // swaps the whole radar universe (identity + evidence), never merges them.
+      actSwitch: {
+        title: 'Your acts',
+        active: 'Active',
+        switchAria: 'Switch act',
+        switchedToast: (name) => `Switched to ${name} — its own universe, its own evidence`,
+        genreTagAria: (genre) => `${genre} — open Identity & Story`,
+        newActHint: 'New act starts empty — evidence never transfers between acts',
+      },
       backToUniverse: '← Universe',
       whatItProves: 'What it proves',
       whatItDoesNotProve: 'What it does NOT prove',

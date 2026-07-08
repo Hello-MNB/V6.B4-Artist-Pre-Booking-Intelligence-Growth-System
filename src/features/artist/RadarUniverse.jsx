@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { updateClaim, updateAct, addProfileItem, addEvidence, processEvidence, listClaims } from '../../lib/db.js'
+import { updateClaim, updateAct, addProfileItem, addEvidence, processEvidence, listClaims, listActs, switchAct } from '../../lib/db.js'
 import { uploadFile } from '../../lib/storage.js'
 import { BottomSheet, Spinner, GpIcon } from '../../components/ui.jsx'
 import { PlatformLogo, detectPlatform } from '../../components/PlatformLogo.jsx'
@@ -71,6 +71,86 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
   const [flashMsg, setFlashMsg] = useState('')
   const undoRef = useRef(null)
   const flashRef = useRef(null)
+  // Confirm bloom (Master-Class Pillar 1: "the moment of confirmation must feel
+  // like progress being minted") — node ids currently mid-bloom (~400ms), then
+  // cleared. A Set so a bulk confirm can bloom several rows at once.
+  const [bloomIds, setBloomIds] = useState(() => new Set())
+  function triggerBloom(ids) {
+    const list = Array.isArray(ids) ? ids : [ids]
+    setBloomIds((prev) => new Set([...prev, ...list]))
+    setTimeout(() => {
+      setBloomIds((prev) => { const next = new Set(prev); list.forEach((id) => next.delete(id)); return next })
+    }, 420)
+  }
+
+  // ── Multi-Act switch — lives at the radar CENTER-STAR (Design Spec §MULTI-ACT).
+  // One Person may hold several Acts (a psytrance Act + a techno Act…), each
+  // with its OWN Passport and OWN evidence, per-Act non-transferable. Switching
+  // swaps the whole universe (identity + nodes) — never merges two Acts'
+  // evidence. `actOverride` is null while viewing the default (prop-driven)
+  // Act; it holds the swapped-in identity/evidence once another Act is active.
+  const [acts, setActs] = useState([])
+  const [activeActId, setActiveActId] = useState(() => localStorage.getItem('gigproof_active_act') || artist.id)
+  const [actSheet, setActSheet] = useState(false)
+  const [actBusy, setActBusy] = useState(false)
+  const [actOverride, setActOverride] = useState(null) // { artist, items, claims } for a non-default Act
+
+  useEffect(() => {
+    let cancelled = false
+    listActs(artist.id).then((rows) => { if (!cancelled) setActs(rows || []) }).catch(() => {})
+    return () => { cancelled = true }
+  }, [artist.id])
+
+  // Restore a persisted non-default Act once its record has loaded.
+  useEffect(() => {
+    const stored = localStorage.getItem('gigproof_active_act')
+    if (stored && stored !== artist.id && acts.some((a) => a.id === stored) && !actOverride) {
+      pickAct(stored)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [acts])
+
+  async function pickAct(id) {
+    const alreadyActive = id === artist.id ? !actOverride : activeActId === id && !!actOverride
+    if (alreadyActive) { setActSheet(false); return }
+    if (actBusy) return
+    setActBusy(true)
+    try {
+      if (id === artist.id) {
+        setActOverride(null) // back to the default Act — the prop-driven data
+      } else {
+        const res = await switchAct(id)
+        const a = acts.find((x) => x.id === id) || res.act || {}
+        setActOverride({
+          act: res.act || a,
+          items: res.items || [],
+          claims: res.claims || [],
+          // The non-default Act's own identity fields (migration 020: act.stage_name/
+          // genre/city/positioning/photo_url); draw/kit fields (bands, sells_tickets,
+          // rider…) live only on `artists` today — honestly absent here rather than
+          // carried over from the default Act (real-DB depth gap, documented).
+          artist: {
+            ...artist,
+            stage_name: a.stage_name || artist.stage_name,
+            genre: a.genre ?? null,
+            city: a.city ?? null,
+            one_line: a.positioning ?? null,
+            photo_url: a.photo_url ?? null,
+            lineup_frequency_band: null, sells_tickets: null, price_band: null,
+            community_size_band: null, set_length: null, regions: null,
+            rider_url: null, invoice_ready: null, whatsapp_number: null,
+          },
+        })
+      }
+      setActiveActId(id)
+      localStorage.setItem('gigproof_active_act', id)
+      setActSheet(false)
+      setSelected(null)
+      flash(S.actSwitch.switchedToast((acts.find((a) => a.id === id) || {}).stage_name || artist.stage_name))
+    } finally {
+      setActBusy(false)
+    }
+  }
 
   function flash(msg) {
     clearTimeout(flashRef.current)
@@ -78,20 +158,31 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
     flashRef.current = setTimeout(() => setFlashMsg(''), 3200)
   }
 
-  const uni = useMemo(() => buildUniverse({ artist, act, items, claims, T }), [artist, act, items, claims, T])
-  const worlds = useMemo(() => deriveWorlds({ artist, items }), [artist, items])
+  // Everything below derives from the ACTIVE act's data — swapped wholesale,
+  // never merged, when a non-default Act is selected.
+  const effArtist = actOverride?.artist || artist
+  const effItems = actOverride?.items || items
+  const effClaims = actOverride?.claims || claims
+  const effAct = actOverride?.act || act
+
+  const uni = useMemo(() => buildUniverse({ artist: effArtist, act: effAct, items: effItems, claims: effClaims, T }), [effArtist, effAct, effItems, effClaims, T])
+  const worlds = useMemo(() => deriveWorlds({ artist: effArtist, items: effItems }), [effArtist, effItems])
   const evidenceRoute = `/evidence/${artist.id}`
 
   // Every found/review node across all planets — the radar's review mode.
+  // A just-confirmed node stays in this list for its bloom duration (bloomIds)
+  // even though its state has already flipped to CONFIRMED — otherwise the row
+  // is removed from the panel in the SAME render that adds the bloom class, and
+  // the "moment of confirmation" (Master-Class Pillar 1) is never seen.
   const needsNodes = useMemo(() => {
     const out = []
     for (const p of PLANETS) {
       for (const n of uni.planets[p.key].nodes) {
-        if (n.state === NODE.FOUND || n.state === NODE.REVIEW) out.push({ node: n, planet: p.key })
+        if (n.state === NODE.FOUND || n.state === NODE.REVIEW || bloomIds.has(n.id)) out.push({ node: n, planet: p.key })
       }
     }
     return out
-  }, [uni])
+  }, [uni, bloomIds])
   const foundClaims = needsNodes.filter((x) => x.node.state === NODE.FOUND && x.node.claim)
 
   // The dashboard's Next-step card can open the review mode without leaving the radar.
@@ -128,7 +219,10 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
     if (key === 'needsYou' && foundClaims.length > 0) setReview(true)
   }
 
-  const blossom = claims.length === 0 && items.filter((i) => i.item_type === 'link').length === 0
+  // "New Act starts empty" honesty (canon: per-Act evidence is non-transferable) —
+  // derived from the ACTIVE Act's own data, so switching to a fresh Act shows
+  // its own empty/needs-you states, never the previous Act's content.
+  const blossom = effClaims.length === 0 && effItems.filter((i) => i.item_type === 'link').length === 0
 
   async function confirm(node) {
     if (!node?.claim || confirming) return
@@ -137,6 +231,7 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
     try {
       await updateClaim(c.id, { artist_approved: true })
       onClaimsChange((prev) => prev.map((x) => x.id === c.id ? { ...x, artist_approved: true } : x))
+      triggerBloom(node.id)
       clearTimeout(undoRef.current)
       setUndo({ claim: c })
       undoRef.current = setTimeout(() => setUndo(null), 7000)
@@ -164,6 +259,7 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
       for (const n of list) await updateClaim(n.claim.id, { artist_approved: true })
       const ids = new Set(list.map((n) => n.claim.id))
       onClaimsChange((prev) => prev.map((x) => ids.has(x.id) ? { ...x, artist_approved: true } : x))
+      triggerBloom(list.map((n) => n.id))
       flash(`${list.length} claims confirmed — each added to ${destinationOf(list[0].claim)}`)
     } finally { setBulkBusy(false) }
   }
@@ -180,7 +276,7 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
   const rowProps = {
     S, T,
     onEvidence: goEvidence,
-    artist, onArtistChange, onActChange, onItemsRefresh, onClaimsChange,
+    artist: effArtist, onArtistChange, onActChange, onItemsRefresh, onClaimsChange,
   }
 
   return (
@@ -217,7 +313,9 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
 
       {blossom ? (
         <div className="relative py-10 text-center">
-          <CenterStar artist={artist} T={T} dim />
+          <CenterStar artist={effArtist} T={T} S={S} dim
+            onOpenSwitch={() => setActSheet(true)}
+            onTagClick={() => setSelected('identity')} />
           <h3 className="font-display mt-5 text-xl font-bold text-ink">{S.blossomTitle}</h3>
           <p className="mx-auto mt-1.5 max-w-[300px] text-xs leading-relaxed text-muted">{S.blossomBody}</p>
           <button className="btn-primary mt-4 px-4 py-2.5 text-xs" onClick={() => nav(evidenceRoute)}>{S.blossomCta}</button>
@@ -229,7 +327,9 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
           <div className="absolute inset-[9%] rounded-full border border-line" aria-hidden />
           <div className="absolute inset-[27%] rounded-full border border-line" aria-hidden />
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            <CenterStar artist={artist} T={T} />
+            <CenterStar artist={effArtist} T={T} S={S}
+              onOpenSwitch={() => setActSheet(true)}
+              onTagClick={() => setSelected('identity')} />
           </div>
           {PLANETS.map((p) => {
             const info = uni.planets[p.key]
@@ -319,6 +419,7 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
               {panelNodes.map((n) => (
                 <PlanetRow key={n.id} node={n} planet={selected} {...rowProps}
                   busy={confirming === n.id}
+                  bloom={bloomIds.has(n.id)}
                   onConfirm={() => confirm(n)}
                   onSaved={() => flash(S.fill.savedInPlace)} />
               ))}
@@ -344,6 +445,7 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
             {needsNodes.map(({ node: n, planet }) => (
               <PlanetRow key={`rv-${planet}-${n.id}`} node={n} planet={planet} {...rowProps}
                 busy={confirming === n.id}
+                bloom={bloomIds.has(n.id)}
                 onConfirm={() => confirm(n)}
                 onSaved={() => flash(S.fill.savedInPlace)} />
             ))}
@@ -352,6 +454,35 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
             )}
           </div>
         </div>
+      </BottomSheet>
+
+      {/* ── ACT SWITCH — center-star only (Design Spec §MULTI-ACT). One Person,
+            several Acts; picking one swaps the whole universe above — never a
+            merge. A non-active Act with no evidence yet is shown honestly
+            (radar's own empty/needs-you states render once it's selected). ── */}
+      <BottomSheet open={actSheet} onClose={() => setActSheet(false)} title={S.actSwitch.title}>
+        <div className="space-y-2">
+          {acts.map((a) => {
+            const isActive = a.id === activeActId
+            return (
+              <button key={a.id} type="button" onClick={() => pickAct(a.id)} disabled={actBusy}
+                className={`flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-start transition-colors disabled:opacity-60 ${
+                  isActive ? 'border-line2 bg-surface2' : 'border-line bg-surface2 hover:bg-raise'
+                }`}>
+                {a.photo_url
+                  ? <img src={a.photo_url} alt="" className="h-9 w-9 shrink-0 rounded-full border border-line2 object-cover" />
+                  : <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-line2 bg-surface font-display text-sm text-ink">{(a.stage_name || '★').slice(0, 1)}</span>}
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-sm font-semibold text-ink">{a.stage_name}</span>
+                  {a.genre && <span className="chip mt-0.5 inline-flex bg-na-bg text-[10px] text-muted">{a.genre}</span>}
+                </span>
+                {isActive && <span className="chip shrink-0 bg-[rgba(190,226,78,0.10)] text-[10px] text-[#CBEE72]">✓ {S.actSwitch.active}</span>}
+              </button>
+            )
+          })}
+          {acts.length === 0 && <p className="py-4 text-center text-xs text-muted">—</p>}
+        </div>
+        <p className="mt-3 text-[11px] leading-relaxed text-faint">{S.actSwitch.newActHint}</p>
       </BottomSheet>
     </div>
   )
@@ -363,7 +494,7 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
 // identifiable reference), (3) the honest proves / doesn't-prove line. The
 // button names what it confirms. Non-claim rows keep the inline expander +
 // in-place fill form. Never a second modal above the panel.
-function PlanetRow({ node: n, planet, S, T, busy, onConfirm, onEvidence, artist, onArtistChange, onActChange, onItemsRefresh, onClaimsChange, onSaved }) {
+function PlanetRow({ node: n, planet, S, T, busy, bloom, onConfirm, onEvidence, artist, onArtistChange, onActChange, onItemsRefresh, onClaimsChange, onSaved }) {
   const [open, setOpen] = useState(false)
   const chip = NODE_CHIP[n.state]
   const actionable = (n.state === NODE.FOUND || n.state === NODE.REVIEW) && !!n.claim
@@ -382,7 +513,7 @@ function PlanetRow({ node: n, planet, S, T, busy, onConfirm, onEvidence, artist,
 
   if (actionable) {
     return (
-      <div className={`rounded-xl border border-line bg-surface2 px-3 py-3 transition ${busy ? 'opacity-60' : ''}`}>
+      <div className={`rounded-xl border border-line bg-surface2 px-3 py-3 transition ${busy ? 'opacity-60' : ''} ${bloom ? 'bloom-confirm' : ''}`}>
         <div className="flex items-start gap-3">
           {icon}
           <div className="min-w-0 flex-1">
@@ -411,7 +542,7 @@ function PlanetRow({ node: n, planet, S, T, busy, onConfirm, onEvidence, artist,
   }
 
   return (
-    <div className={`rounded-xl border border-line bg-surface2 px-3 py-3 transition ${busy ? 'opacity-60' : ''}`}>
+    <div className={`rounded-xl border border-line bg-surface2 px-3 py-3 transition ${busy ? 'opacity-60' : ''} ${bloom ? 'bloom-confirm' : ''}`}>
       <div className="flex items-center gap-3">
         {icon}
         <span className="min-w-0 flex-1">
@@ -621,18 +752,32 @@ function MissingFill({ node, artist, S, onArtistChange, onActChange, onItemsRefr
   )
 }
 
-function CenterStar({ artist, T, dim }) {
-  // The artist IS the center of the universe — photo first, in the one gold aura.
+// The artist IS the center of the universe — photo first, in the one gold aura.
+// The whole identity block is the Act-switch trigger (Design Spec §MULTI-ACT):
+// tapping the stage name opens the Act-switch sheet; the active Act's genre
+// renders as a small chip underneath, itself tappable → the Identity panel.
+function CenterStar({ artist, T, S, dim, onOpenSwitch, onTagClick }) {
   return (
     <div className={`text-center transition-opacity ${dim ? 'opacity-50' : ''}`}>
-      {artist.photo_url
-        ? <img src={artist.photo_url} alt="" className="mx-auto h-20 w-20 rounded-full border border-gold/70 object-cover shadow-[0_0_28px_rgba(242,192,99,0.25)]" />
-        : <span className="mx-auto grid h-20 w-20 place-items-center rounded-full border border-gold/70 bg-surface2 font-display text-xl text-ink shadow-[0_0_28px_rgba(242,192,99,0.18)]">
-            {(artist.stage_name || '★').slice(0, 1)}
-          </span>}
-      <span className="font-display mt-2 block text-sm font-bold tracking-[-0.01em] text-ink">
-        {artist.stage_name || T.radar.universe.you}
-      </span>
+      <button type="button" onClick={onOpenSwitch} aria-haspopup="dialog" aria-label={S?.actSwitch?.switchAria}
+        className="mx-auto flex flex-col items-center rounded-2xl px-2 py-1 transition-opacity hover:opacity-90">
+        {artist.photo_url
+          ? <img src={artist.photo_url} alt="" className="mx-auto h-20 w-20 rounded-full border border-gold/70 object-cover shadow-[0_0_28px_rgba(242,192,99,0.25)]" />
+          : <span className="mx-auto grid h-20 w-20 place-items-center rounded-full border border-gold/70 bg-surface2 font-display text-xl text-ink shadow-[0_0_28px_rgba(242,192,99,0.18)]">
+              {(artist.stage_name || '★').slice(0, 1)}
+            </span>}
+        <span className="font-display mt-2 flex items-center gap-1 text-sm font-bold tracking-[-0.01em] text-ink">
+          {artist.stage_name || T.radar.universe.you}
+          <span aria-hidden className="text-[10px] text-faint">▾</span>
+        </span>
+      </button>
+      {artist.genre && (
+        <button type="button" onClick={(e) => { e.stopPropagation(); onTagClick?.() }}
+          aria-label={S?.actSwitch?.genreTagAria ? S.actSwitch.genreTagAria(artist.genre) : artist.genre}
+          className="chip mt-1 bg-na-bg text-[10px] text-muted transition-colors hover:text-ink">
+          {artist.genre}
+        </button>
+      )}
     </div>
   )
 }

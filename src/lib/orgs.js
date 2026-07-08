@@ -2,10 +2,27 @@
 // Bootstrap, memberships, members/invites, subscription/seats. Demo-guarded.
 // RLS (008) + RPCs (009) enforce tenancy + seat limits server-side; these are thin wrappers.
 import { supabase } from './supabase.js'
+import { ROLES } from './constants.js'
 import {
   DEMO, demoOrg, demoSubscription, demoMemberships, demoMembers, demoRadarRecords, demoUpgradeRequests, demoInviteInfo,
   demoAccessRequests, demoRequestArtistAccess, demoRespondToAccessRequest, demoRevokeArtistAccess,
 } from './demo.js'
+
+// Maps role_assignment.functional_role (the DB vocabulary — includes rep/
+// production seniority tiers like artist_manager/booking_agent) onto the app's
+// 5 top-level ROLES used for nav/routing (ROUND 4: the ACTIVE workspace's
+// functional_role drives nav/home, not a single global profile role). Client-
+// side normalization only — never writes back to the DB.
+function normalizeFunctionalRole(fr) {
+  switch (fr) {
+    case 'artist': return ROLES.ARTIST
+    case 'booking_manager': case 'booker': case 'venue_programmer': return ROLES.BOOKER
+    case 'agency': case 'artist_manager': case 'booking_agent': case 'roster_coordinator': case 'viewer': return ROLES.AGENCY
+    case 'producer': return ROLES.PRODUCER
+    case 'operator': return ROLES.OPERATOR
+    default: return null
+  }
+}
 
 // ── Bootstrap a personal solo org at signup (§19.5) ──
 export async function bootstrapOrg({ name, functionalRole, email, displayName }) {
@@ -28,7 +45,25 @@ export async function getMyMemberships() {
     .select('id, org_role, status, organization:organization_id(id, name, slug, plan)')
     .eq('status', 'active')
   if (error) throw error
-  return data ?? []
+  const memberships = data ?? []
+  // Attach the CALLER's functional_role per org (role_assignment, migration 008)
+  // so OrgContext can derive the effective nav/routing role from the ACTIVE
+  // workspace instead of a single global profile role (ROUND 4 canon: person →
+  // workspace → role). Read-only, best-effort: any failure here just leaves
+  // functional_role unset and the caller falls back to the profile role — it
+  // never blocks the membership list itself from loading.
+  try {
+    const { data: { user } = {} } = await supabase.auth.getUser()
+    if (user && memberships.length) {
+      const { data: roles } = await supabase
+        .from('role_assignment')
+        .select('organization_id, functional_role')
+        .eq('person_id', user.id)
+      const byOrg = new Map((roles || []).map((r) => [r.organization_id, r.functional_role]))
+      for (const m of memberships) m.functional_role = normalizeFunctionalRole(byOrg.get(m.organization?.id))
+    }
+  } catch { /* non-blocking */ }
+  return memberships
 }
 
 export async function getActiveOrgId() {

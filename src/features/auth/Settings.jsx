@@ -142,8 +142,12 @@ function RepresentationSection({ T, toast }) {
 
 export default function Settings() {
   const { T, lang } = useLang()
-  const { user, profile, role, signOut, reloadProfile } = useAuth()
-  const { activeOrg, isAgency, isOwner } = useOrg()
+  // baseRole = the static profile role (identity-level; only used for the
+  // profiles.role write in saveProfile). role = the ACTIVE workspace's
+  // effective role (ROUND 4) — used for anything nav/route-related below, so
+  // this screen reflects whichever workspace is currently active.
+  const { user, profile, role: baseRole, signOut, reloadProfile } = useAuth()
+  const { activeOrg, isAgency, isOwner, role } = useOrg()
   const nav = useNavigate()
   const toast = useToast()
   const [name, setName] = useState(profile?.full_name || '')
@@ -185,7 +189,7 @@ export default function Settings() {
   async function saveProfile() {
     setSaving(true); setError(''); setSaved(false)
     try {
-      await upsertProfile({ id: user.id, role, full_name: name.trim() || null })
+      await upsertProfile({ id: user.id, role: baseRole, full_name: name.trim() || null })
       await reloadProfile()
       setSaved(true)
       setTimeout(() => setSaved(false), 2000)

@@ -36,8 +36,11 @@ function addWorkspaceRoute(role) {
 // (not just when multi-org), since it is also the "add a workspace" surface.
 export default function ContextSwitcher() {
   const { T } = useLang()
-  const { memberships, activeOrgId, switchOrg } = useOrg()
-  const { role, profile } = useAuth()
+  // role: the ACTIVE workspace's effective role (ROUND 4), so the label under
+  // the avatar and the "add workspace" destination follow whichever workspace
+  // is selected right now, not a single static profile role.
+  const { memberships, activeOrgId, switchOrg, role } = useOrg()
+  const { profile } = useAuth()
   const [open, setOpen] = useState(false)
 
   const active = memberships?.find((m) => m.organization?.id === activeOrgId) || memberships?.[0]
