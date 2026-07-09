@@ -34,8 +34,15 @@ export const T = {
     saving: 'Saving…',
     aiAssistedBeta: 'AI-assisted (beta)',
   },
+  authScene: {
+    eyebrow: 'Pre-booking proof',
+    tagline: 'The evidence behind the night.',
+    taglineSignup: 'Your nights, made provable.',
+    disclaimer: 'LOCK shows evidence only — not a guarantee.',
+  },
   login: {
     title: 'Welcome back',
+    heroLine: 'Sign in to your proof workspace.',
     email: 'Email',
     password: 'Password',
     cta: 'Sign in',

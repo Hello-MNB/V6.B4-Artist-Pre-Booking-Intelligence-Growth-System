@@ -34,8 +34,15 @@ export const T = {
     saving: 'שומר…',
     aiAssistedBeta: 'מבוסס-AI (בטא)',
   },
+  authScene: {
+    eyebrow: 'הוכחה לפני הזמנה',
+    tagline: 'העדות שמאחורי הופעה.',
+    taglineSignup: 'ההופעות שלך — עם הוכחה.',
+    disclaimer: 'LOCK מציג עדויות בלבד — לא ערובה.',
+  },
   login: {
     title: 'ברוכים השבים',
+    heroLine: 'היכנס/י למרחב ההוכחות שלך.',
     email: 'אימייל',
     password: 'סיסמה',
     cta: 'כניסה',
@@ -51,6 +58,7 @@ export const T = {
   },
   signup: {
     title: 'בוא נבנה לך פרופיל מקצועי',
+    heroLine: 'העבודה שלך משתנה. החשבון שלך נשאר.',
     name: 'שם',
     firstName: 'שם פרטי',
     firstNamePlaceholder: 'פרטי',

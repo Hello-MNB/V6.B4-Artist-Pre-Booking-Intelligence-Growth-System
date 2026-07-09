@@ -70,7 +70,7 @@ export default function Login() {
   return (
     <AuthScene>
       <h1 className="mb-1 text-2xl font-bold text-ink">{T.login.title}</h1>
-      <p className="mb-6 text-sm text-muted">Sign in to your proof workspace.</p>
+      <p className="mb-6 text-sm text-muted">{T.login.heroLine}</p>
       <form onSubmit={onSubmit}>
         {alreadyExists && (
           <p className="mb-3 rounded-lg border border-accent/30 bg-accent/10 px-3 py-2 text-sm text-ink">
