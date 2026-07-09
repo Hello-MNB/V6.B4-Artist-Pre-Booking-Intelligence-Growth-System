@@ -80,8 +80,16 @@ function RealAuthProvider({ children }) {
     // /select (UserTypeSelect) AFTER auth, which creates the profile row. Keeps the
     // flow uniform for email + OAuth: auth → choose user-type → route. The name is
     // stashed in auth metadata so /select can persist it.
+    // emailRedirectTo must match the surface the user signed up on (standalone
+    // app.lock.show vs the /app embed) — OAuth already does this; email signup
+    // must too, or confirmation links bounce to the wrong deployment.
+    const base = import.meta.env.BASE_URL || '/'
     const { data, error } = await supabase.auth.signUp({
-      email, password, options: { data: { full_name: fullName ?? null } },
+      email, password,
+      options: {
+        data: { full_name: fullName ?? null },
+        emailRedirectTo: window.location.origin + base,
+      },
     })
     if (error) throw error
     return data

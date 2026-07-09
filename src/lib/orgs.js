@@ -71,7 +71,18 @@ export async function getMyMemberships() {
 }
 
 export async function getActiveOrgId() {
-  if (DEMO) return demoOrg.id
+  if (DEMO) {
+    // Respect the demo persona just picked at the login chooser so each entity
+    // lands on ITS OWN workspace (audit #2: was hardcoded to the artist org, so
+    // the agency chip wrongly landed on /artist/home). artist→artist org,
+    // agency/booker→management org, producer→producer org.
+    try {
+      const r = localStorage.getItem('gigproof_demo_role')
+      if (r === 'agency' || r === 'booker') return 'demo-org-3'
+      if (r === 'producer') return 'demo-org-2'
+    } catch { /* storage unavailable — fall through to artist org */ }
+    return demoOrg.id
+  }
   const { data } = await supabase.from('active_role_context').select('active_organization_id').maybeSingle()
   return data?.active_organization_id ?? null
 }

@@ -18,7 +18,9 @@ export const ROLES = {
   OPERATOR: 'operator',
 }
 export const ROLE_VALUES = Object.values(ROLES)
-// The roles a user may pick at signup (excludes the internal operator role).
+// Valid non-operator role values. NOTE: PRODUCER has NO self-signup UI card
+// (UserTypeSelect renders artist/agency/booker only; producers arrive via
+// accountless magic-link confirm) — it is a valid role, not a reachable signup.
 export const SIGNUP_ROLES = [ROLES.ARTIST, ROLES.BOOKER, ROLES.PRODUCER, ROLES.AGENCY]
 
 // OAuth default ON since 8 Jul 2026 — the Google provider is ENABLED in the

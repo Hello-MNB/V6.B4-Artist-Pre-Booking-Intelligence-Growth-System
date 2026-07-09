@@ -6,21 +6,24 @@ import { AuthProvider } from './features/auth/AuthProvider.jsx'
 import { OrgProvider } from './context/OrgContext.jsx'
 import { LangProvider } from './context/LangContext.jsx'
 import { ToastProvider } from './components/ui.jsx'
+import ErrorBoundary from './components/ErrorBoundary.jsx'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     {/* BASE_URL: '/' standalone · '/app/' when embedded in the public website */}
     <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '')}>
-      <LangProvider>
-        <AuthProvider>
-          <OrgProvider>
-            <ToastProvider>
-              <App />
-            </ToastProvider>
-          </OrgProvider>
-        </AuthProvider>
-      </LangProvider>
+      <ErrorBoundary>
+        <LangProvider>
+          <AuthProvider>
+            <OrgProvider>
+              <ToastProvider>
+                <App />
+              </ToastProvider>
+            </OrgProvider>
+          </AuthProvider>
+        </LangProvider>
+      </ErrorBoundary>
     </BrowserRouter>
   </React.StrictMode>
 )

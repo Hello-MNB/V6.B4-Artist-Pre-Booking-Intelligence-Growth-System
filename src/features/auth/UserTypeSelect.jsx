@@ -56,7 +56,15 @@ export default function UserTypeSelect() {
       // functional role. Idempotent server-side; non-blocking if already bootstrapped.
       try {
         await bootstrapOrg({ name: full_name, functionalRole: role, email: user.email, displayName: full_name })
-      } catch { /* already bootstrapped or RPC unavailable — proceed */ }
+      } catch (e) {
+        // "already bootstrapped" is benign (idempotent). Anything else means the
+        // user has a profile but NO org/role — surface it instead of silently
+        // proceeding into broken org-dependent screens later (audit finding #3).
+        const msg = String(e?.message || e)
+        if (!/already|exists|duplicate/i.test(msg)) {
+          console.error('[bootstrapOrg] failed — user may lack an organization:', msg)
+        }
+      }
       await reloadProfile()
     }
     nav(route)

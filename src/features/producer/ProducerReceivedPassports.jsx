@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import * as UI from '../../components/ui.jsx'
 import { PageShell, Field, GpIcon } from '../../components/ui.jsx'
 import { useLang } from '../../context/LangContext.jsx'
