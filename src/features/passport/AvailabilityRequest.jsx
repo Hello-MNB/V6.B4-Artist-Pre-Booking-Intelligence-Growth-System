@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { getArtist, createRequest } from '../../lib/db.js'
 import { createNotification } from '../../lib/notifications.js'
+import { logEvent, EVENTS } from '../../lib/analytics.js'
 import { PageShell, Wordmark, Field, Spinner, Loading } from '../../components/ui.jsx'
 import { useLang } from '../../context/LangContext.jsx'
 
@@ -47,6 +48,8 @@ export default function AvailabilityRequest() {
     setBusy(true); setError('')
     try {
       await createRequest({ artist_id: id, ...f, event_date: f.event_date || null })
+      // GATE signal — a booking manager reacted to a real Passport.
+      logEvent(EVENTS.REQUEST_SENT, { artist_id: id })
       // P1-1 — fire-and-forget (not awaited): a notification hiccup must never
       // block or delay the booker's confirmation screen.
       createNotification({

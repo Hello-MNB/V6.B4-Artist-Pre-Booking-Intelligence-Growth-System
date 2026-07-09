@@ -5,6 +5,7 @@ import { PlatformLogo, detectPlatform } from '../../components/PlatformLogo.jsx'
 import { useLang } from '../../context/LangContext.jsx'
 import { SOURCE_STATUS, methodLabelFor } from '../../lib/constants.js'
 import { getPublicPassport, recordPassportView, recordProfessionalReaction } from '../../lib/db.js'
+import { logEvent, EVENTS } from '../../lib/analytics.js'
 
 // ── A15 · The public Passport — the WEDGE (warm cinematic night) ─────────────
 // Public, buyer-facing, no login. Reads LIVE via anon + RLS; the firewall is
@@ -78,6 +79,8 @@ export default function Passport() {
         setClaims(data.claims ?? [])
         setView('ready')
         recordPassportView(id) // measurement, never blocks
+        // GATE funnel — a real published Passport was viewed (unified analytics_event).
+        logEvent(EVENTS.PASSPORT_VIEWED, { artist_id: id })
       } catch {
         if (alive) setView('error') // network/server — distinct from not-found
       }

@@ -4,6 +4,7 @@ import { useAuth } from './AuthProvider.jsx'
 import { Field, Spinner, ErrorNote, SocialAuthButtons, OrDivider } from '../../components/ui.jsx'
 import { useLang } from '../../context/LangContext.jsx'
 import { OAUTH_ENABLED } from '../../lib/constants.js'
+import { logEvent, EVENTS } from '../../lib/analytics.js'
 import { PENDING_ROLE_KEY, JOB_ROLES } from './roleHint.js'
 import AuthScene from './AuthScene.jsx'
 
@@ -52,7 +53,7 @@ export default function Signup() {
           /* genuine confirmation-required: fall through to confirmPending */
         }
       }
-      if (session) nav('/select')
+      if (session) { logEvent(EVENTS.SIGNUP); nav('/select') }
       else setConfirmPending(true)
     } catch (err) {
       setError(err?.message?.includes('registered') ? T.signup.error : (err.message || T.common.error))

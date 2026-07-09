@@ -4,6 +4,7 @@ import { useAuth } from './AuthProvider.jsx'
 import { Field, Spinner, ErrorNote, SocialAuthButtons } from '../../components/ui.jsx'
 import { useLang } from '../../context/LangContext.jsx'
 import { ROLES, OAUTH_ENABLED } from '../../lib/constants.js'
+import { logEvent, EVENTS } from '../../lib/analytics.js'
 import AuthScene from './AuthScene.jsx'
 
 export default function Login() {
@@ -22,6 +23,7 @@ export default function Login() {
     setLoading(true)
     try {
       await signIn({ email, password })
+      logEvent(EVENTS.LOGIN)
       // Honor the return path RequireAuth/AcceptInvite stashed in state.from
       // (deep link or /invite/:token) — otherwise every login dead-drops on "/"
       // and invited teammates / bounced deep-links never reach where they meant
