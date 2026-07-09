@@ -1,9 +1,9 @@
 {
   "_note": "SCAFFOLD ONLY — requires native Hebrew editor review before shipping. Authored for structure; not production-ready.",
   "nav": {
-    "artists": "לאמנים",
-    "bookers": "לאמרגנים",
-    "producers": "למפיקים",
+    "artists": "אמנים",
+    "bookers": "אמרגנים",
+    "producers": "מפיקים",
     "howItWorks": "איך זה עובד",
     "methodology": "מתודולוגיה",
     "pricing": "תמחור",
