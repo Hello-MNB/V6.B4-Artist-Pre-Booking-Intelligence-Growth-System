@@ -26,7 +26,7 @@ priority board (docs/TASK-STATUS-BOARD.md) + open pending-from-owner list.
 
 ## Migrations
 - Live DB at 025/026. 021 FROZEN (vocab, needs app lockstep — bootstrapOrg 'booker' latent bug noted).
-- 027 written NOT applied (workspace_type, artist_access scopes/status, can_access_artist fix, SECURITY DEFINER RPCs) — awaiting Maria's approval. Open ruling: 'producer' vs 'production' enum value; consent 4-vs-6.
+- **027 APPLIED to live DB 9 Jul** ('Success. No rows returned' — screenshot verified). Unlocks real consent handshake + representation/production workspaces; 'producer' enum word stands (owner ran as written). Was: 027 written NOT applied (workspace_type, artist_access scopes/status, can_access_artist fix, SECURITY DEFINER RPCs) — awaiting Maria's approval. Open ruling: 'producer' vs 'production' enum value; consent 4-vs-6.
 - 028 planned bundle: 'discovered' source_type + HE/EN name fields, M1 analytics events, plan capability flags.
 
 ## Monetization (APPROVED)
@@ -40,7 +40,7 @@ No booking commission ever. Each entity pays its own plan; artist always owns/pa
 
 ## Open pending-from-Maria (repeat at end of every reply until resolved)
 1. Verify real AI labeling works on v6-b4 (key now in Vercel ✅ — needs a live test after redeploy).
-2. Approve migration 027 (+ ruling: 'producer' vs 'production'; consent 4-vs-6).
+2. RESOLVED 9 Jul: 027 applied (producer word stands). Remaining sub-ruling: consent 4-vs-6 (low urgency).
 3. Fixed pilot price (rec ₪179).
 4. RESOLVED — domain LIVE, rebrand deployed. Residual: Supabase URL update (above). Was: DOMAIN PURCHASED 8 Jul: **lock.show** (GoDaddy, +Full Domain Protection, receipt to garmel.maria@gmail.com). Mapping: lock.show=site, app.lock.show=app. RESOLVED 8 Jul: owner ordered full rebrand — product renamed GIGPROOF → LOCK everywhere in user-facing copy (privacy policy's temporary-name clause updated accordingly). Code URL updates applied; DNS attach still pending.
 5. Google OAuth: client CREATED ✅ ('GIGPROOF Supabase', redirect verified). Final step (Maria): paste Client ID+Secret into Supabase Google provider, toggle ON, Save → then ME: VITE_OAUTH_ENABLED=1 (Vercel env + .env.embed) + rebuild.
