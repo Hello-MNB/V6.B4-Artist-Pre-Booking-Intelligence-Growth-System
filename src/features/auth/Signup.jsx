@@ -9,7 +9,7 @@ import AuthScene from './AuthScene.jsx'
 
 export default function Signup() {
   const { T } = useLang()
-  const { signUp, signInWithOAuth, demo } = useAuth()
+  const { signUp, signIn, signInWithOAuth, demo } = useAuth()
   const nav = useNavigate()
   const loc = useLocation()
   const [fullName, setFullName] = useState('')
@@ -34,12 +34,26 @@ export default function Signup() {
     setLoading(true)
     try {
       const data = await signUp({ email, password, fullName })
-      if (!data.session) {
-        // Supabase requires email confirmation — user is not yet logged in.
-        setConfirmPending(true)
-      } else {
-        nav('/select')
+      // PKCE gotcha: with flowType:'pkce' (needed for Google OAuth), signUp
+      // returns session:null EVEN when the project auto-confirms emails
+      // (mailer_autoconfirm=true) — it defers the session to a code exchange.
+      // That dropped every email signup onto the "check your inbox" dead-end
+      // and back to /login (Maria, 9 Jul), despite no confirmation being
+      // required. When there's no session, try an immediate password sign-in:
+      //  • auto-confirm ON  → sign-in succeeds → straight into /select.
+      //  • confirmation ON  → sign-in throws "Email not confirmed" → we show
+      //    the real "check your inbox" screen. Correct in both worlds.
+      let session = data.session
+      if (!session) {
+        try {
+          const signedIn = await signIn({ email, password })
+          session = signedIn?.session ?? null
+        } catch {
+          /* genuine confirmation-required: fall through to confirmPending */
+        }
       }
+      if (session) nav('/select')
+      else setConfirmPending(true)
     } catch (err) {
       setError(err?.message?.includes('registered') ? T.signup.error : (err.message || T.common.error))
     } finally {
