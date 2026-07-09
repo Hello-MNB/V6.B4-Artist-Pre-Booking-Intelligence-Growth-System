@@ -31,6 +31,17 @@ Any text produced for LOCK — UI, marketing, legal, docs — MUST use these ter
 | Four data doors | official API · consented OAuth · artist artifact · artist-confirmed discovery (surface, never publish; no cold directories) |
 | Certainty (claim ladder, canon-pending final ruling) | COUNTERPARTY_CONFIRMED > ARTIFACT_SUPPORTED > OAUTH_VERIFIED > SELF_REPORTED (+ STALE/CONFLICTED states) |
 
+## HE lexicon (from canon Lexicon v1.1 / Localization Matrix v2.0 — for the Hebrew pass)
+| Term | Locked HE | Forbidden |
+|---|---|---|
+| Artist view / Buyer view | תצוגת אמן / תצוגת קונה | — |
+| PRODUCER-CONFIRMED | מאושר ע"י מפיק | אושר ע״י מפיק |
+| SELF-REPORTED | מדווח ע"י האמן | הצהרת האמן |
+| ARTIFACT-SUPPORTED | נתמך בראיה/מסמך/מקור | נתמך בראיות |
+| generic "verified" | — | **מאומת** (never generic; current repo has 10 occurrences → HE-pass fix list) |
+| Draw hero (public) | כוח בוקינג | עוצמת מכירה (INTERNAL ONLY — never in UI) |
+| Act | ⏳ NO locked HE term — R00 ruling pending; never invent one |
+
 ## Voice law
 Professional restraint; evidence-grade; show-business warmth without hype. NO emoji in UI/legal copy. No exclamation-mark salesiness. "check, don't trust". EN and HE each fully professional — never mixed in one view (LANGUAGE LAW, see LOCALIZATION-MATRIX.md).
 

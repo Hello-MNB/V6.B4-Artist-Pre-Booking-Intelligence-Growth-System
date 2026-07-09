@@ -46,7 +46,8 @@ No booking commission ever. Each entity pays its own plan; artist always owns/pa
 5. Google OAuth: client CREATED ✅ ('GIGPROOF Supabase', redirect verified). Final step (Maria): paste Client ID+Secret into Supabase Google provider, toggle ON, Save → then ME: VITE_OAUTH_ENABLED=1 (Vercel env + .env.embed) + rebuild.
 6. Green Invoice: DEFERRED by owner (9 Jul) until first payment intent (S3 signal: payment_reference_created). Launch plan: docs/LAUNCH-PLAN.md.
 8. Send counsel email (docs/COUNSEL-EMAIL-DRAFT.md).
-9. Later, low urgency: rotate Anthropic + Tavily keys (both pasted in chat).
+9. NEW ruling needed: Hebrew term for 'Act' (canon has none; forbidden to invent).
+10. Later, low urgency: rotate Anthropic + Tavily keys (both pasted in chat).
 
 ## Document governance (8 Jul, owner directive)
 - docs/GLOSSARY.md is BINDING for all agents/documents (created after R00 rejected privacy v0.2 for דרכון/מראה/Netlify/no-AI violations).
