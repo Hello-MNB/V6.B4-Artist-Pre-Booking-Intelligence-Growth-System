@@ -13,6 +13,16 @@ export const isConfigured = DEMO || realConfig
 // No real client in DEMO — db.js + the public Passport short-circuit to fixtures.
 export const supabase = (!DEMO && realConfig)
   ? createClient(url, anon, {
-      auth: { persistSession: true, autoRefreshToken: true },
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        // OAuth (Google) fix: Supabase's provider redirect returns a `?code=`
+        // (PKCE). Without flowType:'pkce' + detectSessionInUrl the client can't
+        // exchange it, so the user lands back on the login screen after Google
+        // — the exact bug Maria hit 9 Jul. PKCE is also the secure default for
+        // a browser SPA.
+        flowType: 'pkce',
+        detectSessionInUrl: true,
+      },
     })
   : null
