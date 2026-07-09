@@ -68,16 +68,26 @@ export const demoArtist2 = {
 // demo-org   = Shai's personal solo workspace (the PERLMAN artist identity).
 // demo-org-2 = INSOMNIA TLV, his event-production brand (closest existing enum is
 // plan 'agency' — the schema has no dedicated "production brand" org type). ──
-export const demoOrg = { id: 'demo-org', get name() { return L('Shai Perlman', 'שי פרלמן') }, slug: 'shai-perlman', plan: 'solo', created_by: 'demo-user', created_at: '2026-01-01T00:00:00Z' }
+export const demoOrg = { id: 'demo-org', get name() { return L('Shai Perlman', 'שי פרלמן') }, slug: 'shai-perlman', plan: 'solo', workspace_type: 'artist', created_by: 'demo-user', created_at: '2026-01-01T00:00:00Z' }
 export const demoSubscription = { id: 'demo-sub', organization_id: 'demo-org', plan: 'solo', seats_included: 3, seats_used: 1, status: 'active', current_period_end: null }
 // `functional_role` mirrors role_assignment.functional_role (migration 008) —
 // the ACTIVE membership's functional_role is what OrgContext now derives the
 // effective nav/routing role from (canon ROUND 4: switching workspace recomputes
 // role), not a single global profile role. Two real hats on one demo person:
 // Shai's own artist workspace, and his INSOMNIA TLV production/booking brand.
+// `organization.workspace_type` (migration 027) is the SEPARATE axis that picks
+// the production nav set (Team·Events·Requests) over the generic agency roster
+// screen — INSOMNIA TLV is a production company (it runs its own events and
+// books lineups), not a booking/management agency, even though its
+// functional_role still normalizes to the AGENCY nav role today. A THIRD demo
+// workspace (Golan Artist Management) is a genuine representation/booking
+// agency (workspace_type='management') so the roster/access-grant screen
+// (AgencyDashboard) has its own real demo coverage, separate from — and not
+// shadowed by — INSOMNIA's production dashboard.
 export const demoMemberships = [
-  { id: 'dm-self', org_role: 'owner', status: 'active', functional_role: 'artist', organization: { id: 'demo-org', get name() { return L('Shai Perlman', 'שי פרלמן') }, slug: 'shai-perlman', plan: 'solo' } },
-  { id: 'dm-2', org_role: 'owner', status: 'active', functional_role: 'agency', organization: { id: 'demo-org-2', name: 'INSOMNIA TLV', slug: 'insomnia-tlv', plan: 'agency' } },
+  { id: 'dm-self', org_role: 'owner', status: 'active', functional_role: 'artist', organization: { id: 'demo-org', get name() { return L('Shai Perlman', 'שי פרלמן') }, slug: 'shai-perlman', plan: 'solo', workspace_type: 'artist' } },
+  { id: 'dm-2', org_role: 'owner', status: 'active', functional_role: 'agency', organization: { id: 'demo-org-2', name: 'INSOMNIA TLV', slug: 'insomnia-tlv', plan: 'agency', workspace_type: 'producer' } },
+  { id: 'dm-3', org_role: 'owner', status: 'active', functional_role: 'agency', get organization() { return { id: 'demo-org-3', get name() { return L('Golan Artist Management', 'ניהול אמנים גולן') }, slug: 'golan-management', plan: 'agency', workspace_type: 'management' } } },
 ]
 export const demoMembers = [
   { id: 'dm-self', org_role: 'owner', status: 'active', invited_email: null, person: { id: 'demo-user', email: 'demo@lock.test', get display_name() { return L('Shai Perlman', 'שי פרלמן') } } },
@@ -253,25 +263,39 @@ export const demoNotifications = [
 
 // ── artist_access consent handshake (migration 027 target) — DEMO fixture.
 // Seeded with ONE realistic three-hat case (ENTITY-SPEC-ORG §6.1): Shai's own
-// representation workspace (INSOMNIA TLV / demo-org-2) has requested access to
-// Shai's own artist (PERLMAN / demo-artist) — "same grant, same scopes, same
-// revocability" as any other roster member, no special-case "it's me" path.
-// Mutable (like demoEntitlement) so the demo Add-artist/Representation screens
-// can drive the full pending→active→revoked lifecycle end-to-end with no backend.
-let _daaSeq = 2
+// representation workspace (Golan Artist Management / demo-org-3, a genuine
+// management-type org — NOT INSOMNIA, which is production-type) has requested
+// access to Shai's own artist (PERLMAN / demo-artist) — "same grant, same
+// scopes, same revocability" as any other roster member, no special-case
+// "it's me" path. A second, already-active grant with a fuller scope set
+// (upload+share) and a territory/expiry shows the roster-row chip display
+// end-to-end, not just the pending state. Mutable (like demoEntitlement) so
+// the demo Add-artist/Representation screens can drive the full
+// pending→active→revoked lifecycle end-to-end with no backend.
+let _daaSeq = 3
 export const demoAccessRequests = [
   {
     id: 'daa1', artist_id: DEMO_ARTIST_ID, get artist_stage_name() { return 'PERLMAN' },
-    organization_id: 'demo-org-2', organization_name: 'INSOMNIA TLV',
+    organization_id: 'demo-org-3', get organization_name() { return L('Golan Artist Management', 'ניהול אמנים גולן') },
     scope: ['view'], territory: null, status: 'pending', consent_at: null,
     expires_at: null, created_at: '2026-07-01T00:00:00Z',
   },
+  {
+    id: 'daa2', artist_id: 'demo-artist-2', get artist_stage_name() { return L('Idan Raz', 'עידן רז') },
+    organization_id: 'demo-org-3', get organization_name() { return L('Golan Artist Management', 'ניהול אמנים גולן') },
+    scope: ['view', 'upload', 'share'], get territory() { return L('North · Center', 'צפון · מרכז') }, status: 'active',
+    consent_at: '2026-06-15T00:00:00Z', expires_at: '2027-06-15T00:00:00Z', created_at: '2026-06-10T00:00:00Z',
+  },
 ]
+function demoOrgNameFor(orgId) {
+  const m = demoMemberships.find((mm) => mm.organization?.id === orgId)
+  return m?.organization?.name || orgId
+}
 export function demoRequestArtistAccess(orgId, artistId, scope, territory) {
   const artist = artistId === demoArtist2.id ? demoArtist2 : demoArtist
   const row = {
     id: `daa${_daaSeq++}`, artist_id: artistId, artist_stage_name: artist.stage_name,
-    organization_id: orgId, organization_name: orgId === demoOrg.id ? demoOrg.name : 'INSOMNIA TLV',
+    organization_id: orgId, organization_name: demoOrgNameFor(orgId),
     scope: scope?.length ? scope : ['view'], territory: territory || null,
     status: 'pending', consent_at: null, expires_at: null, created_at: new Date().toISOString(),
   }
@@ -296,5 +320,48 @@ export function demoRevokeArtistAccess(id) {
   if (row) row.status = 'revoked'
   return { ok: true }
 }
+
+// ── PRODUCTION WORKSPACE (organization.workspace_type='producer', migration 027)
+// fixtures — INSOMNIA TLV's own `gigs` (008 + 023 gig-depth) rows. Two real
+// events from PERLMAN's own numbered series (matches demoItems di11/di12):
+// #20 already ran (closeout done — the Gig Evidence Refresh loop), #21 is
+// upcoming with a second lineup slot (Idan Raz, guest support) so the
+// grouped-into-events view has a real multi-slot lineup to show. ──
+export const demoOrgGigs = [
+  {
+    id: 'gig1', artist_id: DEMO_ARTIST_ID, get title() { return L('INSOMNIA TLV #20 "See You in the Dark"', 'INSOMNIA TLV #20 "See You in the Dark"') },
+    event_date: '2026-06-05', venue: 'Gagarin', get city() { return L('Tel Aviv', 'תל אביב') },
+    status: 'settled', role_at_event: 'headliner', audience_band: '300-600', closeout_status: 'completed',
+    artist: { stage_name: 'PERLMAN' },
+  },
+  {
+    id: 'gig2', artist_id: DEMO_ARTIST_ID, get title() { return L('INSOMNIA TLV #21 "Black Jack"', 'INSOMNIA TLV #21 "Black Jack"') },
+    event_date: '2026-07-10', venue: 'Gagarin', get city() { return L('Tel Aviv', 'תל אביב') },
+    status: 'confirmed', role_at_event: 'headliner', audience_band: 'unknown', closeout_status: 'pending',
+    artist: { stage_name: 'PERLMAN' },
+  },
+  {
+    id: 'gig3', artist_id: 'demo-artist-2', get title() { return L('INSOMNIA TLV #21 "Black Jack"', 'INSOMNIA TLV #21 "Black Jack"') },
+    event_date: '2026-07-10', venue: 'Gagarin', get city() { return L('Tel Aviv', 'תל אביב') },
+    status: 'hold', role_at_event: 'support', audience_band: 'unknown', closeout_status: 'pending',
+    get artist() { return { get stage_name() { return L('Idan Raz', 'עידן רז') } } },
+  },
+]
+
+// Confirm-requests surface fixture — an artist outside INSOMNIA TLV's own
+// roster (Idan Raz) asking INSOMNIA TLV, as the venue/producer counterparty,
+// to confirm a guest-support claim at one of its real events. Still
+// unanswered (response: null) — the real query (listOrgConfirmRequests)
+// returns `null` (not this array) once DEMO is off, since no RLS path exists
+// yet for the confirming org to list these; this fixture exists ONLY to make
+// the demo build show a populated, honest-looking surface.
+export const demoOrgConfirmRequests = [
+  {
+    id: 'pc1', claim_id: 'dc-idan-1', artist_id: 'demo-artist-2',
+    get artist_stage_name() { return L('Idan Raz', 'עידן רז') },
+    get claim_text() { return L('Guest support slot — INSOMNIA TLV #21 "Black Jack" @ Gagarin', 'סט אורח — INSOMNIA TLV #21 "Black Jack" @ Gagarin') },
+    response: null, revoked: false, responded_at: null, created_at: '2026-07-08T09:00:00Z',
+  },
+]
 
 export { DEMO_ARTIST_ID }

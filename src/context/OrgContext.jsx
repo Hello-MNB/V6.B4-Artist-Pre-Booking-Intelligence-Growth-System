@@ -70,6 +70,14 @@ export function OrgProvider({ children }) {
 
   const active = memberships.find((m) => m.organization?.id === activeOrgId) || memberships[0] || null
   const plan = active?.organization?.plan || 'solo'
+  // workspace_type (migration 027) — a SEPARATE axis from functional_role/plan:
+  // a production company (e.g. INSOMNIA TLV) has functional_role='agency' (same
+  // nav-role family as a booking/management agency) but workspace_type='producer'
+  // — it runs its own events/lineups, so it gets the production nav set instead
+  // of the generic roster screen. Orgs created before 027 (or in DEMO without an
+  // explicit value) default to 'artist', matching the migration's own backfill.
+  const workspaceType = active?.organization?.workspace_type || 'artist'
+  const isProducerWorkspace = workspaceType === 'producer'
 
   // Effective role — recomputed from the ACTIVE workspace every time
   // activeOrgId changes, not read once from a static profile field.
@@ -85,6 +93,8 @@ export function OrgProvider({ children }) {
     orgRole: active?.org_role || null,
     role,
     plan,
+    workspaceType,
+    isProducerWorkspace,
     isAgency: ['agency', 'agency_plus'].includes(plan),
     isOwner: active?.org_role === 'owner',
     isAdmin: ['owner', 'admin'].includes(active?.org_role),

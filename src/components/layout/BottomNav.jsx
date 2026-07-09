@@ -6,9 +6,9 @@ import { getNavTabs, NavIcon } from './navItems.jsx'
 export default function BottomNav() {
   // role: the ACTIVE workspace's effective role (ROUND 4) — NOT the static
   // useAuth() profile role — so switching workspace recomputes the tab set.
-  const { role, isAgency } = useOrg()
+  const { role, isAgency, isProducerWorkspace } = useOrg()
   const { T } = useLang()
-  const tabs = getNavTabs(role, isAgency, T)
+  const tabs = getNavTabs(role, isAgency, T, isProducerWorkspace)
   if (tabs.length === 0) return null
 
   return (

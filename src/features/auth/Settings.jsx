@@ -147,7 +147,7 @@ export default function Settings() {
   // effective role (ROUND 4) — used for anything nav/route-related below, so
   // this screen reflects whichever workspace is currently active.
   const { user, profile, role: baseRole, signOut, reloadProfile } = useAuth()
-  const { activeOrg, isAgency, isOwner, role } = useOrg()
+  const { activeOrg, isAgency, isOwner, role, isProducerWorkspace } = useOrg()
   const nav = useNavigate()
   const toast = useToast()
   const [name, setName] = useState(profile?.full_name || '')
@@ -219,7 +219,7 @@ export default function Settings() {
   return (
     <PageShell max="max-w-md">
       <div className="mb-7 flex items-center justify-end">
-        <Link to={role === ROLES.ARTIST ? '/artist/home' : role === ROLES.AGENCY ? '/agency' : '/'}
+        <Link to={role === ROLES.ARTIST ? '/artist/home' : role === ROLES.AGENCY ? (isProducerWorkspace ? '/production' : '/agency') : '/'}
           className="text-sm text-muted transition hover:text-ink">
           {T.common.back}
         </Link>
@@ -259,7 +259,11 @@ export default function Settings() {
           <Link to="/org/members" className="btn-ghost">{T.org.membersTitle}</Link>
           {!isAgency && <Link to="/org/upgrade" className="btn-ghost">{T.org.upgradeTitle}</Link>}
           {isOwner && <Link to="/org/billing" className="btn-ghost">{T.org.billingTitle}</Link>}
-          {isAgency && <Link to="/agency" className="btn-primary mt-1">{T.agency.title}</Link>}
+          {isAgency && (
+            <Link to={isProducerWorkspace ? '/production' : '/agency'} className="btn-primary mt-1">
+              {isProducerWorkspace ? T.production.title : T.agency.title}
+            </Link>
+          )}
         </div>
       </div>
 

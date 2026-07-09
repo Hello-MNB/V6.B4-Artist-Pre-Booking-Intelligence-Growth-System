@@ -3,7 +3,7 @@ import { ROLES } from '../../lib/constants.js'
 // Shared nav tab definitions — consumed by BottomNav (mobile) and SideNav (desktop).
 // Each tab: { key, label, to, end }
 // `end` mirrors NavLink's `end` prop (exact-match active state).
-export function getNavTabs(role, isAgency, T) {
+export function getNavTabs(role, isAgency, T, isProducerWorkspace = false) {
   const n = T.nav
   // IA correction (canon): artist nav = Radar · Passport · Requests · Account.
   // Readiness left the nav (content lives inside the Radar's readiness surface);
@@ -14,6 +14,15 @@ export function getNavTabs(role, isAgency, T) {
     { key: 'passport', label: n.passport, to: '/artist/passport', end: true },
     { key: 'requests', label: n.requests, to: '/artist/requests', end: true },
     { key: 'account',  label: n.account,  to: '/settings',        end: true },
+  ]
+  // Production-company workspace (organization.workspace_type='producer', 027) —
+  // checked BEFORE the generic agency branch so a production org gets its own
+  // nav set (Team · Events · Requests · Account) instead of the roster tabs.
+  if ((role === ROLES.AGENCY || isAgency) && isProducerWorkspace) return [
+    { key: 'team',      label: n.team,     to: '/production',          end: true },
+    { key: 'events',    label: n.events,   to: '/production/events',   end: true },
+    { key: 'requests',  label: n.requests, to: '/production/requests', end: true },
+    { key: 'account',   label: n.account,  to: '/settings',            end: true },
   ]
   if (role === ROLES.AGENCY || isAgency) return [
     { key: 'roster',   label: n.roster,   to: '/agency',          end: true },
@@ -49,6 +58,10 @@ export function NavIcon({ name }) {
       return <svg {...p}><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"/></svg>
     case 'received':
       return <svg {...p}><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    case 'team':
+      return <svg {...p}><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+    case 'events':
+      return <svg {...p}><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
     case 'account':
       return <svg {...p}><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
     case 'admin':

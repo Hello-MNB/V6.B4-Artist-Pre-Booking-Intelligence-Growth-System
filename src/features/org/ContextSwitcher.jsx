@@ -8,9 +8,10 @@ import { ROLES } from '../../lib/constants.js'
 
 const orgRoleLabel = (r, T) => ({ owner: T.org.roleOwner, admin: T.org.roleAdmin, member: T.org.roleMember }[r] || r)
 
-function workspaceTypeLabel(role, isAgency, T) {
+function workspaceTypeLabel(role, isAgency, T, isProducerWorkspace) {
   const n = T.nav
   if (role === ROLES.ARTIST) return n.workspaceArtist
+  if ((role === ROLES.AGENCY || isAgency) && isProducerWorkspace) return n.workspaceProduction
   if (role === ROLES.AGENCY || isAgency) return n.workspaceManager
   if (role === ROLES.PRODUCER) return n.workspaceProducer
   if (role === ROLES.BOOKER) return n.workspaceBooker
@@ -21,9 +22,9 @@ function workspaceTypeLabel(role, isAgency, T) {
 // "Add workspace" destination — the artist wizard (/onboarding) is
 // ARTIST-ONLY. Every other role must land on its OWN home, never inside
 // another role's screen (bug fix: previously linked everyone to /onboarding).
-function addWorkspaceRoute(role) {
+function addWorkspaceRoute(role, isProducerWorkspace) {
   if (role === ROLES.ARTIST) return '/onboarding'
-  if (role === ROLES.AGENCY) return '/agency'
+  if (role === ROLES.AGENCY) return isProducerWorkspace ? '/production' : '/agency'
   if (role === ROLES.BOOKER) return '/discover'
   if (role === ROLES.PRODUCER) return '/producer/received'
   if (role === ROLES.OPERATOR) return '/admin'
@@ -39,13 +40,13 @@ export default function ContextSwitcher() {
   // role: the ACTIVE workspace's effective role (ROUND 4), so the label under
   // the avatar and the "add workspace" destination follow whichever workspace
   // is selected right now, not a single static profile role.
-  const { memberships, activeOrgId, switchOrg, role } = useOrg()
+  const { memberships, activeOrgId, switchOrg, role, isProducerWorkspace } = useOrg()
   const { profile } = useAuth()
   const [open, setOpen] = useState(false)
 
   const active = memberships?.find((m) => m.organization?.id === activeOrgId) || memberships?.[0]
   const isAgency = ['agency', 'agency_plus'].includes(active?.organization?.plan)
-  const typeLabel = workspaceTypeLabel(role, isAgency, T)
+  const typeLabel = workspaceTypeLabel(role, isAgency, T, isProducerWorkspace)
   const initial = (profile?.full_name || 'G').trim().charAt(0).toUpperCase() || 'G'
 
   return (
@@ -88,7 +89,7 @@ export default function ContextSwitcher() {
             )
           })}
           <Link
-            to={addWorkspaceRoute(role)}
+            to={addWorkspaceRoute(role, isProducerWorkspace)}
             onClick={() => setOpen(false)}
             className="mt-1.5 block w-full py-1.5 text-center text-xs text-muted transition hover:text-accent"
           >

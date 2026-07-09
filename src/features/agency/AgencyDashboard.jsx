@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../auth/AuthProvider.jsx'
 import { listAgencyArtists, listClaimsByArtists, listRequestsForAgency, upsertArtist } from '../../lib/db.js'
-import { requestArtistAccess, listOutgoingAccessRequests } from '../../lib/orgs.js'
+import { requestArtistAccess, listOutgoingAccessRequests, revokeArtistAccess } from '../../lib/orgs.js'
 import AgencyRadarUniverse from './AgencyRadarUniverse.jsx'
 import { PageShell, Loading, ErrorState, StatusChip, Field, Spinner, useToast } from '../../components/ui.jsx'
 import { useLang } from '../../context/LangContext.jsx'
@@ -24,9 +24,27 @@ function parseArtistId(raw) {
 // ── Access-requests card — grants THIS org has requested against artists it
 // does not own. Firewall/canon: a pending grant shows NOTHING about the
 // artist beyond identification — RLS itself hides the artists row until the
-// artist approves, so there is literally no content to leak here.
-function AccessRequestsCard({ requests, T }) {
+// artist approves, so there is literally no content to leak here. Reads REAL
+// artist_access rows (migration 027: scope[], territory, expires_at, status) —
+// scope chips, territory and expiry all render from the actual grant, not a
+// guess. Either side may revoke an active grant, or the requesting org may
+// cancel its own still-pending invite (both go through revoke_artist_access).
+function AccessRequestsCard({ requests, T, onRevoked }) {
+  const [busyId, setBusyId] = useState(null)
   if (!requests || requests.length === 0) return null
+
+  async function revoke(r) {
+    const name = r.artist?.stage_name || r.artist_stage_name || T.agency.pendingArtistLabel
+    if (!window.confirm(T.representation.revokeConfirm(name))) return
+    setBusyId(r.id)
+    try {
+      await revokeArtistAccess(r.id)
+      await onRevoked?.()
+    } finally {
+      setBusyId(null)
+    }
+  }
+
   return (
     <div className="mb-4">
       <p className="mb-2 font-mono text-[10.5px] uppercase tracking-[0.1em] text-muted">{T.agency.accessRequestsTitle}</p>
@@ -37,19 +55,34 @@ function AccessRequestsCard({ requests, T }) {
               <p className="truncate font-bold text-ink">{r.artist?.stage_name || r.artist_stage_name || T.agency.pendingArtistLabel}</p>
               {r.status === 'pending' && <p className="text-xs text-amber">{T.agency.awaitingApproval}</p>}
               {r.status === 'active' && (
-                <div className="mt-1 flex flex-wrap gap-1">
-                  {(r.scope || []).map((s) => (
-                    <span key={s} className="chip border border-line bg-surface2 px-2 py-0.5 text-[10px] text-ink">
-                      {T.access[`scope${s.charAt(0).toUpperCase()}${s.slice(1)}`] || s}
-                    </span>
-                  ))}
-                </div>
+                <>
+                  <div className="mt-1 flex flex-wrap gap-1">
+                    {(r.scope || []).map((s) => (
+                      <span key={s} className="chip border border-line bg-surface2 px-2 py-0.5 text-[10px] text-ink">
+                        {T.access[`scope${s.charAt(0).toUpperCase()}${s.slice(1)}`] || s}
+                      </span>
+                    ))}
+                  </div>
+                  {(r.territory || r.expires_at) && (
+                    <p className="mt-1 text-[11px] text-faint">
+                      {[r.territory, r.expires_at && `${T.agency.accessExpires} ${fmtDate(r.expires_at)}`].filter(Boolean).join(' · ')}
+                    </p>
+                  )}
+                </>
               )}
               {r.status === 'revoked' && <p className="text-xs text-muted">{T.agency.accessRevoked}</p>}
             </div>
-            <span className={`shrink-0 font-mono text-[10px] uppercase tracking-[0.08em] ${r.status === 'active' ? 'text-accent' : r.status === 'pending' ? 'text-amber' : 'text-faint'}`}>
-              {r.status === 'active' ? T.representation.activeLabel : r.status === 'pending' ? T.agency.pendingArtistLabel : T.representation.revokedLabel}
-            </span>
+            <div className="flex shrink-0 flex-col items-end gap-1.5">
+              <span className={`font-mono text-[10px] uppercase tracking-[0.08em] ${r.status === 'active' ? 'text-accent' : r.status === 'pending' ? 'text-amber' : 'text-faint'}`}>
+                {r.status === 'active' ? T.representation.activeLabel : r.status === 'pending' ? T.agency.pendingArtistLabel : T.representation.revokedLabel}
+              </span>
+              {(r.status === 'pending' || r.status === 'active') && (
+                <button className="chip border border-line bg-surface2 px-2 py-0.5 text-[10px] text-amber min-h-[28px]"
+                  onClick={() => revoke(r)} disabled={busyId === r.id}>
+                  {busyId === r.id ? <Spinner /> : (r.status === 'pending' ? T.agency.cancelInvite : T.representation.revoke)}
+                </button>
+              )}
+            </div>
           </div>
         ))}
       </div>
@@ -116,15 +149,19 @@ export default function AgencyDashboard() {
   const { T } = useLang()
   const { user } = useAuth()
   const { isAgency, activeOrgId, memberships } = useOrg()
-  // DEMO ONLY: OrgContext's activeOrgId defaults to the solo/artist org even
-  // on this screen (the already-documented "context switcher is a no-op"
-  // gap — ENTITY-SPEC-ORG §3/§6.1 item 5). This screen inherently represents
-  // the agency workspace, so resolve it directly from the demo memberships
-  // rather than depend on a switch the user hasn't necessarily made. Real
-  // accounts use activeOrgId as-is — switching context there is the real,
-  // still-open fix tracked separately.
+  // DEMO ONLY: prefer the ACTIVE workspace if it's already a valid
+  // (non-production) agency/management org — the switcher IS functional now
+  // (OrgContext derives `role`/`isProducerWorkspace` from the active
+  // membership, and RequireAgency/RequireProduction route on that) — only
+  // fall back to picking any such demo org when activeOrgId doesn't resolve
+  // to one (e.g. a stale deep link). Producer-type workspaces (INSOMNIA) are
+  // deliberately excluded — that org's screen is ProductionDashboard, never
+  // this one, even in demo mode.
+  const isNonProductionAgency = (m) => ['agency', 'agency_plus'].includes(m.organization?.plan) && m.organization?.workspace_type !== 'producer'
   const orgIdForThisScreen = DEMO
-    ? (memberships.find((m) => ['agency', 'agency_plus'].includes(m.organization?.plan))?.organization?.id || activeOrgId)
+    ? (memberships.find((m) => m.organization?.id === activeOrgId && isNonProductionAgency(m))?.organization?.id
+        || memberships.find(isNonProductionAgency)?.organization?.id
+        || activeOrgId)
     : activeOrgId
   const toast = useToast()
   const [hideChecklist, setHideChecklist] = useState(() => { try { return localStorage.getItem('gigproof_hide_checklist') === '1' } catch { return false } })
@@ -231,7 +268,7 @@ export default function AgencyDashboard() {
       {/* ── Representation — the artist_access consent handshake this org has
             requested (pending/active/revoked). Separate from the owned roster
             below: this is ACCESS, not ownership. ── */}
-      <AccessRequestsCard requests={accessRequests} T={T} />
+      <AccessRequestsCard requests={accessRequests} T={T} onRevoked={load} />
 
       {/* first-run checklist — dismissible, non-shaming */}
       {!hideChecklist && (

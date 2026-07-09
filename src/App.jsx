@@ -25,6 +25,7 @@ import RequestConfirmation from './features/passport/RequestConfirmation.jsx'
 import AgencyDashboard from './features/agency/AgencyDashboard.jsx'
 import AgencyRequestsInbox from './features/agency/AgencyRequestsInbox.jsx'
 import RadarFeed from './features/agency/RadarFeed.jsx'
+import ProductionDashboard from './features/production/ProductionDashboard.jsx'
 import BookerHome from './features/booker/BookerHome.jsx'
 import ProducerHome from './features/producer/ProducerHome.jsx'
 import ProducerReceivedPassports from './features/producer/ProducerReceivedPassports.jsx'
@@ -66,13 +67,35 @@ function RequireRole({ role: need, children }) {
 // Agency-feature gate: an agency is a grown booker-org. Access is granted by org
 // PLAN (isAgency) OR the (org-derived) agency role — so an upgraded booker
 // reaches the agency screens on the SAME account, no migration, no role swap.
+// A production-type workspace (organization.workspace_type='producer', 027) is
+// its OWN screen-set (ProductionDashboard) — it never falls through to the
+// generic roster/agency screen, even though its functional_role also
+// normalizes to ROLES.AGENCY today.
 function RequireAgency({ children }) {
   const { user, loading: authLoading } = useAuth()
-  const { role, isAgency, loading: orgLoading } = useOrg()
+  const { role, isAgency, isProducerWorkspace, loading: orgLoading } = useOrg()
   const loc = useLocation()
   if (authLoading || orgLoading) return <Loading />
   if (!user) return <Navigate to="/login" replace state={{ from: loc.pathname }} />
+  if (isProducerWorkspace) return <Navigate to="/production" replace />
   if (role === ROLES.AGENCY || isAgency) return children
+  return <Navigate to="/" replace />
+}
+
+// Production-workspace gate — the counterpart of RequireAgency, gated on the
+// ACTIVE org's workspace_type rather than on `role` (functional_role has no
+// dedicated "producer org" value; workspace_type is the real signal, per
+// migration 027 / ENTITY-ARCHITECTURE.md refactor step 5).
+function RequireProduction({ children }) {
+  const { user, loading: authLoading } = useAuth()
+  const { role, isAgency, isProducerWorkspace, loading: orgLoading } = useOrg()
+  const loc = useLocation()
+  if (authLoading || orgLoading) return <Loading />
+  if (!user) return <Navigate to="/login" replace state={{ from: loc.pathname }} />
+  if (isProducerWorkspace) return children
+  // Not a production workspace but IS an agency-type one — send to the roster
+  // screen instead of a dead-end "/".
+  if (role === ROLES.AGENCY || isAgency) return <Navigate to="/agency" replace />
   return <Navigate to="/" replace />
 }
 
@@ -81,12 +104,15 @@ function RequireAgency({ children }) {
 // switch (OrgContext.switchOrg navigates here) land on the NEW workspace's home.
 function RoleHome() {
   const { user, loading: authLoading } = useAuth()
-  const { role, loading: orgLoading } = useOrg()
+  const { role, isProducerWorkspace, loading: orgLoading } = useOrg()
   if (authLoading || orgLoading) return <Loading />
   if (!user) return <Navigate to="/login" replace />
   if (!role) return <Navigate to={DEMO ? '/login' : '/select'} replace />
   if (role === ROLES.OPERATOR) return <Navigate to="/admin" replace />
-  if (role === ROLES.AGENCY) return <Navigate to="/agency" replace />
+  // A production-type workspace (027) lands on its own dashboard instead of
+  // the generic agency/roster screen, even though its functional_role also
+  // normalizes to ROLES.AGENCY — workspace_type is the real routing signal.
+  if (role === ROLES.AGENCY) return <Navigate to={isProducerWorkspace ? '/production' : '/agency'} replace />
   if (role === ROLES.BOOKER) return <Navigate to="/discover" replace />
   if (role === ROLES.PRODUCER) return <Navigate to="/producer/received" replace />
   return <Navigate to="/artist/home" replace />
@@ -152,6 +178,14 @@ export default function App() {
         <Route path="/agency" element={<RequireAgency><AgencyDashboard /></RequireAgency>} />
         <Route path="/agency/requests" element={<RequireAgency><AgencyRequestsInbox /></RequireAgency>} />
         <Route path="/agency/radar" element={<RequireAgency><RadarFeed /></RequireAgency>} />
+
+        {/* production-company workspace (organization.workspace_type='producer', 027) —
+            same component for all three sections; it reads the path to pick the
+            active tab (Team · Events · Requests), keeping real per-route nav
+            highlighting without three separate screen components. */}
+        <Route path="/production" element={<RequireProduction><ProductionDashboard /></RequireProduction>} />
+        <Route path="/production/events" element={<RequireProduction><ProductionDashboard /></RequireProduction>} />
+        <Route path="/production/requests" element={<RequireProduction><ProductionDashboard /></RequireProduction>} />
 
         {/* operator */}
         <Route path="/admin" element={<RequireRole role={ROLES.OPERATOR}><AdminDashboard /></RequireRole>} />

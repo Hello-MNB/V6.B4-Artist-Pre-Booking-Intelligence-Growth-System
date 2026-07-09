@@ -6,6 +6,7 @@ import { ROLES } from './constants.js'
 import {
   DEMO, demoOrg, demoSubscription, demoMemberships, demoMembers, demoRadarRecords, demoUpgradeRequests, demoInviteInfo,
   demoAccessRequests, demoRequestArtistAccess, demoRespondToAccessRequest, demoRevokeArtistAccess,
+  demoOrgGigs, demoOrgConfirmRequests,
 } from './demo.js'
 
 // Maps role_assignment.functional_role (the DB vocabulary — includes rep/
@@ -42,7 +43,10 @@ export async function getMyMemberships() {
   if (DEMO) return demoMemberships
   const { data, error } = await supabase
     .from('organization_membership')
-    .select('id, org_role, status, organization:organization_id(id, name, slug, plan)')
+    // workspace_type (migration 027) drives the production-vs-management workspace
+    // split — read alongside plan (tier) so OrgContext can derive BOTH axes: the
+    // functional_role (nav role) and the org's workspace_type (production nav set).
+    .select('id, org_role, status, organization:organization_id(id, name, slug, plan, workspace_type)')
     .eq('status', 'active')
   if (error) throw error
   const memberships = data ?? []
@@ -303,4 +307,62 @@ export async function getRadarInputs(orgId) {
     records.push({ artist, claims: claims.data || [], draw: draw.data || [], demand: demand.data || [] })
   }
   return records
+}
+
+// ============================================================
+// PRODUCTION WORKSPACE (organization.workspace_type = 'producer', migration 027)
+// A production company (e.g. INSOMNIA TLV) runs its own events and books
+// lineup slots — distinct from the individual `producer` (מפיק) role that
+// confirms a single claim via a no-login magic link (role_assignment/
+// ProducerConfirm.jsx). This section is org-scoped, real-schema, real-RLS.
+// ============================================================
+
+// Events + lineup — the `gigs` table (008 + 023 gig-depth) is org-scoped and
+// one row = one artist's slot on one event (artist_id, role_at_event). There is
+// no separate `event` table, so "events" are derived client-side by grouping
+// gigs that share the same date+venue+title — each gig row inside a group is
+// one lineup slot. Honest with the real schema: never invents an event that
+// isn't backed by at least one gigs row.
+export async function listOrgGigs(orgId) {
+  if (DEMO) return demoOrgGigs
+  const { data, error } = await supabase
+    .from('gigs')
+    .select('id, artist_id, title, event_date, venue, city, status, role_at_event, audience_band, closeout_status, artist:artist_id(stage_name)')
+    .eq('organization_id', orgId)
+    .order('event_date', { ascending: true })
+  if (error) throw error
+  return data ?? []
+}
+
+// Groups flat gig rows into events with nested lineup slots (pure client-side
+// derivation — no new schema/migration needed; see listOrgGigs comment).
+export function groupGigsIntoEvents(gigs) {
+  const byKey = new Map()
+  for (const g of gigs || []) {
+    const key = `${g.event_date || 'tbd'}|${g.venue || ''}|${g.title || ''}`
+    if (!byKey.has(key)) byKey.set(key, { key, event_date: g.event_date, venue: g.venue, city: g.city, title: g.title, slots: [] })
+    byKey.get(key).slots.push(g)
+  }
+  return [...byKey.values()].sort((a, b) => (a.event_date || '9999').localeCompare(b.event_date || '9999'))
+}
+
+// Confirm-requests surface — producer_confirmations rows where THIS org is the
+// confirming counterparty (an artist asked this production company to confirm
+// a claim about one of its events). HONEST GAP, confirmed by reading 005/008/
+// 018/019/027: no migration ever added an RLS policy or RPC letting the
+// CONFIRMING org list producer_confirmations addressed to it — today's
+// policies only cover the artist's own org (pc_org_read, via can_access_artist)
+// and the operator (pc_operator_read). RLS would silently filter every row to
+// zero for this org (no error — just an always-empty result), which would
+// render as a false "no requests yet" state if we ran the query as-is. We
+// deliberately return `null` (not `[]`) instead of querying, so the UI can
+// render an honest "not wired yet" needs-state rather than a fake empty one.
+// Fix: a list_incoming_confirmation_requests SECURITY DEFINER RPC, same
+// pattern as migration 027's list_incoming_access_requests, is the real build
+// step this unblocks — tracked, not attempted here (out of this session's
+// migration scope).
+export async function listOrgConfirmRequests(orgId) {
+  if (DEMO) return demoOrgConfirmRequests
+  void orgId
+  return null
 }
