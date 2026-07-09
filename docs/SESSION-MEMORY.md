@@ -9,6 +9,7 @@ priority board (docs/TASK-STATUS-BOARD.md) + open pending-from-owner list.
 - Demo persona: Shai Perlman — 3 hats: DJ PERLMAN (artist, multi-genre Acts) / artist representative (roster) / INSOMNIA TLV (production company).
 
 ## Deployments
+- 9 Jul: **lock.show FULLY LIVE** — static export serving (Framework=Other + out/ + Maria's dashboard clicks closed it). Fingerprints verified: LOCK title, privacy v0.2 (0 GIGPROOF), robots Host lock.show + Disallow /app, pricing/app-embed/sitemap all 200. G2 audit CLOSED. Site architecture is now output:'export' (plain files) — never revert to server output without revisiting the Vercel preset saga.
 - 8 Jul night: **lock.show LIVE** (Maria attached domains + DNS; confirmed 'באוויר') → LOCK rebrand deployed to main (7472688). Mapping live: lock.show=site, app.lock.show=app. Supabase URL config DONE 8 Jul (verified screenshot); GA4 stream label + Google OAuth client display name cosmetic renames (external dashboards).
 - 8 Jul DEPLOYED: main fast-forwarded 9c99873→b410824 (Maria's explicit approval). Ships: unified design (0 off-palette), consent banner (Consent Mode v2, conversion-safe), GA4 G-ZX907M2NY8, legal pages /terms /privacy /accessibility, notifications P1-1, producer-trust fix, brand vocabulary cleanup, platform-logo + today's batch merged.
 - gigproof-website.vercel.app — Next.js marketing site + committed pre-built /app embed (NO /api).
