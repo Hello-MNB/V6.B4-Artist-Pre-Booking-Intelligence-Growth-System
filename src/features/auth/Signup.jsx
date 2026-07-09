@@ -13,7 +13,9 @@ export default function Signup() {
   const { signUp, signIn, signInWithOAuth, demo } = useAuth()
   const nav = useNavigate()
   const loc = useLocation()
-  const [fullName, setFullName] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const fullName = `${firstName} ${lastName}`.trim()
   const [email, setEmail] = useState(loc.state?.email || '')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -101,10 +103,16 @@ export default function Signup() {
       )}
       <form onSubmit={onSubmit}>
         <ErrorNote>{error}</ErrorNote>
-        <Field label={T.signup.name}>
-          <input className="field" placeholder="Your name"
-            value={fullName} onChange={(e) => setFullName(e.target.value)} required />
-        </Field>
+        <div className="grid grid-cols-2 gap-3">
+          <Field label={T.signup.firstName}>
+            <input className="field" placeholder={T.signup.firstNamePlaceholder} autoComplete="given-name"
+              value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
+          </Field>
+          <Field label={T.signup.lastName}>
+            <input className="field" placeholder={T.signup.lastNamePlaceholder} autoComplete="family-name"
+              value={lastName} onChange={(e) => setLastName(e.target.value)} required />
+          </Field>
+        </div>
         <Field label={T.signup.email}>
           <input className="field" type="email" dir="ltr" autoComplete="email"
             placeholder="you@stage.com"

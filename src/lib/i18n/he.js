@@ -52,6 +52,10 @@ export const T = {
   signup: {
     title: 'בוא נבנה לך פרופיל מקצועי',
     name: 'שם',
+    firstName: 'שם פרטי',
+    firstNamePlaceholder: 'פרטי',
+    lastName: 'שם משפחה',
+    lastNamePlaceholder: 'משפחה',
     email: 'אימייל',
     password: 'סיסמה',
     cta: 'צור חשבון',
