@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from './AuthProvider.jsx'
-import { upsertProfile, requestAccountDeletion, hasConsent, recordConsentScope } from '../../lib/db.js'
+import { upsertProfile, requestAccountDeletion, hasConsent, recordConsentScope, getMyArtist, saveArtistWhatsApp } from '../../lib/db.js'
 import { listIncomingAccessRequests, respondToAccessRequest, revokeArtistAccess } from '../../lib/orgs.js'
 import { ROLES } from '../../lib/constants.js'
 import { PageShell, Field, ErrorNote, LanguageToggle, BottomSheet, Spinner, useToast } from '../../components/ui.jsx'
@@ -163,6 +163,16 @@ export default function Settings() {
   const [marketingLoaded, setMarketingLoaded] = useState(false)
   const [marketingBusy, setMarketingBusy] = useState(false)
 
+  // Artist personal details — WhatsApp number + the artist's own opt-in for
+  // letting a booking manager reach them on WhatsApp after a request (owner
+  // ruling: the artist decides; default off). Loaded only for an artist role.
+  const isArtist = role === ROLES.ARTIST
+  const [artistId, setArtistId] = useState(null)
+  const [waNumber, setWaNumber] = useState('')
+  const [waShare, setWaShare] = useState(false)
+  const [waSaving, setWaSaving] = useState(false)
+  const [waSaved, setWaSaved] = useState(false)
+
   logEvent(EVENTS.SETTINGS_OPENED, { role })
 
   useEffect(() => {
@@ -171,6 +181,30 @@ export default function Settings() {
       finally { setMarketingLoaded(true) }
     })()
   }, [user.id])
+
+  useEffect(() => {
+    if (!isArtist) return
+    let alive = true
+    getMyArtist(user.id).then((a) => {
+      if (!alive || !a) return
+      setArtistId(a.id)
+      setWaNumber(a.whatsapp_number || '')
+      setWaShare(!!a.whatsapp_share)
+    }).catch(() => { /* no artist record yet — section still lets them save once created */ })
+    return () => { alive = false }
+  }, [isArtist, user.id])
+
+  async function saveWhatsApp() {
+    if (!artistId) { setError(T.settings.waNeedProfile || 'Create your artist profile first.'); return }
+    setWaSaving(true); setError(''); setWaSaved(false)
+    try {
+      await saveArtistWhatsApp(artistId, { number: waNumber, share: waShare })
+      setWaSaved(true)
+      setTimeout(() => setWaSaved(false), 2000)
+    } catch (e) {
+      setError(e.message || T.common.error)
+    } finally { setWaSaving(false) }
+  }
 
   async function toggleMarketing() {
     if (marketingBusy) return
@@ -247,6 +281,32 @@ export default function Settings() {
           {saving ? T.common.loading : saved ? T.settings.saved + ' ✓' : T.settings.save}
         </button>
       </div>
+
+      {/* Artist personal details — WhatsApp + the artist's own sharing opt-in.
+          The number stays private; a booking manager only sees it after sending
+          a request, and only if the artist opted in here (default off). */}
+      {isArtist && (
+        <div className="card mb-3">
+          <SectionHead>{T.settings.waTitle}</SectionHead>
+          <p className="mb-3 text-sm text-muted">{T.settings.waIntro}</p>
+          <Field label={T.settings.waNumber} hint={T.settings.waNumberHint}>
+            <input className="field" dir="ltr" inputMode="tel" autoComplete="tel"
+              placeholder="+972 5X-XXX-XXXX"
+              value={waNumber} onChange={(e) => setWaNumber(e.target.value)} />
+          </Field>
+          <label className="mt-1 flex cursor-pointer items-start gap-3">
+            <input type="checkbox" className="mt-1 h-4 w-4 accent-accent" checked={waShare}
+              onChange={(e) => setWaShare(e.target.checked)} />
+            <span className="text-sm text-ink">
+              {T.settings.waShareLabel}
+              <span className="mt-0.5 block text-xs text-muted">{T.settings.waShareHint}</span>
+            </span>
+          </label>
+          <button className="btn-primary mt-4 w-full" onClick={saveWhatsApp} disabled={waSaving}>
+            {waSaving ? T.common.loading : waSaved ? T.settings.saved + ' ✓' : T.settings.save}
+          </button>
+        </div>
+      )}
 
       {/* Organization (org-first account model) */}
       <div className="card mb-3">

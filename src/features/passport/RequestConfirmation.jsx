@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, useLocation, Link } from 'react-router-dom'
-import { getArtist } from '../../lib/db.js'
+import { getArtist, getSharedWhatsApp } from '../../lib/db.js'
 import { PageShell, Wordmark } from '../../components/ui.jsx'
 import { useLang } from '../../context/LangContext.jsx'
 import { logEvent, EVENTS } from '../../lib/analytics.js'
@@ -21,23 +21,26 @@ export default function RequestConfirmation() {
   const { id } = useParams()
   const loc = useLocation()
   const [artist, setArtist] = useState(null)
+  const [sharedWa, setSharedWa] = useState(null)
   const [settled, setSettled] = useState(false)
   const [copied, setCopied] = useState(false)
 
-  // Artist fetch only powers the WhatsApp bonus CTA — on failure the page still
-  // confirms the sent request via router state, so swallow rather than break.
+  // Artist fetch powers the name; the WhatsApp CTA comes from a SEPARATE gated
+  // read (getSharedWhatsApp) that returns a number ONLY when the artist opted in
+  // (Settings → personal details). Both are best-effort — the page still confirms
+  // the sent request via router state, so swallow rather than break.
   useEffect(() => {
     let alive = true
-    getArtist(id)
-      .then((a) => { if (alive) setArtist(a) })
-      .catch(() => {})
-      .finally(() => { if (alive) setSettled(true) })
+    Promise.allSettled([
+      getArtist(id).then((a) => { if (alive) setArtist(a) }),
+      getSharedWhatsApp(id).then((wa) => { if (alive) setSharedWa(wa) }),
+    ]).finally(() => { if (alive) setSettled(true) })
     return () => { alive = false }
   }, [id])
 
   const artistName = artist?.stage_name || loc.state?.artist_name || T.request.theArtist
   const requesterName = loc.state?.requester_name || ''
-  const rawWa = artist?.whatsapp_number
+  const rawWa = sharedWa
   const waNumber = formatWaNumber(rawWa)
   const waMsg = encodeURIComponent(T.request.whatsappMsg(artistName, requesterName))
   const waUrl = waNumber ? `https://wa.me/${waNumber}?text=${waMsg}` : null

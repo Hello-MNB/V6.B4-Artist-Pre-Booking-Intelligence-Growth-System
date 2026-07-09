@@ -55,6 +55,37 @@ export async function upsertArtist(artist) {
   return data
 }
 
+// Artist-controlled WhatsApp sharing (owner ruling 9 Jul). The artist sets their
+// number + opt-in in Settings; a booking manager only sees it after a request,
+// via the gated RPC below. whatsapp_number stays firewall-private (016).
+// Resilient to running BEFORE migration 029: if whatsapp_share doesn't exist yet
+// the update retries with just the number so Settings never hard-errors.
+export async function saveArtistWhatsApp(artistId, { number, share }) {
+  if (DEMO) return
+  const num = (number || '').trim() || null
+  const full = { id: artistId, whatsapp_number: num, whatsapp_share: !!share }
+  const { error } = await supabase.from('artists').update(full).eq('id', artistId)
+  if (!error) return
+  // Pre-029 fallback: unknown column whatsapp_share → save the number only.
+  if (/whatsapp_share|column .* does not exist|schema cache/i.test(error.message || '')) {
+    const { error: e2 } = await supabase.from('artists').update({ whatsapp_number: num }).eq('id', artistId)
+    if (e2) throw e2
+    return
+  }
+  throw error
+}
+
+// Buyer-facing gated read: returns the artist's WhatsApp ONLY if they published
+// and opted in (SECURITY DEFINER RPC, migration 029). Null on any error — a
+// missing RPC (pre-029) or block just means "no WhatsApp CTA", never a crash.
+export async function getSharedWhatsApp(artistId) {
+  if (DEMO) return demoArtist.whatsapp_number ?? null
+  if (!artistId) return null
+  const { data, error } = await supabase.rpc('get_shared_whatsapp', { p_artist_id: artistId })
+  if (error) return null
+  return data ?? null
+}
+
 // ── Act (multi-Act spine, migration 020) ────────────────────────────────────
 // Transition model: act.id === artists.id for the default Act, so the artist id
 // addresses the Act directly. Act-only fields (artist_goal, format, alias…)
