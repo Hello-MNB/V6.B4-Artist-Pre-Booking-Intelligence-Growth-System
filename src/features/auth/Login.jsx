@@ -12,10 +12,13 @@ export default function Login() {
   const { signIn, signInWithOAuth, demo, setDemoRole } = useAuth()
   const nav = useNavigate()
   const loc = useLocation()
-  const [email, setEmail] = useState('')
+  // Prefill the email + show a friendly notice when Signup redirected here
+  // because the account already exists (state.notice === 'exists').
+  const [email, setEmail] = useState(loc.state?.email || '')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const alreadyExists = loc.state?.notice === 'exists'
 
   async function onSubmit(e) {
     e.preventDefault()
@@ -69,6 +72,11 @@ export default function Login() {
       <h1 className="mb-1 text-2xl font-bold text-ink">{T.login.title}</h1>
       <p className="mb-6 text-sm text-muted">Sign in to your proof workspace.</p>
       <form onSubmit={onSubmit}>
+        {alreadyExists && (
+          <p className="mb-3 rounded-lg border border-accent/30 bg-accent/10 px-3 py-2 text-sm text-ink">
+            {T.login.alreadyExists}
+          </p>
+        )}
         <ErrorNote>{error}</ErrorNote>
         <Field label={T.login.email}>
           <input className="field" type="email" dir="ltr" autoComplete="email"

@@ -42,6 +42,7 @@ export const T = {
     secondary: 'אין לך חשבון? הרשמה',
     error: 'אימייל או סיסמה שגויים. נסה שוב.',
     forgot: 'שכחתי סיסמה',
+    alreadyExists: 'כבר יש לך חשבון — היכנס/י למטה.',
     googleCta: 'כניסה עם Google',
     facebookCta: 'כניסה עם Facebook',
     socialError: 'שגיאה בכניסה עם רשת חברתית',

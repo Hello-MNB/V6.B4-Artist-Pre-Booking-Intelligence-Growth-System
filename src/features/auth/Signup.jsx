@@ -35,6 +35,15 @@ export default function Signup() {
     setLoading(true)
     try {
       const data = await signUp({ email, password, fullName })
+      // ALREADY-REGISTERED: Supabase anti-enumeration returns a user with an
+      // EMPTY identities array and no session for an email that already exists —
+      // no error, no session, so signup silently dead-ends (the exact confusion
+      // Maria hit: "sign up lands me on /login"). Detect it and send them to LOG
+      // IN with the email prefilled + a clear notice, instead of a dead end.
+      if (data?.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+        nav('/login', { state: { email, notice: 'exists' } })
+        return
+      }
       // PKCE gotcha: with flowType:'pkce' (needed for Google OAuth), signUp
       // returns session:null EVEN when the project auto-confirms emails
       // (mailer_autoconfirm=true) — it defers the session to a code exchange.

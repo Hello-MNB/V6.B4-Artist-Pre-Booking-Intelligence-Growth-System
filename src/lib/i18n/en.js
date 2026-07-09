@@ -42,6 +42,7 @@ export const T = {
     secondary: "Don't have an account? Sign up",
     error: 'Incorrect email or password. Please try again.',
     forgot: 'Forgot password',
+    alreadyExists: 'You already have an account — please log in below.',
     googleCta: 'Sign in with Google',
     facebookCta: 'Sign in with Facebook',
     socialError: 'Social sign-in failed.',
