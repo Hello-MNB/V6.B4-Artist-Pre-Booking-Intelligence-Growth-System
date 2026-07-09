@@ -29,6 +29,11 @@ priority board (docs/TASK-STATUS-BOARD.md) + open pending-from-owner list.
 - Deploy routine: main auto-deploys both; app changes need `npm run build:embed` → commit → push. Gate: vite build + build:demo + lint:i18n (3 known radarUniverse.js violations = accepted baseline) + website-next build.
 - Sandbox proxy blocks vercel.app (403) — live site unverifiable from the container.
 
+## Deploy hooks — BOTH projects now have one (fire to publish → production)
+- **lock-app (app.lock.show):** VERCEL_DEPLOY_HOOK_APP in .env.local (prj_ANv5iiMz4a8CUYA3gyzn7kvIUfho). Created 9 Jul after lock-app auto-deploy broke in the rename. `curl -X POST "$VERCEL_DEPLOY_HOOK_APP"` builds main → production. **This is how app changes now go live** (auto-deploy from main was unreliable post-rename). PROVEN 9 Jul: signup works server-side (live Supabase test — signup returns session, autoconfirm on; signInWithPassword fallback returns session). The persistent 'signup → /login' was ONLY stale deployed code (app.lock.show frozen on pre-fix build); firing this hook publishes 6205ad2 (signup fix + auth fixes + PWA self-destroy kill-switch).
+- **lock-site (lock.show):** VERCEL_DEPLOY_HOOK_SITE (prj_dUHnMaaTeg1...). Same pattern for site changes.
+- Deploy routine now: after pushing to main → POST the relevant hook(s). App change → APP hook. Site/embed change → SITE hook. Both → both.
+
 ## Deploy hook (site) — the fix for the stuck-production problem
 - gigproof-website has NO reliable auto-deploy from main (webhook/branch issue). WORKAROUND: a Vercel Deploy Hook (URL in gitignored .env.local as VERCEL_DEPLOY_HOOK_SITE, prj_dUHnMaaTeg1...) triggers a production build on POST. After pushing site code to main, run: curl -X POST "$VERCEL_DEPLOY_HOOK_SITE" — deploys to production + aliases www.lock.show. Durable fix still pending: Settings→Git→Production Branch=main. The app project (app.lock.show) deploys normally.
 
