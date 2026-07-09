@@ -1,6 +1,7 @@
 ﻿import type { Metadata } from 'next'
 import WaitlistForm from '../../components/waitlist-form'
 import { APP_URL } from '@/lib/app-url'
+import { SOCIAL, WHATSAPP_URL, WHATSAPP_DISPLAY } from '@/lib/social'
 
 export const metadata: Metadata = {
   alternates: { canonical: '/contact' },
@@ -132,6 +133,50 @@ export default function Contact() {
                     </span>
                   </div>
                 ))}
+              </div>
+
+              {/* Direct channels */}
+              <div style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid rgba(10,13,11,0.08)' }}>
+                <a
+                  href={WHATSAPP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    padding: '12px 16px',
+                    backgroundColor: 'var(--color-night)',
+                    color: 'var(--color-paper)',
+                    borderRadius: 'var(--radius-sm)',
+                    textDecoration: 'none',
+                    marginBottom: '14px',
+                  }}
+                >
+                  <span style={{ fontFamily: 'var(--font-space-mono)', fontSize: '0.7rem', letterSpacing: '0.08em' }}>
+                    WHATSAPP
+                  </span>
+                  <span dir="ltr" style={{ fontSize: '0.875rem', fontWeight: 700 }}>{WHATSAPP_DISPLAY}</span>
+                </a>
+                <div style={{ display: 'flex', gap: '18px' }}>
+                  {SOCIAL.map(({ key, label, href }) => (
+                    <a
+                      key={key}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        fontFamily: 'var(--font-space-mono)',
+                        fontSize: '0.7rem',
+                        letterSpacing: '0.06em',
+                        color: 'var(--color-tally-onlight)',
+                        textDecoration: 'none',
+                      }}
+                    >
+                      {label}
+                    </a>
+                  ))}
+                </div>
               </div>
             </div>
 

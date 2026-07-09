@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { APP_URL } from '@/lib/app-url'
 import { useLocale } from '@/lib/locale-context'
 import { DoorStamp } from '@/components/door-stamp'
+import { SOCIAL, WHATSAPP_URL, WHATSAPP_DISPLAY } from '@/lib/social'
 
 const CONSENT_STORAGE_KEY = 'gigproof_consent'
 
@@ -214,6 +215,53 @@ export function Footer() {
               ))}
               <li style={{ marginBottom: '10px' }}>
                 <ConsentPrefsButton label={t.consentPrefs} />
+              </li>
+            </ul>
+          </div>
+
+          {/* Connect — official channels (single source: lib/social.ts) */}
+          <div>
+            <p style={{
+              fontFamily: 'var(--font-space-mono)',
+              fontSize: '0.6rem',
+              letterSpacing: '0.14em',
+              color: 'rgba(255,255,255,0.35)',
+              margin: '0 0 16px',
+            }}>
+              CONNECT
+            </p>
+            <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+              {SOCIAL.map(({ key, label, href }) => (
+                <li key={key} style={{ marginBottom: '10px' }}>
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      fontFamily: 'var(--font-heebo)',
+                      fontSize: '0.875rem',
+                      color: 'rgba(255,255,255,0.6)',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    {label}
+                  </a>
+                </li>
+              ))}
+              <li style={{ marginBottom: '10px' }}>
+                <a
+                  href={WHATSAPP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    fontFamily: 'var(--font-heebo)',
+                    fontSize: '0.875rem',
+                    color: 'rgba(255,255,255,0.6)',
+                    textDecoration: 'none',
+                  }}
+                >
+                  WhatsApp <span dir="ltr" style={{ color: 'rgba(255,255,255,0.4)' }}>{WHATSAPP_DISPLAY}</span>
+                </a>
               </li>
             </ul>
           </div>
