@@ -17,9 +17,10 @@ export const colors = {
   muted: '#98A19A',     // secondary text
   faint: '#69716B',     // tertiary / placeholders
 
-  // Accent & atmosphere — lime ALWAYS carries dark text
-  accent: '#BEE24E',
-  accentDeep: '#9FD531',
+  // Accent & atmosphere — lime ALWAYS carries dark text.
+  // Aligned to Design System v1.2.0 (docs/design-system): lime is #C8F04D.
+  accent: '#C8F04D',
+  accentDeep: '#AEDA36',
   onAccent: '#12160A',  // the ONLY text color allowed on lime
   gold: '#F2C063',      // warm atmosphere, method labels, artist aura
   teal: '#46DCC2',      // developing state

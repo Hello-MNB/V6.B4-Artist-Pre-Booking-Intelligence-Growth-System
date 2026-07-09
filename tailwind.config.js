@@ -22,8 +22,10 @@ export default {
         faint: '#69716B',     // tertiary / placeholders
 
         // ── Accent & atmosphere ──
-        accent: '#BEE24E',        // lime — CTAs, verified cues. ALWAYS dark text (#12160A) on lime.
-        'accent-deep': '#9FD531', // lime gradient bottom / pressed
+        // Lime aligned to Design System v1.2.0 (docs/design-system): #c8f04d is
+        // THE single dominant action. ALWAYS dark text (--ink #0a0d0b) on lime.
+        accent: '#C8F04D',        // lime — CTAs, verified cues (DS v1.2.0 exact)
+        'accent-deep': '#AEDA36', // pressed / gradient bottom
         gold: '#F2C063',          // warm atmosphere, method labels, artist aura
         teal: '#46DCC2',          // developing state
         amber: '#E39A4B',         // needs-you state
@@ -55,7 +57,7 @@ export default {
         night: '#14181A',                // dark sections → surface
         forest: '#14181A',               // deep green panels → surface
         card: '#14181A',                 // white cards → surface
-        lime: '#BEE24E',                 // = accent
+        lime: '#C8F04D',                 // = accent (DS v1.2.0)
         'accent-700': '#9FD531',         // lime hover → accent-deep
         soft: '#F3F0E8',                 // was body text → ink
         mist: 'rgba(255,255,255,.08)',   // hairlines → line
@@ -87,7 +89,7 @@ export default {
       },
       boxShadow: {
         card: '0 24px 60px -24px rgba(0,0,0,.75)',
-        glow: '0 10px 26px -10px rgba(190,226,78,.5)',    // lime glow — THE one primary CTA per view
+        glow: '0 10px 26px -10px rgba(200,240,77,.5)',    // lime glow (DS v1.2.0) — THE one primary CTA per view
         'glow-gold': '0 0 12px 0 rgba(242,192,99,.22)',   // found-state edge — subtle, never loud
       },
       keyframes: {
