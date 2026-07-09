@@ -21,7 +21,7 @@
 | P0-5 | 22 | Domain | ✅ **lock.show LIVE + LOCK rebrand + deploy-hook fix** | Site static-export live; app.lock.show live. Supabase URL config DONE. |
 | P0-6 | 7 | Producer confirmation ceremony (magic link) | 🟡 works on app URL | No migration. Canonical app = app.lock.show. |
 | P0-7 | 11 | Analytics events (funnel + Gate measurement) | 🔴 **028 APPLIED ✅** | Migration DONE 9 Jul (14 M1 events). GA4 wired ✅. **ME:** M1 event writers (Batch 1, unblocked). |
-| P0-9 | — | **Auth stabilization** (Google login end-to-end) | 🟡 code LIVE, awaits Maria's clean test | No migration. PKCE + exchangeCodeForSession + PWA skipWaiting/clientsClaim all shipped. ErrorBoundary added; producer black-screen fixed. |
+| P0-9 | — | **Auth stabilization** (signup + Google login end-to-end) | 🟡 code LIVE, awaits Maria's clean test | No migration. **Signup dead-end FIXED (a1ae464)**: PKCE made signUp return null session even with auto-confirm → bounced to /login; now falls back to immediate password sign-in. Also: exchangeCodeForSession (Google), PWA skipWaiting/clientsClaim, ErrorBoundary, producer black-screen. Shipped both surfaces. |
 
 ## P1 — STRONG-LAUNCH BUILDS
 
