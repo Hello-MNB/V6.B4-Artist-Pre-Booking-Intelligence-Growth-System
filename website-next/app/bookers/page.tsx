@@ -4,13 +4,14 @@ import { DoorStamp } from '@/components/door-stamp'
 
 export const metadata: Metadata = {
   alternates: { canonical: '/bookers' },
-  title: 'For Booking Managers — Evaluate Before You Commit',
+  title: 'For Booking Managers — Book With Context, Not Guesswork',
   description:
-    'An artist sends you a link. Open it and see exactly how each claim was checked — no account, no signup, free for booking managers, always.',
+    'Your name is on the line every time you book an unfamiliar artist. Open their LOCK Passport and see checked, dated evidence in two minutes — free for booking managers, always. No account, no signup.',
   openGraph: {
     url: '/bookers',
     title: 'For Booking Managers | LOCK',
-    description: 'Your reputation is on the line. Evaluate before you commit.',
+    description:
+      'Book with context, not guesswork. Checked evidence in two minutes — free for booking managers, always.',
     type: 'website',
   },
 }
@@ -18,41 +19,41 @@ export const metadata: Metadata = {
 const risks = [
   {
     num: '01',
-    title: "Recommending someone who doesn't draw.",
-    body: "An empty floor isn't forgotten. Every recommendation stakes credibility you've built over years.",
+    title: 'The dead dancefloor.',
+    body: 'When a room stays empty, nobody blames the artist they’ve never heard of. They remember the אמרגן who put the name on the bill. That night follows you.',
   },
   {
     num: '02',
-    title: "Links don't answer the question.",
-    body: "Spotify, Instagram, YouTube — they all show existence. None answer: \"How many will show up to my venue?\"",
+    title: 'The hype folder.',
+    body: 'EPKs, follower counts, “sold out” stories. Everything looks enormous, and none of it answers the only question that matters: who actually shows up?',
   },
   {
     num: '03',
-    title: "You don't have time to investigate every name.",
-    body: "New names come in daily. Deep investigation takes time you don't have. You need fast, useful context.",
+    title: 'No time to play detective.',
+    body: 'New names land every week. You can’t give each one an evening of digging through Instagram — and you shouldn’t have to.',
   },
 ]
 
 const passportFeatures = [
   {
-    label: 'AUDIENCE DRAW AS A BAND',
-    title: 'Ranges, not exact figures.',
-    body: 'Every claim shows a band (60–100, 100–200, etc.) — not a precise number. More honest about what evidence actually supports. More useful for your decision.',
+    label: 'DRAW AS A BAND, NOT A BOAST',
+    title: 'A range the evidence can actually carry.',
+    body: 'Audience draw appears as a band — 60–100, 100–200 — not a flattering number someone typed into a bio. It’s a quieter claim, and that’s exactly why you can lean on it.',
   },
   {
-    label: 'VERIFICATION METHOD',
-    title: 'You always know how much to trust it.',
-    body: '"Producer-confirmed" / "ticket platform export" / "self-reported" — the method label is always visible. You decide the weight.',
+    label: 'HOW IT WAS CHECKED',
+    title: 'You always know what a claim is worth.',
+    body: 'Confirmed by the producer who ran the night. Pulled from a ticket platform. Or the artist’s own word — clearly marked as such. Nothing hides behind polish; you weigh it yourself.',
   },
   {
-    label: 'DATE + GEOGRAPHIC AREA',
-    title: 'Evidence from Jan 2026 ≠ evidence from 2023.',
-    body: 'You always know when the data was collected and in which market. Freshness and locality are part of every claim.',
+    label: 'FRESH AND LOCAL',
+    title: 'A packed room in 2023 isn’t a packed room now.',
+    body: 'Every claim carries when it happened and where. You’re reading the artist who exists today, in the market you actually book — not a highlight reel from another life.',
   },
   {
-    label: 'NO SIGNUP REQUIRED',
-    title: 'One link, open in browser.',
-    body: "Artist sends a link. You open it — no app, no account, no friction. The full Passport is visible immediately.",
+    label: 'NO ACCOUNT, EVER',
+    title: 'One link, two minutes, zero friction.',
+    body: 'The artist sends a link. You open it in any browser — no app, no signup, nothing to install. LOCK is free for booking managers, always.',
   },
 ]
 
@@ -63,9 +64,9 @@ export default function BookersPage() {
       {/* ── HERO ─────────────────────────────────────────── */}
       <section
         style={{
-                    overflow: 'hidden',
+          overflow: 'hidden',
           minHeight: 'min(92svh, 880px)',
-          background: `linear-gradient(180deg, rgba(10,13,11,0.55) 0%, rgba(10,13,11,0.86) 55%, rgba(10,13,11,0.97) 100%), url('/gigproof-persona-manager-v1.webp') center/cover no-repeat`,
+          background: `linear-gradient(180deg, rgba(10,13,11,0.55) 0%, rgba(10,13,11,0.86) 55%, rgba(10,13,11,0.97) 100%), url('/lockshow-persona-manager-v1.webp') center/cover no-repeat`,
           color: 'var(--color-paper)',
           position: 'relative',
           display: 'flex',
@@ -107,7 +108,7 @@ export default function BookersPage() {
           <p
             style={{
               fontFamily: 'var(--font-space-mono), monospace',
-              fontSize: '0.65rem',
+              fontSize: '0.75rem',
               letterSpacing: '0.14em',
               color: 'var(--color-stamp)',
               textTransform: 'uppercase',
@@ -127,25 +128,25 @@ export default function BookersPage() {
               marginBottom: '1.5rem',
             }}
           >
-            Evaluate before
+            Book with context,
             <br />
             <em style={{ fontStyle: 'italic', color: 'var(--color-stamp)' }}>
-              you commit.
+              not guesswork.
             </em>
           </h1>
           <p
             style={{
               fontFamily: 'var(--font-heebo), system-ui, sans-serif',
-              fontSize: 'clamp(0.9rem, 1.8vw, 1.05rem)',
+              fontSize: 'clamp(1rem, 1.8vw, 1.1rem)',
               lineHeight: 1.65,
-              color: 'rgba(243,245,239,0.62)',
+              color: 'rgba(243,245,239,0.72)',
               maxWidth: '520px',
               marginBottom: '2.25rem',
             }}
           >
-            LOCK is free for booking managers. An artist sends you a link;
-            you open it in a browser and see exactly how each claim was
-            checked — no speculation, no signup, no account.
+            An unfamiliar artist wants your stage. Before your name goes on
+            that flyer, open their Passport and see what actually happened at
+            their last shows — checked, dated, readable in two minutes.
           </p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
             <Link
@@ -183,6 +184,17 @@ export default function BookersPage() {
               HOW IT WORKS
             </Link>
           </div>
+          <p
+            style={{
+              fontFamily: 'var(--font-space-mono), monospace',
+              fontSize: '0.75rem',
+              letterSpacing: '0.08em',
+              color: 'rgba(243,245,239,0.55)',
+              marginTop: '1.5rem',
+            }}
+          >
+            FREE FOR BOOKING MANAGERS — ALWAYS. NO ACCOUNT, NO SIGNUP.
+          </p>
         </div>
       </section>
 
@@ -198,14 +210,14 @@ export default function BookersPage() {
           <p
             style={{
               fontFamily: 'var(--font-space-mono), monospace',
-              fontSize: '0.65rem',
+              fontSize: '0.75rem',
               color: 'var(--color-tally-onlight)',
               letterSpacing: '0.1em',
               textTransform: 'uppercase',
               marginBottom: '0.5rem',
             }}
           >
-            THE RISK YOU TAKE
+            THE NIGHT YOU&apos;RE PROTECTING
           </p>
           <h2
             style={{
@@ -215,7 +227,7 @@ export default function BookersPage() {
               marginBottom: '2.5rem',
             }}
           >
-            Your reputation is on the line.
+            An empty floor remembers your name, not theirs.
           </h2>
           <div
             style={{
@@ -234,7 +246,7 @@ export default function BookersPage() {
                 <span
                   style={{
                     fontFamily: 'var(--font-space-mono), monospace',
-                    fontSize: '0.65rem',
+                    fontSize: '0.75rem',
                     color: 'var(--color-tally-onlight)',
                     opacity: 0.5,
                     display: 'block',
@@ -246,7 +258,7 @@ export default function BookersPage() {
                 <h3
                   style={{
                     fontFamily: 'var(--font-archivo), system-ui, sans-serif',
-                    fontSize: '1rem',
+                    fontSize: '1.05rem',
                     color: 'var(--color-ink)',
                     marginBottom: '0.5rem',
                   }}
@@ -256,7 +268,7 @@ export default function BookersPage() {
                 <p
                   style={{
                     fontFamily: 'var(--font-heebo), system-ui, sans-serif',
-                    fontSize: '0.875rem',
+                    fontSize: '1rem',
                     color: 'var(--color-tally-onlight)',
                     lineHeight: 1.6,
                   }}
@@ -269,20 +281,64 @@ export default function BookersPage() {
         </div>
       </section>
 
+      {/* ── EVIDENCE ANCHOR IMAGE ────────────────────────── */}
+      {/* TODO: swap for a lockshow-atmosphere-* scene if a better booker-desk shot arrives from Codex's Drive */}
+      <section
+        style={{
+          background: 'var(--color-paper)',
+          padding: '4rem max(24px, 4vw) 0',
+        }}
+      >
+        <figure style={{ maxWidth: '1120px', margin: '0 auto' }}>
+          <div
+            style={{
+              borderRadius: 'var(--radius-sm)',
+              overflow: 'hidden',
+              border: '1px solid rgba(10,13,11,0.08)',
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/lockshow-evidence-review.webp"
+              alt="A booking manager reading an artist's checked evidence before saying yes"
+              style={{
+                display: 'block',
+                width: '100%',
+                maxHeight: '440px',
+                objectFit: 'cover',
+              }}
+            />
+          </div>
+          <figcaption
+            style={{
+              fontFamily: 'var(--font-heebo), system-ui, sans-serif',
+              fontSize: '1rem',
+              color: 'var(--color-tally-onlight)',
+              lineHeight: 1.6,
+              marginTop: '0.85rem',
+              maxWidth: '640px',
+            }}
+          >
+            Every claim is checked before it reaches you. You see what held up
+            — and exactly how it was verified.
+          </figcaption>
+        </figure>
+      </section>
+
       {/* ── WHAT YOU SEE IN THE PASSPORT ─────────────────── */}
       <section style={{ background: 'var(--color-paper)', padding: '4rem max(24px, 4vw)' }}>
         <div style={{ maxWidth: '1120px', margin: '0 auto' }}>
           <p
             style={{
               fontFamily: 'var(--font-space-mono), monospace',
-              fontSize: '0.65rem',
+              fontSize: '0.75rem',
               color: 'var(--color-tally-onlight)',
               letterSpacing: '0.1em',
               textTransform: 'uppercase',
               marginBottom: '0.5rem',
             }}
           >
-            WHAT YOU SEE IN THE PASSPORT
+            WHAT YOU OPEN
           </p>
           <h2
             style={{
@@ -292,7 +348,7 @@ export default function BookersPage() {
               marginBottom: '2.5rem',
             }}
           >
-            Evidence. Method. Date.
+            One link. The whole story, checked.
           </h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
             {passportFeatures.map((f, i) => (
@@ -306,7 +362,7 @@ export default function BookersPage() {
                 <span
                   style={{
                     fontFamily: 'var(--font-space-mono), monospace',
-                    fontSize: '0.6rem',
+                    fontSize: '0.75rem',
                     color: 'var(--color-stamp-onlight)',
                     letterSpacing: '0.1em',
                     textTransform: 'uppercase',
@@ -319,7 +375,7 @@ export default function BookersPage() {
                 <h3
                   style={{
                     fontFamily: 'var(--font-archivo), system-ui, sans-serif',
-                    fontSize: '0.95rem',
+                    fontSize: '1.05rem',
                     color: 'var(--color-ink)',
                     marginBottom: '0.4rem',
                   }}
@@ -329,7 +385,7 @@ export default function BookersPage() {
                 <p
                   style={{
                     fontFamily: 'var(--font-heebo), system-ui, sans-serif',
-                    fontSize: '0.875rem',
+                    fontSize: '1rem',
                     color: 'var(--color-tally-onlight)',
                     lineHeight: 1.65,
                     maxWidth: '832px',
@@ -354,7 +410,7 @@ export default function BookersPage() {
           <p
             style={{
               fontFamily: 'var(--font-space-mono), monospace',
-              fontSize: '0.65rem',
+              fontSize: '0.75rem',
               color: 'var(--color-stamp)',
               letterSpacing: '0.1em',
               textTransform: 'uppercase',
@@ -371,20 +427,20 @@ export default function BookersPage() {
               marginBottom: '1rem',
             }}
           >
-            LOCK doesn&apos;t promise anything.
+            LOCK makes no promises. That&apos;s the point.
           </h2>
           <p
             style={{
               fontFamily: 'var(--font-heebo), system-ui, sans-serif',
-              fontSize: '0.95rem',
-              color: 'rgba(243,245,239,0.6)',
+              fontSize: '1rem',
+              color: 'rgba(243,245,239,0.72)',
               lineHeight: 1.7,
               marginBottom: '2rem',
             }}
           >
-            No score. No ranking. No guarantee that an artist will fill a floor.
-            Evidence with a verification method and a date — that&apos;s what LOCK
-            provides. The decision is yours.
+            LOCK will never tell you an artist will fill your floor. No score,
+            no ranking, no prediction — only what happened, how it was checked,
+            and when. You read it in two minutes. The decision stays yours.
           </p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
             {[
@@ -398,8 +454,8 @@ export default function BookersPage() {
                 key={chip}
                 style={{
                   fontFamily: 'var(--font-space-mono), monospace',
-                  fontSize: '0.6rem',
-                  color: 'rgba(243,245,239,0.4)',
+                  fontSize: '0.75rem',
+                  color: 'rgba(243,245,239,0.6)',
                   border: '1px solid rgba(243,245,239,0.12)',
                   padding: '0.25rem 0.6rem',
                   borderRadius: 'var(--radius-sm)',
@@ -424,19 +480,19 @@ export default function BookersPage() {
               marginBottom: '1rem',
             }}
           >
-            Getting a link from an artist?
+            The next link you get deserves two minutes.
           </h2>
           <p
             style={{
               fontFamily: 'var(--font-heebo), system-ui, sans-serif',
-              fontSize: '0.9rem',
+              fontSize: '1rem',
               color: 'var(--color-tally-onlight)',
               marginBottom: '2rem',
               lineHeight: 1.6,
             }}
           >
-            Just open it. LOCK is completely free for booking managers —
-            no signup, no account, no friction.
+            Open it. See the room before you say yes. LOCK is free for booking
+            managers — always. No signup, no account, no catch.
           </p>
           <Link
             href="/passport/demo"
