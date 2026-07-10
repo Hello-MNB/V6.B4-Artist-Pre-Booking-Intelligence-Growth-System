@@ -180,7 +180,7 @@ export default function HomePage() {
             alignItems: 'center',
           }}
         >
-          {/* Lime ambient glow — the תמנון */}
+          {/* Lime ambient glow */}
           <div
             aria-hidden="true"
             style={{
@@ -667,6 +667,7 @@ export default function HomePage() {
             </p>
 
             <div
+              className="m-divide"
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
@@ -676,7 +677,7 @@ export default function HomePage() {
               {[
                 {
                   image: '/lockshow-persona-artist-v1.webp',
-                  tag: 'אמן · ARTIST',
+                  tag: 'ARTIST',
                   title: 'Your nights already tell the story',
                   body: 'Turn the gigs you played into a Passport that opens the next room. Free during the pilot.',
                   href: '/artists',
@@ -684,7 +685,7 @@ export default function HomePage() {
                 },
                 {
                   image: '/lockshow-persona-manager-v1.webp',
-                  tag: 'אמרגן · BOOKING MANAGER',
+                  tag: 'BOOKING MANAGER',
                   title: 'Say yes with a clear head',
                   body: 'Read an artist’s real history in two minutes — before your name goes on the line. Always free.',
                   href: '/bookers',
@@ -692,7 +693,7 @@ export default function HomePage() {
                 },
                 {
                   image: '/lockshow-persona-producer-v1.webp',
-                  tag: 'מפיק · PRODUCER',
+                  tag: 'PRODUCER',
                   title: 'You were there. Say so.',
                   body: 'One tap confirms a night you ran — thirty seconds, no account, and an artist you believe in gets further.',
                   href: '/producers',
@@ -701,6 +702,7 @@ export default function HomePage() {
               ].map(({ image, tag, title, body, href, cta }) => (
                 <div
                   key={href}
+                  className="m-flat"
                   style={{
                     background: 'var(--color-paper)',
                     border: '1px solid rgba(10,13,11,0.1)',
@@ -718,7 +720,7 @@ export default function HomePage() {
                       background: `linear-gradient(180deg, rgba(10,13,11,0) 55%, rgba(10,13,11,0.35) 100%), url('${image}') center 30%/cover no-repeat`,
                     }}
                   />
-                  <div style={{ padding: 'clamp(1.25rem, 3vw, 2rem)', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                  <div className="m-flat" style={{ padding: 'clamp(1.25rem, 3vw, 2rem)', display: 'flex', flexDirection: 'column', flex: 1 }}>
                     <div>
                       <RoleTag>{tag}</RoleTag>
                     </div>
@@ -817,7 +819,7 @@ export default function HomePage() {
                     marginBottom: '1.5rem',
                   }}
                 >
-                  Who checked it, and when — the method label is always in view.
+                  Every claim says who checked it — right there on the card.
                 </p>
                 <Link
                   href="/methodology"
@@ -1027,7 +1029,7 @@ export default function HomePage() {
                 {
                   step: '03',
                   title: 'We check everything',
-                  body: 'Nothing reaches your Passport until it has been reviewed and labelled.',
+                  body: 'Nothing reaches your Passport until it has actually been checked.',
                 },
                 {
                   step: '04',

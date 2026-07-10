@@ -121,7 +121,7 @@ export function Footer() {
               color: 'rgba(243,245,239,0.55)',
               margin: 0,
             }}>
-              VERIFIED PROOF · METHOD-LABELED · TEL AVIV
+              REAL NIGHTS · CHECKED PROOF · TEL AVIV
             </p>
           </div>
           <a
@@ -307,9 +307,9 @@ export function Footer() {
             margin: 0,
             lineHeight: 1.8,
           }}>
-            אמרגן ≠ מפיק · BOOKING MANAGER ≠ PRODUCER — DISTINCT ROLES, NEVER MERGED.
+            BOOKING MANAGER ≠ PRODUCER — DISTINCT ROLES, NEVER MERGED.
             {' '}NO SCORE · NO RANKING · NO PREDICTION · NO GUARANTEE.
-            {' '}ALL CLAIMS ARE METHOD-LABELED. AUDIENCE DRAW SHOWN AS A BAND ONLY.
+            {' '}EVERY CLAIM SHOWS HOW IT WAS CHECKED. AUDIENCE SIZE ALWAYS SHOWN AS A RANGE.
           </p>
         </div>
 

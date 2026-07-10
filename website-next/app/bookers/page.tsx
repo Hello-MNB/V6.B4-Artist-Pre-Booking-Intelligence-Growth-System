@@ -20,7 +20,7 @@ const risks = [
   {
     num: '01',
     title: 'The dead dancefloor.',
-    body: 'When a room stays empty, nobody blames the artist they’ve never heard of. They remember the אמרגן who put the name on the bill. That night follows you.',
+    body: 'When a room stays empty, nobody blames the artist they’ve never heard of. They remember the booking manager who put the name on the bill. That night follows you.',
   },
   {
     num: '02',
@@ -115,7 +115,7 @@ export default function BookersPage() {
               marginBottom: '1.75rem',
             }}
           >
-            FOR BOOKING MANAGERS · לאמרגנים
+            FOR BOOKING MANAGERS
           </p>
           <h1
             style={{
@@ -230,6 +230,7 @@ export default function BookersPage() {
             An empty floor remembers your name, not theirs.
           </h2>
           <div
+            className="m-divide"
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
@@ -241,6 +242,7 @@ export default function BookersPage() {
             {risks.map((r) => (
               <div
                 key={r.num}
+                className="m-flat"
                 style={{ background: 'var(--color-paper)', padding: 'clamp(1.25rem, 3vw, 2rem)' }}
               >
                 <span
@@ -320,7 +322,7 @@ export default function BookersPage() {
             }}
           >
             Every claim is checked before it reaches you. You see what held up
-            — and exactly how it was verified.
+            — and exactly how it was checked.
           </figcaption>
         </figure>
       </section>
@@ -448,7 +450,7 @@ export default function BookersPage() {
               'NO RANKINGS',
               'NO PREDICTIONS',
               'NO GUARANTEES',
-              'METHOD-LABELLED EVIDENCE ONLY',
+              'CHECKED EVIDENCE ONLY',
             ].map((chip) => (
               <span
                 key={chip}

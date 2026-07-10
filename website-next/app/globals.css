@@ -118,3 +118,40 @@ details[open] .faq-glyph::before { content: '\2212'; }
     background-position: 0 0, 72% 30% !important;
   }
 }
+
+/* ─── Mobile full-width editorial flow (owner directive) ─────────────────
+   ≤640px, boxed cards on paper sections flatten into open, full-width
+   blocks separated by hairlines — no borders, no boxes, maximum canvas.
+   Inline styles keep the desktop card look untouched; these !important
+   rules only act on small screens. */
+@media (max-width: 640px) {
+  .m-flat {
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  .m-flat-white {
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  .m-divide {
+    /* parent reset: the 1px-gap "hairline table" grids paint their lines
+       via a background + border on the parent — remove both, and stack
+       everything in one full-width column */
+    background: transparent !important;
+    border: none !important;
+    gap: 0 !important;
+    grid-template-columns: 1fr !important;
+  }
+  .m-divide > * + * {
+    border-top: 1px solid var(--color-mist);
+    margin-top: 1.75rem;
+    padding-top: 1.75rem;
+  }
+}

@@ -104,7 +104,7 @@ const steps = [
   {
     num: '03',
     title: 'We check.',
-    body: 'Every claim gets looked at and labelled before it goes anywhere near your Passport.',
+    body: 'Every claim gets a proper look before it goes anywhere near your Passport.',
   },
   {
     num: '04',
@@ -198,7 +198,7 @@ export default function ArtistsPage() {
                 textTransform: 'uppercase',
               }}
             >
-              For Artists · לאמנים
+              For Artists
             </span>
           </div>
 
@@ -342,6 +342,7 @@ export default function ArtistsPage() {
           </h2>
 
           <div
+            className="m-divide"
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
@@ -352,6 +353,7 @@ export default function ArtistsPage() {
             {painPoints.map((p, i) => (
               <div
                 key={i}
+                className="m-flat"
                 style={{
                   background: '#ffffff',
                   padding: 'clamp(1.25rem, 3vw, 2rem)',
@@ -430,6 +432,7 @@ export default function ArtistsPage() {
           </h2>
 
           <div
+            className="m-divide"
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
@@ -438,6 +441,7 @@ export default function ArtistsPage() {
           >
             {/* Artist Radar */}
             <div
+              className="m-flat"
               style={{
                 border: '1px solid rgba(10,13,11,0.1)',
                 borderRadius: '16px',
@@ -509,6 +513,7 @@ export default function ArtistsPage() {
 
             {/* Bookability Passport */}
             <div
+              className="m-flat"
               style={{
                 border: '1px solid rgba(10,13,11,0.1)',
                 borderRadius: '16px',
@@ -632,7 +637,7 @@ export default function ArtistsPage() {
                 {
                   label: 'Gig',
                   value: 'Barby — support slot',
-                  detail: 'Self-managed booking, Dec 2024',
+                  detail: 'Booked it herself, Dec 2024',
                   badge: 'PRODUCER-CONFIRMED',
                   date: 'REVIEWED DEC 2024',
                 },
@@ -818,9 +823,8 @@ export default function ArtistsPage() {
               lineHeight: 1.6,
             }}
           >
-            Two different people, by the way: the producer (מפיק) who ran your
-            night confirms it — the booking manager (אמרגן) simply reads the
-            result.
+            Two different people, by the way: the producer who ran your night
+            confirms it — the booking manager simply reads the result.
           </p>
         </div>
       </section>

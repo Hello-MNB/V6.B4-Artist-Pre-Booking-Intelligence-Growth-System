@@ -94,7 +94,7 @@ export default function ProducersPage() {
               marginBottom: '1.75rem',
             }}
           >
-            FOR PRODUCERS · למפיקים
+            FOR PRODUCERS
           </p>
           <h1
             style={{
@@ -193,6 +193,7 @@ export default function ProducersPage() {
           </h2>
 
           <div
+            className="m-divide"
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
@@ -226,6 +227,7 @@ export default function ProducersPage() {
             ].map((item, i) => (
               <div
                 key={i}
+                className="m-flat"
                 style={{ background: 'var(--color-paper)', padding: 'clamp(1.25rem, 3vw, 2rem)' }}
               >
                 <span style={{
@@ -284,7 +286,7 @@ export default function ProducersPage() {
                 marginBottom: '0.5rem',
               }}
             >
-              מפיק ≠ אמרגן
+              PRODUCER ≠ BOOKING MANAGER
             </p>
             <p
               style={{
@@ -294,9 +296,9 @@ export default function ProducersPage() {
                 lineHeight: 1.6,
               }}
             >
-              You&apos;re the <strong style={{ color: 'var(--color-ink)' }}>producer (מפיק)</strong> who
+              You&apos;re the <strong style={{ color: 'var(--color-ink)' }}>producer</strong> who
               ran that night and can vouch for it — the <strong style={{ color: 'var(--color-ink)' }}>booking
-              manager (אמרגן)</strong> is the one deciding on the next one, and LOCK never mixes the two.
+              manager</strong> is the one deciding on the next one, and LOCK never mixes the two.
             </p>
           </div>
         </div>
