@@ -162,10 +162,7 @@ export default function HomePage() {
         {/* ── HERO ─────────────────────────────────────────────────────── */}
         <section
           style={{
-            margin: '28px max(24px, 4vw) 0',
-            border: '1px solid #2a362c',
-            borderRadius: '20px',
-            background: `
+                        background: `
               linear-gradient(100deg,
                 rgba(10,13,11,0.95) 0%,
                 rgba(10,13,11,0.82) 30%,
@@ -175,7 +172,7 @@ export default function HomePage() {
               url('/gigproof-live-hero.webp') center 35%/cover no-repeat
             `,
             color: 'var(--color-paper)',
-            minHeight: '620px',
+            minHeight: 'min(92svh, 880px)',
             padding: 'clamp(3.5rem, 8vw, 5.5rem) clamp(1.5rem, 4vw, 4rem)',
             position: 'relative',
             overflow: 'hidden',

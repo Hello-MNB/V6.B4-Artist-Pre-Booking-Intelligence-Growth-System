@@ -134,11 +134,8 @@ export default function ArtistsPage() {
       <section
         className="persona-hero-artist"
         style={{
-          margin: '28px max(24px, 4vw) 0',
-          border: '1px solid #2a362c',
-          borderRadius: '20px',
-          overflow: 'hidden',
-          minHeight: '620px',
+                    overflow: 'hidden',
+          minHeight: 'min(92svh, 880px)',
           background: `
             linear-gradient(180deg,
               rgba(10,13,11,0.55) 0%,
