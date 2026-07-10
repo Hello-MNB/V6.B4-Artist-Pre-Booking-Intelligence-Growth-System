@@ -220,8 +220,12 @@ const MIGRATION_027_NOTE =
 function isPreMigration027(err) {
   const code = err?.code
   const msg = `${err?.message || ''} ${err?.details || ''} ${err?.hint || ''}`.toLowerCase()
-  return code === 'PGRST202' || code === '42883' || code === '42703' || code === '23514'
+  // 42P17 = infinite RLS recursion (artists<->artist_access before migration 030).
+  // Catching it makes every cross-org read degrade to an honest empty + notice
+  // instead of a hard throw (flow-gap F) — even if a future policy regresses.
+  return code === 'PGRST202' || code === '42883' || code === '42703' || code === '23514' || code === '42P17'
     || msg.includes('could not find') || msg.includes('does not exist') || msg.includes('violates check constraint')
+    || msg.includes('infinite recursion')
 }
 
 // Agency/production side — invite (or re-invite) an EXISTING artist by id.

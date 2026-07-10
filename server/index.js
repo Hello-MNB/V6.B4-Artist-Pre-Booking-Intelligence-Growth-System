@@ -337,7 +337,7 @@ app.post('/api/confirm/:token', async (req, res) => {
     const { token } = req.params
     const { response, revoke } = req.body || {}
     const { data: pc, error } = await admin
-      .from('producer_confirmations').select('id, claim_id').eq('token', token).maybeSingle()
+      .from('producer_confirmations').select('id, claim_id, artist_id').eq('token', token).maybeSingle()
     if (error) throw error
     if (!pc) return res.status(404).json({ error: 'Invalid or expired link.' })
 
@@ -358,6 +358,25 @@ app.post('/api/confirm/:token', async (req, res) => {
     // until the fix is reviewed (canon: correction-pending, not confirmed).
     const method = response === 'yes' ? 'producer-confirmed' : null
     await admin.from('claims').update({ method_label: method }).eq('id', pc.claim_id)
+    // Fire-and-forget: the artist's bell must ring when a producer replies
+    // (flow-gap K — this event previously notified no one), and an unqualified
+    // "yes" is the canonical claim_confirmed funnel event. Neither may ever
+    // block the ceremony itself.
+    if (pc.artist_id) {
+      try {
+        await notifyArtistOwner(pc.artist_id, {
+          type: 'claim_confirmed',
+          body: en.notifications.claimConfirmed,
+          link: '/artist/home',
+        })
+        if (response === 'yes') {
+          await admin.from('analytics_event').insert({
+            event_name: 'claim_confirmed',
+            properties: { artist_id: pc.artist_id, claim_id: pc.claim_id },
+          })
+        }
+      } catch (e) { console.error('[confirm-notify]', e) }
+    }
 
     // P1-1 — notify the artist owner a producer confirmation arrived (best-effort,
     // never blocks the response). Server has no user-language preference to read,

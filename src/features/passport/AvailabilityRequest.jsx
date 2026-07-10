@@ -56,7 +56,7 @@ export default function AvailabilityRequest() {
         artistId: id,
         type: 'new_request',
         body: T.notifications.newRequest(f.requester_name.trim()),
-        link: '/agency/requests',
+        link: '/artist/requests', // the artist's inbox — an ARTIST role is bounced off /agency/* (flow-gap R4)
       })
       nav(`/passport/${id}/sent`, {
         state: { requester_name: f.requester_name, artist_name: artist?.stage_name },

@@ -7,6 +7,7 @@ import {
 } from '../../lib/db.js'
 import { listUpgradeRequests, approveUpgrade } from '../../lib/orgs.js'
 import { createNotification } from '../../lib/notifications.js'
+import { logEvent, EVENTS } from '../../lib/analytics.js'
 import {
   PageShell, Loading, EmptyState, ErrorState, SourceLabel,
   BottomSheet,
@@ -96,6 +97,9 @@ export default function AdminDashboard() {
     try {
       const payment = payments.find((p) => p.id === id)
       await adminActivateEntitlement(id)
+      // GATE signal — someone PAID and the operator activated it (the second half
+      // of the validation gate: one reacts AND one pays).
+      logEvent(EVENTS.ENTITLEMENT_ACTIVATED, { artist_id: payment?.artist_id, entitlement_id: id })
       setPayments((prev) => prev.filter((p) => p.id !== id))
       // P1-1 — fire-and-forget: a notification hiccup must never undo the activation.
       if (payment?.artist_id) {

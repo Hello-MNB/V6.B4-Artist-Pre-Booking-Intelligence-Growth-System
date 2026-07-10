@@ -112,6 +112,9 @@ export default function Passport() {
     setBusy(true)
     try {
       await recordProfessionalReaction(id, actionType)
+      // GATE signal — a booking professional REACTED to a real Passport (canon
+      // P0-5: a view is not a reaction; this is). Sample passport never measured.
+      if (id !== 'demo-artist') logEvent(EVENTS.PROFESSIONAL_REACTION, { artist_id: id, action: actionType })
       if (toRequest) { setSheet(false); nav(`/passport/${id}/request`); return }
       setReceipt(label)
     } catch { setReceipt(label) } // reaction is best-effort for the visitor

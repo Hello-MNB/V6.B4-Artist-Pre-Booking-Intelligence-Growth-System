@@ -538,6 +538,7 @@ export const T = {
     passportPublished: 'הפספורט שלך פורסם בהצלחה!',
     confirmationArrived: (claimText) => `מפיק אישר: "${claimText}"`,
     paymentActivated: 'התשלום הופעל — הפספורט המייסד שלך פעיל.',
+    claimConfirmed: 'מפיק השיב לבקשת האישור שלך — פתח את הרדאר לצפייה.',
     markAllRead: 'סמן הכל כנקרא',
     justNow: 'כרגע',
     minutesAgo: (n) => `לפני ${n} דק׳`,

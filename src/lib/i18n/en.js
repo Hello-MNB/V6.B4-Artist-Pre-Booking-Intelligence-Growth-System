@@ -555,6 +555,7 @@ export const T = {
     passportPublished: 'Your profile was published successfully!',
     confirmationArrived: (claimText) => `A producer confirmed: "${claimText}"`,
     paymentActivated: 'Your payment was activated — your Founding Passport is live.',
+    claimConfirmed: 'A producer replied to your confirmation request — open your Radar to review.',
     markAllRead: 'Mark all read',
     justNow: 'Just now',
     minutesAgo: (n) => `${n}m ago`,
