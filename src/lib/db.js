@@ -390,6 +390,10 @@ export async function updateItemVisibility(id, visibility) {
 // buyer-safe columns only.
 export async function getPublicPassport(id) {
   if (DEMO) return demoPassportPayload
+  // Sample passport — the booker/login "see a sample" escape hatch. artists.id is
+  // a uuid, so 'demo-artist' would throw 22P02 on live and dead-end the one
+  // no-link-in-hand path (flow-gap B). Serve the canned demo payload instead.
+  if (id === 'demo-artist') return demoPassportPayload
   const artist = await getArtist(id) // null if not published (RLS hides it from anon)
   if (!artist || !artist.published) return { artist: null, items: [], claims: [] }
   // Two viewer classes, two firewalls (verified live 8 Jul):

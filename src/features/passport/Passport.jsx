@@ -59,8 +59,12 @@ export default function Passport() {
         setItems(data.items ?? [])
         setClaims(data.claims ?? [])
         setView('ready')
-        recordPassportView(id) // measurement, never blocks
-        logEvent(EVENTS.PASSPORT_VIEWED, { artist_id: id })
+        // Sample passport (demo-artist) is a canned payload — never measured,
+        // so the GATE funnel only ever counts real published passports.
+        if (id !== 'demo-artist') {
+          recordPassportView(id) // measurement, never blocks
+          logEvent(EVENTS.PASSPORT_VIEWED, { artist_id: id })
+        }
       } catch {
         if (alive) setView('error')
       }

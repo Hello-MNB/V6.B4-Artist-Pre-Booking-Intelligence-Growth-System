@@ -126,10 +126,18 @@ export function DrawSection({ data, T, label }) {
   return (
     <PassportSection label={label || T.passport.proofTitle} caption={T.passport.drawCaption}>
       <div className="grid gap-3">
-        {data.drawClaims.map((c) => (
+        {/* FIREWALL: the draw headline may ONLY be the buyer-safe wording, a band,
+            or a band-SHAPED value. Raw `value` can carry an exact headcount
+            ("Drew 450 people") — a claim with no safe form renders nothing here
+            (flow-gap I: safety must not depend on the pipeline always filling
+            public_wording/public_band). */}
+        {data.drawClaims
+          .map((c) => ({ c, safe: c.public_wording || c.public_band || (isBand(c.value) ? c.value : null) }))
+          .filter(({ safe }) => safe)
+          .map(({ c, safe }) => (
           <ProofUnit
             key={c.id}
-            claim={c.public_wording || c.public_band || c.value}
+            claim={safe}
             context={prettyType(c.claim_type)}
             band={bandOf(c)}
             status={c.verification_status}
