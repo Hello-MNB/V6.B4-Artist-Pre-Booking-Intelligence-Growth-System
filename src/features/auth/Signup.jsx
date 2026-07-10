@@ -92,7 +92,7 @@ export default function Signup() {
   }
 
   return (
-    <AuthScene tagline="Your nights, made provable.">
+    <AuthScene tagline={T.authScene.taglineSignup}>
       <h1 className="mb-1 text-2xl font-bold text-ink">{T.signup.title}</h1>
       <p className="mb-6 text-sm text-muted">{T.signup.heroLine}</p>
       {(OAUTH_ENABLED || demo) && (
