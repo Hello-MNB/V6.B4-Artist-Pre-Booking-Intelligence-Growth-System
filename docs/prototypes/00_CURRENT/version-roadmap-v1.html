@@ -1,318 +1,63 @@
-<title>LOCK — Version Roadmap</title>
+<title>LOCK — Version Map</title>
 <style>
-  :root{
-    --paper:#f3f5ef; --card:#ffffff; --ink:#0a0d0b; --forest:#18221a;
-    --lime:#C8F04D; --mist:#dde3d9; --slate:#687269; --muted:#6c776e;
-    --amber:#c8892a; --line:#dde3d9; --band:#eef1ea;
-    --shadow:0 1px 2px rgba(24,34,26,.05),0 8px 24px -16px rgba(24,34,26,.25);
-    --serif:Georgia,"Times New Roman",serif;
-    --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-    --mono:ui-monospace,"SF Mono","DM Mono",Menlo,monospace;
-  }
-  @media (prefers-color-scheme:dark){
-    :root{
-      --paper:#0e140d; --card:#18221a; --ink:#eef2ea; --forest:#0b100c;
-      --lime:#C8F04D; --mist:#2b362c; --slate:#9aa79b; --muted:#8a968b;
-      --amber:#e0aa4e; --line:#2b362c; --band:#141c14;
-      --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -18px rgba(0,0,0,.7);
-    }
-  }
-  :root[data-theme="light"]{
-    --paper:#f3f5ef; --card:#ffffff; --ink:#0a0d0b; --forest:#18221a;
-    --mist:#dde3d9; --slate:#687269; --muted:#6c776e; --amber:#c8892a;
-    --line:#dde3d9; --band:#eef1ea; --shadow:0 1px 2px rgba(24,34,26,.05),0 8px 24px -16px rgba(24,34,26,.25);
-  }
-  :root[data-theme="dark"]{
-    --paper:#0e140d; --card:#18221a; --ink:#eef2ea; --forest:#0b100c;
-    --mist:#2b362c; --slate:#9aa79b; --muted:#8a968b; --amber:#e0aa4e;
-    --line:#2b362c; --band:#141c14; --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -18px rgba(0,0,0,.7);
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
-    line-height:1.5;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:1180px;margin:0 auto;padding:32px 20px 56px}
-
-  header.head{margin-bottom:22px}
-  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
-    color:var(--lime);font-weight:600;margin:0 0 8px}
-  h1{font-family:var(--serif);font-weight:700;font-size:clamp(1.8rem,4.5vw,2.6rem);
-    letter-spacing:-.01em;line-height:1.05;margin:0 0 6px;text-wrap:balance}
-  .sub{color:var(--slate);font-size:15px;max-width:60ch;margin:0}
-
-  .now{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin:18px 0 6px;
-    padding:13px 16px;background:var(--card);border:1px solid var(--line);
-    border-radius:14px;box-shadow:var(--shadow)}
-  .now b{color:var(--ink)}
-  .now .txt{font-size:13.5px;color:var(--muted)}
-  .now .pin{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.06em;
-    text-transform:uppercase;color:var(--ink);background:var(--lime);
-    padding:4px 9px;border-radius:999px;white-space:nowrap}
-
-  .legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin:16px 2px 12px;
-    font-size:12.5px;color:var(--muted)}
-  .legend span{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
-  .dot{width:9px;height:9px;border-radius:50%;flex:none;margin-top:1px}
-  .s-live{background:var(--slate)}
-  .s-now{background:var(--lime);box-shadow:0 0 0 3px color-mix(in srgb,var(--lime) 28%,transparent)}
-  .s-plan{background:transparent;border:1.5px solid var(--slate)}
-  .s-own{background:var(--amber)}
-
-  .scroll{overflow-x:auto;border:1px solid var(--line);border-radius:16px;
-    box-shadow:var(--shadow);background:var(--card)}
-  table{border-collapse:separate;border-spacing:0;width:100%;min-width:1000px}
-  thead th{position:sticky;top:0;z-index:3;background:var(--forest);color:#f3f5ef;
-    text-align:left;vertical-align:bottom;padding:14px 14px;font-family:var(--sans)}
-  thead th .vh{font-family:var(--serif);font-size:16px;font-weight:700;letter-spacing:-.01em;display:block}
-  thead th .vt{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
-    color:#aeb9ac;display:block;margin-top:3px}
-  thead th.userhead{z-index:5;left:0;border-top-left-radius:16px}
-  thead th.col-now{background:linear-gradient(180deg,#20301f,#18221a);
-    box-shadow:inset 0 3px 0 var(--lime)}
-  thead th.col-now .vt{color:var(--lime)}
-
-  th.user{position:sticky;left:0;z-index:2;background:var(--band);
-    text-align:left;vertical-align:top;padding:16px 14px;min-width:140px;max-width:150px;
-    border-right:1px solid var(--line)}
-  th.user .uname{font-family:var(--serif);font-size:16px;font-weight:700;color:var(--ink);
-    display:block;line-height:1.15}
-  th.user .urole{font-size:11.5px;color:var(--slate);display:block;margin-top:3px;font-weight:400}
-
-  td{vertical-align:top;padding:13px 14px;border-top:1px solid var(--line);
-    min-width:186px;width:19%}
-  td.col-now{background:color-mix(in srgb,var(--lime) 7%,var(--card))}
-  tbody tr:nth-child(even) th.user{background:var(--band)}
-  tbody tr:hover td{background:color-mix(in srgb,var(--slate) 6%,var(--card))}
-  tbody tr:hover td.col-now{background:color-mix(in srgb,var(--lime) 11%,var(--card))}
-
-  ul.items{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
-  ul.items li{display:flex;gap:9px;font-size:13px;line-height:1.38;color:var(--ink)}
-  ul.items li .dot{margin-top:5px}
-  .dash{color:var(--slate);font-size:13px;opacity:.6}
-
-  footer{margin-top:26px;display:grid;grid-template-columns:1fr;gap:14px}
-  @media(min-width:720px){footer{grid-template-columns:1fr 1fr}}
-  .fcard{background:var(--card);border:1px solid var(--line);border-radius:14px;
-    padding:16px 18px;box-shadow:var(--shadow)}
-  .fcard h3{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
-    color:var(--slate);margin:0 0 10px;font-weight:600}
-  .fcard ol,.fcard ul{margin:0;padding-left:18px}
-  .fcard li{font-size:13.5px;color:var(--ink);margin-bottom:6px;line-height:1.4}
-  .fcard li b{color:var(--ink)}
-  .fnote{font-size:12px;color:var(--muted);margin:14px 2px 0;font-family:var(--mono);
-    letter-spacing:.02em}
+:root{--paper:#f3f5ef;--card:#fff;--ink:#0a0d0b;--forest:#18221a;--lime:#C8F04D;--mist:#dde3d9;--slate:#687269;--amber:#c8892a;--line:#dde3d9;--shadow:0 1px 2px rgba(24,34,26,.05),0 8px 24px -16px rgba(24,34,26,.25);--serif:Georgia,serif;--sans:system-ui,-apple-system,"Segoe UI",sans-serif;--mono:ui-monospace,Menlo,monospace}
+@media (prefers-color-scheme:dark){:root{--paper:#0e140d;--card:#18221a;--ink:#eef2ea;--forest:#0b100c;--mist:#2b362c;--slate:#9aa79b;--amber:#e0aa4e;--line:#2b362c;--shadow:0 1px 2px rgba(0,0,0,.3)}}
+:root[data-theme="light"]{--paper:#f3f5ef;--card:#fff;--ink:#0a0d0b;--mist:#dde3d9;--slate:#687269;--line:#dde3d9}
+:root[data-theme="dark"]{--paper:#0e140d;--card:#18221a;--ink:#eef2ea;--mist:#2b362c;--slate:#9aa79b;--line:#2b362c}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.5}
+.wrap{max-width:1080px;margin:0 auto;padding:32px 20px 56px}
+h1{font-family:var(--serif);font-size:clamp(1.7rem,4vw,2.4rem);margin:0 0 4px}
+h2{font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--slate);margin:26px 0 10px}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#7a9a1e;font-weight:700;margin:0 0 6px}
+.sub{color:var(--slate);font-size:14px;max-width:70ch;margin:4px 0 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow);margin-bottom:12px}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;text-align:left;color:var(--slate);padding:8px 10px;border-bottom:2px solid var(--line)}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.scroll{overflow-x:auto}
+.ok{color:#476c3c;font-weight:700}.pend{color:var(--amber);font-weight:700}.plan{color:var(--slate)}
+.small{font-size:12px;color:var(--slate)}
+b{color:var(--ink)}
 </style>
-
 <div class="wrap">
-  <header class="head">
-    <p class="eyebrow">LOCK · Release Roadmap</p>
-    <h1>What changes, release to release — by workspace</h1>
-    <p class="sub">One row per workspace (see the entity model below). Columns move left→right in time. This is the thread: where each user has been, what ships now, and where we're headed — so nothing gets lost between versions.</p>
-  </header>
+<p class="eyebrow">LOCK · Version Map · rebuilt from verified facts only · 12 Jul 2026</p>
+<h1>What is true right now — and what comes next</h1>
+<p class="sub">Rule of this document: a ✅ appears ONLY with the evidence named beside it. Anything not verified says so. "Planned" is clearly planned. Rebuilt clean on 12 Jul after an owner truth-audit.</p>
 
-  <div class="now">
-    <span class="pin">You are here</span>
-    <span class="txt"><b>STATUS 12 Jul:</b> site 100% rewritten (11 pages) · app rel-07.10 live · infra clean (OAuth published · previews off · smart build-skip) · DS v1.5.2 delivered · versioning manifest live (docs/VERSIONS.md). <b>NEXT VERSION — rel-07.13 (corrective):</b> APP: A13 mapping layer · +New Act · producer-confirm wiring · agency home next-action · activated_by · funnel events · embed parity. SITE: arrow/footer/waitlist polish. GATES: Cowork flow-QA (C1–C2) · migration 032 apply · owner ledger approval.</span>
-  </div>
+<h2>1 · The entity model (how LOCK is structured)</h2>
+<div class="card"><b>Person → Workspace → Role.</b> One person, one login, many workspaces (switcher top-right). Workspaces: <b>Artist</b> (one person, multiple Acts) · <b>Manager office / אמרגן</b> (solo OR team — seats+invites; job = artist roster) · <b>Production / מפיק אירועים</b> (solo OR team — seats+invites; job = events+lineups) · <b>Booker</b> (event organizer receiving a Passport link) · <b>Operator</b> (internal console). The <b>producer-confirmer (מפיק מאשר)</b> is not a workspace: an accountless person tapping one magic link. Subscriptions attach to the workspace. <span class="small">Verified in code (migration 027, org membership + seats shared by both office types).</span></div>
 
-  <div class="legend">
-    <span><i class="dot s-live"></i>Live — already shipped</span>
-    <span><i class="dot s-now"></i>This release (R1)</span>
-    <span><i class="dot s-plan"></i>Planned (R2 / R3 / Launch)</span>
-    <span><i class="dot s-own"></i>Needs owner / decision</span>
-  </div>
+<h2>2 · What is LIVE — with the evidence</h2>
+<div class="card scroll"><table>
+<tr><th>Track</th><th>Version</th><th>What it contains</th><th>Technically verified</th><th>Owner approved</th></tr>
+<tr><td>APP<br>app.lock.show</td><td>rel-app-2026.07.10<br>+ firewall hotfix</td><td>Two-persona Passport · booker nav · sample passport · GATE analytics (reaction+payment) · producer-reply notifications · Hebrew auth screens · approval-gate firewall</td><td class="ok">✅ production bundle fingerprints (5 markers found in served JS)</td><td class="pend">🟠 NOT approved — awaiting your pass</td></tr>
+<tr><td>SITE<br>lock.show</td><td>rel-site-2026.07.11-2</td><td><b>10 marketing pages rewritten</b> (home, 3 entity pages, pricing, how-it-works, methodology, faq, contact, radar). NOT touched: legal pages (terms/privacy/accessibility), demo page, waitlist-form sizes</td><td class="ok">✅ live-page fingerprints + 0 Hebrew glyphs (unicode scan)</td><td class="pend">🟡 partial — your corrections shipped; no formal sign-off</td></tr>
+<tr><td>EMBED<br>lock.show/app</td><td>mirrors rel-app-07.10</td><td>Same app, static mirror (no server features)</td><td class="ok">✅ bundle hash matches current app code</td><td class="pend">🟠</td></tr>
+<tr><td>DB</td><td>head = 031 (021 frozen)</td><td>Workspace types, analytics, WhatsApp, RLS fix, firewall gate</td><td class="ok">✅ applied by owner, flows confirmed working after</td><td class="ok">✅ (owner-applied)</td></tr>
+<tr><td>DESIGN SYSTEM</td><td>v1.5.2 (Codex)</td><td>Tokens incl. motion/radius/spacing, Radar state table, band/binary spec, HE display token</td><td class="pend">🟠 <b>honest status: reported by Codex, NOT yet independently audited by Claude</b> (my audits covered v1.4.2 only)</td><td>owner-directed</td></tr>
+<tr><td>INFRA</td><td>—</td><td>OAuth consent published · previews OFF · smart build-skip · registries in repo</td><td class="ok">✅ headless OAuth trace + Cowork dashboard confirmations</td><td>— operational</td></tr>
+</table>
+<p class="small">NOT yet verified by anyone: a real Google login click-through (config verified to Google's page only) · real email-confirm delivery (Cowork QA item C1/C2) · DS v1.5.2 content (my audit pending).</p></div>
 
-  <div class="fcard" style="margin:0 0 14px">
-    <h3>The entity model (how to read the rows)</h3>
-    <p style="font-size:13.5px;margin:0 0 8px"><b>Person → Workspace → Role.</b> One person, one login, several workspaces — switched top-right. The rows below are <b>WORKSPACES</b> (screen-sets), not people: the same person can hold an Artist workspace, run a Manager office, and sit in a Production team (that is the Shai Perlman demo persona). A Manager office (אמרגן) can be <b>solo or a team</b> (seats + invites). A Production workspace (מפיק אירועים) is likewise <b>solo or a team</b> (seats + invites) — its difference is the JOB: events + lineups, vs the Manager office's artist roster. The <b>producer-confirmer</b> (מפיק מאשר) is NOT a workspace — an accountless person tapping one magic link. Subscriptions attach to the workspace, never the person.</p>
-  </div>
-  <div class="fcard" style="margin:0 0 14px">
-    <h3>Release ledger — two products, two tracks (status: live-verified vs owner-approved)</h3>
-    <div style="overflow-x:auto"><table style="min-width:640px"><thead><tr>
-      <th style="position:static;background:var(--forest)"><span class="vt">Track</span></th>
-      <th style="position:static;background:var(--forest)"><span class="vt">Release</span></th>
-      <th style="position:static;background:var(--forest)"><span class="vt">Live + verified</span></th>
-      <th style="position:static;background:var(--forest)"><span class="vt">Owner approved</span></th></tr></thead><tbody>
-      <tr><td>APP</td><td>rel-07.10 (passport personas · GATE analytics · notifications · Hebrew auth)</td><td>✅ bundle fingerprints</td><td>🟠 awaiting your review</td></tr>
-      <tr><td>APP</td><td>Firewall hotfix (approval gate, all read paths)</td><td>✅</td><td>🟠</td></tr>
-      <tr><td>SITE</td><td>Full rewrite (11 pages) · values-first · full-bleed · polish · EN purity</td><td>✅ per-page fingerprints</td><td>🟡 partially — your corrections shipped; final pass pending</td></tr>
-      <tr><td>SITE</td><td>Pricing 4-entities · nav IA · inner pages</td><td>✅</td><td>🟠</td></tr>
-      <tr><td>EMBED</td><td>lock.show/app parity (skew fixed, rebuild rule standing)</td><td>✅</td><td>🟠</td></tr>
-      <tr><td>INFRA</td><td>Deploy optimization · previews OFF · OAuth published · registries</td><td>✅</td><td>— (operational)</td></tr>
-    </tbody></table></div>
-    <p style="font-size:12px;color:var(--muted);margin:8px 0 0">"Live + verified" = deployed with technical fingerprints checked. "Owner approved" = Maria reviewed the live surface and signed off — the formal gate before we call a version DONE.</p>
-  </div>
-  <div class="scroll">
-    <table>
-      <thead>
-        <tr>
-          <th class="userhead user">User</th>
-          <th><span class="vh">Live now</span><span class="vt">≤ rel-07.09 · shipped</span></th>
-          <th class="col-now"><span class="vh">rel-07.10–11</span><span class="vt">SHIPPED · live-verified</span></th>
-          <th><span class="vh">NEXT · rel-07.13</span><span class="vt">corrective release · in build</span></th>
-          <th><span class="vh">R3 · Depth</span><span class="vt">After</span></th>
-          <th><span class="vh">Launch · Gate</span><span class="vt">Before real money</span></th>
-        </tr>
-      </thead>
-      <tbody>
+<h2>3 · NEXT version — rel-*.2026.07.13 (planned, in build — nothing here is live)</h2>
+<div class="card scroll"><table>
+<tr><th>Workspace</th><th>Planned in 07.13</th></tr>
+<tr><td>Artist</td><td class="plan">+ New Act (multi-Act usable) · producer-confirm intent wired to the real magic-link · more funnel events</td></tr>
+<tr><td>Manager office</td><td class="plan">Next-best-action ON the roster home · roster-from-consented-grants (needs migration 032 applied)</td></tr>
+<tr><td>Production</td><td class="plan">Requests inbox with real data (needs migration 032)</td></tr>
+<tr><td>Operator</td><td class="plan">activated_by audit trail on payment activation</td></tr>
+<tr><td>All / app-wide</td><td class="plan">A13 mapping layer — DS v1.5.2 tokens bound into the app (after my v1.5.2 audit) · embed rebuilt in the same release</td></tr>
+<tr><td>Site</td><td class="plan">Arrow unification · footer regrouping · waitlist type floor</td></tr>
+</table></div>
 
-        <tr>
-          <th class="user"><span class="uname">Artist workspace</span><span class="urole">אמן — one person, multiple Acts</span></th>
-          <td><ul class="items">
-            <li><i class="dot s-live"></i>Signup (first + last name), onboarding</li>
-            <li><i class="dot s-live"></i>Radar home · evidence → AI claims · review · publish</li>
-            <li><i class="dot s-live"></i>Controls WhatsApp sharing</li>
-          </ul></td>
-          <td class="col-now"><ul class="items">
-            <li><i class="dot s-now"></i><b>🔒 Firewall fix</b> — unreviewed claims no longer go public</li>
-            <li><i class="dot s-now"></i>Own Passport preview now shows both buyer views</li>
-          </ul></td>
-          <td><ul class="items">
-            <li><i class="dot s-plan"></i><b>+ New Act</b> (multi-Act usable) · producer-confirm wired to real magic-link · remaining funnel events</li>
-          </ul></td>
-          <td><ul class="items">
-            <li><i class="dot s-plan"></i>Create a 2nd Act (multi-Act finally usable)</li>
-            <li><i class="dot s-plan"></i>Reply to a booking request</li>
-            <li><i class="dot s-plan"></i>Ask a producer to confirm, from evidence</li>
-          </ul></td>
-          <td><ul class="items">
-            <li><i class="dot s-plan"></i>Radar re-theme to paper · Hebrew polish</li>
-            <li><i class="dot s-plan"></i>Real AI model on deploy (not the mock)</li>
-          </ul></td>
-        </tr>
+<h2>4 · Gates before 07.13 can promote</h2>
+<div class="card">
+1. <b>Cowork QA (C1–C2):</b> real-browser flows — Google login click-through, email signup incl. confirmation delivery, artist journey, booker link, workspace switch.<br>
+2. <b>Migration 032</b> — I author, Cowork applies, regression-checked.<br>
+3. <b>My DS v1.5.2 audit</b> — before binding its tokens (no more green-on-trust).<br>
+4. <b>Your approval pass on rel-07.10–11</b> (section 2's 🟠 column).<br>
+<span class="small">Then: launch planning (pilot: 2–3 artists + 1 אמרגן; the Gate = one reacts AND one pays — measurement for both is already live).</span></div>
 
-        <tr>
-          <th class="user"><span class="uname">Booker</span><span class="urole">event organizer — receives a Passport link</span></th>
-          <td><ul class="items">
-            <li><i class="dot s-live"></i>Open a Passport from a link (/discover)</li>
-          </ul></td>
-          <td class="col-now"><ul class="items">
-            <li><i class="dot s-now"></i><b>Own nav tab</b> (Passports) — no more dead-end</li>
-            <li><i class="dot s-now"></i>“See a sample passport” now works on live</li>
-          </ul></td>
-          <td><span class="dash">—</span></td>
-          <td><ul class="items">
-            <li><i class="dot s-plan"></i>Open discovery (post-validation)</li>
-          </ul></td>
-          <td><span class="dash">—</span></td>
-        </tr>
-
-        <tr>
-          <th class="user"><span class="uname">Producer-confirmer</span><span class="urole">מפיק מאשר — a PERSON, no account: one magic link</span></th>
-          <td><ul class="items">
-            <li><i class="dot s-live"></i>Magic-link confirm ceremony</li>
-            <li><i class="dot s-live"></i>“Passports shared with you” + paste a link</li>
-          </ul></td>
-          <td class="col-now"><span class="dash">—</span></td>
-          <td><span class="dash">—</span></td>
-          <td><ul class="items">
-            <li><i class="dot s-plan"></i>Confirming notifies the artist + logs it</li>
-            <li><i class="dot s-plan"></i>Real received-passports list · “link expired” state</li>
-          </ul></td>
-          <td><span class="dash">—</span></td>
-        </tr>
-
-        <tr>
-          <th class="user"><span class="uname">Manager office</span><span class="urole">אמרגן — solo OR team (seats), the payer</span></th>
-          <td><ul class="items">
-            <li><i class="dot s-live"></i>Roster · Radar feed · Requests inbox</li>
-            <li><i class="dot s-live"></i>Consent access-request cards</li>
-          </ul></td>
-          <td class="col-now"><ul class="items">
-            <li><i class="dot s-now"></i><b>🔓 Radar works again</b> (migration 030)</li>
-            <li><i class="dot s-now"></i>Passport <b>Representation view</b> to evaluate artists</li>
-          </ul></td>
-          <td><ul class="items">
-            <li><i class="dot s-plan"></i><b>Next-action ON the roster home</b> · roster-from-grants (after migration 032)</li>
-          </ul></td>
-          <td><ul class="items">
-            <li><i class="dot s-plan"></i>Roster from consented grants (not just owned)</li>
-            <li><i class="dot s-own"></i>Remove legacy “own artist” mode (firewall)</li>
-          </ul></td>
-          <td><span class="dash">—</span></td>
-        </tr>
-
-        <tr>
-          <th class="user"><span class="uname">Production workspace</span><span class="urole">מפיק אירועים — solo OR team (seats); events + lineup</span></th>
-          <td><ul class="items">
-            <li><i class="dot s-live"></i>Team · Events · Requests tabs</li>
-          </ul></td>
-          <td class="col-now"><ul class="items">
-            <li><i class="dot s-now"></i><b>🔓 Events load</b> for external artists (migration 030)</li>
-          </ul></td>
-          <td><span class="dash">—</span></td>
-          <td><ul class="items">
-            <li><i class="dot s-plan"></i>Requests inbox with real data (new read path)</li>
-          </ul></td>
-          <td><span class="dash">—</span></td>
-        </tr>
-
-        <tr>
-          <th class="user"><span class="uname">Operator</span><span class="urole">you — admin console</span></th>
-          <td><ul class="items">
-            <li><i class="dot s-live"></i>Artists · claims · consents · audit</li>
-            <li><i class="dot s-live"></i>Payments queue · agency upgrades · export/erase</li>
-          </ul></td>
-          <td class="col-now"><span class="dash">—</span></td>
-          <td><ul class="items">
-            <li><i class="dot s-plan"></i>activated_by audit trail (GATE events already LIVE in rel-07.10)</li>
-          </ul></td>
-          <td><ul class="items">
-            <li><i class="dot s-plan"></i>Record who activated a payment (audit trail)</li>
-          </ul></td>
-          <td><ul class="items">
-            <li><i class="dot s-own"></i><b>Receipts / invoices</b> (חשבונית — legal)</li>
-            <li><i class="dot s-own"></i>Agency-side payment record · revenue ledger</li>
-          </ul></td>
-        </tr>
-
-        <tr>
-          <th class="user"><span class="uname">Everyone</span><span class="urole">platform / cross-cutting</span></th>
-          <td><ul class="items">
-            <li><i class="dot s-live"></i>Navigation contract (34 journeys) · auth fixes</li>
-            <li><i class="dot s-live"></i>Analytics (6 events) · Design System on the site</li>
-            <li><i class="dot s-live"></i>lock.show live · migrations ≤ 029</li>
-          </ul></td>
-          <td class="col-now"><ul class="items">
-            <li><i class="dot s-now"></i><b>Two-persona Passport</b> (Booking · Representation)</li>
-            <li><i class="dot s-now"></i>Migrations 030 + 031 applied · gate green · draw-headline firewall hardened</li>
-            <li><i class="dot s-own"></i>Hebrew auth-screen fix (2nd session branch — include in R1?)</li>
-          </ul></td>
-          <td><ul class="items">
-            <li><i class="dot s-plan"></i><b>A13 mapping layer</b> — DS v1.5.2 tokens into the app · embed parity in same release · site polish (arrows, footer grouping)</li>
-          </ul></td>
-          <td><ul class="items">
-            <li><i class="dot s-plan"></i>“Add workspace” actually creates one</li>
-          </ul></td>
-          <td><ul class="items">
-            <li><i class="dot s-plan"></i>App re-theme via <b>LOCK DS v1.3 + tokens-to-code map</b> (Codex → Claude)</li>
-            <li><i class="dot s-own"></i>Counsel sign-off · Hebrew launch pass · ONE pricing truth</li>
-          </ul></td>
-        </tr>
-
-      </tbody>
-    </table>
-  </div>
-
-  <p class="fnote">24 flow-gaps mapped across all users (2 P0 · 10 P1 · 12 P2) — full detail in docs/FLOW-GAP-AUDIT-2026-07-10.md. This board is the summary.</p>
-
-  <footer>
-    <div class="fcard">
-      <h3>How we release (so we don't lose the thread)</h3>
-      <ol>
-        <li><b>Small batches, not big-bang.</b> Each column above is one release.</li>
-        <li><b>Every release passes the gate</b> (nav 34/34 + build) → is <b>tagged</b> → is <b>reversible</b> in minutes.</li>
-        <li><b>Migrations go in alone</b>, verified before code rides on them.</li>
-        <li>Claude does audit → code → verify → browser-test → deploy. You decide <b>promote</b>.</li>
-      </ol>
-    </div>
-    <div class="fcard">
-      <h3>Decisions waiting on you</h3>
-      <ul>
-        <li><b>Google login click-test</b> (30 sec) → unlocks the flow-agent fleet.</li>
-        <li><b>Facebook App ID+Secret</b> → provider → button flag.</li>
-        <li><b>"clean"</b> — delete merged branch + quarantine the MVP branch.</li>
-        <li>Rotate Anthropic+Tavily keys · push git tags · About-page facts.</li>
-      </ul>
-    </div>
-  </footer>
+<h2>5 · Backlog (later — honestly not scheduled)</h2>
+<div class="card small">Artist reply-channel (needs your product decision) · agency "own artist" legacy mode removal · open booker discovery (post-validation) · Hebrew site version · About page (needs your facts) · comparison mode (deferred, firewall watch) · Radar v5 emotional layer (radar-v4 prototype approved, build after mapping layer) · receipts/invoices + agency payment trail (legal, before real money).</div>
 </div>

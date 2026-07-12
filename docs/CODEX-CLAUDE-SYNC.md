@@ -51,7 +51,7 @@ current tokens stay frozen (no new invented styling), and the re-ground starts t
 |---|---|---|---|
 | 1 | A13 tokens-to-code map | Codex → Claude | ✅ DELIVERED 10 Jul (`docs/design-system/A13-TOKEN-VALUES.md`) — mapping layer UNBLOCKED |
 | 2 | Per-surface token values | Codex → Claude | ✅ delivered inside A13 (app dark-first ratified; marketing paper) |
-| 3 | Build-blocker specs (band/binary component, Radar state table, motion/radius/spacing tokens, HE display token, OG contract) | Codex → Claude | ✅ CLOSED in DS v1.5.2 (12 Jul) |
+| 3 | Build-blocker specs (band/binary, Radar states, motion/radius/spacing, HE token, OG contract) | Codex → Claude | 🟠 reported delivered in v1.5.2 — **Claude independent audit PENDING** (no green without verification) |
 | 3b | Physical files INTO git: logo SVGs, lockshow-icons.svg, 4 atmosphere PNGs, OG exports | Owner/Codex → repo | 🔴 open — only blocker left on the design side |
 | 3c | DB-state inventory (states vs actions) + post-implementation screenshots | Claude → Codex | 🟡 Claude owes |
 | 4 | Live-app screenshots + Radar visual spec | Claude → Codex | ✅ delivered (`current-screens/` ×12 + `CODEX-RADAR-VISUAL-SPEC.md`) |
