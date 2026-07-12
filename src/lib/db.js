@@ -122,6 +122,27 @@ export async function listActs(artistId) {
   return data ?? []
 }
 
+// Create a SECOND (or third…) Act for the same Person (rel-07.13 A3/N12).
+// Canon: the new Act starts EMPTY — evidence is per-Act and never transfers.
+// person_id is resolved from the currently-active Act row (same resolution
+// path listActs uses), so a caller can never attach an Act to someone else.
+// Known transition gap (documented in switchAct): a non-default Act has no
+// matching `artists` row — artists-only fields stay honestly absent for it.
+export async function createAct(currentActId, { stage_name, genre = null }) {
+  if (DEMO) throw new Error('demo') // UI shows the friendly demo hint
+  const name = (stage_name || '').trim()
+  if (!name) throw new Error('stage name required')
+  const { data: mine, error: e1 } = await supabase.from('act').select('person_id').eq('id', currentActId).maybeSingle()
+  if (e1) throw e1
+  if (!mine?.person_id) throw new Error('active act has no person — cannot create')
+  const { data, error } = await supabase.from('act')
+    .insert({ person_id: mine.person_id, stage_name: name, genre, is_default: false })
+    .select('id, stage_name, genre, city, positioning, photo_url, is_default, created_at')
+    .single()
+  if (error) throw error
+  return data
+}
+
 // Switching Acts swaps the WHOLE evidence universe. Reads are act_id-scoped —
 // migration 020 threaded act_id through every evidence table and backfilled it
 // for existing rows, so the default Act's own history still resolves here too.

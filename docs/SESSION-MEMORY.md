@@ -27,6 +27,7 @@ priority board (docs/TASK-STATUS-BOARD.md) + open pending-from-owner list.
 - Six questions before ANY entity copy/route/component (DS v1.5.8): artist-side rep? pro buyer? private client? production? source-confirmation only? workspace needed at all?
 
 ## STANDING RULES (owner directives)
+- **TASK-RELEASE RULE (owner, 12 Jul): a task assigned to another AI is NEVER marked done on their word alone or dropped silently — it stays OPEN and is clearly RE-REQUESTED in every report until the owner relays its completion (or Claude independently verifies it with evidence).**
 - **LINK RULE (owner, 12 Jul): every reply that mentions a document includes a clickable link to it** (GitHub URL on the working branch for repo docs; Drive URL for Drive docs; artifact URL for artifacts).
 - **SIGNATURE RULE (owner, 12 Jul): every reply ends signed "CLAUDE CODE" + areas of responsibility** (development in the repo · code-proof · release mechanics · repo docs-of-record).
 - **ALWAYS update the Version Roadmap artifact** (https://claude.ai/code/artifact/a65d12d9-a66d-442c-9077-306eb05fddd6, source docs/prototypes/00_CURRENT/version-roadmap-v1.html + scratchpad) after ANY planning-relevant change — releases, decisions, blockers. Professional planning must never be lost (owner, 10 Jul).

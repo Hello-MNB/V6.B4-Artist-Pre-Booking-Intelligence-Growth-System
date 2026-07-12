@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { updateClaim, updateAct, addProfileItem, addEvidence, processEvidence, listClaims, listActs, switchAct } from '../../lib/db.js'
+import { updateClaim, updateAct, addProfileItem, addEvidence, processEvidence, listClaims, listActs, switchAct, createAct } from '../../lib/db.js'
 import { uploadFile } from '../../lib/storage.js'
 import { BottomSheet, Spinner, GpIcon } from '../../components/ui.jsx'
 import { PlatformLogo, detectPlatform } from '../../components/PlatformLogo.jsx'
@@ -117,6 +117,7 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
   const [activeActId, setActiveActId] = useState(() => localStorage.getItem('gigproof_active_act') || artist.id)
   const [actSheet, setActSheet] = useState(false)
   const [actBusy, setActBusy] = useState(false)
+  const [newActName, setNewActName] = useState('') // + New Act inline form (A3/N12)
   const [actOverride, setActOverride] = useState(null) // { artist, items, claims } for a non-default Act
 
   useEffect(() => {
@@ -134,7 +135,7 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [acts])
 
-  async function pickAct(id) {
+  async function pickAct(id, actRow = null) {
     const alreadyActive = id === artist.id ? !actOverride : activeActId === id && !!actOverride
     if (alreadyActive) { setActSheet(false); return }
     if (actBusy) return
@@ -144,7 +145,7 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
         setActOverride(null) // back to the default Act — the prop-driven data
       } else {
         const res = await switchAct(id)
-        const a = acts.find((x) => x.id === id) || res.act || {}
+        const a = actRow || acts.find((x) => x.id === id) || res.act || {}
         setActOverride({
           act: res.act || a,
           items: res.items || [],
@@ -170,7 +171,7 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
       localStorage.setItem('gigproof_active_act', id)
       setActSheet(false)
       setSelected(null)
-      flash(S.actSwitch.switchedToast((acts.find((a) => a.id === id) || {}).stage_name || artist.stage_name))
+      flash(S.actSwitch.switchedToast((actRow || acts.find((a) => a.id === id) || {}).stage_name || artist.stage_name))
     } finally {
       setActBusy(false)
     }
@@ -180,6 +181,26 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
     clearTimeout(flashRef.current)
     setFlashMsg(msg)
     flashRef.current = setTimeout(() => setFlashMsg(''), 3200)
+  }
+
+  // + New Act (rel-07.13 A3/N12) — creates an EMPTY second universe for the
+  // same Person and switches straight into it (canon: evidence never transfers).
+  async function createNewAct(e) {
+    e?.preventDefault?.()
+    const name = newActName.trim()
+    if (!name || actBusy) return
+    setActBusy(true)
+    try {
+      const row = await createAct(activeActId || artist.id, { stage_name: name })
+      setActs((prev) => [...prev, row])
+      setNewActName('')
+      setActBusy(false)          // pickAct manages its own busy state
+      await pickAct(row.id, row) // lands inside the new, honestly-empty universe
+      flash(S.actSwitch.newActCreated(row.stage_name))
+    } catch (err) {
+      setActBusy(false)
+      flash(err?.message === 'demo' ? S.actSwitch.newActDemo : (err?.message || T.common.error))
+    }
   }
 
   // Everything below derives from the ACTIVE act's data — swapped wholesale,
@@ -559,7 +580,16 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
           })}
           {acts.length === 0 && <p className="py-4 text-center text-xs text-muted">—</p>}
         </div>
-        <p className="mt-3 text-[11px] leading-relaxed text-faint">{S.actSwitch.newActHint}</p>
+        <form onSubmit={createNewAct} className="mt-3 flex items-center gap-2">
+          <input className="field flex-1" maxLength={60} value={newActName}
+            placeholder={S.actSwitch.newActNamePh} aria-label={S.actSwitch.newActCta}
+            onChange={(e) => setNewActName(e.target.value)} disabled={actBusy} />
+          <button type="submit" disabled={actBusy || !newActName.trim()}
+            className="btn btn-primary shrink-0 text-sm disabled:opacity-50">
+            {S.actSwitch.newActCreate}
+          </button>
+        </form>
+        <p className="mt-2 text-[11px] leading-relaxed text-faint">{S.actSwitch.newActHint}</p>
       </BottomSheet>
     </div>
   )

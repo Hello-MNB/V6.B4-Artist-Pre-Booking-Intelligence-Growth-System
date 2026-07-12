@@ -177,6 +177,27 @@ Artist lane FIRST; other entities after. Codex: artist-screen DS DODs + states s
 briefs. Cowork: Q3/Q4 QA weights the artist journey end-to-end. Entity architecture verified ready for
 growth; structural debts (033+ renames) scheduled, not blocking.
 
+## 16. DS v1.6.3 INDEPENDENT AUDIT (12 Jul night, Claude) — verdict: **BIND WITH FIXES**
+Read in full from Drive (263,236 bytes, nothing truncated). PASS: version governance (v1.6.3 current) ·
+Artist-lane N1–N12 with per-screen proof columns · color tokens have hex + light/dark + AA ratios
+(e.g. paper #F3F5EF / forest #18221A = 14.91 · app.bg #0B0C0B / app.text #F3F0E8 = 17.21 ·
+action.primary #C8F04D) · no contradictions with repo facts.
+**Codex fixes required (re-requested until owner relays done — owner rule 12 Jul):**
+1. 🔴 Draw-band demo shows a numeric "62% coverage" + filled bar — a PERCENTAGE on a trust widget,
+   firewall violation inside the DS itself. Remove/relabel to a band.
+2. 🔴 Demo chip "Producer-linked" — non-canonical; must be "Producer-confirmed".
+3. 🟠 Entity-table Source-Confirmer row still recommends "מפיק מאשר" — contradicts the file's own
+   canon-lock note; Recommended HE = מאשר-מקור only.
+4. 🟠 "Unable to verify" appears as a fifth chip label in one voice rule — it is a band STATE
+   (לא-ניתן-להעריך), not a method chip; chips stay exactly 4.
+5. 🟡 Stale "DS v1.6.2 tokens" note in artist-lane section; "buyer workspace need proof" phrase
+   (buyers are recipients, never workspaces).
+**Claude corrections to the audit itself:** the flag on state.confirmed #CBEE72 (green) is a FALSE
+POSITIVE — "no green-on-trust" is the evidence-governance rule (no ✅ without evidence), not a color
+ban; the lime state colors are live and fine. **Binding decision:** color/surface token mapping may
+START now (values verified); font tokens (font.display/ui/mono/rtl) have NO values yet — blocked on
+Codex; the 5 fixes above must land before the binding batch is declared DS-true.
+
 ## 15e. OWNER CANON-LOCK APPROVED (12 Jul evening, "מאשרת") + Codex handoff verdicts
 - ✅ מאשר-מקור ratified as the ONLY Source-Confirmer UI term (מפיק מאשר = docs-only alias).
 - ✅ Terminology wave (buyer ≠ אמרגן) APPROVED → A1/S1 cleared for the train (deploy law still: rides the train, no partial deploy).
