@@ -692,6 +692,20 @@ export const T = {
     title: 'RADAR · מודיעין רוסטר וביקוש',
     subtitle: 'סיגנלים מבוססי-ראיות — מה דורש טיפול ברוסטר ובביקוש הנכנס.',
     scanKickoff: 'הרדאר שלך פועל — חוזקות מופיעות קודם; מה שצריך אותך מחכה בשקט למטה.',
+    // North-Star chain next-actions (rel-07.13 N3) — the rest of nextActions
+    // falls back to EN per-key until the native-authoring pass.
+    nextActions: {
+      publish: {
+        title: 'פרסם את הפספורט שלך',
+        why: 'ההוכחות מוכנות — פרסום הופך אותן לקישור אחד שזר יכול לסמוך עליו.',
+        time: 2,
+      },
+      share: {
+        title: 'שתף את הפספורט עם מזמין הופעות',
+        why: 'תגובה אמיתית ממי שמזמין היא המטרה — שלח את הקישור לאדם אחד שמזמין אמנים.',
+        time: 1,
+      },
+    },
     // Partial HE for the artist universe — the rest falls back to EN per-key
     // (build-in-English rule) until the native-authoring pass.
     universe: {

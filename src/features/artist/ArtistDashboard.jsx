@@ -30,7 +30,11 @@ function pickNextAction(artist, items, claims, T) {
   if (links.length === 0) return { ...A.links, to: evidenceRoute }
   if (exp.length < 3) return { ...A.experience, to: evidenceRoute }
   if (!artist.lineup_frequency_band) return { ...A.bands, planet: 'proof' } // deferred band → radar fill
-  return { ...A.done, to: null }
+  // North-Star chain (rel-07.13 N3): the ladder never dead-ends at "done" —
+  // once proof exists it drives publish → share → a real buyer reaction (the
+  // Gate's first half). Pilot ruling: publishing is FREE — never a wall here.
+  if (!artist.published) return { ...A.publish, to: '/artist/passport' }
+  return { ...A.share, to: '/artist/passport' }
 }
 
 export default function ArtistDashboard() {

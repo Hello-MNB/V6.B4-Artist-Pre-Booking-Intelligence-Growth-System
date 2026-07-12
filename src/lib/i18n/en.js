@@ -766,6 +766,16 @@ export const T = {
         why: 'Bands (never exact numbers) are the only way draw appears publicly — set yours honestly.',
         time: 2,
       },
+      publish: {
+        title: 'Publish your Passport',
+        why: 'Your proof is ready — publishing turns it into one link a stranger can trust.',
+        time: 2,
+      },
+      share: {
+        title: 'Share your Passport with a buyer',
+        why: 'A real reaction from someone who books is the goal — send your link to one person who books artists.',
+        time: 1,
+      },
       done: {
         title: 'You are set for now',
         why: 'Refresh evidence after your next show — fresh proof beats old proof.',
