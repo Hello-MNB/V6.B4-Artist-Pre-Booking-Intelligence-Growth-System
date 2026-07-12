@@ -204,7 +204,7 @@ export default function Contact() {
                   <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
                     <span style={{
                       fontFamily: 'var(--font-space-mono)',
-                      fontSize: '0.7rem',
+                      fontSize: '0.75rem',
                       color: 'var(--color-stamp-onlight)',
                       flexShrink: 0,
                       paddingTop: '2px',
