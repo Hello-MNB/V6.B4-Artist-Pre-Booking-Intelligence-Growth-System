@@ -142,3 +142,16 @@ Also adopted: per-entity DOD structure into the release plan; QA/QC protocol (Q1
 - Act HE: correctly flagged as the still-open ruling (never invent — canon rule).
 - Release-train strategy: **ADOPTED** as rel-2026.07.13-PLAN §4b (preview-first, additive-032-now, backups-before-033+, atomic go-live, rollback SHAs). One correction applied: previews are OFF globally (quota) — the preview lane needs a one-time hook/enable by Cowork, not a routine push.
 - Supabase Pro backups: prerequisite for STRUCTURAL migrations (033+), not for additive 032 — sequencing recorded; $ decision = Maria.
+
+## 13. TASK-HANDOFF PROTOCOL (owner directive, 12 Jul — BINDING for Claude/Cowork/Chat/Codex)
+Every task passed between agents MUST contain: (1) **full self-contained text** — never shorthand
+that assumes the reader saw another conversation; (2) **explicit source-of-truth references** (repo
+path and, for Codex, the Drive path) so all agents loop on the SAME truth; (3) the reasoning (why),
+not only the what — "Codex cannot act without comprehensive, reasoned information."
+Until repo and Drive truth are fully mirrored: repo docs are canonical for entities/vocabulary/
+releases (`docs/GLOSSARY.md`, `docs/ENTITY-GLOSSARY.md`, `docs/VERSIONS.md`,
+`docs/releases/rel-2026.07.13-PLAN.md`, this file); Drive `00_CURRENT` is canonical for the DS.
+**Roles:** Cowork = technology/execution tasks + manages the project GPT (keeps the overall
+project archive updated with every canon change). Codex = design law, needs full briefs. Claude =
+implementation/code-proof + keeps repo docs current. Maria = arbiter; relays between Drive and repo
+where an agent can't reach.
