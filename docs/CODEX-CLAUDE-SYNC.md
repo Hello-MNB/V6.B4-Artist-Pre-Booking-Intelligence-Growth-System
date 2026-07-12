@@ -177,6 +177,26 @@ Artist lane FIRST; other entities after. Codex: artist-screen DS DODs + states s
 briefs. Cowork: Q3/Q4 QA weights the artist journey end-to-end. Entity architecture verified ready for
 growth; structural debts (033+ renames) scheduled, not blocking.
 
+## 19. CFRO v2.3 + Codex v1.6.7 processed (12 Jul night) — Claude Code verdicts
+**CFRO v2.3: HIGH QUALITY, ADOPTED AS ADVISORY MAP** — canon-aware (all ₪ marked HYPOTHESIS, Option A,
+Green-Invoice-before-payment, no-score-to-sell honored), honest verified-vs-hypothesis ledger.
+**One REAL canon conflict caught (both CFRO and Codex missed it):** the proposed Free-tier
+"cannot publish" wall CONTRADICTS the live pilot ruling — **artists are free in the pilot INCLUDING
+publish** (CODEX-FUNCTIONAL-CONTRACTS pricing ruling). The publish-wall is a POST-GATE shape only.
+**Ruling: no publish-wall is built in rel-07.13.** The Gate's "pays" half is measured via the
+existing voluntary Bit flow, not forced by a wall.
+**Answers to CFRO's 3 blockers:** Q1 — the auth-gated pricing ruling says exactly: artists FREE in
+pilot; ₪149–249 range only if asked; never a fixed public price; agency Roster deliberately unpriced
+(its ₪199 fits the range; every recurring tier = new proposal, post-Gate). Q2 — N10 is NOT a
+fixed-price screen: Bit reference + operator-set manual activation, so 3-cohort price testing is
+operationally possible post-Gate with zero build change. Q3 — canon pack file =
+"LOCK-CANON-PACK — 2026-07-12 @ d2aa382.md" in 05 — CANON MIRROR (refresh due after the train).
+**Codex v1.6.7 (Radar = Growth Advisor): ADOPTED** — gives N3's next-action widget its product
+meaning; firewall-checked (next-actions, never grades). Codex's gated-roadmap feedback matches the
+locked scope; its "prices configurable, never hard-coded" instruction accepted for N10.
+**Open to Maria (from CFRO):** Q8 — who is the first REAL payer if the pilot cohort is free
+("SHIGAON" mentioned — name unknown to repo docs; clarify). Q4–Q7 = post-Gate design questions.
+
 ## 18. NEW ENTITY REGISTERED (owner, 12 Jul night): CLAUDE CHAT — CFO / Monetization Strategy
 - **Lane:** business model, pricing/tracks strategy, monetization feedback, cost governance opinion.
   Advises; **decides nothing** — every monetization decision remains Maria's, and pricing/economy
