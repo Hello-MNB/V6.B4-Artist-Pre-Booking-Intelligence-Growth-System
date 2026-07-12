@@ -198,6 +198,14 @@ ban; the lime state colors are live and fine. **Binding decision:** color/surfac
 START now (values verified); font tokens (font.display/ui/mono/rtl) have NO values yet — blocked on
 Codex; the 5 fixes above must land before the binding batch is declared DS-true.
 
+**✅ CLOSED (12 Jul night): ALL 5 FIXES VERIFIED FIXED in DS v1.6.5** — independent re-read of the
+full file (265,710 bytes) confirmed: "62%" zero occurrences · "Producer-linked" zero · Source-Confirmer
+Recommended HE = מאשר-מקור with the docs-only alias note · "Unable to verify" explicitly documented as
+a band/recovery state, not a fifth chip · no stale v1.6.2 refs · no "buyer workspace". Closed on
+Claude's own verification evidence per the owner's task-release rule (not on Codex's word alone).
+Remaining Codex asks: font token VALUES · atmospheric image bank · physical assets already flowing
+(6 SVG export templates → repo import in progress).
+
 ## 15e. OWNER CANON-LOCK APPROVED (12 Jul evening, "מאשרת") + Codex handoff verdicts
 - ✅ מאשר-מקור ratified as the ONLY Source-Confirmer UI term (מפיק מאשר = docs-only alias).
 - ✅ Terminology wave (buyer ≠ אמרגן) APPROVED → A1/S1 cleared for the train (deploy law still: rides the train, no partial deploy).
