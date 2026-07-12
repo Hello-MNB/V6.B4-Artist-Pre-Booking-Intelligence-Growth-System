@@ -24,7 +24,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/producers',     priority: 0.8,  changeFrequency: 'monthly' },
     { path: '/how-it-works',  priority: 0.7,  changeFrequency: 'monthly' },
     { path: '/methodology',   priority: 0.7,  changeFrequency: 'monthly' },
-    { path: '/pricing',       priority: 0.6,  changeFrequency: 'monthly' },
+    // '/pricing' unpublished (owner, 12 Jul night — S8 beta focus; redirects to /artists)
     { path: '/radar',         priority: 0.5,  changeFrequency: 'monthly' },
     { path: '/faq',           priority: 0.5,  changeFrequency: 'monthly' },
     { path: '/contact',       priority: 0.5,  changeFrequency: 'monthly' },

@@ -7,8 +7,10 @@ QA/QC: protocol Q1–Q8 (plan §4) — the version is not valid until it passes.
 
 ## SITE — rel-site-2026.07.13 · SCOPE
 
-**Goal (one sentence):** vocabulary-true, polished marketing site where every demand-side
-audience (including private clients) understands LOCK without industry jargon.
+**Goal (one sentence, updated 12 Jul night by owner):** a beta-signup engine — vocabulary-true,
+polished landing pages where every audience understands LOCK without jargon AND is moved to
+register for the beta (the marketing-skills test: is the offer attractive?). Pricing hidden
+until post-Gate.
 
 **IN (7 items, closed list):**
 | # | Item | Where |
@@ -20,6 +22,8 @@ audience (including private clients) understands LOCK without industry jargon.
 | S5 | ONE private/corporate acknowledgment line, warm register, no venue jargon | /bookers |
 | S6 | ONE clarifying line: this flow = Source Confirmer (magic link, no account) ≠ production company | /producers |
 | S7 | OG/social exports committed + metadata wired — ONLY IF Codex delivers files in time; otherwise moves to next train without blocking | public/ + metadata |
+| S8 | **Pricing page UNPUBLISHED (owner word, 12 Jul night — beta-signup focus):** removed from nav/footer/sitemap/llms.txt + `/pricing` → `/artists` redirect; page file KEPT in repo for one-commit restore | nav, footer, sitemap, llms.txt, vercel.json |
+| S9 | **Beta-signup landing upgrade (owner word, 12 Jul night):** Codex passes over the WHOLE site — content + design — with ONE goal: attractive offer → beta signups; every page's primary CTA drives the waitlist/signup; Claude Code implements Codex's deltas + wires signup measurement | all marketing pages |
 
 **OUT (explicit):** Hebrew site · About page · private-client dedicated page · new imagery
 beyond delivered files · How-it-works/Methodology restructure · pricing changes · any new page.

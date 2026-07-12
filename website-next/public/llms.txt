@@ -47,7 +47,7 @@ Every claim on a Passport carries a method label and reviewed date. Method label
 - https://lock.show/passport/demo — A sample Passport showing verified evidence
 - https://lock.show/how-it-works — Three players, seven steps
 - https://lock.show/methodology — How evidence is verified; method labels explained
-- https://lock.show/pricing — Free for booking managers; artist access by arrangement during beta
+- (Pricing page temporarily unpublished during the closed beta — access is by arrangement; booking managers always free)
 - https://lock.show/radar — The Artist Radar feature explained
 - https://lock.show/faq — Frequently asked questions
 - https://lock.show/contact — Contact form and information

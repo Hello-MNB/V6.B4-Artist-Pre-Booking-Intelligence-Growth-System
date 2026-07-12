@@ -47,7 +47,7 @@ const FOOTER_LINKS = [
       { href: '/artists',     label: 'Why LOCK' },
       { href: '/radar',       label: 'Artist Radar' },
       { href: '/methodology', label: 'Methodology' },
-      { href: '/pricing',     label: 'Pricing' },
+      // Pricing unpublished (owner, 12 Jul night — S8 beta focus; restore by re-adding)
     ],
   },
   {

@@ -16,7 +16,8 @@ const NAV_LINK_KEYS = [
   // How-it-works + Methodology demoted from the top nav (owner IA ruling 10 Jul:
   // each audience page tells its own story; the reference pages stay reachable
   // from the footer + deep links — never a 404).
-  { href: '/pricing',      key: 'pricing'      },
+  // Pricing UNPUBLISHED (owner ruling 12 Jul night, S8): beta-signup focus —
+  // the page file stays in the repo for easy restore; /pricing redirects (vercel.json).
 ] as const
 
 function LocaleToggle() {
