@@ -27,6 +27,7 @@ priority board (docs/TASK-STATUS-BOARD.md) + open pending-from-owner list.
 - Six questions before ANY entity copy/route/component (DS v1.5.8): artist-side rep? pro buyer? private client? production? source-confirmation only? workspace needed at all?
 
 ## STANDING RULES (owner directives)
+- **AGENT TEAM (updated 12 Jul night):** Maria = sole approver · Claude Code = development/code-proof/release mechanics · Cowork = tech-QA + DB migrations + Drive/GPT ops · Codex = design law (DS) · GPT-Drive = archive hygiene/sentinel · **CLAUDE CHAT = CFO/Monetization Strategy (advises only; no repo access — reads the Drive canon mirror + owner-pasted briefs; docs/CFO-BRIEF.md is its onboarding)**.
 - **TASK-RELEASE RULE (owner, 12 Jul): a task assigned to another AI is NEVER marked done on their word alone or dropped silently — it stays OPEN and is clearly RE-REQUESTED in every report until the owner relays its completion (or Claude independently verifies it with evidence).**
 - **LINK RULE (owner, 12 Jul): every reply that mentions a document includes a clickable link to it** (GitHub URL on the working branch for repo docs; Drive URL for Drive docs; artifact URL for artifacts).
 - **SIGNATURE RULE (owner, 12 Jul): every reply ends signed "CLAUDE CODE" + areas of responsibility** (development in the repo · code-proof · release mechanics · repo docs-of-record).

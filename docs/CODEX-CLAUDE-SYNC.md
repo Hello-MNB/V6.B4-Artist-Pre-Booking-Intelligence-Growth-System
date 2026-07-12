@@ -177,6 +177,22 @@ Artist lane FIRST; other entities after. Codex: artist-screen DS DODs + states s
 briefs. Cowork: Q3/Q4 QA weights the artist journey end-to-end. Entity architecture verified ready for
 growth; structural debts (033+ renames) scheduled, not blocking.
 
+## 18. NEW ENTITY REGISTERED (owner, 12 Jul night): CLAUDE CHAT — CFO / Monetization Strategy
+- **Lane:** business model, pricing/tracks strategy, monetization feedback, cost governance opinion.
+  Advises; **decides nothing** — every monetization decision remains Maria's, and pricing/economy
+  changes enter a train only via a scope row with her word.
+- **Access reality:** CLAUDE CHAT cannot read the private repo. Its truth sources: the Drive canon
+  mirror (`B4 - lock.show/05 — CANON MIRROR/`) — now including `CFO-BRIEF` — plus owner-pasted
+  briefs and the owner-shared artifacts. Handoff protocol §13 applies fully: any task to/from it
+  carries complete self-contained text + source references.
+- **Canon boundaries binding its recommendations:** firewall (no score/rank ever, "no score to
+  sell"); monetisation measured, not required, until the Gate; no price/ICP locked until then;
+  buyer free forever; no booking commission ever; artists free in pilot (range ₪149–249 only if
+  asked; agency unpriced) — the pricing ruling in CODEX-FUNCTIONAL-CONTRACTS.
+- **First expected inputs:** the pricing fork (A = own train rel-07.14 after tracks decided /
+  B = fold into current train) · professional-tracks economy design inside canon · receipts/
+  invoices priority (legal gap before real money) · Supabase Pro ($25/mo) opinion.
+
 ## 17. DS v1.6.6 app-imagery boundary (12 Jul night, Codex) — ACCEPTED + mapping layer started
 - Codex's boundary RATIFIED: Claude builds flows/state/analytics/rendering pipelines — never invents
   imagery; app content images = user media or named DS assets; new image need → stop and ask Codex.
