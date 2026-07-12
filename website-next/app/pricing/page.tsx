@@ -1,684 +1,677 @@
 import type { Metadata } from 'next'
-
-export const metadata: Metadata = {
-  alternates: { canonical: '/pricing' },
-  title: 'Pricing — Free to Publish, Plans for More',
-  description: 'Publishing your Passport is always free. Paid plans just keep your proof current and give management offices one view across a roster.',
-}
+import Link from 'next/link'
 
 import { APP_URL } from '@/lib/app-url'
 
-const artistAlwaysFree = [
-  'Your basic profile — name, act, genre, city',
-  'A first full scan of your gig and platform history',
-  'Evidence logging in your private workspace (limited)',
-  'Publishing your Passport — never paywalled, ever',
-  'An inbox for booking requests',
-  'Full export and delete, any time',
+export const metadata: Metadata = {
+  alternates: { canonical: '/pricing' },
+  title: 'Pricing — What Each Person Pays',
+  description:
+    'Artists build and publish free during the pilot. Booking managers read Passports free, always. Producers never need an account. Agency roster plans come later.',
+  openGraph: {
+    url: '/pricing',
+    title: 'Pricing | LOCK',
+    description:
+      'One page, four honest answers — artist, booking manager, producer, agency. And the things money can never buy here.',
+    type: 'website',
+  },
+}
+
+/* ── The four answers — one per entity ─────────────────── */
+const seats = [
+  {
+    label: 'FOR ARTISTS',
+    price: 'Free during the pilot',
+    line: 'Build your Radar, shape your story, publish your Passport — all of it free while the pilot runs.',
+    points: [
+      'A full first scan of your gig and platform history',
+      'Your private Radar workspace — only you see it',
+      'Publishing your Passport, on your approval',
+      'Full export and delete, any time',
+    ],
+    cta: { text: 'START FREE IN THE PILOT →', href: `${APP_URL}/signup`, primary: true },
+    note: 'The pilot is a closed beta for Israeli artists. When pricing comes, it will be set with the artists already inside.',
+  },
+  {
+    label: 'FOR BOOKING MANAGERS',
+    price: 'Free, always',
+    line: 'You receive proof — you don’t pay for it. Opening a Passport someone sends you never costs a thing.',
+    points: [
+      'Open any shared Passport link — no account needed',
+      'Every claim carries its source and date',
+      'Reply with an availability request in one tap',
+    ],
+    cta: { text: 'How booking managers use LOCK →', href: '/bookers', primary: false },
+    note: 'This one is permanent. A paywall between you and the proof would defeat the whole idea.',
+  },
+  {
+    label: 'FOR PRODUCERS',
+    price: 'Nothing — no account at all',
+    line: 'An artist asks you to confirm one show you ran. One tap from a link, and you’re done.',
+    points: [
+      'No signup, no app, no password',
+      'Confirm, correct, or skip — your call',
+      'Nothing to pay, nothing to join, no follow-ups',
+    ],
+    cta: { text: 'What producers confirm →', href: '/producers', primary: false },
+    note: 'Your word is the product here. Charging you for giving it would be absurd.',
+  },
+  {
+    label: 'FOR AGENCIES & ROSTERS',
+    price: 'Plans come later',
+    line: 'Roster tools are coming for agencies — one view across every artist you represent. Pricing arrives with them.',
+    points: [
+      'One screen across the whole roster',
+      'Artists keep ownership of their own Passports',
+      'Built with the first offices that raise a hand',
+    ],
+    cta: { text: 'Register roster interest →', href: '/contact', primary: false },
+    note: 'No numbers yet, on purpose. We’d rather build it with you than guess at it.',
+  },
 ]
 
-const buyerAlwaysFree = [
-  'View any shared Passport link — no account needed',
-  'Full method labels, dates, and geographic context',
-  'Send an availability request through the Passport',
-  'Free. Forever. Not a trial.',
+/* ── The permanent principle — the only "forever" we say ── */
+const neverForSale = [
+  'Publication of a Passport',
+  'A badge, seal, or verified status',
+  'A better spot in anyone’s view',
+  'A score or ranking — there is none to sell',
 ]
 
-const momentumFeatures = [
-  'A fresh scan every time your career grows',
-  'Freshness — nothing goes stale before the next call',
-  'A quick re-scan after every new gig you log',
-  'Private guidance on your one next move — never shown to anyone else',
+/* ── FAQ (visible + JSON-LD share this source) ──────────── */
+const faq = [
+  {
+    q: 'Is LOCK free for artists?',
+    a: 'Yes — free during the pilot. The pilot is a closed beta for Israeli artists: building your Radar and publishing your Passport cost nothing while it runs. When the pilot ends, pricing will be set together with the artists already inside — and we will say so clearly before anything changes.',
+  },
+  {
+    q: 'Can a paid plan ever buy a better Passport?',
+    a: 'No — and this is the one permanent promise on this page. A paid plan never buys publication, a badge, or a better spot. Those aren’t for sale. What a Passport shows is decided by what actually happened and by the artist’s own approval — never by money.',
+  },
+  {
+    q: 'Do booking managers pay to read a Passport?',
+    a: 'No. Reading a Passport is free, always. A booking manager receiving a Passport link opens it in the browser — no account, no paywall. That stays true permanently.',
+  },
+  {
+    q: 'Do producers need an account or a plan?',
+    a: 'Never. A producer confirming a show taps one link, looks at one night they ran, and answers. There is nothing to pay, nothing to join, and no account is ever created for them.',
+  },
+  {
+    q: 'What will agencies and rosters pay?',
+    a: 'Roster tools for agencies and management offices are coming, and pricing arrives with them. No numbers are set yet — the plans will be built with the first offices that join.',
+  },
+  {
+    q: 'What happens to artist pricing after the pilot?',
+    a: 'It gets decided with the founding artists, based on real usage — not announced at them. Whatever comes, the not-for-sale list above does not move: publication, badges, and placement will never be things money can buy.',
+  },
 ]
 
-const rosterFeatures = [
-  "See every artist's proof status on one screen",
-  'Team seats included — the plan is per workspace, not per head',
-  'Tools to package an artist for a pitch',
-  "Your artists' own plans stay theirs — no double billing",
-]
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+}
 
-const neverIncluded = [
-  'No score. No ranking. No prediction.',
-  'No booking guarantee.',
-  'No badge or status bought with money.',
-  'No ownership transfer — an artist who leaves takes their Passport with them.',
-]
+const mono = 'var(--font-space-mono), monospace'
+const sans = 'var(--font-heebo), system-ui, sans-serif'
+const heading = 'var(--font-archivo), system-ui, sans-serif'
 
 export default function Pricing() {
   return (
-    <main style={{ backgroundColor: 'var(--color-paper)', color: 'var(--color-ink)', fontFamily: 'var(--font-heebo)' }}>
+    <main style={{ backgroundColor: 'var(--color-paper)', color: 'var(--color-ink)', fontFamily: sans }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
 
-      {/* PAGE HEADER */}
-      <section style={{ padding: '72px 24px 56px', borderBottom: '1px solid rgba(10,13,11,0.08)' }}>
-        <div style={{ maxWidth: '720px', margin: '0 auto' }}>
-          <p style={{
-            fontFamily: 'var(--font-space-mono)',
-            fontSize: '0.7rem',
-            letterSpacing: '0.12em',
-            color: 'var(--color-stamp-onlight)',
-            textTransform: 'uppercase',
-            marginBottom: '16px',
-          }}>
-            PRICING
-          </p>
-          <h1 style={{
-            fontFamily: 'Georgia, "Times New Roman", serif',
-            fontWeight: 400,
-            fontSize: 'clamp(2rem, 5vw, 3.25rem)',
-            lineHeight: 1.05,
-            letterSpacing: '-0.03em',
-            margin: '0 0 20px',
-          }}>
-            Publication is free. It always will be.
-          </h1>
-          <p style={{ fontSize: '1.05rem', color: 'var(--color-tally-onlight)', maxWidth: '560px', lineHeight: 1.6, margin: '0 0 16px' }}>
-            A paid plan buys the ongoing work behind your proof — rescanning your gig
-            history as it grows, telling you what to do next, and keeping it all current.
-            It never buys publication, a badge, or a better spot in line. Those aren&apos;t for sale.
-          </p>
-        </div>
-      </section>
-
-      {/* WHAT'S ALWAYS FREE — same visual weight as the plans */}
-      <section style={{ padding: '64px 24px', borderBottom: '1px solid rgba(10,13,11,0.08)' }}>
-        <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-          <p style={{
-            fontFamily: 'var(--font-space-mono)',
-            fontSize: '0.7rem',
-            letterSpacing: '0.12em',
-            color: 'var(--color-stamp-onlight)',
-            textTransform: 'uppercase',
-            marginBottom: '16px',
-          }}>
-            WHAT&apos;S ALWAYS FREE — NO TIER, NO TRIAL, NO CATCH
-          </p>
-          <h2 style={{
-            fontFamily: 'var(--font-archivo)',
-            fontSize: 'clamp(1.4rem, 3vw, 2rem)',
-            letterSpacing: '-0.02em',
-            marginBottom: '32px',
-            maxWidth: '640px',
-          }}>
-            Building your proof and reading someone else&apos;s proof — both free, permanently.
-          </h2>
-
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-            gap: '24px',
-          }}>
-            {/* Artist always-free */}
-            <div style={{
-              border: '2px solid var(--color-stamp)',
-              borderRadius: 'var(--radius-sm)',
-              padding: '32px 28px',
-            }}>
-              <p style={{
-                fontFamily: 'var(--font-space-mono)',
-                fontSize: '0.65rem',
-                letterSpacing: '0.12em',
-                color: 'var(--color-stamp-onlight)',
+      {/* ── HERO — live-crowd band with dark veil ─────────── */}
+      <section
+        style={{
+          overflow: 'hidden',
+          minHeight: 'min(78svh, 720px)',
+          background: `linear-gradient(180deg, rgba(10,13,11,0.55) 0%, rgba(10,13,11,0.86) 55%, rgba(10,13,11,0.97) 100%), url('/lockshow-hero-live.webp') center/cover no-repeat`,
+          color: 'var(--color-paper)',
+          position: 'relative',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'flex-end',
+          padding: 'clamp(2.5rem, 5vw, 4rem) clamp(1.5rem, 4vw, 3.5rem)',
+        }}
+      >
+        <div style={{ maxWidth: '1120px', width: '100%', margin: '0 auto' }}>
+          <div style={{ maxWidth: '640px' }}>
+            <p
+              style={{
+                fontFamily: mono,
+                fontSize: '0.75rem',
+                letterSpacing: '0.14em',
+                color: 'rgba(243,245,239,0.72)',
                 textTransform: 'uppercase',
-                marginBottom: '16px',
-              }}>
-                FOR ARTISTS · אמנים
-              </p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                {artistAlwaysFree.map((item, i) => (
-                  <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
-                    <span style={{
-                      fontFamily: 'var(--font-space-mono)',
-                      fontSize: '0.7rem',
-                      color: 'var(--color-stamp-onlight)',
-                      flexShrink: 0,
-                      paddingTop: '2px',
-                    }}>✓</span>
-                    <p style={{ fontSize: '0.875rem', color: 'var(--color-ink)', margin: 0, lineHeight: 1.5 }}>
-                      {item}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Buyer always-free */}
-            <div style={{
-              border: '2px solid var(--color-stamp)',
-              borderRadius: 'var(--radius-sm)',
-              padding: '32px 28px',
-            }}>
-              <p style={{
-                fontFamily: 'var(--font-space-mono)',
-                fontSize: '0.65rem',
-                letterSpacing: '0.12em',
-                color: 'var(--color-stamp-onlight)',
-                textTransform: 'uppercase',
-                marginBottom: '16px',
-              }}>
-                FOR BOOKING MANAGERS · אמרגנים
-              </p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                {buyerAlwaysFree.map((item, i) => (
-                  <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
-                    <span style={{
-                      fontFamily: 'var(--font-space-mono)',
-                      fontSize: '0.7rem',
-                      color: 'var(--color-stamp-onlight)',
-                      flexShrink: 0,
-                      paddingTop: '2px',
-                    }}>✓</span>
-                    <p style={{ fontSize: '0.875rem', color: 'var(--color-ink)', margin: 0, lineHeight: 1.5 }}>
-                      {item}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* THE PLANS — Passport (free) / Momentum (artist) / Roster (manager) */}
-      <section style={{ padding: '80px 24px' }}>
-        <div style={{ maxWidth: '1080px', margin: '0 auto' }}>
-          <p style={{
-            fontFamily: 'var(--font-space-mono)',
-            fontSize: '0.7rem',
-            letterSpacing: '0.12em',
-            color: 'var(--color-tally-onlight)',
-            textTransform: 'uppercase',
-            marginBottom: '32px',
-          }}>
-            THE PLANS
-          </p>
-
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '24px',
-          }}>
-
-            {/* Passport — free tier */}
-            <div style={{
-              border: '1px solid rgba(10,13,11,0.08)',
-              borderRadius: 'var(--radius-sm)',
-              padding: '40px 32px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '24px',
-            }}>
-              <div>
-                <p style={{
-                  fontFamily: 'var(--font-space-mono)',
-                  fontSize: '0.65rem',
-                  letterSpacing: '0.12em',
-                  color: 'var(--color-tally-onlight)',
-                  textTransform: 'uppercase',
-                  marginBottom: '12px',
-                }}>
-                  ARTIST · FREE
-                </p>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '8px' }}>
-                  <span style={{ fontFamily: 'var(--font-archivo)', fontSize: '2.25rem', letterSpacing: '-0.03em', lineHeight: 1 }}>
-                    Passport
-                  </span>
-                </div>
-                <p style={{ color: 'var(--color-tally-onlight)', fontSize: '0.875rem', lineHeight: 1.6, margin: 0 }}>
-                  Get scanned, get organized, get published — free, permanently.
-                </p>
-              </div>
-
-              <div style={{ height: '1px', backgroundColor: 'rgba(10,13,11,0.08)' }} />
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                {artistAlwaysFree.slice(0, 4).map((item, i) => (
-                  <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
-                    <span style={{ fontFamily: 'var(--font-space-mono)', fontSize: '0.7rem', color: 'var(--color-stamp-onlight)', flexShrink: 0, paddingTop: '2px' }}>✓</span>
-                    <p style={{ fontSize: '0.875rem', color: 'var(--color-tally-onlight)', margin: 0, lineHeight: 1.5 }}>{item}</p>
-                  </div>
-                ))}
-              </div>
-
+                marginBottom: '1.75rem',
+              }}
+            >
+              PRICING
+            </p>
+            <h1
+              style={{
+                fontFamily: 'Georgia, "Times New Roman", serif',
+                fontSize: 'clamp(2.4rem, 5vw, 4rem)',
+                fontWeight: 400,
+                lineHeight: 0.96,
+                letterSpacing: '-0.055em',
+                color: 'var(--color-paper)',
+                marginBottom: '1.5rem',
+              }}
+            >
+              Four people make a booking happen.
+              <br />
+              <em style={{ fontStyle: 'italic', color: 'var(--color-stamp)' }}>
+                Here&apos;s what each one pays.
+              </em>
+            </h1>
+            <p
+              style={{
+                fontFamily: sans,
+                fontSize: 'clamp(1rem, 1.8vw, 1.1rem)',
+                lineHeight: 1.65,
+                color: 'rgba(243,245,239,0.78)',
+                maxWidth: '520px',
+                marginBottom: '2.25rem',
+              }}
+            >
+              The short version: during the pilot, almost nobody pays anything. And the
+              things that make proof worth trusting are never for sale — to anyone.
+            </p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', alignItems: 'center' }}>
               <a
                 href={`${APP_URL}/signup`}
                 style={{
-                  display: 'inline-block',
-                  padding: '13px 24px',
-                  backgroundColor: 'transparent',
+                  background: 'var(--color-stamp)',
                   color: 'var(--color-ink)',
-                  border: '1px solid rgba(10,13,11,0.2)',
-                  fontFamily: 'var(--font-space-mono)',
-                  fontSize: '0.7rem',
-                  letterSpacing: '0.08em',
-                  textDecoration: 'none',
-                  borderRadius: 'var(--radius-sm)',
-                  textAlign: 'center',
-                  marginTop: 'auto',
-                }}
-              >
-                BUILD YOUR PASSPORT →
-              </a>
-            </div>
-
-            {/* Momentum — artist paid plan */}
-            <div style={{
-              border: '2px solid var(--color-stamp)',
-              borderRadius: 'var(--radius-sm)',
-              padding: '40px 32px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '24px',
-              position: 'relative',
-            }}>
-              <div style={{
-                position: 'absolute',
-                top: '-1px',
-                right: '24px',
-                backgroundColor: 'var(--color-stamp)',
-                color: 'var(--color-ink)',
-                fontFamily: 'var(--font-space-mono)',
-                fontSize: '0.6rem',
-                letterSpacing: '0.1em',
-                padding: '4px 10px',
-              }}>
-                PILOT PRICING · ON REQUEST
-              </div>
-
-              <div>
-                <p style={{
-                  fontFamily: 'var(--font-space-mono)',
-                  fontSize: '0.65rem',
-                  letterSpacing: '0.12em',
-                  color: 'var(--color-stamp-onlight)',
-                  textTransform: 'uppercase',
-                  marginBottom: '12px',
-                }}>
-                  ARTIST · MOMENTUM
-                </p>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '8px' }}>
-                  <span style={{ fontFamily: 'var(--font-archivo)', fontSize: '2.25rem', letterSpacing: '-0.03em', lineHeight: 1 }}>
-                    Momentum
-                  </span>
-                </div>
-                <p style={{ color: 'var(--color-tally-onlight)', fontSize: '0.875rem', lineHeight: 1.6, margin: 0 }}>
-                  Keep your proof current. Every new gig updates your Passport before your next call.
-                </p>
-              </div>
-
-              <div style={{ height: '1px', backgroundColor: 'rgba(200,240,77,0.15)' }} />
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                {momentumFeatures.map((item, i) => (
-                  <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
-                    <span style={{ fontFamily: 'var(--font-space-mono)', fontSize: '0.7rem', color: 'var(--color-stamp-onlight)', flexShrink: 0, paddingTop: '2px' }}>✓</span>
-                    <p style={{ fontSize: '0.875rem', color: 'var(--color-ink)', margin: 0, lineHeight: 1.5 }}>{item}</p>
-                  </div>
-                ))}
-              </div>
-
-              <a
-                href="/contact"
-                style={{
-                  display: 'inline-block',
-                  padding: '13px 24px',
-                  backgroundColor: 'var(--color-stamp)',
-                  color: 'var(--color-ink)',
-                  fontFamily: 'var(--font-space-mono)',
-                  fontSize: '0.7rem',
-                  letterSpacing: '0.08em',
-                  textDecoration: 'none',
-                  borderRadius: 'var(--radius-sm)',
-                  textAlign: 'center',
-                  marginTop: 'auto',
+                  fontFamily: mono,
+                  fontSize: '0.78rem',
                   fontWeight: 700,
-                }}
-              >
-                TALK TO US →
-              </a>
-            </div>
-
-            {/* Roster — manager plan */}
-            <div style={{
-              border: '1px solid rgba(10,13,11,0.08)',
-              borderRadius: 'var(--radius-sm)',
-              padding: '40px 32px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '24px',
-              position: 'relative',
-            }}>
-              <div style={{
-                position: 'absolute',
-                top: '-1px',
-                right: '24px',
-                backgroundColor: 'var(--color-ink)',
-                color: 'var(--color-paper)',
-                fontFamily: 'var(--font-space-mono)',
-                fontSize: '0.6rem',
-                letterSpacing: '0.1em',
-                padding: '4px 10px',
-              }}>
-                OPENS AFTER PILOT
-              </div>
-
-              <div>
-                <p style={{
-                  fontFamily: 'var(--font-space-mono)',
-                  fontSize: '0.65rem',
-                  letterSpacing: '0.12em',
-                  color: 'var(--color-tally-onlight)',
-                  textTransform: 'uppercase',
-                  marginBottom: '12px',
-                }}>
-                  MANAGEMENT / AGENCY · ROSTER
-                </p>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '8px' }}>
-                  <span style={{ fontFamily: 'var(--font-archivo)', fontSize: '2.25rem', letterSpacing: '-0.03em', lineHeight: 1 }}>
-                    Roster
-                  </span>
-                </div>
-                <p style={{ color: 'var(--color-tally-onlight)', fontSize: '0.875rem', lineHeight: 1.6, margin: 0 }}>
-                  One screen showing where every artist on your roster stands — your team included.
-                </p>
-              </div>
-
-              <div style={{ height: '1px', backgroundColor: 'rgba(10,13,11,0.08)' }} />
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                {rosterFeatures.map((item, i) => (
-                  <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
-                    <span style={{ fontFamily: 'var(--font-space-mono)', fontSize: '0.7rem', color: 'var(--color-stamp-onlight)', flexShrink: 0, paddingTop: '2px' }}>✓</span>
-                    <p style={{ fontSize: '0.875rem', color: 'var(--color-tally-onlight)', margin: 0, lineHeight: 1.5 }}>{item}</p>
-                  </div>
-                ))}
-              </div>
-
-              <a
-                href="/contact"
-                style={{
-                  display: 'inline-block',
-                  padding: '13px 24px',
-                  backgroundColor: 'transparent',
-                  color: 'var(--color-ink)',
-                  border: '1px solid rgba(10,13,11,0.2)',
-                  fontFamily: 'var(--font-space-mono)',
-                  fontSize: '0.7rem',
                   letterSpacing: '0.08em',
+                  padding: '0.95rem 1.75rem',
                   textDecoration: 'none',
-                  borderRadius: 'var(--radius-sm)',
-                  textAlign: 'center',
-                  marginTop: 'auto',
+                  borderRadius: '10px',
+                  display: 'inline-block',
                 }}
               >
-                REGISTER INTEREST →
+                START FREE IN THE PILOT →
               </a>
-            </div>
-          </div>
-
-          {/* Buyer note — no plan, by design */}
-          <div style={{
-            marginTop: '24px',
-            padding: '24px 28px',
-            border: '1px solid rgba(10,13,11,0.08)',
-            borderRadius: 'var(--radius-sm)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '8px',
-          }}>
-            <p style={{
-              fontFamily: 'var(--font-space-mono)',
-              fontSize: '0.65rem',
-              letterSpacing: '0.12em',
-              color: 'var(--color-tally-onlight)',
-              textTransform: 'uppercase',
-              margin: 0,
-            }}>
-              BOOKING MANAGER / PRODUCER · NO PLAN
-            </p>
-            <p style={{ fontFamily: 'var(--font-archivo)', fontSize: '1.1rem', margin: 0 }}>
-              Not an EPK — a passport. Check, don&apos;t trust.
-            </p>
-            <p style={{ fontSize: '0.875rem', color: 'var(--color-tally-onlight)', lineHeight: 1.6, margin: 0, maxWidth: '560px' }}>
-              Free. Always. There is no plan to buy here — a free, engaged booking manager is the demand signal
-              the whole system runs on.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* PORTABILITY */}
-      <section style={{
-        backgroundColor: 'var(--color-night)',
-        color: 'var(--color-paper)',
-        padding: '72px 24px',
-      }}>
-        <div style={{ maxWidth: '720px', margin: '0 auto' }}>
-          <p style={{
-            fontFamily: 'var(--font-space-mono)',
-            fontSize: '0.7rem',
-            letterSpacing: '0.12em',
-            color: 'var(--color-stamp)',
-            textTransform: 'uppercase',
-            marginBottom: '16px',
-          }}>
-            PORTABILITY
-          </p>
-          <h2 style={{
-            fontFamily: 'Georgia, "Times New Roman", serif',
-            fontWeight: 400,
-            fontSize: 'clamp(1.6rem, 3.5vw, 2.4rem)',
-            letterSpacing: '-0.03em',
-            lineHeight: 1.15,
-            marginBottom: '20px',
-            maxWidth: '540px',
-          }}>
-            Your career is yours — even if you change offices.
-          </h2>
-          <p style={{ color: 'rgba(255,255,255,0.55)', lineHeight: 1.7, maxWidth: '580px', margin: 0 }}>
-            An artist&apos;s evidence, Passport, and consents belong to the artist — never to a management
-            office, even when the office is paying. A management office can sponsor an artist&apos;s Momentum
-            plan without taking any ownership over it. If an artist leaves, everything goes with them:
-            the Passport, the evidence, the history. Nothing stays behind except the office&apos;s own view
-            of it.
-          </p>
-        </div>
-      </section>
-
-      {/* WHAT'S NEVER FOR SALE */}
-      <section style={{ padding: '64px 24px', backgroundColor: 'var(--color-paper)' }}>
-        <div style={{ maxWidth: '720px', margin: '0 auto' }}>
-          <p style={{
-            fontFamily: 'var(--font-space-mono)',
-            fontSize: '0.7rem',
-            letterSpacing: '0.12em',
-            color: 'var(--color-tally-onlight)',
-            textTransform: 'uppercase',
-            marginBottom: '16px',
-          }}>
-            BY DESIGN — NOT FOR SALE, ON ANY PLAN
-          </p>
-          <h2 style={{
-            fontFamily: 'var(--font-archivo)',
-            fontSize: 'clamp(1.4rem, 3vw, 2rem)',
-            letterSpacing: '-0.02em',
-            marginBottom: '32px',
-          }}>
-            What you will never pay for — because it doesn&apos;t exist.
-          </h2>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-            gap: '12px',
-          }}>
-            {neverIncluded.map((item, i) => (
-              <div
-                key={i}
+              <Link
+                href="/passport/demo"
                 style={{
-                  display: 'flex',
-                  gap: '10px',
-                  alignItems: 'flex-start',
-                  padding: '14px 16px',
-                  border: '1px solid rgba(178,59,46,0.15)',
-                  borderRadius: 'var(--radius-sm)',
-                  backgroundColor: 'rgba(178,59,46,0.03)',
+                  border: '1px solid rgba(243,245,239,0.22)',
+                  color: 'var(--color-paper)',
+                  fontFamily: mono,
+                  fontSize: '0.78rem',
+                  fontWeight: 700,
+                  letterSpacing: '0.08em',
+                  padding: '0.95rem 1.75rem',
+                  textDecoration: 'none',
+                  borderRadius: '10px',
+                  display: 'inline-block',
                 }}
               >
-                <span style={{
-                  fontFamily: 'var(--font-space-mono)',
-                  fontSize: '0.7rem',
-                  color: 'var(--color-void)',
-                  flexShrink: 0,
-                }}>✗</span>
-                <p style={{ fontSize: '0.875rem', color: 'var(--color-tally-onlight)', margin: 0, lineHeight: 1.5 }}>
-                  {item}
+                SEE A SAMPLE PASSPORT
+              </Link>
+            </div>
+            <p
+              style={{
+                fontFamily: mono,
+                fontSize: '0.75rem',
+                letterSpacing: '0.1em',
+                color: 'rgba(243,245,239,0.55)',
+                textTransform: 'uppercase',
+                marginTop: '1.5rem',
+              }}
+            >
+              NO SCORES · NO RANKINGS · NOTHING BOUGHT
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── THE FOUR ANSWERS ──────────────────────────────── */}
+      <section style={{ background: 'var(--color-paper)', padding: 'clamp(3rem, 8vw, 6rem) max(24px, 4vw)' }}>
+        <div style={{ maxWidth: '1120px', margin: '0 auto' }}>
+          <p
+            style={{
+              fontFamily: mono,
+              fontSize: '0.75rem',
+              color: 'var(--color-tally-onlight)',
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              marginBottom: '0.5rem',
+            }}
+          >
+            THE FOUR ANSWERS
+          </p>
+          <h2
+            style={{
+              fontFamily: heading,
+              fontSize: 'clamp(1.5rem, 3.5vw, 2rem)',
+              color: 'var(--color-ink)',
+              marginBottom: '0.75rem',
+            }}
+          >
+            Whoever you are in the room, here&apos;s your answer.
+          </h2>
+          <p
+            style={{
+              fontFamily: sans,
+              fontSize: '1rem',
+              color: 'var(--color-tally-onlight)',
+              lineHeight: 1.6,
+              maxWidth: '560px',
+              marginBottom: '2.5rem',
+            }}
+          >
+            Artist, booking manager, producer, agency — one card each, no fine print
+            hiding underneath.
+          </p>
+
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gap: '1.25rem',
+            }}
+          >
+            {seats.map((seat) => (
+              <div
+                key={seat.label}
+                style={{
+                  background: '#ffffff',
+                  border: '1px solid var(--color-mist)',
+                  borderRadius: '16px',
+                  padding: 'clamp(1.5rem, 3vw, 2rem)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '1rem',
+                }}
+              >
+                <p
+                  style={{
+                    fontFamily: mono,
+                    fontSize: '0.75rem',
+                    letterSpacing: '0.12em',
+                    color: 'var(--color-stamp-onlight)',
+                    textTransform: 'uppercase',
+                    margin: 0,
+                  }}
+                >
+                  {seat.label}
                 </p>
+                <h3
+                  style={{
+                    fontFamily: 'Georgia, "Times New Roman", serif',
+                    fontWeight: 400,
+                    fontSize: 'clamp(1.5rem, 2.5vw, 1.9rem)',
+                    letterSpacing: '-0.03em',
+                    lineHeight: 1.1,
+                    color: 'var(--color-ink)',
+                    margin: 0,
+                  }}
+                >
+                  {seat.price}
+                </h3>
+                <p
+                  style={{
+                    fontFamily: sans,
+                    fontSize: '1rem',
+                    color: 'var(--color-tally-onlight)',
+                    lineHeight: 1.6,
+                    margin: 0,
+                  }}
+                >
+                  {seat.line}
+                </p>
+                <div style={{ height: '1px', background: 'var(--color-mist)' }} />
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                  {seat.points.map((point) => (
+                    <div key={point} style={{ display: 'flex', gap: '0.6rem', alignItems: 'flex-start' }}>
+                      <span
+                        style={{
+                          fontFamily: mono,
+                          fontSize: '0.75rem',
+                          color: 'var(--color-stamp-onlight)',
+                          flexShrink: 0,
+                          paddingTop: '3px',
+                        }}
+                      >
+                        ✓
+                      </span>
+                      <p style={{ fontFamily: sans, fontSize: '1rem', color: 'var(--color-ink)', lineHeight: 1.55, margin: 0 }}>
+                        {point}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+                <p
+                  style={{
+                    fontFamily: sans,
+                    fontSize: '1rem',
+                    color: 'var(--color-tally-onlight)',
+                    lineHeight: 1.55,
+                    fontStyle: 'italic',
+                    margin: 0,
+                  }}
+                >
+                  {seat.note}
+                </p>
+                {seat.cta.primary ? (
+                  <a
+                    href={seat.cta.href}
+                    style={{
+                      background: 'var(--color-stamp)',
+                      color: 'var(--color-ink)',
+                      fontFamily: mono,
+                      fontSize: '0.78rem',
+                      fontWeight: 700,
+                      letterSpacing: '0.08em',
+                      padding: '0.95rem 1.5rem',
+                      textDecoration: 'none',
+                      borderRadius: '10px',
+                      textAlign: 'center',
+                      display: 'inline-block',
+                      marginTop: 'auto',
+                    }}
+                  >
+                    {seat.cta.text}
+                  </a>
+                ) : (
+                  <Link
+                    href={seat.cta.href}
+                    style={{
+                      fontFamily: mono,
+                      fontSize: '0.78rem',
+                      fontWeight: 700,
+                      letterSpacing: '0.08em',
+                      color: 'var(--color-ink)',
+                      textDecoration: 'none',
+                      borderBottom: '2px solid var(--color-stamp)',
+                      paddingBottom: '3px',
+                      alignSelf: 'flex-start',
+                      marginTop: 'auto',
+                    }}
+                  >
+                    {seat.cta.text}
+                  </Link>
+                )}
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* FAQ ROW */}
-      <section style={{ padding: '80px 24px' }}>
-        <div style={{ maxWidth: '680px', margin: '0 auto' }}>
-          <p style={{
-            fontFamily: 'var(--font-space-mono)',
-            fontSize: '0.7rem',
-            letterSpacing: '0.12em',
-            color: 'var(--color-tally-onlight)',
-            textTransform: 'uppercase',
-            marginBottom: '32px',
-          }}>
-            PRICING FAQ
-          </p>
-          {[
-            {
-              q: 'Will Passport publication ever be paywalled?',
-              a: 'No. Publishing a Passport is locked only on having evidence, giving consent, and the artist\'s own approval — never on payment. This is structural, not a promotional offer.',
-            },
-            {
-              q: 'Will there always be a free tier for booking managers?',
-              a: 'Yes. Booking managers viewing Passports will always be free. This is structural to how LOCK works — the booking manager receiving a Passport link should never face a paywall.',
-            },
-            {
-              q: 'Why is Momentum priced "on request" instead of listed?',
-              a: 'We are running a paid pilot with a small number of real artists before we lock a public number. Pricing by direct conversation lets us find a fair number with real usage, instead of guessing in public and having to walk it back later.',
-            },
-            {
-              q: 'What does "pilot pricing" mean in practice?',
-              a: 'During the pilot, artists pay by direct arrangement — Bit or bank transfer, confirmed manually by the founding team. No credit card processing yet. The number discussed with you now is not a final, published price.',
-            },
-            {
-              q: 'Does paying for Momentum improve my Passport or evidence labels?',
-              a: 'No. Momentum buys ongoing scanning, freshness, and private guidance — the work that keeps your proof current. It does not change method labels, upgrade evidence, or affect what a booking manager sees. The evidence means what the evidence means.',
-            },
-            {
-              q: 'If my management office pays for my Momentum plan, who owns my Passport?',
-              a: 'You do — always. A sponsoring office funds the plan; it never gains control over your evidence, consents, or Passport. If you leave the office, your plan, Passport, and evidence go with you.',
-            },
-            {
-              q: 'Does a management office pay again for evidence its artists already paid for?',
-              a: "No. An artist's Momentum plan and an office's Roster plan are two different layers — an artist's own evidence-truth, and the office's multi-artist readiness view over it. Nothing is billed twice for the same value.",
-            },
-          ].map((item, i) => (
-            <details
-              key={i}
-              style={{ borderBottom: '1px solid rgba(10,13,11,0.08)' }}
+      {/* ── NOT FOR SALE — the one permanent promise ──────── */}
+      <section
+        style={{
+          background: 'var(--color-night)',
+          color: 'var(--color-paper)',
+          padding: 'clamp(3rem, 8vw, 6rem) max(24px, 4vw)',
+        }}
+      >
+        <div
+          style={{
+            maxWidth: '1120px',
+            margin: '0 auto',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: 'clamp(2rem, 5vw, 4rem)',
+            alignItems: 'center',
+          }}
+        >
+          <div>
+            <p
+              style={{
+                fontFamily: mono,
+                fontSize: '0.75rem',
+                letterSpacing: '0.12em',
+                color: 'var(--color-stamp)',
+                textTransform: 'uppercase',
+                marginBottom: '1rem',
+              }}
             >
-              <summary style={{
-                padding: '20px 0',
-                cursor: 'pointer',
-                fontFamily: 'var(--font-archivo)',
+              THE ONE PERMANENT PROMISE
+            </p>
+            <h2
+              style={{
+                fontFamily: 'Georgia, "Times New Roman", serif',
+                fontWeight: 400,
+                fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)',
+                letterSpacing: '-0.04em',
+                lineHeight: 1.05,
+                marginBottom: '1.25rem',
+              }}
+            >
+              A paid plan never buys a better story.
+            </h2>
+            <p
+              style={{
+                fontFamily: sans,
                 fontSize: '1rem',
-                lineHeight: 1.4,
-                listStyle: 'none',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                gap: '16px',
-              }}>
-                <span>{item.q}</span>
-                <span style={{
-                  fontFamily: 'var(--font-space-mono)',
-                  fontSize: '0.8rem',
-                  color: 'var(--color-stamp-onlight)',
-                  flexShrink: 0,
-                }}>+</span>
-              </summary>
-              <p style={{
-                padding: '0 0 24px 0',
-                fontSize: '0.925rem',
-                color: 'var(--color-tally-onlight)',
+                color: 'rgba(243,245,239,0.72)',
                 lineHeight: 1.7,
-                margin: 0,
-                maxWidth: '600px',
-              }}>
-                {item.a}
-              </p>
-            </details>
-          ))}
+                maxWidth: '480px',
+                marginBottom: '1.75rem',
+              }}
+            >
+              Prices can change as LOCK grows — that&apos;s honest. What never changes is
+              this: money moves nothing on a Passport. What it shows is decided by what
+              actually happened, and by the artist&apos;s own approval.
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              {neverForSale.map((item) => (
+                <div key={item} style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
+                  <span
+                    style={{
+                      fontFamily: mono,
+                      fontSize: '0.8rem',
+                      color: 'var(--color-stamp)',
+                      flexShrink: 0,
+                      paddingTop: '2px',
+                    }}
+                  >
+                    ✗
+                  </span>
+                  <p style={{ fontFamily: sans, fontSize: '1rem', color: 'rgba(243,245,239,0.85)', lineHeight: 1.55, margin: 0 }}>
+                    {item}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div
+            style={{
+              borderRadius: '16px',
+              overflow: 'hidden',
+              border: '1px solid rgba(243,245,239,0.12)',
+              minHeight: '280px',
+              background: `linear-gradient(180deg, rgba(10,13,11,0.1) 0%, rgba(10,13,11,0.45) 100%), url('/lockshow-evidence-review.webp') center/cover no-repeat`,
+            }}
+            role="img"
+            aria-label="A booking manager reviewing evidence on a Passport"
+          />
+          {/* TODO: swap in a lockshow-atmosphere-* scene when Codex's Drive assets land */}
         </div>
       </section>
 
-      {/* CTA */}
-      <section style={{
-        backgroundColor: 'var(--color-night)',
-        color: 'var(--color-paper)',
-        padding: '72px 24px',
-        textAlign: 'center',
-      }}>
-        <div style={{ maxWidth: '480px', margin: '0 auto' }}>
-          <h2 style={{
-            fontFamily: 'var(--font-archivo)',
-            fontSize: 'clamp(1.75rem, 4vw, 2.5rem)',
-            letterSpacing: '-0.02em',
-            marginBottom: '12px',
-          }}>
-            Ready to build your Passport?
-          </h2>
-          <p style={{ color: 'rgba(255,255,255,0.5)', marginBottom: '32px', lineHeight: 1.6 }}>
-            Publishing is free — start now. Want Momentum or Roster? Talk to us and we&apos;ll work out pricing together.
-          </p>
-          <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <a
-              href={`${APP_URL}/signup`}
+      {/* ── AFTER THE PILOT — honest, no "forever" ────────── */}
+      <section
+        style={{
+          background: 'var(--color-paper)',
+          padding: 'clamp(3rem, 8vw, 6rem) max(24px, 4vw)',
+          borderBottom: '1px solid var(--color-mist)',
+        }}
+      >
+        <div style={{ maxWidth: '1120px', margin: '0 auto' }}>
+          <div style={{ maxWidth: '720px' }}>
+            <p
               style={{
-                display: 'inline-block',
-                padding: '14px 28px',
-                backgroundColor: 'var(--color-stamp)',
+                fontFamily: mono,
+                fontSize: '0.75rem',
+                color: 'var(--color-tally-onlight)',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                marginBottom: '0.5rem',
+              }}
+            >
+              AFTER THE PILOT
+            </p>
+            <h2
+              style={{
+                fontFamily: heading,
+                fontSize: 'clamp(1.5rem, 3.5vw, 2rem)',
                 color: 'var(--color-ink)',
-                fontFamily: 'var(--font-space-mono)',
-                fontSize: '0.75rem',
-                letterSpacing: '0.08em',
-                textDecoration: 'none',
-                borderRadius: 'var(--radius-sm)',
-                fontWeight: 700,
+                marginBottom: '1rem',
               }}
             >
-              BUILD YOUR PASSPORT →
-            </a>
-            <a
-              href="/contact"
+              We&apos;d rather tell you the truth than promise you forever.
+            </h2>
+            <p
               style={{
-                display: 'inline-block',
-                padding: '14px 28px',
-                backgroundColor: 'transparent',
-                color: 'rgba(255,255,255,0.7)',
-                border: '1px solid rgba(255,255,255,0.2)',
-                fontFamily: 'var(--font-space-mono)',
-                fontSize: '0.75rem',
-                letterSpacing: '0.08em',
-                textDecoration: 'none',
-                borderRadius: 'var(--radius-sm)',
+                fontFamily: sans,
+                fontSize: '1rem',
+                color: 'var(--color-tally-onlight)',
+                lineHeight: 1.7,
+                margin: 0,
               }}
             >
-              TALK TO US ABOUT PRICING
-            </a>
+              Right now LOCK is in a closed pilot with Israeli artists, and artists build
+              free. When the pilot ends, artist pricing gets worked out with the founding
+              artists — in the open, based on real use, before anything changes. Booking
+              managers reading Passports stay free, producers never need an account, and
+              the not-for-sale list above doesn&apos;t move. That&apos;s the deal.
+            </p>
           </div>
         </div>
       </section>
 
+      {/* ── PRICING FAQ ───────────────────────────────────── */}
+      <section style={{ background: 'var(--color-paper)', padding: 'clamp(3rem, 8vw, 6rem) max(24px, 4vw)' }}>
+        <div style={{ maxWidth: '1120px', margin: '0 auto' }}>
+          <div style={{ maxWidth: '720px' }}>
+            <p
+              style={{
+                fontFamily: mono,
+                fontSize: '0.75rem',
+                color: 'var(--color-tally-onlight)',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                marginBottom: '2rem',
+              }}
+            >
+              PRICING FAQ
+            </p>
+            {faq.map((item) => (
+              <details key={item.q} style={{ borderBottom: '1px solid var(--color-mist)' }}>
+                <summary
+                  style={{
+                    padding: '1.25rem 0',
+                    cursor: 'pointer',
+                    fontFamily: heading,
+                    fontSize: '1.05rem',
+                    lineHeight: 1.4,
+                    listStyle: 'none',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    gap: '1rem',
+                    color: 'var(--color-ink)',
+                  }}
+                >
+                  <span>{item.q}</span>
+                  <span
+                    style={{
+                      fontFamily: mono,
+                      fontSize: '0.85rem',
+                      color: 'var(--color-stamp-onlight)',
+                      flexShrink: 0,
+                    }}
+                  >
+                    +
+                  </span>
+                </summary>
+                <p
+                  style={{
+                    padding: '0 0 1.5rem 0',
+                    fontFamily: sans,
+                    fontSize: '1rem',
+                    color: 'var(--color-tally-onlight)',
+                    lineHeight: 1.7,
+                    margin: 0,
+                    maxWidth: '640px',
+                  }}
+                >
+                  {item.a}
+                </p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── DARK CLOSING CTA ──────────────────────────────── */}
+      <section
+        style={{
+          background: 'var(--color-night)',
+          color: 'var(--color-paper)',
+          padding: 'clamp(3.5rem, 9vw, 6.5rem) max(24px, 4vw)',
+          textAlign: 'center',
+        }}
+      >
+        <div style={{ maxWidth: '560px', margin: '0 auto' }}>
+          <h2
+            style={{
+              fontFamily: 'Georgia, "Times New Roman", serif',
+              fontWeight: 400,
+              fontSize: 'clamp(1.9rem, 4vw, 2.75rem)',
+              letterSpacing: '-0.04em',
+              lineHeight: 1.05,
+              marginBottom: '1rem',
+            }}
+          >
+            The pilot is open. The price is your time.
+          </h2>
+          <p
+            style={{
+              fontFamily: sans,
+              fontSize: '1rem',
+              color: 'rgba(243,245,239,0.72)',
+              lineHeight: 1.65,
+              marginBottom: '2rem',
+            }}
+          >
+            Start with one link. Radar helps you build from there — and every show you
+            play makes the next room easier to enter.
+          </p>
+          <a
+            href={`${APP_URL}/signup`}
+            style={{
+              background: 'var(--color-stamp)',
+              color: 'var(--color-ink)',
+              fontFamily: mono,
+              fontSize: '0.78rem',
+              fontWeight: 700,
+              letterSpacing: '0.08em',
+              padding: '0.95rem 1.75rem',
+              textDecoration: 'none',
+              borderRadius: '10px',
+              display: 'inline-block',
+            }}
+          >
+            START FREE IN THE PILOT →
+          </a>
+        </div>
+      </section>
     </main>
   )
 }
