@@ -170,3 +170,19 @@ approval, owner pass only. Status corrections on its remaining-gaps table (again
 - "OG/social export path" ruling per §6 Q10 split: **Codex produces the export files, Claude
   commits them into the repo** (website-next/public) and wires metadata.
 All other rows accepted as assigned. These tasks are now on the roadmap task tables (v20).
+
+## 15. ONE PLACE OF TRUTH + daily sync (owner directive, 12 Jul)
+**Architecture (ratified):** the GitHub repo is the ONE truth for code/docs/versions/vocabulary.
+Claude reads it natively; Cowork + Codex scan the local clone (LAW: `git pull` before every scan);
+the Drive is truth ONLY for the DS (`00_CURRENT`) + collaboration/design materials.
+**The GPT bridge:** GPT sees only Drive → a read-only mirror now exists:
+Drive `B4 - lock.show/05 — CANON MIRROR (READ-ONLY · repo is truth)/LOCK-CANON-PACK — <date> @ <sha>.md`
+(seeded by Claude 12 Jul @ d2aa382 via Drive API). Edits made in the mirror are ignored by definition.
+**Sync duties:**
+- Claude: refresh the canon pack after every canon-changing release (Claude's Drive access is
+  create-only — each refresh is a new dated file; Cowork deletes superseded ones + the dead stub
+  "LOCK-CANON-PACK.md").
+- Cowork: daily "LOCK Morning Sync" (owner to give the word — 08:00): Drive drift + live-sites check
+  + the one blocking decision; deletes stale mirror files.
+- GPT (daily, READ-ONLY — never moves files): Drive drift sentinel + mirror freshness (SYNCED date
+  older than 48h → 🟡 "mirror stale, ping Cowork"). Heavy file hygiene = weekly batch, on approval.
