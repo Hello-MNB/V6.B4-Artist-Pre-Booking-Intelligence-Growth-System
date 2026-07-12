@@ -70,6 +70,31 @@ Six questions before touching any copy/route/component (DS v1.5.8 rule): artist-
 professional buyer? private/non-industry client? event production? source confirmation only? does the
 context need a workspace at all — or only a recipient/Passport-review flow?
 
+## 2c · Individual vs Team matrix (merged from Cowork's table, 12 Jul — verified against code)
+
+| Entity | Individual or Team | Workspace? | Verified boundary |
+|---|---|---|---|
+| Person/Account | individual only | no — the login | account identity ≠ public artist identity; never re-register to switch context |
+| Artist | individual — ONE entity even with many genres/Acts (genres = attributes, not entities) | yes | "supported, not inspected" |
+| Act | belongs to one artist | no (inside artist ws) | evidence per-Act, never transfers |
+| Manager office (אמרגן) | individual OR team/company | yes (seats/invites) | membership ≠ artist ownership |
+| Production | individual OR team/company | yes | ≠ Source Confirmer; not a roster owner |
+| **Booker (buyer)** | ⭐ **private individual OR business** — a wedding couple IS a מזמין הופעות | **no workspace by default** | public Passport review needs **NO login** (verified: `/passport/:id` route is outside all auth guards); no private Radar; no evaluation voice at the private register |
+| Source Confirmer | individual, accountless | no — magic-link task | no signup/dashboard/endorsement |
+| Operator | internal LOCK team only | internal console | never in public signup |
+| Passport | artifact (per Act/version) | — | verified strengths + method labels only |
+| ArtistAccess | relationship/grant | — | never implies ownership transfer |
+
+Growth rule: only Artist, Manager office, Production are workspaces that can grow solo→team.
+Buyer-facing copy rule (private register): warm and direct — "מזמינים אמן להופעה?" — never venue jargon.
+
+## 2d · OPEN HEBREW RULINGS (Maria — the ONLY canon items still open)
+1. **Source Confirmer HE:** canon GLOSSARY already locks **מאשר-מקור** (v1.0, 8 Jul) — Cowork's localizer
+   independently recommends the same. Ruling needed: confirm מאשר-מקור as the ONLY UI term and retire
+   "מפיק מאשר" from copy (kept only as historical alias), OR keep מפיק מאשר. Recommendation: מאשר-מקור.
+2. **Act HE:** still ⏳ (v1.0 rule: never invent one). Options on the table: מופע (can read as a single gig)
+   vs פרויקט (broader). One-word ruling needed before Act appears in Hebrew UI.
+
 **One flag back to Codex (Claude, 12 Jul):** the canon method label on live Passports is
 **PRODUCER-CONFIRMED** (CLAUDE.md + A13 + shipped chips), and a *different* method is
 **Source-linked**. "Source Confirmer" as the person's name sits close to "Source-linked" —

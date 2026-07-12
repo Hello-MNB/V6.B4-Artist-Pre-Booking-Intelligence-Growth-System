@@ -134,3 +134,11 @@ Claude integrates. Open spec-vs-reality hole owned by Claude for rel-07.13: "Add
 | SIGNUP_ROLES includes PRODUCER | **REAL → FIXED** — removed (constant was consumed nowhere; Source Confirmer ≠ signup) | this commit |
 | Private clients not represented | **ACCEPTED as plan item** — /bookers one-line acknowledgment + FAQ in rel-07.13; full private-client page = post-validation (canon Gate audience = professional buyer) | rel-2026.07.13-PLAN §1 |
 Also adopted: per-entity DOD structure into the release plan; QA/QC protocol (Q1–Q8) now binding — a version is not valid until it passes.
+
+## 12. Cowork entity-table + localizer handoff (12 Jul) — Claude verification verdicts
+- Entity table: **VERIFIED against code, merged** into ENTITY-GLOSSARY §2c (single source kept — no competing glossary). ⭐ Booker-as-private-individual insight adopted (wedding couple = מזמין הופעות; warm register in buyer copy).
+- "Public Passport review needs no login": **TRUE** — `/passport/:id` route sits outside all RequireRole guards; anon reads gated only by claims_public_read RLS (artist_approved).
+- מאשר-מקור recommendation: **matches EXISTING canon** — GLOSSARY locked "Source Confirmer = מאשר-מקור" on 8 Jul (v1.0). So this is a confirm-and-retire-alias ruling, not a new term (ENTITY-GLOSSARY §2d #1).
+- Act HE: correctly flagged as the still-open ruling (never invent — canon rule).
+- Release-train strategy: **ADOPTED** as rel-2026.07.13-PLAN §4b (preview-first, additive-032-now, backups-before-033+, atomic go-live, rollback SHAs). One correction applied: previews are OFF globally (quota) — the preview lane needs a one-time hook/enable by Cowork, not a routine push.
+- Supabase Pro backups: prerequisite for STRUCTURAL migrations (033+), not for additive 032 — sequencing recorded; $ decision = Maria.
