@@ -36,7 +36,7 @@ b{color:var(--ink)}
 <tr><td>SITE<br>lock.show</td><td>rel-site-2026.07.11-2<br>@917ef57</td><td><b>10 marketing pages rewritten</b> (home, 3 entity pages, pricing, how-it-works, methodology, faq, contact, radar). NOT touched: legal pages (terms/privacy/accessibility), demo page, waitlist-form sizes</td><td class="ok">✅ live-page fingerprints + 0 Hebrew glyphs (unicode scan)</td><td class="pend">🟡 partial — your corrections shipped; no formal sign-off</td></tr>
 <tr><td>EMBED<br>lock.show/app</td><td>mirrors rel-app-07.10</td><td>Same app, static mirror (no server features)</td><td class="ok">✅ bundle hash matches current app code</td><td class="pend">🟠</td></tr>
 <tr><td>DB</td><td>head = 031 (021 frozen)</td><td>Workspace types, analytics, WhatsApp, RLS fix, firewall gate</td><td class="ok">✅ applied by owner, flows confirmed working after</td><td class="ok">✅ (owner-applied)</td></tr>
-<tr><td>DESIGN SYSTEM</td><td>v1.5.8 (Codex)</td><td>v1.5.2 build-blocker tokens + v1.5.5 workspace-transition contract + v1.5.6 entity table + v1.5.8 demand-side segmentation (buyer ≠ אמרגן)</td><td class="pend">🟠 Codex verified locally; <b>Claude independent audit PENDING before binding</b> (audits cover ≤v1.4.2)</td><td>owner-directed</td></tr>
+<tr><td>DESIGN SYSTEM</td><td>v1.6.0 (Codex)</td><td>v1.5.x tokens/contracts + v1.5.8 demand-side segmentation + v1.6.0 platform/entity matrix, per-entity DOD, missing-material briefs (Codex ranks: site 88 · app desktop 84 · mobile 80 · imagery 76 · OG 68)</td><td class="pend">🟠 Codex verified locally; <b>Claude independent audit PENDING before binding</b> (audits cover ≤v1.4.2)</td><td>owner-directed</td></tr>
 <tr><td>INFRA</td><td>—</td><td>OAuth consent published · previews OFF · smart build-skip · registries in repo</td><td class="ok">✅ headless OAuth trace + Cowork dashboard confirmations</td><td>— operational</td></tr>
 </table>
 <p class="small">NOT yet verified by anyone: a real Google login click-through (config verified to Google's page only) · real email-confirm delivery (Cowork QA item C1/C2) · DS v1.5.2 content (my audit pending).</p></div>
@@ -57,7 +57,8 @@ b{color:var(--ink)}
 <div class="card">
 1. <b>Cowork QA (C1–C2):</b> real-browser flows — Google login click-through, email signup incl. confirmation delivery, artist journey, booker link, workspace switch.<br>
 2. <b>Migration 032</b> — I author, Cowork applies, regression-checked. <span class="small">(Codex governance alarm RESOLVED: origin/main contains 030+031 — its local clone was stale; rule: git pull before reading.)</span><br>
-3. <b>My DS v1.5.8 audit</b> — before binding its tokens (no more green-on-trust).<br>
+3. <b>My DS v1.6.0 audit</b> — before binding its tokens (no more green-on-trust).<br>
+3b. <b>QA/QC protocol Q1–Q8 (rel-2026.07.13-PLAN §4) — BINDING: a published version is NOT valid until the protocol passes</b> (pre-deploy verify → live fingerprints → real-browser flows → 360px mobile pass → firewall scan → terminology scan → governance update → owner approval).<br>
 4. <b>Your approval pass on rel-07.10–11</b> (section 2's 🟠 column) <b>+ your Hebrew-wording nod on the terminology wave</b> (מזמין הופעות etc. — your voice).<br>
 <span class="small">Then: launch planning (pilot: 2–3 artists + 1 אמרגן; the Gate = one reacts AND one pays — measurement for both is already live).</span></div>
 

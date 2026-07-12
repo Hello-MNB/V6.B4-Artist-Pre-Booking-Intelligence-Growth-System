@@ -19,9 +19,9 @@ Every app/site release row also records **which DS version it implements** (desi
 | Track | Version | main SHA | DS implemented | Live-verified | Owner-approved |
 |---|---|---|---|---|---|
 | App | rel-app-2026.07.10 (+hotfix) | a874ab5/eafcd4e | pre-DS (dark legacy; A13 mapping next) | ✅ bundle fingerprints | 🟠 pending |
-| **Site** | rel-site-2026.07.11-2 (inner pages) | 917ef57 | v1.4.2 voice/surface law (v1.5.2 tokens pending) | ✅ page fingerprints | 🟡 partial (owner corrections shipped) |
+| **Site** | rel-site-2026.07.11-2 (inner pages) | 917ef57 | v1.4.2 voice/surface law at ship time (token re-ground pending — target now DS v1.6.0) | ✅ page fingerprints | 🟡 partial (owner corrections shipped) |
 | Embed | embed@rel-app-2026.07.10 | e027958 | = app | ✅ bundle hash | 🟠 pending |
-| DS | v1.5.2 (Codex) | Drive 00_CURRENT | — | Codex QA ✓ | ✅ owner-directed |
+| DS | v1.6.0 (Codex, 12 Jul) | Drive 00_CURRENT | platform/entity matrix + per-entity DOD + demand-side terms (buyer ≠ אמרגן) | Codex QA ✓ · Claude independent audit PENDING | ✅ owner-directed |
 | DB | migration 031 (021 FROZEN) | applied 10 Jul | — | ✅ owner-applied | ✅ |
 | Infra | previews OFF · smart build-skip · OAuth published | 6f5ce8e | — | ✅ | — operational |
 
@@ -36,7 +36,7 @@ Every app/site release row also records **which DS version it implements** (desi
 ## NEXT VERSION TARGETS (rel-*.2026.07.13 — corrective release, in build)
 | Track | Targets | Gate |
 |---|---|---|
-| App | A13 mapping layer (DS v1.5.2) · +New Act · producer-confirm wiring · agency home next-action · activated_by · remaining funnel events | verify gate + Cowork flow-QA (C1) |
+| App | terminology wave (BUILT on branch) · A13 mapping layer (DS v1.6.0, after Claude audit) · +New Act · producer-confirm wiring · agency home next-action · activated_by · remaining funnel events · "Add workspace" real | verify gate + QA/QC protocol Q1–Q8 (rel-2026.07.13-PLAN §4) |
 | Site | arrow unification · footer regrouping · waitlist type floor | build + sweeps |
 | Embed | rebuilt with the app release (parity rule) | bundle hash |
 | DB | migration 032 (roster-grants RPC + production-requests RPC) — Claude authors, Cowork applies | SQL apply + regression check |

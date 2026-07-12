@@ -103,7 +103,7 @@ export const T = {
     jobTitle: 'מה תרצה לעשות קודם?',
     jobArtist: 'לבנות את עולם האמן שלי',
     jobAgency: 'לנהל אמנים',
-    jobBooker: 'להעריך אמנים לקראת אירוע',
+    jobBooker: 'לקבל הקשר ובהירות על אמן לפני הזמנה',
   },
   demo: {
     title: 'דמו — בחר תפקיד',
@@ -261,7 +261,7 @@ export const T = {
   readiness: {
     title: 'מצב מוכנות',
     subtitle: 'תצוגה פרטית — רק אתה רואה את זה.',
-    emptyTitle: 'הוסף הוכחות כדי להעריך',
+    emptyTitle: 'הוסף הוכחות כדי לבנות את התמונה המקצועית שלך',
     buildProfile: 'בנה פרופיל',
     nextStep: 'הצעד הבא שלך',
     axisDraw: 'הוכחת משיכה',

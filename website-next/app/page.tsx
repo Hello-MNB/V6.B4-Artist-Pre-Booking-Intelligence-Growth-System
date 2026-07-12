@@ -66,7 +66,8 @@ const jsonLd = {
 }
 
 // ─── Inline icon helper ────────────────────────────────────────────────────
-// Paths sourced from gigproof-icons.svg (Codex design system)
+// Icon paths originally sourced from the pre-rename icon sheet (public/gigproof-icons.svg,
+// kept as historical reference only); the governed replacement is lockshow-icons.svg (Codex, pending in git).
 const ICON_PATHS: Record<string, string> = {
   artist:   '<circle cx="12" cy="8" r="3"/><path d="M5.5 20c.7-4 2.8-6 6.5-6s5.8 2 6.5 6"/><path d="M19 4v7M16.5 6.5 19 4l2.5 2.5"/>',
   manager:  '<circle cx="8" cy="8" r="2.5"/><circle cx="17" cy="9" r="2"/><path d="M3.5 19c.5-3.4 2-5.2 4.5-5.2s4 1.8 4.5 5.2M13.5 18c.4-2.7 1.6-4.1 3.5-4.1s3.1 1.4 3.5 4.1"/><path d="M12 5.5 14.5 3 17 5.5"/>',

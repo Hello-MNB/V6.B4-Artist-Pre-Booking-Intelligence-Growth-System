@@ -52,7 +52,7 @@ current tokens stay frozen (no new invented styling), and the re-ground starts t
 |---|---|---|---|
 | 1 | A13 tokens-to-code map | Codex → Claude | ✅ DELIVERED 10 Jul (`docs/design-system/A13-TOKEN-VALUES.md`) — mapping layer UNBLOCKED |
 | 2 | Per-surface token values | Codex → Claude | ✅ delivered inside A13 (app dark-first ratified; marketing paper) |
-| 3 | Build-blocker specs (band/binary, Radar states, motion/radius/spacing, HE token, OG contract) | Codex → Claude | 🟠 now v1.5.8 (demand-side segmentation; buyer ≠ אמרגן) — **Claude independent audit PENDING before binding** |
+| 3 | Build-blocker specs (band/binary, Radar states, motion/radius/spacing, HE token, OG contract) | Codex → Claude | 🟠 now v1.6.0 (platform/entity matrix + per-entity DOD + missing-material briefs) — **Claude independent audit PENDING before binding** |
 | 3b | Physical files INTO git: logo SVGs, lockshow-icons.svg, 4 atmosphere PNGs, OG exports | Owner/Codex → repo | 🔴 open — only blocker left on the design side |
 | 3c | DB-state inventory (states vs actions) + post-implementation screenshots | Claude → Codex | 🟡 Claude owes |
 | 4 | Live-app screenshots + Radar visual spec | Claude → Codex | ✅ delivered (`current-screens/` ×12 + `CODEX-RADAR-VISUAL-SPEC.md`) |
@@ -124,3 +124,13 @@ Claude integrates. Open spec-vs-reality hole owned by Claude for rel-07.13: "Add
 - Claude's earlier ENTITY-GLOSSARY first edition repeated the inversion in its Booker row — self-corrected, marked superseded.
 - Agency-side strings that correctly use אמרגן (roster team) KEPT.
 - HE final taste (מזמין הופעות vs מנהל בוקינג etc. per context) = Maria.
+
+## 11. DS v1.6.0 handoff (12 Jul) — Claude verdicts on the 5 "old wording" issues
+| Codex claim | Verdict | Evidence |
+|---|---|---|
+| GLOSSARY.md still "Buyer = אמרגן" | **STALE CLONE** — fixed in v1.1 same day | commit a3fc01d; rule remains: git pull before scanning |
+| he.js workspaceBooker 'מרחב אמרגן' | **STALE CLONE** — already 'מרחב מזמין הופעות' | a3fc01d |
+| "להעריך אמנים" evaluation language | **REAL → FIXED** — jobBooker (both languages) → context/clarity wording; artist-facing readiness emptyTitle → "build your professional picture". Canon band-state 'לא-ניתן-להעריך' (not-assessable) KEPT — it is a method label, not judgment voice | this commit |
+| SIGNUP_ROLES includes PRODUCER | **REAL → FIXED** — removed (constant was consumed nowhere; Source Confirmer ≠ signup) | this commit |
+| Private clients not represented | **ACCEPTED as plan item** — /bookers one-line acknowledgment + FAQ in rel-07.13; full private-client page = post-validation (canon Gate audience = professional buyer) | rel-2026.07.13-PLAN §1 |
+Also adopted: per-entity DOD structure into the release plan; QA/QC protocol (Q1–Q8) now binding — a version is not valid until it passes.

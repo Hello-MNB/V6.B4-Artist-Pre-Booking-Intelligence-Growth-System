@@ -35,7 +35,7 @@
       "heading": "One platform, three different jobs",
       "sub": "A booking manager decides whether to book you. A producer ran the show you played. LOCK keeps those roles separate — so no one confirms their own claim.",
       "artist": {
-        "tag": "אמן · ARTIST",
+        "tag": "ARTIST",
         "title": "Build your proof profile",
         "body": "Collect evidence, invite producers to confirm a single claim, and publish a method-labelled Passport that speaks for you before the first call.",
         "cta": "FOR ARTISTS →"
@@ -47,7 +47,7 @@
         "cta": "FOR BOOKING MANAGERS →"
       },
       "producer": {
-        "tag": "מפיק · PRODUCER",
+        "tag": "PRODUCER",
         "title": "Confirm one claim, no account needed",
         "body": "Receive a bounded magic link, confirm a single claim you know first-hand, and done. Your confirmation is method-labelled on the Passport.",
         "cta": "FOR PRODUCERS →"

@@ -105,7 +105,7 @@ export const T = {
     jobTitle: 'What would you like to do first?',
     jobArtist: 'Build my artist world',
     jobAgency: 'Manage artists',
-    jobBooker: 'Evaluate artists for an event',
+    jobBooker: 'Get context and clarity on an artist before booking',
   },
   demo: {
     title: 'Demo — choose a role',
@@ -265,7 +265,7 @@ export const T = {
   readiness: {
     title: 'Readiness',
     subtitle: 'Private view — not visible to booking managers.',
-    emptyTitle: 'Add proof to assess',
+    emptyTitle: 'Add proof to build your professional picture',
     buildProfile: 'Build profile',
     nextStep: 'Your next step',
     axisDraw: 'Proof of draw',
