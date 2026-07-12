@@ -13,6 +13,7 @@ export const metadata: Metadata = {
     description:
       'Book with context, not guesswork. Checked evidence in two minutes — free for booking managers, always.',
     type: 'website',
+    images: [{ url: '/og/lockshow-og-professional-buyers-v1.png', width: 1200, height: 630 }],
   },
 }
 

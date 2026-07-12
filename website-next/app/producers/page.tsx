@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     title: 'For Producers | LOCK',
     description: 'You were there that night. Twenty seconds of your word turns one good show into something an artist can build on.',
     type: 'website',
+    images: [{ url: '/og/lockshow-og-source-confirmer-v1.png', width: 1200, height: 630 }],
   },
 }
 
