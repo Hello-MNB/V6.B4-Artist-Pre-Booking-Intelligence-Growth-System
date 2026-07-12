@@ -177,6 +177,23 @@ Artist lane FIRST; other entities after. Codex: artist-screen DS DODs + states s
 briefs. Cowork: Q3/Q4 QA weights the artist journey end-to-end. Entity architecture verified ready for
 growth; structural debts (033+ renames) scheduled, not blocking.
 
+## 20. OWNER RADAR SPEC (12 Jul night) + beta-signup pivot — the current batch definitions
+**Radar (N3) owner spec:** the Radar shows the artist WHO they are · relative to their GENRE ·
+WHERE to focus · the VALUE of each planet — **planets have different weights per genre**. Firewall
+translation: genre weights = which PROOF matters most for this artist's genre (focus guidance +
+planet emphasis + weighted next-actions) — NEVER a score/percentile/comparison to genre peers.
+**Codex batch ask (ONE block):** ① the genre→planet-weight table (per genre family: which of the
+6 planets carries most booking weight, with one-line "why" per planet — extends v1.6.7
+Growth-Advisor law) ② S9 full-site content+design pass — goal: BETA SIGNUPS (owner's marketing
+test; every page maximally effective; outreach-ready: she will send text+join-link per audience)
+③ content for TWO NEW outreach landing pages: /managers (משרד אמרגנות audience) + /production
+(production offices) — the current /producers page is the Source-Confirmer flow, NOT these
+audiences ④ Q4 review when preview lands. **Claude implements all of it + waitlist wiring.**
+**Signup recording (verified in repo):** `waitlist_signup` table (026) already records role +
+source_page, anon-insert; form component exists. Claude adds per-page role-preset + outreach
+`?src=` attribution; role-check widening (artist_manager/production values) = small additive
+migration for the Cowork batch.
+
 ## 19. CFRO v2.3 + Codex v1.6.7 processed (12 Jul night) — Claude Code verdicts
 **CFRO v2.3: HIGH QUALITY, ADOPTED AS ADVISORY MAP** — canon-aware (all ₪ marked HYPOTHESIS, Option A,
 Green-Invoice-before-payment, no-score-to-sell honored), honest verified-vs-hypothesis ledger.
