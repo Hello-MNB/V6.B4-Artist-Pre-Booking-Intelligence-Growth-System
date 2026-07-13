@@ -496,3 +496,16 @@ repo). ③ Any missing visual for the first-users push (its brief lane). ④ Fir
 applies to marketing too: proof/confidence vocabulary — never score/rank/"we evaluate artists".
 Maria sends the messages personally — kits must be paste-ready. Claude verifies links+tokens work
 on the live site before she sends anything (part of the release train).
+
+## 27. CFRO OWNS BUDGET + P&L + SWOT (owner order, 13 Jul)
+Owner needs: FULL budget BY GROWTH STAGE, expense clarity, per-subscription notes — what each
+tier includes (free ceiling → next price → alternatives) — plus P&L and SWOT. CFRO = responsible.
+Deliverable spec: ① Budget table per service (Supabase free→Pro$25→Team$599: ceilings incl.
+NO-BACKUPS on free · Vercel Hobby free→Pro$20: build/bandwidth caps · Anthropic API usage: cents/
+evidence now, $50 cap proposal, deep-scan future line · Resend free 3k emails→$20 · domain ·
+Green Invoice fees when active · alternatives column per service) ② Growth stages: pilot(friends)
+→ post-Gate(first payments) → growth(100+ artists) — costs + revenue per stage ③ P&L per stage
+(free pilot = pure burn + owner-hours line it already modeled) ④ SWOT — venture-level, honest.
+Claude Code verifies every price/ceiling claim against provider truth before it binds. Owner
+audit order: EVERYTHING gets audited incl. version management — GPT audits the G-register + train
+integrity; each member re-runs their role audit per standing rules.
