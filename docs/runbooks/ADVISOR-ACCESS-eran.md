@@ -1,4 +1,13 @@
 # ADVISOR ACCESS RUNBOOK — eran@agendos.app (owner order, 13 Jul 2026)
+## ⚠️ STATUS: WAITING (owner, 13 Jul) — invitation goes out ONLY when we are ready. Nothing here executes until Maria's word.
+## 🚩 P0 AMENDMENT (GPT + Cowork audits, ADOPTED): LEAST-PRIVILEGE REQUIRED.
+Today's operator role carries WRITE powers (activate payments, approve upgrades, publish state,
+export/delete artist data). An ADVISOR must get READ-ONLY oversight. Therefore: the §1 SQL below
+is NOT to be run as-is for Eran — Claude Code first ships the capability separation
+(operator_owner vs operator_advisor, or capability flags: business_read/pii_read/payment_manage/
+publish_manage/data_export/data_delete/audit_read). Cowork keeps the grant BLOCKED until it can
+prove prohibited mutations fail at UI + RPC + RLS levels for the advisor user. Maria = full owner
+capabilities, unchanged.
 Owner directive: Eran (serial entrepreneur, developer) gets access to SEE/EXAMINE everything.
 Execution discipline: every grant below is an OWNER action from Maria's own accounts, or a
 Cowork action on Maria's DIRECT word (prod-DB guardrail). No credentials in chat/files, ever.

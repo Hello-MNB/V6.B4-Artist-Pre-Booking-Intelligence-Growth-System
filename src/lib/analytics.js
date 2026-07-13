@@ -26,6 +26,7 @@ const CANON = new Set([
   'passport_view', 'professional_reaction_submitted', 'availability_request_created',
   'producer_confirmation_sent', 'producer_confirmation_received', 'claim_published',
   'passport_published', 'entitlement_activated', 'gig_evidence_refresh_completed',
+  'passport_unpublished', // requires migration 034 (CHECK widened); before it, insert fails harmlessly → localStorage only
   'share_link_created', 'share_link_opened', 'consent_granted', 'consent_withdrawn',
   'account_deleted',
   // 028 M1 funnel additions

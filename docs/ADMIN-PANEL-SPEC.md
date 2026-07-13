@@ -56,3 +56,31 @@ build (each queue lands WITH the automation that feeds it — no empty dashboard
 - CFRO: confirms §B covers its measurement needs (it asked for exactly the publish-cadence and
   Gate tiles).
 - GPT: drift-check this spec vs its Retention Measurement Spec (event names must match 1:1).
+
+## E) GPT COCKPIT-AUDIT AMENDMENTS (13 Jul — ADOPTED, binding on the P0.5 build)
+1. **Live inventory = SEVEN sections** (correction): Payments · Upgrades · Artists · Requests ·
+   Claims · **Consents · Audit** (verified in AdminDashboard.jsx:161).
+2. **Access separation is P0 BEFORE any advisor grant:** operator_owner (Maria, full) vs
+   operator_advisor (read-only aggregated cockpit; no payment/publish/export/delete). Eran's
+   grant stays 🚩BLOCKED until Cowork proves prohibited mutations fail at UI+RPC+RLS.
+   Runbook amended. **Owner directive: the invitation itself = WAITING task until Maria is ready.**
+3. **Event persistence corrected:** passport_unpublished was outside the 028 CHECK → was
+   localStorage-only. Migration 034 drafted (additive CHECK widening + down) — owner applies;
+   until then current-unpublished comes from DB state (published=false) and republish cadence
+   from repeated passport_published (distinguish first vs re-publish via prior events; demo excluded).
+4. **Funnels split PER ENTITY** (artist/manager/buyer/production/confirmer/site) — each with
+   eligible population, distinct key, first-vs-repeat, demo exclusion. No single mixed funnel;
+   no cross-unit conversion rates.
+5. **Gate tile:** qualified buyer reaction (availability_request_created) · payment INTENT
+   (payment_reference_created) · VERIFIED payment (entitlement_activated) — three columns,
+   intent never presented as payment. Gate strip renders FIRST (Codex DS v1.6.18 mobile order).
+6. **"Not instrumented yet" ≠ 0:** planned P1 metrics (improvement cycles, gig debriefs,
+   freshness resolution) render as explicitly unavailable, never as zeros.
+7. **Read-model contract:** admin_business_overview(window_key, entity_filter) — SECURITY
+   DEFINER + fixed search_path + capability check; response discloses generated/data-through
+   timestamps, vocabulary version, missing-instrumentation list, demo-exclusion status; every
+   metric carries unit/denominator/source/limitation. Aggregates only for advisor.
+8. **Dimensions before build:** verify which events actually carry workspace_id/act_id/
+   passport_id/request_id/actor_role/locale/source/src/is_demo — absent key → metric marked
+   unavailable, never silently estimated. Attribution language: "this source produced these
+   signups" (not "this message worked").
