@@ -19,5 +19,6 @@ alter table public.analytics_event add constraint analytics_event_event_name_che
     'radar_opened','evidence_added','claim_confirmed',
     'act_created','act_switched','workspace_switched',
     'payment_reference_created','availability_request_responded',
-    -- 034 · publish-cadence signal
-    'passport_unpublished'));
+    -- 034 · publish-cadence signal + onboarding fix (applied version, Cowork 13 Jul:
+    -- onboarding_completed was in the app CANON but missing from the 028 CHECK — added on apply)
+    'passport_unpublished','onboarding_completed'));
