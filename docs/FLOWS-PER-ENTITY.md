@@ -65,7 +65,7 @@ waitlist marketing tag = artist_manager (audience label). They map 1:1.
 **Flow:**
 1. `/production` — dashboard: events + requests (production-requests RPC, 032) 🔵
 2. Request statuses: new / replied / closed chips 🔵
-3. Source-Confirmer duties when asked to confirm artist claims (docs-only alias: מפיק מאשר) → §5
+3. Source-Confirmer duties when asked to confirm artist claims → §5
 **Outbound booking (clarification):** when a production office wants to BOOK an artist, it acts
 AS A BUYER — it opens the artist's Passport link and sends an availability request exactly like
 flow §4 (no separate outbound-request screen in this release; §3's dashboard shows the requests
@@ -81,12 +81,12 @@ it RECEIVES as an artist-side/confirmer party). Post-Gate we may add a native ou
    (paste the link/ID you received → opens the Passport). HONESTY NOTE (GPT audit): true "saved
    passports" / shortlist / notes do NOT exist yet — open discovery and saving are deliberately
    post-validation ⏳
-**Measured:** passport_viewed, availability request sent (the GATE metric: a real buyer reacts).
+**Measured:** passport_view, availability request sent (the GATE metric: a real buyer reacts).
 
 ## 5) SOURCE CONFIRMER (מאשר-מקור — venue/festival/production confirming a claim)
 **Entry:** email/WhatsApp link from artist's claim → `/confirm/:token` — NO LOGIN 🔵
 **Flow:** open link → see the specific claim → confirm / decline → done (one screen).
-**Measured:** producer_confirmation_sent → confirmed (evidence ceiling upgrade to 'verified').
+**Measured:** producer_confirmation_sent → producer_confirmation_received (evidence ceiling upgrade to 'verified').
 
 ## 6) SITE VISITOR (marketing site lock.show)
 **Entry:** outreach message / social / search
