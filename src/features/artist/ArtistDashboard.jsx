@@ -129,6 +129,9 @@ export default function ArtistDashboard() {
   const [focusSignal, setFocusSignal] = useState(0)
   const arrivalShown = useRef(false)
   const radarLogged = useRef(false) // RADAR_OPENED once per visit (pilot signal A10)
+  // G7 — share ladder: copied-state for the share-link button in the sheet.
+  const [linkCopied, setLinkCopied] = useState(false)
+  const copiedTimer = useRef(null)
 
   async function load() {
     setLoadError(false)
@@ -155,6 +158,24 @@ export default function ArtistDashboard() {
     }
   }
   useEffect(() => { load() }, [user.id])
+  useEffect(() => () => clearTimeout(copiedTimer.current), [])
+
+  // G7 — the artist's SHARE action (the ladder's share step, DEPLOY-GAPS G7).
+  // The copied link carries the ?s=1 share marker so the public Passport can
+  // log share_link_opened for visits that came from a shared link (id + marker
+  // only — never a score/percent, firewall-safe). share_link_created fires on
+  // the real copy action; if the clipboard is blocked the visible link below
+  // the button stays selectable, and no event is logged (nothing was copied).
+  const shareUrl = artist ? `${window.location.origin}/passport/${artist.id}?s=1` : ''
+  async function copyShareLink() {
+    try {
+      await navigator.clipboard.writeText(shareUrl)
+      setLinkCopied(true)
+      clearTimeout(copiedTimer.current)
+      copiedTimer.current = setTimeout(() => setLinkCopied(false), 2000)
+      logEvent(EVENTS.SHARE_LINK_CREATED, { artist_id: artist.id }) // pilot signal — share step of the North-Star chain
+    } catch { /* clipboard blocked — the link stays visible/selectable below */ }
+  }
 
   // Landing here straight from the shortened entry — the "we're scanning /
   // here's what needs you" moment (one quiet toast, once per arrival).
@@ -373,6 +394,16 @@ export default function ArtistDashboard() {
               className={`mt-2 w-full text-sm ${dirty ? 'btn-primary' : 'btn-ghost'}`}>
               {T.dashboard.refreshPublic}
             </button>
+            {/* ── G7 share step — copy the public link (carries the ?s=1 share
+                  marker so opens of THIS link are measurable). Link stays
+                  visible + selectable as the no-clipboard fallback. ── */}
+            <div className="mt-3 border-t border-line pt-3">
+              <button onClick={copyShareLink} className="btn-primary w-full text-sm">
+                {linkCopied ? T.dashboard.shareLinkCopied : T.dashboard.shareLinkCta}
+              </button>
+              <p className="mt-1.5 break-all text-center font-mono text-[10px] text-faint" dir="ltr">{shareUrl}</p>
+              <p className="mt-1 text-center text-[11px] text-muted">{T.dashboard.shareLinkHint}</p>
+            </div>
           </>
         )}
         {pubError && <p className="mt-2 text-xs text-need">{pubError}</p>}

@@ -38,6 +38,49 @@ export async function bootstrapOrg({ name, functionalRole, email, displayName })
   return data
 }
 
+// ── A2/N12 — create an ADDITIONAL workspace (G3) ──
+// bootstrap_personal_org can't do this: it is deliberately idempotent per owner
+// (returns the EXISTING org when the caller already owns one), and a direct
+// client-side insert can't either — the first owner membership row can never
+// pass mem_admin_write RLS (008) because the creator isn't a member yet (the
+// exact chicken-and-egg 009 solved with a SECURITY DEFINER RPC). So this calls
+// the create_workspace RPC (migration 035 — function only, no table/column
+// changes) and fails SOFT with a typed result until 035 is applied, same
+// pattern as the 027/032 wrappers above — the UI renders an honest
+// "needs migration" note, never a crash and never a half-created workspace.
+//
+// G3 BOUNDARY (DEPLOY-GAPS testable condition): the RPC creates ONLY the
+// organization + solo subscription + owner membership + role_assignment.
+// NOTHING is copied or moved — evidence, billing and ArtistAccess grants stay
+// bound to their original workspace; the new workspace starts empty.
+//
+// UI type vocabulary → DB vocabulary (migration 027 constraint values):
+//   artist → 'artist' · agency → 'management' · production → 'producer'.
+// functional_role: an agency AND a production office both normalize to the
+// AGENCY nav family (workspace_type picks the production screen-set) — see
+// normalizeFunctionalRole above and OrgContext's isProducerWorkspace.
+const WORKSPACE_TYPE_BY_UI = { artist: 'artist', agency: 'management', production: 'producer' }
+const FUNCTIONAL_ROLE_BY_UI = { artist: 'artist', agency: 'artist_manager', production: 'artist_manager' }
+const MIGRATION_035_NOTE =
+  '[create_workspace] migration 035 not applied yet — run supabase/migrations/035_create_workspace.sql (owner-approved) to enable adding workspaces.'
+
+export async function createWorkspace({ name, type = 'artist' } = {}) {
+  if (DEMO) return demoCreateWorkspace(name, type)
+  const { data, error } = await supabase.rpc('create_workspace', {
+    p_name: name || null,
+    p_workspace_type: WORKSPACE_TYPE_BY_UI[type] || 'artist',
+    p_functional_role: FUNCTIONAL_ROLE_BY_UI[type] || 'artist',
+  })
+  if (error) {
+    if (error.code === '42883' || error.code === 'PGRST202' || /function .* does not exist/i.test(error.message || '')) {
+      console.warn(MIGRATION_035_NOTE)
+      return { ok: false, reason: 'migration-035-required' }
+    }
+    throw error
+  }
+  return { ok: true, id: data }
+}
+
 // ── Memberships + active-org context (O3) ──
 export async function getMyMemberships() {
   if (DEMO) return demoMemberships

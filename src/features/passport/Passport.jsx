@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom'
 import { Wordmark, BottomSheet, PageShell } from '../../components/ui.jsx'
 import { useLang } from '../../context/LangContext.jsx'
@@ -44,6 +44,10 @@ export default function Passport() {
   const [sheet, setSheet] = useState(false)
   const [receipt, setReceipt] = useState(null)
   const [busy, setBusy] = useState(false)
+  // G7 — share_link_opened once per visit (ref guard: retries/re-renders never
+  // double-log). Only when the URL carries the ?s=1 share marker the artist's
+  // copied link appends — an organic open is a passport_view, not a share open.
+  const shareOpenLogged = useRef(false)
 
   useEffect(() => {
     let alive = true
@@ -64,6 +68,12 @@ export default function Passport() {
         if (id !== 'demo-artist') {
           recordPassportView(id) // measurement, never blocks
           logEvent(EVENTS.PASSPORT_VIEWED, { artist_id: id })
+          // G7 — this visit arrived via a shared link (?s=1): log the share
+          // open once, on a REAL successfully-loaded passport only.
+          if (sp.get('s') === '1' && !shareOpenLogged.current) {
+            shareOpenLogged.current = true
+            logEvent(EVENTS.SHARE_LINK_OPENED, { artist_id: id })
+          }
         }
       } catch {
         if (alive) setView('error')

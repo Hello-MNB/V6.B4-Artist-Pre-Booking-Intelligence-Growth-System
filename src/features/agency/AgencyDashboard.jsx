@@ -274,25 +274,44 @@ export default function AgencyDashboard() {
 
       {/* ── A6 (032-backed): the CONSENTED roster — ACTIVE ArtistAccess grants.
             A grant, never ownership (ENTITY-GLOSSARY §2c boundary). Renders only
-            when 032 is applied AND at least one grant is active. ── */}
+            when 032 is applied AND at least one grant is active.
+            G4 (A5): ONE commercial next action per artist row, derived ONLY from
+            state this screen has actually loaded — a 'new' availability request
+            for that artist (requests list) → reply; otherwise the roster radar
+            is the one honestly-known next move. The 032 grant row carries no
+            publish/evidence fields, so richer actions (request video / refresh
+            proof) are NOT derivable here and are deliberately not invented. ── */}
       {Array.isArray(grants) && grants.length > 0 && (
         <div className="card mb-4 border border-line">
           <p className="mb-0.5 font-bold text-ink text-sm">{T.agency.consentedTitle}</p>
           <p className="mb-2 text-xs text-muted">{T.agency.consentedHint}</p>
           <div className="space-y-1.5">
-            {grants.map((g) => (
-              <div key={g.grant_id} className="flex items-center justify-between gap-3 rounded-xl border border-line bg-surface2 px-3 py-2">
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold text-ink">{g.artist_stage_name || '—'}</p>
-                  {g.artist_city && <p className="truncate text-[11px] text-muted">{g.artist_city}</p>}
+            {grants.map((g) => {
+              const hasNewRequest = (requests || []).some((r) => r.status === 'new' && r.artist_id === g.artist_id)
+              return (
+                <div key={g.grant_id} className="flex items-center justify-between gap-3 rounded-xl border border-line bg-surface2 px-3 py-2">
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-semibold text-ink">{g.artist_stage_name || '—'}</p>
+                    {g.artist_city && <p className="truncate text-[11px] text-muted">{g.artist_city}</p>}
+                  </div>
+                  <div className="flex shrink-0 items-center gap-1.5">
+                    <div className="hidden items-center gap-1 sm:flex">
+                      {(g.scope || []).map((s) => (
+                        <span key={s} className="chip bg-na-bg text-[9px] uppercase tracking-[0.06em] text-muted">{s}</span>
+                      ))}
+                    </div>
+                    {/* the ONE next action — real state only, never a guess */}
+                    <Link
+                      to={hasNewRequest ? '/agency/requests' : '/agency/radar'}
+                      className={`chip min-h-[28px] border px-2 py-0.5 text-[10px] font-semibold transition ${
+                        hasNewRequest ? 'border-accent/60 text-accent hover:border-accent' : 'border-line text-ink hover:border-line2'}`}
+                    >
+                      {hasNewRequest ? T.agency.nextReplyRequest : T.agency.nextOpenRadar} ›
+                    </Link>
+                  </div>
                 </div>
-                <div className="flex shrink-0 items-center gap-1">
-                  {(g.scope || []).map((s) => (
-                    <span key={s} className="chip bg-na-bg text-[9px] uppercase tracking-[0.06em] text-muted">{s}</span>
-                  ))}
-                </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       )}

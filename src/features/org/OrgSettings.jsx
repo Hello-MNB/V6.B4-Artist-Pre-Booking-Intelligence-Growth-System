@@ -78,6 +78,19 @@ export default function OrgSettings() {
         {isAdmin && <button className="btn-primary w-full mt-4" onClick={save} disabled={busy}>{busy ? <Spinner /> : T.org.save}</button>}
       </div>
 
+      {/* ── G8 · N10 — entitlement VISIBILITY (display only). FREE-PILOT ruling
+            (G17): the pilot is free — no payment CTA, no price, ever, here.
+            Reads the real organization.plan; a solo org shows the pilot's plan
+            name ("Passport — free pilot") since 'Solo' is a tier word, not the
+            offer the workspace is actually on. ── */}
+      <div className="card mb-4">
+        <p className="mb-1 font-mono text-[10.5px] uppercase tracking-[0.1em] text-muted">{T.org.planLabel}</p>
+        <p className="text-sm font-semibold text-ink">
+          {org?.plan && org.plan !== 'solo' ? planLabel(org.plan, T) : T.org.planPilotName}
+        </p>
+        <p className="mt-1 text-xs leading-relaxed text-muted">{T.org.planPilotNote}</p>
+      </div>
+
       {/* owner-only zone */}
       <div className="card border border-amber/40">
         {isOwner ? (
