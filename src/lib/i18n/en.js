@@ -779,6 +779,17 @@ export const T = {
         why: 'A real reaction from someone who books is the goal — send your link to one person who books artists.',
         time: 1,
       },
+      replyRequest: {
+        title: 'A buyer is waiting — reply to the request',
+        why: 'Someone who books artists asked about your availability. Answering fast is the strongest professional signal you can send.',
+        time: 2,
+      },
+      refreshProof: {
+        title: 'Refresh your proof',
+        why: 'Your newest evidence is over 90 days old — buyers opening your Passport may see yesterday’s picture. One fresh item from a recent show keeps it current.',
+        time: 5,
+        planet: 'proof',
+      },
       done: {
         title: 'You are set for now',
         why: 'Refresh evidence after your next show — fresh proof beats old proof.',

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthProvider.jsx'
-import { getMyArtist, upsertArtist, getMyAct, updateAct, listProfileItems, listClaims, publishPassport, unpublishArtist, hasConsent, recordConsentScope, getEntitlement } from '../../lib/db.js'
+import { getMyArtist, upsertArtist, getMyAct, updateAct, listProfileItems, listClaims, listRequestsForArtist, publishPassport, unpublishArtist, hasConsent, recordConsentScope, getEntitlement } from '../../lib/db.js'
 import { PageShell, Loading, EmptyState, ErrorState, BottomSheet, useToast } from '../../components/ui.jsx'
 import { useLang } from '../../context/LangContext.jsx'
 import { isPassportDirty, clearPassportDirty, markPassportDirty } from '../../lib/passportState.js'
@@ -28,7 +28,11 @@ function withGenreNote(action, act, artist, T) {
   return { ...action, why: `${action.why ? action.why + ' ' : ''}${T.radar.genrePrimaryNote}` }
 }
 
-function pickNextAction(artist, items, claims, T) {
+// Evidence counts as fresh for 90 days — after that the ladder surfaces a
+// refresh instead of another share (freshness is a TIME state, never quality).
+const FRESHNESS_DAYS = 90
+
+function pickNextAction(artist, items, claims, T, openRequests = 0) {
   const A = T.radar.nextActions
   const links = items.filter((i) => i.item_type === 'link')
   const exp = items.filter((i) => i.item_type !== 'link')
@@ -46,6 +50,11 @@ function pickNextAction(artist, items, claims, T) {
   // once proof exists it drives publish → share → a real buyer reaction (the
   // Gate's first half). Pilot ruling: publishing is FREE — never a wall here.
   if (!artist.published) return { ...A.publish, to: '/artist/passport' }
+  // Post-M8 (GPT growth-loop audit): after publish the action derives from
+  // STATE — a waiting buyer beats everything; stale proof beats another share.
+  if (openRequests > 0) return { ...A.replyRequest, to: '/artist/requests' }
+  const newest = items.reduce((t, i) => Math.max(t, Date.parse(i.created_at) || 0), 0)
+  if (newest && Date.now() - newest > FRESHNESS_DAYS * 864e5) return { ...A.refreshProof, to: evidenceRoute }
   return { ...A.share, to: '/artist/passport' }
 }
 
@@ -61,6 +70,7 @@ export default function ArtistDashboard() {
   const [items, setItems] = useState([])
   const [claims, setClaims] = useState([])
   const [ent, setEnt] = useState(null)
+  const [openReqs, setOpenReqs] = useState(0) // 'new' availability requests — post-M8 ladder
   const [publishing, setPublishing] = useState(false)
   const [pubError, setPubError] = useState('')
   const [loadError, setLoadError] = useState(false)
@@ -86,6 +96,7 @@ export default function ArtistDashboard() {
         setItems(await listProfileItems(a.id))
         setClaims(await listClaims(a.id))
         setEnt(await getEntitlement(a.id))
+        try { setOpenReqs((await listRequestsForArtist(a.id)).filter((r) => r.status === 'new').length) } catch { setOpenReqs(0) } // post-M8 ladder input — tolerate absence
         setDirty(isPassportDirty(a.id))
         if (!radarLogged.current) { radarLogged.current = true; logEvent(EVENTS.RADAR_OPENED, { artist_id: a.id }) } // pilot signal
       }
@@ -198,7 +209,7 @@ export default function ArtistDashboard() {
     )
   }
 
-  const nextAction = withGenreNote(pickNextAction(artist, items, claims, T), act, artist, T)
+  const nextAction = withGenreNote(pickNextAction(artist, items, claims, T, openReqs), act, artist, T)
 
   // IA correction: claim review is NOT a destination — it opens as a panel
   // inside the Radar. Deferred-field actions (photo, bands) open their planet

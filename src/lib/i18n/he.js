@@ -708,6 +708,17 @@ export const T = {
         why: 'תגובה אמיתית ממי שמזמין היא המטרה — שלח את הקישור לאדם אחד שמזמין אמנים.',
         time: 1,
       },
+      replyRequest: {
+        title: 'מזמין ממתין — ענה לבקשה',
+        why: 'מישהו שמזמין אמנים שאל על הזמינות שלך. מענה מהיר הוא הסיגנל המקצועי החזק ביותר שאפשר לשדר.',
+        time: 2,
+      },
+      refreshProof: {
+        title: 'רענן את ההוכחות שלך',
+        why: 'הראיה החדשה ביותר שלך בת יותר מ-90 יום — מזמינים שפותחים את הפספורט עלולים לראות תמונה של אתמול. פריט טרי אחד מהופעה אחרונה שומר אותו עדכני.',
+        time: 5,
+        planet: 'proof',
+      },
     },
     // Partial HE for the artist universe — the rest falls back to EN per-key
     // (build-in-English rule) until the native-authoring pass.

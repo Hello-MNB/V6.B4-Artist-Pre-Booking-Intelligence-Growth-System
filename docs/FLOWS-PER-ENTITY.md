@@ -22,7 +22,13 @@ Firewall applies everywhere: no score/percentile/rank; bands + binaries + method
    — NEVER a % complete, level, progress bar toward a score, or count "X of 8". The milestone UI
    is next-action guidance; it triggers NO AI re-scan (pure UI over existing data).
 4. `/evidence/:artistId` — Evidence capture → AI processing (EVIDENCE_UPLOADED/PROCESSED events) 🔵
+   **AI STATUS (honest, GPT audit ruling):** what is LIVE = per-evidence claim extraction when the
+   artist adds evidence. The canon's multi-source DEEP SCAN (≈$1, once at onboarding) + automatic
+   incremental re-scans = **TARGET ARCHITECTURE, not yet built** (P2, post-preview). No business
+   number may assume the deep-scan cost until it exists.
 5. `/artist/claims` — AI claim review: approve / edit / send Source-Confirmer request 🔵
+   (a PANEL reached from the Radar next-action card and notifications — not a nav destination;
+   the route exists for deep links only)
 6. `/artist/passport` — own Passport (Artist view = private, shows gaps) → publish (FREE in pilot) 🔵
 7. `/passport/:id` — public Passport (Buyer view = verified strengths only; NO login needed) 🟢
 8. `/artist/requests` — incoming availability requests from buyers 🔵
@@ -34,6 +40,10 @@ Firewall applies everywhere: no score/percentile/rank; bands + binaries + method
 flow (publish-wall ruled OUT by canon). N10 = entitlement *visibility* only (showing what plan
 a workspace is on), not a charge. First real payment waits for Green Invoice + the Gate.
 **Measured:** signup → onboarding → radar_opened → evidence → claim_confirmed → published → share → request.
+**Post-M8 (GPT audit adoption, in current build):** after publish the next-action ladder must NOT
+be a fixed "Share" forever — it derives from state: unreplied request → reply · stale evidence →
+refresh proof · else share. The full Growth Loop (post-gig debrief, freshness engine, buyer-signal
+themes) = P1 layer after preview, spec owned by GPT (CONTINUOUS-ARTIST-VALUE-SPEC).
 
 ## 2) ARTIST MANAGER / AGENCY (אמרגן — artist-side, NOT a buyer)
 **Entry:** site `/managers` outreach page (?src batch token) → waitlist OR `/signup` (role: Agency)
@@ -67,7 +77,10 @@ it RECEIVES as an artist-side/confirmer party). Post-Gate we may add a native ou
 **Flow:**
 1. `/passport/:id` — Buyer view: verified strengths, bands + binaries + method labels 🟢
 2. `/passport/:id/request` → `/passport/:id/sent` — availability request (name/event/date) 🔵
-3. Optional signup (role: Booker) → `/discover` — saved passports home 🔵
+3. Optional signup (role: Booker) → `/discover` — Booker home = **a passport-link resolver**
+   (paste the link/ID you received → opens the Passport). HONESTY NOTE (GPT audit): true "saved
+   passports" / shortlist / notes do NOT exist yet — open discovery and saving are deliberately
+   post-validation ⏳
 **Measured:** passport_viewed, availability request sent (the GATE metric: a real buyer reacts).
 
 ## 5) SOURCE CONFIRMER (מאשר-מקור — venue/festival/production confirming a claim)
@@ -92,8 +105,9 @@ Pricing page: UNPUBLISHED (redirects to /artists) 🔵.
 - **⏳ after:** F4–F6 family registries wiring, GA4/GTM connector (parked), structural migrations 034+,
   Hebrew site, About page, open discovery.
 
-## QA mapping (who verifies which flow on preview)
-- **Cowork (Q1–Q8):** flows 1–7 end-to-end in a real browser + waitlist counters + firewall watch-items.
+## QA mapping (who verifies which flow on preview) — all SEVEN entity flows incl. Operator
+- **Cowork (Q1–Q8):** flows 1–7 end-to-end in a real browser + waitlist counters + firewall watch-items
+  + return-loop probes (reminders, event-date triggers, stale evidence, revoke, no auto-publish).
 - **Codex (Q4):** design/DS conformance of flows 1, 4, 6 (its published checklist, SYNC).
 - **CFRO:** business-case pass over flows 1, 4, 6 — monetization signal points (its validation pack).
 - **GPT:** doc-vs-repo drift check of THIS file against the canon pack.

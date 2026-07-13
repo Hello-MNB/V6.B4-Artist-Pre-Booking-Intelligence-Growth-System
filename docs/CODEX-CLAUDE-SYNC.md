@@ -177,6 +177,35 @@ Artist lane FIRST; other entities after. Codex: artist-screen DS DODs + states s
 briefs. Cowork: Q3/Q4 QA weights the artist journey end-to-end. Entity architecture verified ready for
 growth; structural debts (033+ renames) scheduled, not blocking.
 
+## 24. GPT CONTINUOUS-VALUE AUDIT (13 Jul) — verdicts + rulings, P0 corrections executed
+GPT's product audit (Growth Loop / per-entity pains / AI agents). **Every factual claim
+code-verified TRUE:** post-M8 ended in fixed Share (ArtistDashboard:49) · BookerHome = paste-a-
+link resolver, NO saved passports · multi-source Deep Scan NOT built · rel-PLAN still described
+a Pricing page that SCOPE S8 unpublished. Honest audit, accepted with gratitude.
+**RULINGS (Claude Code, release governor):**
+- **Deep Scan = TARGET ARCHITECTURE ruling (GPT's option 1).** What is LIVE: per-evidence claim
+  extraction. The canon's "$1 deep scan once at onboarding + cheap incremental" = the target,
+  building P2 post-preview. Documented in FLOWS-PER-ENTITY §1; CFRO economics must price the
+  CURRENT per-evidence pipeline separately from the PLANNED deep scan (no business number may
+  assume an unbuilt process). CLAUDE.md canon text itself = owner's to amend; flagged to Maria.
+- **Post-M8 derivation BUILT NOW (not just documented):** pickNextAction after publish now
+  derives from state — open buyer request → REPLY (beats everything) · newest evidence older
+  than 90 days → REFRESH PROOF (freshness = time state, never quality) · else share. New i18n
+  actions replyRequest/refreshProof EN+HE. The FULL Growth Loop (gig debrief, freshness engine,
+  buyer-signal themes, opportunity prep) = P1 after preview — vision ADOPTED as roadmap.
+- **P0 doc corrections executed:** saved-passports overclaim fixed (honest resolver description)
+  · deep-scan status inline · /artist/claims = panel note · "7 entity flows" · rel-PLAN pricing
+  rows superseded by S8 · CFRO pack correction (see below).
+- **GPT's 7 follow-up specs APPROVED** (CONTINUOUS-ARTIST-VALUE-SPEC, pain→feature matrix, AI
+  agent governance, event/automation registry, post-gig data model — NO DB changes without my
+  migration review, flow-correction memo = already executed here, retention-measurement spec).
+  Boundaries: specs land in canon mirror; firewall rules 1–4 for agents ratified verbatim.
+- **North-Star metric adopted:** "Active Acts completing a verified improvement cycle within
+  30 days" — measures the PRODUCT's recurring value, never rates an artist. Retention events
+  = P1 with GPT's spec.
+- **Team batches ratified as GPT proposed** (Codex: 5 loop screens + AI-suggestion states ·
+  Cowork: return-loop probes added to Q3 · CFRO: recurring-value willingness-to-pay split).
+
 ## 23. PRE-DEPLOY VERIFICATION MEGA-BATCH (13 Jul, owner order: "check the processes Claude built")
 Owner-visible surfaces created: `docs/FLOWS-PER-ENTITY.md` (repo canon, from code truth) + the
 Flows-per-Entity artifact + CFRO-VALIDATION-PACK (canon mirror, 1VntX6XSrOCxhXeBQCM5XoAKEK3oiGXNJ).
