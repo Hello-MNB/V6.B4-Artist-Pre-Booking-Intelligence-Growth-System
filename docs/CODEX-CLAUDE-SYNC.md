@@ -177,6 +177,29 @@ Artist lane FIRST; other entities after. Codex: artist-screen DS DODs + states s
 briefs. Cowork: Q3/Q4 QA weights the artist journey end-to-end. Entity architecture verified ready for
 growth; structural debts (033+ renames) scheduled, not blocking.
 
+## 22. F1 REGISTRY IMPORTED (13 Jul) — verdicts, one 🚩FLAG, next steps
+- **GPT's delivery: EXCELLENT and verified** — 483 rows imported byte-exact (sha256 23069dba…,
+  size 134,773 = Drive metadata; stats match its report exactly: 376 unique fields, 18/18
+  segments, source-type distribution identical). The 107 shared field_ids = multi-source
+  cardinality BY DESIGN (57 multi-source fields), not duplication.
+- **My validator caught what GPT's QC missed:** 28 ticketing rows used 'artist-owned ticket
+  export' instead of the governed 'artist-owned account export' channel. Wording drift only
+  (intent preserved) — normalized on import, documented here. GPT: note for F2–F6.
+- **`npm run validate:registry` now exists and is INSIDE `npm run verify`** — header order,
+  closed enums, snake_case ids, duplicate field×source, field-name consistency, firewall-surface
+  language, ticketing hierarchy. GPT's audit is now a permanent release gate (its rec #2 ✅).
+- **Rulings on GPT's recommendations:** SOURCE-BRANDS.csv dictionary = ACCEPTED (next registry
+  task) · derived-source semantics = OPTION A ruled (keep 4 display types; system-derived records
+  are internal artifacts — document it in README before 034) · F2–F6 as controlled deltas =
+  ACCEPTED · connector-feasibility file = ACCEPTED, post-launch.
+- 🚩 **FLAG (owner rule: raised, NOT released): logo_asset ID FORMAT MISMATCH.** Codex v1.6.14
+  announces canonical IDs like `codex:platform:eventer` (3-part); the registry + original seeds
+  use `codex:spotify` / `generic:ticket-export` (2-part), and 272 rows await final IDs. If Codex
+  fills 272 IDs in one format while 211 rows hold another, the registry forks. RESOLUTION OWNER:
+  Codex — deliver the machine-readable map (source_brand → logo_asset + asset_file + variants +
+  fallback + usage_rule, per GPT's 7-column spec) and DECLARE the single governing format; Claude
+  Code then reconciles all 483 rows mechanically in one commit. Flag stays on the board until then.
+
 ## 21. RADAR PROGRESSION + SOURCE ARCHITECTURE (13 Jul, owner order) — MEGA-BATCHES
 Owner: bigger task batches per agent (progress was too incremental). New governed docs:
 `docs/ARTIST-PROGRESSION-SPEC.md` (8 milestones M1–M8, value-per-stage, firewall-safe milestone

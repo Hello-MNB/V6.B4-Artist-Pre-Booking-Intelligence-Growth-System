@@ -28,6 +28,7 @@ priority board (docs/TASK-STATUS-BOARD.md) + open pending-from-owner list.
 
 ## STANDING RULES (owner directives)
 - **AGENT TEAM (updated 12 Jul night):** Maria = sole approver · Claude Code = development/code-proof/release mechanics · Cowork = tech-QA + DB migrations + Drive/GPT ops · Codex = design law (DS) · GPT-Drive = archive hygiene/sentinel · **CLAUDE CHAT = CFO/Monetization Strategy (advises only; no repo access — reads the Drive canon mirror + owner-pasted briefs; docs/CFO-BRIEF.md is its onboarding)**.
+- **DROPPED-TASK FLAG RULE (owner, 13 Jul): if any task risks falling between chairs or isn't executed — Claude Code raises an explicit 🚩FLAG and does NOT release it** (it stays on the board with the flag until resolved).
 - **BATCHING RULE (owner, 12 Jul night): tasks to other AIs go in BATCHES — one consolidated block per agent per round, never a trickle** (e.g., ONE Codex batch: icons+logos+design asks together; ONE Cowork batch: all QA/integration items together). Reduces round-trips.
 - **TASK-RELEASE RULE (owner, 12 Jul): a task assigned to another AI is NEVER marked done on their word alone or dropped silently — it stays OPEN and is clearly RE-REQUESTED in every report until the owner relays its completion (or Claude independently verifies it with evidence).**
 - **LINK RULE (owner, 12 Jul): every reply that mentions a document includes a clickable link to it** (GitHub URL on the working branch for repo docs; Drive URL for Drive docs; artifact URL for artifacts).
