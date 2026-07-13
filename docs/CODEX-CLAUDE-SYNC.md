@@ -509,3 +509,5 @@ Green Invoice fees when active · alternatives column per service) ② Growth st
 Claude Code verifies every price/ceiling claim against provider truth before it binds. Owner
 audit order: EVERYTHING gets audited incl. version management — GPT audits the G-register + train
 integrity; each member re-runs their role audit per standing rules.
+
+## 28. OWNER APPROVALS (13 Jul): AI budget $50 hard / $25 alert — APPROVED. 035 applied ✓ (Cowork-verified). 034 = supabase/migrations/034_event_canon_unpublish.sql — ADDITIVE ONLY (widens the analytics event-name CHECK to allow 'passport_unpublished'; no tables/structure; Free-tier safe; NOT the structural one — structural renames have no number yet and wait for Supabase Pro). Cowork may guide Maria to apply it as-is.
