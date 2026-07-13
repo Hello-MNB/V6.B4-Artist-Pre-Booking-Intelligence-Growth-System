@@ -46,3 +46,21 @@ GOVERNING RULE (GPT, adopted): no preview URL is distributed for WRITE-path test
 G11 + G12 + G16 are closed. G16 also guarantees QA-data exclusion from pilot-signal counts (Cowork).
 AI budget (CFRO v2.8, pending Maria's approval): $50/mo HARD cap · $25 alert · ~15 items/user/day ·
 retry ≤4 · dedup-by-hash — Claude enforces in code under G14 once approved.
+
+### Testability tightening (Cowork QA-chain audit, adopted)
+G2 pass condition: non-primary planets stay FULL-OPACITY and fully interactive (emphasis = additive
+highlight only). G3 adds: workspace switch must NOT silently transfer evidence/billing/ArtistAccess.
+G5 concrete criteria: one arrow style sitewide · footer groups per DS v1.6.12 · waitlist form text
+>= 16px mobile. Manager access-request handshake = already covered by G22 probe (exists in code:
+agency card -> artist Settings approval).
+### GOVERNANCE WAVE 3 (GPT version-management audit V1-V18, ADOPTED as pre-PREVIEW-READY doc gates)
+Owner: Claude Code. One batch, rides before PREVIEW-READY: V1 gap lifecycle states + closure SHAs ·
+V2 scope-to-gap traceability matrix · V3 scope contract RELEASE-SAFETY-LAYER section (G11-G22 bind) ·
+V4 G20 split a-d · V5 scope item-count fix · V6 N10/A8 free-pilot wording · V7 migration-dependency
+refresh · V8 QA two-stage wording · V9 Q8=Maria only (LAUNCH-DOD fixed this commit) · V10-V11
+release-process/branching rewrite to full-train law · V12 VERSIONS refresh · V13 task-board
+supersede · V14 SESSION-MEMORY first-read cleanup · V15 flows false-claim fix (DONE this commit) ·
+V16 artifact metadata (v4 stamped this commit) · V17 Version Map body refresh · V18 tag wording.
+CFRO v3.0 budget: delivered with web-verified prices; key flags adopted — Vercel Hobby is
+NON-COMMERCIAL (Pro $20 = ToS requirement at first revenue) · Supabase Pro $25 before structural
+migrations (backups). Claude spot-verified headline prices; full binding at Maria's budget approval.

@@ -39,7 +39,7 @@ under Hebrew on the main routes; RTL correct incl. numbers/dates/links. RU/DE = 
 - No other paid infra in this launch. AI-cost ledger = admin cockpit next version.
 
 ## 5) QA (after the version is fully built)
-Preview URL → Cowork Q1–Q8 (all 7 entity flows, both languages, forward/backward, new+existing
+Preview URL → Cowork Q1–Q7 technical lanes (all 7 entity flows, both languages, forward/backward, new+existing
 users) → Codex Q4 design/effectiveness → CFRO business pass → GPT drift audit → Maria Q8 owner
 pass (walk Artist + Buyer flows like a stranger) → merge → live re-verify → tag + rollback point.
 EVERYONE returns reasoned improvement recommendations, not just pass/fail (owner rule).
