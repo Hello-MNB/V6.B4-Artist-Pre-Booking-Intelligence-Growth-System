@@ -195,6 +195,31 @@ Each AI CHECKS Claude Code's work — not its own (independent verification, rel
 - **MARIA (Q8):** owner pass = walk Artist flow + Buyer flow on the preview like a stranger.
 Nothing above releases a task on the checker's word — evidence comes back through Maria or me.
 
+### §23b. AUDIT ROUND 1 RESULTS (13 Jul) — three audits received, every finding code-verified
+**CFRO v2.4 (VALIDATED WITH NOTES — GO for preview).** Its 2 "missing signals" verified against code:
+- `second_act_created` → **ALREADY EXISTS** as ACT_CREATED (RadarUniverse.jsx:197, A10); second
+  act = count>1 per person. CFRO finding corrected with evidence.
+- Republish/staleness → PASSPORT_PUBLISHED fires on EVERY publish incl. republish (cadence
+  derivable from timestamps); the real gap was silent UNPUBLISH → **FIXED NOW**:
+  `PASSPORT_UNPUBLISHED` event added (analytics.js + ArtistDashboard togglePublish). Both CFRO
+  recurring-revenue hypotheses now have collecting signals BEFORE launch. ✅
+- Scan-cost check confirmed: milestone path = pure UI over existing data, zero AI re-scans.
+- Green Invoice = launch-day precondition for "one pays" — already on the owner board.
+**Codex flow audit (adopted):** ① status language now 4-state everywhere: BUILT → PREVIEW-TESTED
+→ Q4-PASSED → OWNER-APPROVED (a "built" claim is never a "safe" claim) ② my PREVIEW-READY
+declaration will INCLUDE the proof pack it listed (Radar desktop+mobile, Passport buyer view,
+/bookers 3-audience copy, /managers, /production, /producers, waitlist attribution, 360px) —
+no proof pack, no declaration ③ buyer-segmentation copy + manager next-action value = Codex Q4
+gates, my implementation.
+**Cowork spec audit (4 gaps — all real, all CLOSED in FLOWS-PER-ENTITY.md same hour):**
+① ArtistAccess handshake was missing from the DOC (code has it: agency access-requests card →
+artist approves in Settings → grant active; orgs.js + Settings.jsx) — added as Manager §2 step 2
++ Artist step 10. ② Production outbound booking clarified: production BOOKS AS A BUYER via the
+Passport link (no native outbound screen this release). ③ Payments-in-pilot now explicit: NONE,
+deliberate; N10 = entitlement visibility only. ④ Milestone firewall grammar now INLINE in the
+flow doc (journey ✓/●/○ — never %/level/count-of-8). Minor: AGENCY workspace vs artist_manager
+marketing tag documented as deliberate 1:1 mapping.
+
 ## 22. F1 REGISTRY IMPORTED (13 Jul) — verdicts, one 🚩FLAG, next steps
 - **GPT's delivery: EXCELLENT and verified** — 483 rows imported byte-exact (sha256 23069dba…,
   size 134,773 = Drive metadata; stats match its report exactly: 376 unique fields, 18/18

@@ -136,6 +136,7 @@ export default function ArtistDashboard() {
       try {
         const updated = await unpublishArtist(artist)
         setArtist(updated)
+        logEvent(EVENTS.PASSPORT_UNPUBLISHED, { artist_id: artist.id }) // pilot signal — with PASSPORT_PUBLISHED timestamps this yields publish cadence / staleness (CFRO v2.4 recurring-revenue evidence)
       } catch (e) {
         setPubError(T.dashboard.publishError)
       } finally {

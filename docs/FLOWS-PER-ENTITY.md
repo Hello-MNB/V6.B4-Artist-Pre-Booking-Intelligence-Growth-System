@@ -18,21 +18,36 @@ Firewall applies everywhere: no score/percentile/rank; bands + binaries + method
 1. `/signup` → `/select` (role) → `/onboarding` — light signup, consent inline at step 1 (no wall) 🔵
 2. `/artist/home` — Dashboard: next-best-action card (proof → publish → share ladder, genre-emphasis note) 🔵
 3. Radar (in dashboard) — 6 planets × 18 segments; genre weights internal; milestone path M1–M8 🟠 **← I am here**
+   FIREWALL GRAMMAR (inline, binding): M1–M8 renders as a JOURNEY (✓ done / ● current / ○ next)
+   — NEVER a % complete, level, progress bar toward a score, or count "X of 8". The milestone UI
+   is next-action guidance; it triggers NO AI re-scan (pure UI over existing data).
 4. `/evidence/:artistId` — Evidence capture → AI processing (EVIDENCE_UPLOADED/PROCESSED events) 🔵
 5. `/artist/claims` — AI claim review: approve / edit / send Source-Confirmer request 🔵
 6. `/artist/passport` — own Passport (Artist view = private, shows gaps) → publish (FREE in pilot) 🔵
 7. `/passport/:id` — public Passport (Buyer view = verified strengths only; NO login needed) 🟢
 8. `/artist/requests` — incoming availability requests from buyers 🔵
 9. Multi-Act: act switcher + create new Act (evidence per-Act, non-transferable) 🔵
+10. Access approvals — in Settings the artist sees a manager/agency's ACCESS REQUEST and
+    approves/declines it (this is the artist side of the §2 handshake; grant ≠ ownership,
+    revocable any time by either side) 🔵
+**Payments: NONE in pilot — deliberate.** Publish is free; no payment step exists in the artist
+flow (publish-wall ruled OUT by canon). N10 = entitlement *visibility* only (showing what plan
+a workspace is on), not a charge. First real payment waits for Green Invoice + the Gate.
 **Measured:** signup → onboarding → radar_opened → evidence → claim_confirmed → published → share → request.
 
 ## 2) ARTIST MANAGER / AGENCY (אמרגן — artist-side, NOT a buyer)
 **Entry:** site `/managers` outreach page (?src batch token) → waitlist OR `/signup` (role: Agency)
 **Flow:**
 1. `/agency` — dashboard: roster (consented-roster card via roster-grants RPC, migration 032) 🔵
-2. `/agency/requests` — inbox of requests touching their artists 🔵
-3. `/agency/radar` — radar feed over the roster 🔵
-4. `/org/members` — team members (Booking agent role) 🟢
+2. **ArtistAccess handshake (the consent flow):** agency sends an ACCESS REQUEST from its
+   dashboard's access-requests card → the ARTIST approves in Settings (flow §1 step 10) →
+   grant becomes ACTIVE → artist appears in the consented roster. Grant requires the artist's
+   acceptance (REPRESENTATION-CANON §1.1); either side can revoke, effective immediately 🔵
+3. `/agency/requests` — inbox of requests touching their artists 🔵
+4. `/agency/radar` — radar feed over the roster 🔵
+5. `/org/members` — team members (Booking agent role) 🟢
+**Naming note (deliberate, not drift):** workspace type at signup = AGENCY (product entity);
+waitlist marketing tag = artist_manager (audience label). They map 1:1.
 **Measured:** managers_page waitlist_signup (role artist_manager + source recorded), workspace_switched.
 
 ## 3) PRODUCTION OFFICE (משרד הפקה)
@@ -41,6 +56,10 @@ Firewall applies everywhere: no score/percentile/rank; bands + binaries + method
 1. `/production` — dashboard: events + requests (production-requests RPC, 032) 🔵
 2. Request statuses: new / replied / closed chips 🔵
 3. Source-Confirmer duties when asked to confirm artist claims (docs-only alias: מפיק מאשר) → §5
+**Outbound booking (clarification):** when a production office wants to BOOK an artist, it acts
+AS A BUYER — it opens the artist's Passport link and sends an availability request exactly like
+flow §4 (no separate outbound-request screen in this release; §3's dashboard shows the requests
+it RECEIVES as an artist-side/confirmer party). Post-Gate we may add a native outbound screen.
 **Measured:** production_page waitlist_signup (role production + source), request status flow.
 
 ## 4) BUYER / מזמין הופעות (pro promoter, planner, corporate, PRIVATE individual)

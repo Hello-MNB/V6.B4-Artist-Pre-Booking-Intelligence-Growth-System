@@ -81,6 +81,7 @@ export const EVENTS = {
   CLAIM_CONFIRMED: 'claim_confirmed',
   CLAIM_PUBLISHED: 'claim_published',
   PASSPORT_PUBLISHED: 'passport_published',
+  PASSPORT_UNPUBLISHED: 'passport_unpublished', // republish cadence/staleness (CFRO v2.4 recurring signal)
   ACT_CREATED: 'act_created',
   ACT_SWITCHED: 'act_switched',
   WORKSPACE_SWITCHED: 'workspace_switched',
