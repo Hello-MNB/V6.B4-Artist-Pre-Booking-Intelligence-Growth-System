@@ -6,7 +6,7 @@ PRODUCT: LOCK (lock.show) — pre-booking proof for artists; Israeli demand side
 no score/rank/percentile — bands+binaries+method labels. FREE PILOT (no payments at launch).
 LANGUAGES: EN+HE first-class NOW (native micro-copy, RTL); RU+DE next; scale-ready i18n.
 GOAL NOW: full-scope version → 100% QA → Maria Q8 → LIVE → first users via tracked outreach.
-GATE: 1 real buyer reacts AND 1 pays. Entities: Artist(Acts) · Manager office(אמרגן=artist-side) ·
+COMMERCIAL GATE: 1 real buyer reacts AND — after payment activation by owner ruling — 1 pays. The launch itself is a FREE pilot, no payment accepted. Entities: Artist(Acts) · Manager office(אמרגן=artist-side) ·
 Production · Buyer(incl. PRIVATE clients) · Source Confirmer(no account) · Operator.
 TRUTH: GitHub repo (branch claude/b4-gigproof-discovery-e7749o) > Drive mirror > chats.
 
@@ -30,3 +30,5 @@ flags stay raised till resolved · sign every report with your seat name + dutie
 ## SELF-BUILD DUTY (owner order): each seat PUBLISHES within 2 rounds: ① SKILLS list ② role goals
 (measurable) ③ its done-report template ④ its self-audit checklist run before EVERY answer.
 Claude Code collects all four into this folder (docs/team/<SEAT>-SKILLS.md) and verifies.
+
+## GPT-SKILLS: received+verified at 2a06b79 (full package in its report; formal import to this file = next round with fresh context — flagged, not dropped). Its precision fixes ADOPTED: budget = "estimated $25 alert/$50 guard; true provider-cost cap = P1" · screenshot pack = "28-screen curated baseline, all entity families; full 52-combo matrix = Cowork coverage table" · Gate wording fixed in constitution this commit.
