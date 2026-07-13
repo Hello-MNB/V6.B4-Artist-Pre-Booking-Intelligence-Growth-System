@@ -483,3 +483,16 @@ Drive `B4 - lock.show/05 — CANON MIRROR (READ-ONLY · repo is truth)/LOCK-CANO
   + the one blocking decision; deletes stale mirror files.
 - GPT (daily, READ-ONLY — never moves files): Drive drift sentinel + mirror freshness (SYNCED date
   older than 48h → 🟡 "mirror stale, ping Cowork"). Heavy file hygiene = weekly batch, on approval.
+
+## 26. CODEX MARKETING FOCUS (owner order, 13 Jul)
+Owner: alongside Q4, Codex focuses on MARKETING — site conversion + outreach material kits for
+inviting FIRST USERS to register for the app. Deliverables (Drive, per its versioning):
+① Per-audience outreach message kits — artists / artist managers (משרדי אמרגנות) / production
+offices: short WhatsApp/DM text HE-first (+EN), 2–3 variants each, warm and professional, each
+ending with its join link + ?src batch token (convention live: lock.show/artists?src=<batch> ·
+/managers?src=<batch> · /production?src=<batch> — every signup records role+page+batch, 026/033).
+② Social captions + which existing OG/social asset pairs with each message (assets already in
+repo). ③ Any missing visual for the first-users push (its brief lane). ④ Firewall language law
+applies to marketing too: proof/confidence vocabulary — never score/rank/"we evaluate artists".
+Maria sends the messages personally — kits must be paste-ready. Claude verifies links+tokens work
+on the live site before she sends anything (part of the release train).
