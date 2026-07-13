@@ -31,11 +31,12 @@ function usePaged(items) {
 }
 
 function ShowMore({ paged, total }) {
+  const { T } = useLang()
   if (!paged.hasMore) return null
   return (
     <button onClick={paged.more}
       className="btn-ghost w-full text-sm">
-      Show more <span className="font-mono text-xs text-faint">({paged.slice.length}/{total})</span>
+      {T.admin.showMore} <span className="font-mono text-xs text-faint">({paged.slice.length}/{total})</span>
     </button>
   )
 }
@@ -156,14 +157,12 @@ export default function AdminDashboard() {
   const statusLabel = (s) =>
     s === 'replied' ? T.agency.statusReplied : s === 'closed' ? T.agency.statusClosed : T.agency.statusNew
 
-  const anchors = [
-    ['payments', 'Payments'], ['upgrades', 'Upgrades'], ['artists', 'Artists'],
-    ['requests', 'Requests'], ['claims', 'Claims'], ['consents', 'Consents'], ['audit', 'Audit'],
-  ]
+  const anchors = ['payments', 'upgrades', 'artists', 'requests', 'claims', 'consents', 'audit']
+    .map((id) => [id, T.admin.anchors[id]])
 
   return (
     <PageShell max="max-w-2xl">
-      <p className="mb-1 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-gold">Operator console</p>
+      <p className="mb-1 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-gold">{T.admin.eyebrow}</p>
       <h1 className="mb-1 text-2xl font-bold text-ink">{T.admin.title}</h1>
       <p className="mb-4 text-sm text-muted">{T.admin.subtitle}</p>
 
@@ -369,7 +368,7 @@ export default function AdminDashboard() {
           <>
             <p className="mb-1 text-sm font-medium text-ink">{deleteTarget.stage_name || deleteTarget.id}</p>
             <p className="mb-3 text-xs text-muted">{T.admin.deleteAuditNote}</p>
-            <label className="label" htmlFor="delete-reason">Reason (required — recorded in the audit log)</label>
+            <label className="label" htmlFor="delete-reason">{T.admin.deleteReasonLabel}</label>
             <input id="delete-reason" className="field mb-3" placeholder={T.admin.deleteReasonPlaceholder}
               value={deleteReason} onChange={(e) => setDeleteReason(e.target.value)} />
             <div className="flex gap-2">

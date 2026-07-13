@@ -42,7 +42,7 @@ export default function AvailabilityRequest() {
     e.preventDefault()
     // inline validation — message next to the field, input stays intact
     if (!f.requester_name.trim()) {
-      setFieldErr({ requester_name: 'Add your name so the artist knows who is asking.' })
+      setFieldErr({ requester_name: T.request.nameRequired })
       return
     }
     setBusy(true); setError('')
@@ -90,17 +90,17 @@ export default function AvailabilityRequest() {
 
           <Field label={T.request.name} error={fieldErr.requester_name}>
             <input className="field" value={f.requester_name} onChange={set('requester_name')}
-              placeholder="Your full name" autoComplete="name" />
+              placeholder={T.request.namePlaceholder} autoComplete="name" />
           </Field>
           <Field label={T.request.org}>
             <input className="field" value={f.requester_org} onChange={set('requester_org')}
-              placeholder="Venue, agency or production" autoComplete="organization" />
+              placeholder={T.request.orgPlaceholder} autoComplete="organization" />
           </Field>
           <Field label={T.request.eventDate}>
             <input className="field" type="date" value={f.event_date} onChange={set('event_date')} />
           </Field>
           <Field label={T.request.location}>
-            <input className="field" value={f.location} onChange={set('location')} placeholder="City / venue" />
+            <input className="field" value={f.location} onChange={set('location')} placeholder={T.request.locationPlaceholder} />
           </Field>
           <Field label={T.request.capacity}>
             <select className="field" value={f.capacity_band} onChange={set('capacity_band')}>
@@ -114,14 +114,14 @@ export default function AvailabilityRequest() {
           </Field>
           <Field label={T.request.message}>
             <textarea className="field" rows={3} value={f.message} onChange={set('message')}
-              placeholder="Anything the artist should know about the event" />
+              placeholder={T.request.messagePlaceholder} />
           </Field>
 
           <button className="btn-primary min-h-[48px] w-full shadow-[0_10px_26px_-10px_rgba(190,226,78,.6)]" disabled={busy}>
             {busy ? <><Spinner /> {T.common.sending}</> : T.request.cta}
           </button>
           <p className="mt-3 text-center text-[11px] text-faint">
-            No commitment — this only asks the artist about the date.
+            {T.request.noCommitment}
           </p>
         </form>
       </PageShell>

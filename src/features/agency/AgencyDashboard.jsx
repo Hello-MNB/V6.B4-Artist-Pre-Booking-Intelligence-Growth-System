@@ -120,13 +120,13 @@ function RequestsSideCard({ requests, T }) {
       <div className="mb-2 flex items-center justify-between">
         <p className="font-mono text-[10.5px] uppercase tracking-[0.1em] text-muted">{T.agency.requests}</p>
         {fresh.length > 0 && (
-          <span className="rounded-full bg-accent px-2 py-0.5 font-mono text-[10px] font-bold text-[#12160A]">{fresh.length} new</span>
+          <span className="rounded-full bg-accent px-2 py-0.5 font-mono text-[10px] font-bold text-[#12160A]">{T.agency.newCount(fresh.length)}</span>
         )}
       </div>
       {failed ? (
-        <p className="text-xs text-muted">Couldn't load requests right now.</p>
+        <p className="text-xs text-muted">{T.agency.requestsLoadError}</p>
       ) : list.length === 0 ? (
-        <p className="text-xs text-muted">No requests yet. Share a published Passport link — availability requests land here.</p>
+        <p className="text-xs text-muted">{T.agency.requestsEmptyHint}</p>
       ) : (
         <ul className="space-y-2">
           {list.slice(0, 3).map((r) => (
@@ -140,7 +140,7 @@ function RequestsSideCard({ requests, T }) {
           ))}
         </ul>
       )}
-      <Link to="/agency/requests" className="mt-3 block text-sm font-semibold text-accent hover:underline">Open inbox ›</Link>
+      <Link to="/agency/requests" className="mt-3 block text-sm font-semibold text-accent hover:underline">{T.agency.openInbox} ›</Link>
     </div>
   )
 }
@@ -211,7 +211,7 @@ export default function AgencyDashboard() {
       setF({ stage_name: '', genre: '' }); setAdding(false)
       await load()
       // SUCCESS is visible: toast + the new row glows for a moment (no silent reload)
-      toast.show(`${addedName} added to your roster`)
+      toast.show(T.agency.addedToRoster(addedName))
       if (created?.id) {
         setJustAddedId(created.id)
         clearTimeout(highlightTimer.current)
@@ -259,7 +259,7 @@ export default function AgencyDashboard() {
       <div className="flex items-center justify-between mb-4">
         <h1 className="font-display text-xl font-bold text-ink">{T.agency.title}</h1>
         <div className="flex items-center gap-4">
-          <Link to="/agency/radar" className="font-mono text-[11px] uppercase tracking-[0.1em] text-accent hover:underline">Radar ›</Link>
+          <Link to="/agency/radar" className="font-mono text-[11px] uppercase tracking-[0.1em] text-accent hover:underline">{T.nav.radar} ›</Link>
           <Link to="/agency/requests" className="font-mono text-[11px] uppercase tracking-[0.1em] text-accent hover:underline">{T.agency.requests} ›</Link>
         </div>
       </div>
@@ -338,7 +338,7 @@ export default function AgencyDashboard() {
                         <div className="min-w-0">
                           <p className="truncate font-bold text-ink">{a.stage_name || T.agency.noName}</p>
                           <p className="truncate text-xs text-muted">{a.genre || '—'} · {a.published ? T.agency.publishedTag : T.agency.draftTag}</p>
-                          {fresh && <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.06em] text-faint">Updated {fresh}</p>}
+                          {fresh && <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.06em] text-faint">{T.agency.updatedOn(fresh)}</p>}
                         </div>
                       </div>
                       <StatusChip status={rosterStatus(a)} />
