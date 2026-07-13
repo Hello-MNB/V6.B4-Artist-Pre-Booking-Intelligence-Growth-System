@@ -204,6 +204,27 @@ growth; structural debts (033+ renames) scheduled, not blocking.
   normalized on import, fix the map at source. ② 138 brands are outside the 29-brand map (mostly
   entity/document/declared sources now on generic:none) — extend the map only where a real
   platform logo exists; generic:none is a valid permanent state for the rest.
+- ✅ **BOTH CODEX FOLLOW-UPS CLOSED (13 Jul, Codex v1.6.16 — verified with evidence, not on its
+  word):** ① Tickchak fixed at source — v1.6.16 map fetched from Drive (7,222 bytes), zero
+  'Tichak' occurrences; imported verbatim over `docs/registry/SOURCE-BRANDS.csv` (byte-identical
+  to Drive). ② generic:none ruled valid/permanent where a logo would mislead (its review doc).
+  **18 source-badge SVGs imported byte-faithful from Drive 02_ASSETS** (17 codex-* + 1
+  generic-ticket-export) into `website-next/public/brand/source-logos/` — every file's byte size
+  matches Drive metadata exactly; firewall-QC pass (LOCK-style badges: initials tile + name +
+  "SOURCE BADGE · category"; explicitly NOT official platform logos — display identity only,
+  never partnership/verification/trust weight). **Handoff correction for Codex:** its "mirrored
+  into repo" claim = the LOCAL clone on the owner's machine, which never reaches GitHub without
+  a push — the governed transfer path stays Drive 02_ASSETS → Claude imports byte-verified
+  (SYNC §14 law). No harm done; files carried by Claude Code this time.
+- **Cowork sync corrections adopted (13 Jul):** ① GCP service-account/GA4/GTM connector =
+  PARKED to post-launch marketing phase (owner decision; `lock-analyst` account created and
+  waiting) — dropped from the active Cowork queue, it is NOT preview-blocking. ② Canon-Mirror
+  hygiene routed WHOLLY to GPT (Cowork can add but not delete on Drive; split ownership = an
+  incoherent half-mirror). GPT already executed the full pass same day — F2–F6 lineage copy
+  verified in the mirror at exactly 149,586 bytes (byte-count match vs repo import), dead stub
+  deleted, 2 legacy GIGPROOF docs classified ⛔ SUPERSEDED and archived out of the active root.
+  Drift-sentinel note accepted: Canon Pack (d2aa382) is behind repo head — Claude Code refreshes
+  it after the current canon-changing train (not before; avoids churn).
 - ✅ **FLAG RESOLVED (13 Jul, same day): F2–F6 TRANSPORT — owner relayed the file directly.**
   Maria uploaded GPT's package to this session; imported byte-faithful as
   `docs/registry/F2-F6-DELTAS.csv` (337 records, sha256 76f6668b…, 149,586 bytes). **Import QC —
