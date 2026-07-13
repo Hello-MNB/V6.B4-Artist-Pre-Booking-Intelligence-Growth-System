@@ -15,3 +15,24 @@ Everything else in the locked scope is BUILT and gate-green.
 | G9 | **Embed rebuild** (site /app parity) | Embed hash matches app build; parity proven | Claude + Cowork | 🔴 with train |
 | G10 | **QA applicability matrix** (GPT req.) | Release-specific must-pass vs N/A vs not-instrumented table, attached to the candidate SHA | Claude | 🔴 with PREVIEW-READY |
 Post-deploy (unchanged): admin Business cockpit (P0.5) → Growth-Loop screens + spec imports (P1).
+
+## WAVE 2 — GPT launch-readiness audit (13 Jul) + Cowork QA-lens additions: ADOPTED with rulings
+All claims CODE-VERIFIED by Claude (server/index.js:43 cors() unrestricted; :87 extraction_method
+by key presence; service-role without per-object auth — real). Dispositions:
+| # | Gap | Ruling | Priority |
+|---|---|---|---|
+| G11 | API auth: JWT validation + per-object ownership + CORS allowlist + error sanitization + denial tests | ADOPTED — launch blocker | P0 |
+| G12 | Truthful AI provenance: extraction_method = ACTUAL path (anthropic / deterministic_fallback / client_stub / failed); failure → visible retry state, never mock-as-live | ADOPTED — firewall-class | P0 |
+| G13 | Multi-Act isolation proof: the 6-step Act-A/Act-B test through evidence/claims/passport paths | ADOPTED — launch contract | P0 |
+| G14 | Abuse controls: rate limits + schema/length caps + idempotency on public routes; AI-spend caps (max items/job, per-user daily, dedup by hash) | ADOPTED | P0 (AI+service routes) |
+| G15 | Confirmer token lifecycle: hashed storage + expiry + replay rules + expired-link test | ADOPTED | P0 |
+| G16 | Preview/prod data isolation: QA writes tagged+removable; test analytics excluded from Gate; environment recorded with SHA | ADOPTED — precondition to write-heavy QA | P0 |
+| G17 | Payment posture RULING (Claude, per canon): **FREE PILOT** — no payment CTA, no Bit acceptance at launch, N10 display-only, payments admin dormant; Bit+Green Invoice activate post-Gate by owner word | RULED — DOD §3 corrected accordingly | P0 decision ✅ closed |
+| G18 | Account recovery: password reset + signup email tested on real path; request-notification pilot workaround = documented Admin monitoring SLA | ADOPTED | P0 recovery / P1 alerts |
+| G19 | Backup/restore + incident basics: pre-launch DB export, restore procedure, failed-processing visible, owner severity contact | ADOPTED | P0 basics / P1 monitoring |
+| G20 | Legal/privacy/accessibility + browser matrix (iOS Safari, Android Chrome, keyboard/SR path) + perf budget | ADOPTED — owner+counsel items surfaced on her board | P0/P1 mixed |
+| G21 | Rollback REHEARSAL as its own must-pass row (Cowork addition, post-404 lesson) | ADOPTED | P0 |
+| G22 | QA probes: manager access-request handshake UI + production outbound-booking path (exist in code/doc — prove on preview) | ADOPTED as QA rows | P0 QA |
+Cost contract additions (GPT): monthly AI hard budget + alert threshold + retry cap counted (≤4
+calls/item today) + manual-labor line — folded into LAUNCH-DOD §4 at next edit; CFRO defines the
+budget numbers with Maria.
