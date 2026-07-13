@@ -19,9 +19,12 @@ STAGE: Pre-validation. Gate = 1 booking manager reacts to a real Passport AND on
 Monetisation measured, not required; no price/ICP locked until then.
 
 STACK: React + Vite + Tailwind + Supabase (ref qexfndiyallwqhhzeerd) + Vercel + Anthropic API.
-AI claim-pipeline is FULLY AUTOMATED (no concierge/by-hand step; best model; deep scan once at
-onboarding ≈ $1, cheap incremental after). Provider fallback: if Opus unavailable, degrade to a
-cheaper tier with narrower extraction. Migrations 001–018 exist locally — diff before creating
+AI claim-pipeline currently automates per-evidence claim extraction with no concierge/by-hand
+step. Multi-source deep scan once at onboarding (target cost ≈ $1) and cheap automatic
+incremental re-scans are TARGET ARCHITECTURE, not yet built; no business case may price or
+assume them until implementation and measured cost are verified. Provider fallback may use a
+cheaper tier with narrower extraction, but must preserve the evidence firewall and disclose
+the narrower scope. Migrations 001–018 exist locally — diff before creating
 019+; do not recreate existing tables. Canonical codebase: GitHub Hello-MNB/lock.show (source of truth);
 local clone C:\Users\user\lock.show; Drive B4-lock.show = collaboration/design only.
 
