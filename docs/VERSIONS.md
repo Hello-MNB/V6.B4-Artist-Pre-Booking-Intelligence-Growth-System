@@ -27,7 +27,7 @@ Every app/site release row also records **which DS version it implements** (desi
 | Track | Version | SHA | DS implemented | Live-verified |
 |---|---|---|---|---|
 | App | rel-2026.07.10 (incl. firewall hotfix eafcd4e) | **a874ab5** — last app production deploy (10 Jul) | pre-DS dark legacy (A13 mapping = this train) | ✅ bundle fingerprints (DEPLOY-LOG) |
-| Site | **rel-site-2026.07.14 (11-page rebuild + flat hero + entity messaging + free-pilot page)** | **5890621** — deployed 14 Jul via Vercel API (dpl_BphgsZD5…; rollback anchor: 6183e81 / dpl_3mrHo21…) | Codex rebuild brief + owner no-frames ruling (wave-6 palette pending) | 🟠 Production-QA round 1 running (live sweep + fingerprints + embed OAuth evidence) |
+| Site | **rel-site-2026.07.14 (11-page rebuild + flat hero + entity messaging + free-pilot page)** | **5890621** — deployed 14 Jul via Vercel API (dpl_BphgsZD5…; rollback anchor: 6183e81 / dpl_3mrHo21…) | Codex rebuild brief + owner no-frames ruling (wave-6 palette pending) | ✅ Production-QA round 1 GREEN (14/14 routes 200 incl. /managers+/production; new copy live; old hero absent; no price language; OAuth-fixed embed bundle index-Dhjy-W_p.js served at /app/signup+login; robots/sitemap OK; 0 console errors) |
 | Embed | embed@rel-app-2026.07.10 | e027958 | = app | ✅ bundle hash |
 
 ### Reference tracks

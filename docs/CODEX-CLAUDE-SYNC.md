@@ -877,3 +877,14 @@ fail-open; API train-deploys bypass it by design). LAW: production = named train
 deploy), each train = Production-QA agent round; branch pushes batched. Paid triggers ahead of
 us, in order: Supabase Pro $25 (pre-launch, backups — pending owner) → Vercel Pro $20 (at first
 revenue, ToS) → Resend $20 (if >100 auth emails/day). Nothing else changes cost at launch.
+
+## 53. PRODUCTION-QA ROUND 1: GREEN (14 Jul, live www.lock.show @ 5890621)
+14/14 routes 200 — **the /managers + /production 404s from Codex's live audit are GONE** (that
+question closes; they were old-production artifacts). New-version fingerprints on all sampled
+pages · old hero absent · zero price language on /pricing · footer/robots/sitemap correct ·
+zero console errors/mixed content. EMBED: /app/signup + /app/login serve bundle index-Dhjy-W_p.js
+containing signInWithOAuth redirectTo pinned to current origin + exchangeCodeForSession — the
+Google-loop fix is WHAT PRODUCTION SERVES; final interactive proof = Maria's one Google click.
+Live screenshots: docs/design-system/current-screens/2026-07-14-LIVE/. Minor notes (no blockers):
+preload-tuning nit (7 warnings) · one scroll-reveal card blank in headless mobile capture only
+(text in HTML; one real-phone glance recommended) — both queued to wave-6 polish.
