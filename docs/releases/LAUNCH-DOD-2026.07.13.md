@@ -20,6 +20,14 @@ is internal server housekeeping by Cowork — nothing Maria needs to do or under
 - ADMIN (Maria): 7 ops sections live today; Business cockpit = next version (spec'd).
 ## 2) LANGUAGES (launch requirement): EN+HE first-class — G6 closes the 🚩flag: no English text
 under Hebrew on the main routes; RTL correct incl. numbers/dates/links. RU/DE = later, built-in.
+**OWNER RULING (14 Jul): the Israel launch = SITE + ACTIVITY in BOTH languages, together.** The
+Hebrew MARKETING SITE is therefore IN launch scope — it is the wave immediately after the
+rel-2026.07.13 train deploys (train scope itself unchanged; "OUT: Hebrew site" in SCOPE-rel
+refers to that train only, NOT to the launch). No visitor-bringing activity starts before the
+bilingual site is live. Work split: Claude = i18n externalization of website-next page bodies +
+RTL architecture (rides after the preview snapshot so the RC0 freeze stays valid) · Codex =
+native-HE page copy (its craft per owner ruling: copy+localization+psychology = one craft) ·
+Cowork = bilingual QA on preview.
 
 ## 3) TECH / API / INTEGRATIONS (what the product runs on)
 - Supabase (project qexfndiyallwqhhzeerd): database + login + security rules. Migrations 001–033

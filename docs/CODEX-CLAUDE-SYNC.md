@@ -574,3 +574,17 @@ If any post-freeze commit touches non-docs paths → the freeze is void, re-free
 Git tags remain LOCAL-ONLY (remote tag push 403) — SHA is the anchor, not the tag.
 Production hooks (VERCEL_DEPLOY_HOOK_APP/SITE) are NOT preview tools — they build MAIN to
 PRODUCTION; do not fire them for this step.
+
+## 35. OWNER RULINGS (14 Jul): LAUNCH = BILINGUAL + BATCH MODE RE-ACTIVATED
+① **LAUNCH DEFINITION:** the Israel launch = site AND activity in TWO LANGUAGES, together. The
+Hebrew marketing site is IN launch scope — the wave immediately after the rel-2026.07.13 train
+deploys. Current-train scope unchanged ("OUT: Hebrew site" bound that train only). No growth /
+visitor-bringing activity before the bilingual site is live. Recorded in LAUNCH-DOD §2.
+② **BATCH MODE (owner: "נחזור לעבוד במקבצים"):** yesterday's Codex relay did not happen — tasks
+return to consolidated per-agent BATCHES, one block per agent per round, delivered in-chat for
+Maria to paste. Standing batching rule (SESSION-MEMORY) re-affirmed as the ACTIVE transport;
+task-release rule unchanged (nothing closes on word alone).
+③ HE-site work split: Claude = website-next i18n externalization + RTL (code rides AFTER the
+preview snapshot — keeps §34 freeze equivalence; lands with/after RC1) · Codex = native-HE page
+copy per page, starts NOW from the live EN site + DS v1.6.20 (no code dependency) · Cowork =
+bilingual QA on preview.
