@@ -1152,7 +1152,7 @@ function renderShell(){
   // ── LEFT RAIL (primary nav) ──
   if(e.mode==='app'){
     rail.style.display='flex';
-    rail.innerHTML='<div class="rlab">Navigation</div>'+ e.nav.map(n=>
+    rail.innerHTML= e.nav.map(n=>
       '<button class="navitem '+(n.id===S.screen?'active':'')+'" data-nav="'+n.id+'">'+I[n.icon]+'<span>'+n.label+'</span>'+(n.badge?'<span class="badge-n">'+n.badge+'</span>':'')+'</button>'
     ).join('');
   } else { rail.style.display='none'; }
@@ -1165,7 +1165,8 @@ function renderShell(){
   } else { botnav.classList.remove('on'); botnav.innerHTML=''; }
   screenEl.className='screen'+(e.mode==='public'?' paper':'')+((S.entity==='artist'&&S.screen==='radar')?' radar-mode':'')+((S.entity==='artist'&&S.screen==='passport')?' passport-mode':'');
   const fn=SCREENS[S.entity+'/'+S.screen];
-  const showAtm = e.mode==='app' && ATMOS[S.entity] && S.screen!=='passport' && S.screen!=='radar';
+  // Owner rule U29: no decorative hero/atmosphere images in the app — images only where they are genuine entity content (artist photo, platform logos). Atmos band removed app-wide.
+  const showAtm = false;
   const atm=showAtm
     ? '<div class="atmos-header" style="background-image:url('+IMG[ATMOS[S.entity].img]+')"><span class="atmos-cap">'+ATMOS[S.entity].cap+'</span></div>'
     : '';
@@ -1968,7 +1969,7 @@ function openPlanetSheet(id,justId){
   const info=PLANET_INFO[id]; if(!info) return;
   const src=planetSources()[id]||[];
   const m=planetMeta()[id]||{found:0,conf:0,empty:0};
-  const genre=info.genre?'<div class="method" style="margin-bottom:12px">&#10022; Genre-primary · matters most in DJ / club</div>':'';
+  const genre=info.genre?'<div style="margin-bottom:12px;font-size:12.5px;color:var(--accent);display:flex;align-items:center;gap:6px">&#10022; Buyers in your scene look here first.</div>':'';
   let body;
   if(id==='kit'&&!S.artist.liveLit){
     body=genre+'<div class="kit-locked"><div class="lk-ic">&#128274;</div>'+
