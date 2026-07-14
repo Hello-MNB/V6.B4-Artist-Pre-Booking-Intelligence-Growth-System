@@ -851,3 +851,19 @@ Managers → משרדי אמרגנות · Producers residuals killed ("not a pro
 the he-site-copy pack). Agent double-fetched Drive docs (base64+plain) to guarantee verbatim
 Hebrew — caught 2 transcription errors; adopt as standing practice for HE imports.
 Push of this commit refreshes both previews automatically (§48 infra).
+
+## 51. 🚀 SITE DEPLOYED TO PRODUCTION (14 Jul, owner order "הגרסה באוויר ישנה — עדכן") + STANDING RULES
+DEPLOY RECORD: rel-site-2026.07.14 · SHA **5890621** · deployment dpl_BphgsZD5vzRRVTGMcHSWUKycKEkJ
+· aliases www.lock.show + lock.show · deployed via Vercel API from the branch (lock-site ONLY —
+app.lock.show untouched, Q8 still gates the app train; owner order supersedes the atomic-train
+coupling for the site surface). ROLLBACK ANCHOR: previous production dpl_3mrHo21CZnwsab3k7NGbZ3z67v3p
+(SHA 6183e81) — instant re-promote via API if needed. Ships: 11-page rebuild + flat hero (owner
+no-frames ruling) + W5 entity messaging + free-pilot page + new chrome + committed embed at /app
+(bundle carries exchangeCodeForSession/redirectTo — the Google-loop fix surface for
+www.lock.show/app/signup; interactive round-trip verification = Maria's one Google test).
+OWNER STANDING RULES (14 Jul): ① Claude Code spawns agents under itself for EVERYTHING Claude
+Code can do ② PRODUCTION-QA AGENT runs on EVERY production round (round 1 launched: live-route
+sweep, fingerprints, embed/OAuth evidence, live screenshots → docs/design-system/current-screens/
+2026-07-14-LIVE/) ③ live-status transparency: Version Map artifact = the live board.
+NOTE: sandbox CAN now reach www.lock.show (HTTP 200) — live verification is in-house; Cowork's
+outside-in check remains as redundancy, not dependency.
