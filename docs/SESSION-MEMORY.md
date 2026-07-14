@@ -160,6 +160,7 @@ No booking commission ever. Each entity pays its own plan; artist always owns/pa
 | P-9 | Radar attractive+interactive (meaning-grounded) | ✅ done — radar sweep, parallax, hover preview, planet drill-in sheets, lenses dim/highlight |
 | P-11 | Planet drill-in = platform logos in STATUS (✦found/✓confirmed/+empty) + ONE clear action to add/confirm; discovery→confirm loop short & satisfying | 🔴 running |
 | P-12 | Onboarding NARRATIVE (pro copywriting): artist gives basics → LOCK discovers his footprint → he confirms → we help. "Your career starts growing here." Warm, effective microcopy, NOT technical. EN+HE | 🔴 running |
+| P-14 | RADAR is engaging, NOT boring — agents SPEC every signal + component (meaning · logo · presentation); rich/alive; clean copy, zero technical language; documented | 🔴 running |
 | P-13 | Every screen EFFECTIVE not technical/stuck; intelligent process-shortening | 🔴 running |
 | P-10 | All-entity sweep | ✅ shell IA + tokens applied to all 6; deeper per-entity process polish = next iteration |
 ### STANDING RULES (never forget)
