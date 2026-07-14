@@ -318,6 +318,7 @@ export default function PassportDemo() {
               {t.radarStrip.sources.map((s) => (
                 <span
                   key={s.label}
+                  data-source-kind={s.kind}
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
@@ -329,6 +330,7 @@ export default function PassportDemo() {
                   }}
                 >
                   <span
+                    aria-hidden="true"
                     style={{
                       display: 'inline-flex',
                       alignItems: 'center',
@@ -336,19 +338,32 @@ export default function PassportDemo() {
                       width: '26px',
                       height: '26px',
                       borderRadius: '50%',
-                      background: '#ffffff',
-                      overflow: 'hidden',
+                      background:
+                        s.kind === 'ticketing'
+                          ? 'rgba(242,192,99,0.16)'
+                          : s.kind === 'social'
+                            ? 'rgba(111,181,226,0.16)'
+                            : 'rgba(200,240,77,0.14)',
+                      border:
+                        s.kind === 'ticketing'
+                          ? '1px solid rgba(242,192,99,0.34)'
+                          : s.kind === 'social'
+                            ? '1px solid rgba(111,181,226,0.34)'
+                            : '1px solid rgba(200,240,77,0.28)',
+                      color:
+                        s.kind === 'ticketing'
+                          ? 'var(--color-amber-stage)'
+                          : s.kind === 'social'
+                            ? 'var(--color-source-blue)'
+                            : 'var(--color-stamp)',
                       flexShrink: 0,
+                      fontFamily: 'var(--font-space-mono)',
+                      fontSize: '0.62rem',
+                      fontWeight: 800,
+                      letterSpacing: '0.03em',
                     }}
                   >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={`/brand/source-logos/${s.logo}`}
-                      alt=""
-                      width={16}
-                      height={16}
-                      style={{ width: '16px', height: '16px', objectFit: 'contain' }}
-                    />
+                    {s.kind === 'ticketing' ? 'TX' : s.kind === 'social' ? 'SC' : 'AU'}
                   </span>
                   <span
                     style={{

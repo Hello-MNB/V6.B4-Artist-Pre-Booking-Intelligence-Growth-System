@@ -55,7 +55,6 @@ export const PAGE_SEO: Record<PageSeoKey, SeoEntry> = {
     audience: 'Artist managers, booking agents, representation offices and roster teams',
     intent: 'Explain how representation teams use LOCK without implying artist ownership',
     keywords: ['artist management software', 'artist roster tool', 'booking agent workflow', 'artist representation'],
-    image: '/og/lockshow-og-professional-buyers-v1.png',
   },
   production: {
     path: '/production',
@@ -74,7 +73,6 @@ export const PAGE_SEO: Record<PageSeoKey, SeoEntry> = {
     audience: 'Professional bookers, venue buyers, promoters, corporate buyers and private clients',
     intent: 'Help buyers understand artist fit without becoming a workspace user',
     keywords: ['book artist for event', 'artist booking check', 'wedding DJ context', 'private event artist'],
-    image: '/og/lockshow-og-professional-buyers-v1.png',
   },
   sourceConfirmers: {
     path: '/producers',

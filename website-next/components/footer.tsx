@@ -17,7 +17,7 @@ import { useLocale } from '@/lib/locale-context'
 import { chromeContent } from '@/content/chrome'
 import { SOCIAL, WHATSAPP_URL, WHATSAPP_DISPLAY, EMAILS } from '@/lib/social'
 
-const CONSENT_STORAGE_KEY = 'gigproof_consent'
+const CONSENT_STORAGE_KEY = 'lockshow_consent'
 
 const footerLinkStyle = {
   fontFamily: 'var(--font-heebo)',

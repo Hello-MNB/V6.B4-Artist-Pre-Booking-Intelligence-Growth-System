@@ -24,9 +24,9 @@ const SITE_URL = 'https://lock.show'
 
 export const metadata = buildPageMetadata('methodology')
 
-// Source logos (brief ֲ§5.9 asset list) ג€” /public/brand/source-logos/*.svg.
-// Each logo carries its source CATEGORY, coloured per SYNC ֲ§47:
-// platform=source-blue ֲ· document=amber ֲ· person=lime ֲ· artist-declared=smoke.
+// Source examples are displayed as method chips, not as fake platform logos.
+// Real external logos require licensed/source-approved files; until then LOCK
+// names the source type and platform clearly without pretending to own marks.
 type SourceCategory = 'platform' | 'document' | 'person' | 'declared'
 
 const CATEGORY_COLOR: Record<SourceCategory, string> = {
@@ -42,13 +42,13 @@ const CATEGORY_LABEL: Record<SourceCategory, string> = {
   declared: 'Artist-declared',
 }
 
-const SOURCE_LOGOS: { src: string; alt: string; category: SourceCategory }[] = [
-  { src: '/brand/source-logos/codex-eventer.svg', alt: 'Eventer', category: 'document' },
-  { src: '/brand/source-logos/codex-tickchak.svg', alt: 'Tickchak', category: 'document' },
-  { src: '/brand/source-logos/codex-go-out.svg', alt: 'GO-OUT', category: 'document' },
-  { src: '/brand/source-logos/codex-instagram.svg', alt: 'Instagram', category: 'platform' },
-  { src: '/brand/source-logos/codex-soundcloud.svg', alt: 'SoundCloud', category: 'platform' },
-  { src: '/brand/source-logos/generic-ticket-export.svg', alt: 'Ticket export', category: 'document' },
+const SOURCE_EXAMPLES: { label: string; category: SourceCategory }[] = [
+  { label: 'Eventer account export', category: 'document' },
+  { label: 'Tickchak account export', category: 'document' },
+  { label: 'Go-Out account export', category: 'document' },
+  { label: 'Instagram profile link', category: 'platform' },
+  { label: 'SoundCloud profile link', category: 'platform' },
+  { label: 'Ticketing document', category: 'document' },
 ]
 
 // ג”€ג”€ Local icon glyphs for the ֲ§5.9 icon row (shared icons.tsx lacks these) ג”€ג”€
@@ -318,41 +318,21 @@ export default function MethodologyPage() {
           >
             {t.sourceTypes.logosLabel}
           </p>
-          {/* Source-ecosystem band (build scope ֲ§8) ג€” bigger dark logo cards,
-              each carrying its source CATEGORY with a category colour on the
-              top rule + type label. A credibility ecosystem, not a chart.
-              The badge SVGs share one geometry (56x56 icon tile at 8,8 inside a
-              72px canvas); we crop that tile to a 52px square (scale 52/56:
-              img 66.86px tall, offset -7.43px, radius ~13px). */}
+          {/* Source-ecosystem band: credibility examples, not a logo wall and
+              not evidence quality. The method label stays more important than
+              the source brand name. */}
           <div className="mk-source-belt">
-            {SOURCE_LOGOS.map((logo) => (
+            {SOURCE_EXAMPLES.map((source) => (
               <div
-                key={logo.src}
+                key={source.label}
                 className="mk-source-logo-card"
-                style={{ ['--src-cat' as string]: CATEGORY_COLOR[logo.category] }}
+                style={{ ['--src-cat' as string]: CATEGORY_COLOR[source.category] }}
               >
-                <span
-                  className="mk-source-logo-card__tile"
-                  aria-hidden="true"
-                  style={{ filter: 'grayscale(1)', opacity: 0.9 }}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element -- small local SVG logos */}
-                  <img
-                    src={logo.src}
-                    alt=""
-                    style={{
-                      position: 'absolute',
-                      top: '-7.43px',
-                      left: '-7.43px',
-                      height: '66.86px',
-                      width: 'auto',
-                      maxWidth: 'none',
-                      display: 'block',
-                    }}
-                  />
+                <span className="mk-source-logo-card__tile" aria-hidden="true">
+                  {source.category === 'platform' ? 'PL' : source.category === 'document' ? 'DOC' : source.category === 'person' ? 'P' : 'AD'}
                 </span>
-                <span className="mk-source-logo-card__name">{logo.alt}</span>
-                <span className="mk-source-logo-card__type">{CATEGORY_LABEL[logo.category]}</span>
+                <span className="mk-source-logo-card__name">{source.label}</span>
+                <span className="mk-source-logo-card__type">{CATEGORY_LABEL[source.category]}</span>
               </div>
             ))}
           </div>

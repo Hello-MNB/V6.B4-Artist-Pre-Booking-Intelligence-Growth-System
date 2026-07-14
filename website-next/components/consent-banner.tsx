@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useLocale } from '@/lib/locale-context'
 
-const STORAGE_KEY = 'gigproof_consent'
+const STORAGE_KEY = 'lockshow_consent'
 const MAX_AGE_MS = 365 * 24 * 60 * 60 * 1000 // re-ask after 12 months
 
 type Choice = 'granted' | 'denied'

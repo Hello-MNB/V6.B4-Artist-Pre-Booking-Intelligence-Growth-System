@@ -35,7 +35,7 @@ export interface PassportDemoContent {
   radarStrip: {
     eyebrow: string
     caption: string
-    sources: { logo: string; label: string }[]
+    sources: { label: string; kind: 'ticketing' | 'social' | 'audio' }[]
   }
   /** Media tiles 3–6 (performance, crowd, setup, social/source). */
   media: {
@@ -88,12 +88,12 @@ const en: PassportDemoContent = {
     caption:
       'The private Radar gathered this Passport from the artist’s source universe. Every public detail below carries its method label.',
     sources: [
-      { logo: 'codex-eventer.svg', label: 'Eventer' },
-      { logo: 'codex-tickchak.svg', label: 'Tickchak' },
-      { logo: 'codex-ticketmaster-il.svg', label: 'Ticketmaster IL' },
-      { logo: 'codex-go-out.svg', label: 'Go-Out' },
-      { logo: 'codex-instagram.svg', label: 'Instagram' },
-      { logo: 'codex-soundcloud.svg', label: 'SoundCloud' },
+      { label: 'Eventer export', kind: 'ticketing' },
+      { label: 'Tickchak export', kind: 'ticketing' },
+      { label: 'Ticketmaster IL export', kind: 'ticketing' },
+      { label: 'Go-Out export', kind: 'ticketing' },
+      { label: 'Instagram profile', kind: 'social' },
+      { label: 'SoundCloud profile', kind: 'audio' },
     ],
   },
   media: {
@@ -218,12 +218,12 @@ const he: PassportDemoContent = {
     caption:
       'הרדאר הפרטי אסף את הפספורט הזה מתוך עולם המקורות של האמן. כל פרט ציבורי כאן מגיע עם תווית מקור.',
     sources: [
-      { logo: 'codex-eventer.svg', label: 'Eventer' },
-      { logo: 'codex-tickchak.svg', label: 'Tickchak' },
-      { logo: 'codex-ticketmaster-il.svg', label: 'Ticketmaster IL' },
-      { logo: 'codex-go-out.svg', label: 'Go-Out' },
-      { logo: 'codex-instagram.svg', label: 'Instagram' },
-      { logo: 'codex-soundcloud.svg', label: 'SoundCloud' },
+      { label: 'Eventer export', kind: 'ticketing' },
+      { label: 'Tickchak export', kind: 'ticketing' },
+      { label: 'Ticketmaster IL export', kind: 'ticketing' },
+      { label: 'Go-Out export', kind: 'ticketing' },
+      { label: 'Instagram profile', kind: 'social' },
+      { label: 'SoundCloud profile', kind: 'audio' },
     ],
   },
   media: {
