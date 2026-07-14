@@ -168,3 +168,35 @@ deletion = owner-only · firewall absolute · free-pilot · Q8-before-prod · na
 end every reply with the 3 artifact links + board.
 ### OPEN FROM OWNER (her timing)
 GPT RC1 relay · Google retest · Q8 · Supabase Pro · Eran · G20 legal · restore V9/MNB artifacts.
+
+## 🗂️ MASTER REQUEST REGISTER (owner directive 14 Jul: "verify ALL my requests are documented") — every ask, tracked
+### A · PROTOTYPE / UX (artifact 1c9b0030)
+P-1 no annotations ✅ · P-2 full-screen no-scroll ✅ · P-3 real images ✅ · P-4 gamification ✅ ·
+P-5 flows tested ✅ · P-6 DS tokens ✅ (missing-token flags to Codex) · P-7 mobile-first ✅ ·
+P-8 clear IA (switcher/nav/account) ✅ · P-9 interactive Radar ✅ · P-10 all-entity sweep ✅ ·
+P-11 planet drill-in status'd logos + add/confirm 🟠running · P-12 onboarding discovery→confirm
+narrative (pro copy EN+HE) 🟠running · P-13 effective-not-technical screens 🟠running.
+### B · PRODUCT / APP / ENTITY MODEL
+B-1 canonical entity ruling (3 workspaces; role+authority layers; Manager≠Booking-Agent) — ⏳ AWAITS OWNER APPROVAL ·
+B-2 interactive-screens build plan (INTERACTIVE-SCREENS-BUILD-PLAN.md) — ✅ authored, build on approval ·
+B-3 Artist/Act edit screen (D1, the broken screen) — 🔴 P0 in app fix wave ·
+B-4 payment screen off (free pilot) — ✅ done (PAYMENTS_ENABLED flag) ·
+B-5 refresh-logout bug — ✅ fixed (SPA rewrite), LIVE ·
+B-6 Google login fix — ✅ live on www.lock.show/app/signup — ⏳ AWAITS OWNER's Google test ·
+B-7 app RC1 → G16 → QA → Q8 → deploy — ⏳ AWAITS OWNER Q8 (target 16-17 Jul) ·
+B-8 AI/scan intelligence layer (built vs target) — ✅ documented, honest.
+### C · INFRA / DEPLOY / COST
+C-1 Vercel Pro $20/mo — ✅ active, costs updated · C-2 Supabase Pro $25 — ⏳ owner (pre-launch backups) ·
+C-3 site LIVE (rebuild+wave6+entity-msg+Codex SEO+Codex rhythm 9a08069) — ✅ · C-4 deploy-train law + Production-QA per round — ✅ ·
+C-5 cost-boundaries map — ✅ · C-6 token rotation (chat-pasted) — ⏳ owner (low urgency).
+### D · TEAM / ACCESS / ARTIFACTS
+D-1 Codex site+app access (repo write ✅; Vercel publish = owner adds Codex in dashboard) — ⏳ owner ·
+D-2 test users (5 @gigproof.test, Gigproof!2026) — ✅ · D-3 2 PMs (charters written) — ⏳ owner activation ·
+D-4 canonical artifacts = 3 only, update-only — ✅ RULE · D-5 restore V9/MNB artifacts (my error) — ⏳ owner (version history).
+### E · STANDING RULES (binding)
+NO-NEW-DOCS (update only, ask first) · ARTIFACT-SCOPE (only the 3, never other projects; deletion owner-only) ·
+firewall absolute · free-pilot · Q8-before-prod · named deploy trains · secrets never in chat/shareable ·
+answer in English · end every reply with 3 artifact links + board · reproduce-before-claiming (CTO std).
+### F · PENDING FROM OWNER (repeat every reply)
+B-1 entity ruling · B-6 Google test · B-7 Q8 · C-2 Supabase Pro · C-6 token rotation · D-1 Codex→Vercel ·
+D-3 PM activation · D-5 restore V9/MNB · GPT RC1 re-audit relay · G20 legal facts · Eran access.
