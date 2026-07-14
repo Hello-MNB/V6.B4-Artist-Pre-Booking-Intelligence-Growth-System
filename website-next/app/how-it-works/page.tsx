@@ -1,12 +1,11 @@
-// How It Works — rebuilt per Codex exact rebuild brief §5.8 (2026-07-14).
-// Hero "Start with one link. End with a Passport you control." → 6-step flow
-// (artist adds link → Radar organizes → source can confirm → artist approves
-// → Passport shared → buyer reacts) as a horizontal stepper on desktop and
+﻿// How It Works ג€” rebuilt per Codex exact rebuild brief ֲ§5.8 (2026-07-14).
+// Hero "Start with one link. End with a Passport you control." ג†’ 6-step flow
+// (artist adds link ג†’ Radar organizes ג†’ source can confirm ג†’ artist approves
+// ג†’ Passport shared ג†’ buyer reacts) as a horizontal stepper on desktop and
 // vertical cards on mobile (FlowRow handles both), tiny entity icons per
 // step, career-workspace image, procedural detail cut above the fold.
 // ALL copy lives in content/how-it-works.ts ({ en, he }); renders EN for now.
 
-import type { Metadata } from 'next'
 
 import { FinalCta } from '@/components/marketing/final-cta'
 import { FlowRow, FlowStep } from '@/components/marketing/flow-step'
@@ -14,28 +13,19 @@ import { Hero } from '@/components/marketing/hero'
 import { Icon } from '@/components/marketing/icons'
 import { Section, SectionHeading } from '@/components/marketing/section'
 import { howItWorksContent } from '@/content/how-it-works'
+import { buildPageMetadata } from '@/lib/seo'
 
 const t = howItWorksContent.en
 
 const SITE_URL = 'https://lock.show'
 const HERO_IMAGE = '/brand/lockshow-atmosphere-artist-career-workspace-v1.webp'
 
-export const metadata: Metadata = {
-  alternates: { canonical: '/how-it-works' },
-  title: t.meta.title,
-  description: t.meta.description,
-  openGraph: {
-    title: t.meta.title,
-    description: t.meta.description,
-    type: 'website',
-    url: `${SITE_URL}/how-it-works`,
-  },
-}
+export const metadata = buildPageMetadata('howItWorks')
 
 export default function HowItWorksPage() {
   return (
     <main>
-      {/* ── HERO (brief §5.8) — no procedural detail above the fold ── */}
+      {/* ג”€ג”€ HERO (brief ֲ§5.8) ג€” no procedural detail above the fold ג”€ג”€ */}
       <Hero
         eyebrow={t.hero.eyebrow}
         title={t.hero.h1}
@@ -47,8 +37,8 @@ export default function HowItWorksPage() {
         chips={t.hero.chips}
       />
 
-      {/* ── 6-STEP FLOW — horizontal stepper desktop / vertical cards mobile,
-             tiny entity icon on every step (brief §5.8) ── */}
+      {/* ג”€ג”€ 6-STEP FLOW ג€” horizontal stepper desktop / vertical cards mobile,
+             tiny entity icon on every step (brief ֲ§5.8) ג”€ג”€ */}
       <Section tone="forest">
         <SectionHeading tone="forest" eyebrow={t.flow.eyebrow} title={t.flow.title} />
         <FlowRow cols={6}>
@@ -65,7 +55,7 @@ export default function HowItWorksPage() {
         </FlowRow>
       </Section>
 
-      {/* ── WHO IS INVOLVED — three roles, card rhythm paper·dark·paper ── */}
+      {/* ג”€ג”€ WHO IS INVOLVED ג€” three roles, card rhythm paperֲ·darkֲ·paper ג”€ג”€ */}
       <Section tone="paper">
         <SectionHeading eyebrow={t.roles.eyebrow} title={t.roles.title} />
         <div
@@ -146,7 +136,7 @@ export default function HowItWorksPage() {
         </div>
       </Section>
 
-      {/* ── FINAL CTA ── */}
+      {/* ג”€ג”€ FINAL CTA ג”€ג”€ */}
       <FinalCta
         title={t.finalCta.title}
         body={t.finalCta.body}

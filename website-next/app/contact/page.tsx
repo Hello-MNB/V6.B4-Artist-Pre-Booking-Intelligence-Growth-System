@@ -1,16 +1,16 @@
-// Contact — rebuilt per Codex exact rebuild brief §5.11 (2026-07-14).
-// Hero "Want to see if LOCK fits your role?" — role selector BEFORE the
+﻿// Contact ג€” rebuilt per Codex exact rebuild brief ֲ§5.11 (2026-07-14).
+// Hero "Want to see if LOCK fits your role?" ג€” role selector BEFORE the
 // message (contact-lane.tsx), then the EXISTING form mechanics unchanged
-// (components/waitlist-form.tsx → Supabase waitlist_signup; ?src attribution
+// (components/waitlist-form.tsx ג†’ Supabase waitlist_signup; ?src attribution
 // handled inside the form). Direct channels (WhatsApp / social) preserved.
 // ALL copy lives in content/contact.ts ({ en, he }); renders EN for now.
 
-import type { Metadata } from 'next'
 
 import { APP_URL } from '@/lib/app-url'
 import { SOCIAL, WHATSAPP_URL, WHATSAPP_DISPLAY } from '@/lib/social'
 import { FinalCta } from '@/components/marketing/final-cta'
 import { contactContent } from '@/content/contact'
+import { buildPageMetadata } from '@/lib/seo'
 
 import ContactLane from './contact-lane'
 
@@ -18,23 +18,13 @@ const t = contactContent.en
 
 const SITE_URL = 'https://lock.show'
 
-export const metadata: Metadata = {
-  alternates: { canonical: '/contact' },
-  title: t.meta.title,
-  description: t.meta.description,
-  openGraph: {
-    title: t.meta.title,
-    description: t.meta.description,
-    type: 'website',
-    url: `${SITE_URL}/contact`,
-  },
-}
+export const metadata = buildPageMetadata('contact')
 
 export default function ContactPage() {
   return (
     <main>
-      {/* ── HERO — calm text header; the page's lime moment is the form's
-             submit button, so no lime CTA up here ── */}
+      {/* ג”€ג”€ HERO ג€” calm text header; the page's lime moment is the form's
+             submit button, so no lime CTA up here ג”€ג”€ */}
       <section
         className="mk-hero"
         style={{
@@ -84,7 +74,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* ── FORM + INFO GRID ── */}
+      {/* ג”€ג”€ FORM + INFO GRID ג”€ג”€ */}
       <section className="mk-section" style={{ background: 'var(--color-paper)', color: 'var(--color-ink)' }}>
         <div className="mk-container">
           <div
@@ -96,7 +86,7 @@ export default function ContactPage() {
               alignItems: 'start',
             }}
           >
-            {/* FORM COLUMN — role first, then the message */}
+            {/* FORM COLUMN ג€” role first, then the message */}
             <div>
               <p
                 style={{
@@ -113,7 +103,7 @@ export default function ContactPage() {
               <ContactLane />
             </div>
 
-            {/* INFO COLUMN — details + direct channels (mechanics preserved) */}
+            {/* INFO COLUMN ג€” details + direct channels (mechanics preserved) */}
             <div className="m-flat" style={{ padding: '28px 24px', border: '1px solid rgba(10,13,11,0.08)', borderRadius: 'var(--radius-sm)' }}>
               <p
                 style={{
@@ -211,7 +201,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* ── FINAL CTA ── */}
+      {/* ג”€ג”€ FINAL CTA ג”€ג”€ */}
       <FinalCta
         title={t.finalCta.title}
         body={t.finalCta.body}

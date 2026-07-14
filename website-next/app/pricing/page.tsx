@@ -1,38 +1,28 @@
-// Pricing → FREE PILOT — rebuilt per Codex exact rebuild brief §5.7
+﻿// Pricing ג†’ FREE PILOT ג€” rebuilt per Codex exact rebuild brief ֲ§5.7
 // (2026-07-14). The route stays /pricing (nav relabel is a later wave), but
 // the page is conceptually "Free Pilot": NO pricing table, NO paid plan
 // names, NO payment CTA. ALL copy lives in content/pricing.ts ({ en, he });
-// this page renders EN for now — locale wiring is a later wave.
+// this page renders EN for now ג€” locale wiring is a later wave.
 
-import type { Metadata } from 'next'
 
 import { EntityCard } from '@/components/marketing/entity-card'
 import { FinalCta } from '@/components/marketing/final-cta'
 import { ProductCompositionHero } from '@/components/marketing/product-composition-hero'
 import { Section, SectionHeading } from '@/components/marketing/section'
 import { pricingContent } from '@/content/pricing'
+import { buildPageMetadata } from '@/lib/seo'
 
 const t = pricingContent.en
 
 const SITE_URL = 'https://lock.show'
 
-export const metadata: Metadata = {
-  alternates: { canonical: '/pricing' },
-  title: t.meta.title,
-  description: t.meta.description,
-  openGraph: {
-    title: t.meta.title,
-    description: t.meta.description,
-    type: 'website',
-    url: `${SITE_URL}/pricing`,
-  },
-}
+export const metadata = buildPageMetadata('freePilot')
 
 export default function FreePilotPage() {
   return (
     <main data-accent="free-pilot">
-      {/* ── HERO — product composition, NO photo (Codex build scope §7).
-             Central lime "Free pilot" tile + 5 orbiting entity chips. ── */}
+      {/* ג”€ג”€ HERO ג€” product composition, NO photo (Codex build scope ֲ§7).
+             Central lime "Free pilot" tile + 5 orbiting entity chips. ג”€ג”€ */}
       <ProductCompositionHero
         eyebrow={t.hero.eyebrow}
         title={t.hero.h1}
@@ -49,11 +39,11 @@ export default function FreePilotPage() {
           { label: 'Production', icon: 'production' },
           { label: 'Source confirmation', icon: 'source' },
         ]}
-        note="No payment · No scores · Artist controls publication"
+        note="No payment ֲ· No scores ֲ· Artist controls publication"
       />
 
-      {/* ── 5 ENTITY CARDS — Artist / Buyer / Manager / Production / Source
-             confirmer (brief §5.7). Card rhythm: first card dark. ── */}
+      {/* ג”€ג”€ 5 ENTITY CARDS ג€” Artist / Buyer / Manager / Production / Source
+             confirmer (brief ֲ§5.7). Card rhythm: first card dark. ג”€ג”€ */}
       <Section tone="paper">
         <SectionHeading
           eyebrow={t.entities.eyebrow}
@@ -77,7 +67,7 @@ export default function FreePilotPage() {
         </div>
       </Section>
 
-      {/* ── FINAL CTA — "Join free pilot" (the section's single lime CTA) ── */}
+      {/* ג”€ג”€ FINAL CTA ג€” "Join free pilot" (the section's single lime CTA) ג”€ג”€ */}
       <FinalCta
         title={t.finalCta.title}
         body={t.finalCta.body}
