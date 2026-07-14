@@ -86,7 +86,7 @@ const en: ContactContent = {
   finalCta: {
     title: 'Ready to start without waiting?',
     body: 'Registration is open — free for artists during the pilot.',
-    ctaLabel: 'Join free pilot',
+    ctaLabel: 'Join pilot',
   },
 }
 

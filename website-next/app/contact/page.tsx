@@ -7,7 +7,7 @@
 
 
 import { APP_URL } from '@/lib/app-url'
-import { SOCIAL, WHATSAPP_URL, WHATSAPP_DISPLAY } from '@/lib/social'
+import { SOCIAL } from '@/lib/social'
 import { FinalCta } from '@/components/marketing/final-cta'
 import { contactContent } from '@/content/contact'
 import { buildPageMetadata } from '@/lib/seo'
@@ -145,31 +145,8 @@ export default function ContactPage() {
                 ))}
               </div>
 
-              {/* Direct channels */}
+              {/* Public channels */}
               <div style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid rgba(10,13,11,0.08)' }}>
-                <a
-                  href={WHATSAPP_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    padding: '12px 16px',
-                    backgroundColor: 'var(--color-night)',
-                    color: 'var(--color-paper)',
-                    borderRadius: 'var(--radius-sm)',
-                    textDecoration: 'none',
-                    marginBottom: '14px',
-                  }}
-                >
-                  <span style={{ fontFamily: 'var(--font-space-mono)', fontSize: '0.75rem', letterSpacing: '0.08em' }}>
-                    WHATSAPP
-                  </span>
-                  <span dir="ltr" style={{ fontSize: '1rem', fontWeight: 700 }}>
-                    {WHATSAPP_DISPLAY}
-                  </span>
-                </a>
                 <div style={{ display: 'flex', gap: '18px', flexWrap: 'wrap' }}>
                   {SOCIAL.map(({ key, label, href }) => (
                     <a

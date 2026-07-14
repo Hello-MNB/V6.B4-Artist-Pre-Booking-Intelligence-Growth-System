@@ -48,7 +48,7 @@ const en: ArtistsContent = {
   meta: {
     title: 'Stop rebuilding your story from scattered links | LOCK for Artists',
     description:
-      'LOCK helps you turn shows, links, media and source context into a Passport you can proudly send before booking. No scores. No rankings. You control what goes public.',
+      'LOCK helps you turn shows, links, media and source context into a Passport you can proudly send before booking.',
   },
   hero: {
     // Entity-model audit 2026-07-14: solo / band / collective — an Act can be
@@ -58,7 +58,7 @@ const en: ArtistsContent = {
     body: 'LOCK helps you collect the atmosphere, links and context already around you — then shape them into a Passport you can proudly send before booking.',
     primaryCta: { label: 'Start free in the pilot', href: SIGNUP },
     secondaryCta: { label: 'See sample Passport', href: '/passport/demo' },
-    trustLine: 'No scores. No rankings. Artist controls what goes public.',
+    trustLine: '',
     imageAlt:
       'Artist career workspace — an artist shaping their own story in a calm private space',
     badge: {
@@ -85,7 +85,7 @@ const en: ArtistsContent = {
       },
       {
         title: 'Real nights should not disappear after the lights go on.',
-        body: 'Your live history is scattered across flyers, clips, WhatsApp threads and people who were there.',
+        body: 'Your live history is scattered across flyers, clips, message threads and people who were there.',
       },
       {
         title: 'People stopped believing polished EPKs. You can feel it.',
@@ -131,7 +131,7 @@ const en: ArtistsContent = {
       },
       {
         verb: 'Invite.',
-        body: 'One WhatsApp message to the producer who ran your night. They confirm it in a tap.',
+        body: 'One short message to the person who ran your night. They confirm it in a tap.',
         icon: 'source',
       },
       {
@@ -166,7 +166,7 @@ const he: ArtistsContent = {
     body: 'LOCK עוזרת לך להבין מה כבר קיים סביבך כאמן, מה כדאי לשפר, ומה מתאים להראות החוצה. בלי ציונים, בלי דירוגים, ובלי להפוך את הקריירה שלך לטבלה.',
     primaryCta: { label: 'להתחיל בפיילוט החינמי', href: SIGNUP },
     secondaryCta: { label: 'לראות פספורט לדוגמה', href: '/passport/demo' },
-    trustLine: 'בלי ציון. בלי דירוג. בלי לחשוף חולשות. האמן בוחר מה יוצא החוצה.',
+    trustLine: '',
     imageAlt: TODO_HE,
     badge: {
       methodLabel: 'האמן בוחר מה יוצא החוצה.',

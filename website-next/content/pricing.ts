@@ -28,18 +28,18 @@ const en: PricingContent = {
   meta: {
     title: 'Free Pilot — LOCK is free while we validate',
     description:
-      'Free pilot. No plans yet. We are validating value with artists, bookers, private clients, representation and production teams — no prices, no payment, no commitment.',
+      'Free pilot. No plans yet. We are validating value with artists, buyers, private clients, representation and production teams.',
   },
   hero: {
     eyebrow: 'Free pilot',
     h1: 'Free pilot. No plans yet.',
-    body: 'We are validating value with artists, bookers, private clients, representation and production teams. No payment, no plans, no commitment — the goal is to learn what really helps before anything grows.',
-    primaryCta: { label: 'Join free pilot', href: SIGNUP },
+    body: 'We are validating value with artists, buyers, private clients, representation and production teams — so the product grows from real booking moments, not guesses.',
+    primaryCta: { label: 'Join pilot', href: SIGNUP },
     secondaryCta: { label: 'See how it works', href: '/how-it-works' },
-    trustLine: 'No prices. No paid plans. No scores — ever.',
+    trustLine: '',
     imageAlt:
       'LOCK brand cover — calm growth-intelligence atmosphere for the free pilot stage',
-    chips: ['Radar', 'Passport', 'Free pilot'],
+    chips: [],
   },
   entities: {
     eyebrow: 'Who the pilot is for',
@@ -86,7 +86,7 @@ const en: PricingContent = {
   finalCta: {
     title: 'Join while it costs nothing but curiosity.',
     body: 'When pricing comes, it will be set with the people already inside — measured, not required.',
-    primaryCta: { label: 'Join free pilot', href: SIGNUP },
+    primaryCta: { label: 'Join pilot', href: SIGNUP },
     secondaryLink: { label: 'Talk to us', href: '/contact' },
   },
 }
@@ -105,7 +105,7 @@ const he: PricingContent = {
     secondaryCta: { label: 'לראות איך זה עובד', href: '/how-it-works' },
     trustLine: TODO_HE,
     imageAlt: TODO_HE,
-    chips: ['רדאר', 'פספורט', 'פיילוט חינמי'],
+    chips: [],
   },
   entities: {
     eyebrow: TODO_HE,

@@ -15,7 +15,7 @@ import Link from 'next/link'
 import { APP_URL } from '@/lib/app-url'
 import { useLocale } from '@/lib/locale-context'
 import { chromeContent } from '@/content/chrome'
-import { SOCIAL, WHATSAPP_URL, WHATSAPP_DISPLAY, EMAILS } from '@/lib/social'
+import { SOCIAL, EMAILS } from '@/lib/social'
 
 const CONSENT_STORAGE_KEY = 'lockshow_consent'
 
@@ -227,16 +227,6 @@ export function Footer() {
                 </a>
               </li>
             ))}
-            <li>
-              <a
-                href={WHATSAPP_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={footerLinkStyle}
-              >
-                WhatsApp <span dir="ltr" style={{ color: 'rgba(243,245,239,0.55)' }}>{WHATSAPP_DISPLAY}</span>
-              </a>
-            </li>
             <li>
               <a href={`mailto:${EMAILS.hello}`} dir="ltr" style={footerLinkStyle}>
                 {EMAILS.hello}

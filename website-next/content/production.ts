@@ -73,7 +73,7 @@ const en: ProductionContent = {
     body: 'LOCK gives production teams a clearer read on fit, availability and source-backed context before the lineup becomes a promise.',
     primaryCta: { label: 'Join production beta', href: SIGNUP },
     secondaryCta: { label: 'Register production interest', href: '/contact' },
-    trustLine: 'Method-labelled context. No scores, no rankings.',
+    trustLine: '',
     imageAlt:
       'Production warehouse — an event team preparing a stage build before doors',
     eventCard: {

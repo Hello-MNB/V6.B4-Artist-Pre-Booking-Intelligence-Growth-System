@@ -46,7 +46,7 @@ const en: HowItWorksContent = {
     body: 'LOCK does not ask you to build everything from scratch. It helps organize what already exists around you, checks what fits, and lets you choose what to show whoever is considering booking you.',
     primaryCta: { label: 'Start free', href: SIGNUP },
     secondaryCta: { label: 'See sample Passport', href: '/passport/demo' },
-    trustLine: 'No scores. No rankings. Nothing goes public without your approval.',
+    trustLine: '',
     imageAlt:
       'Artist career workspace — an artist organizing their live history in a calm private space',
     chips: ['One link in', 'Radar', 'Passport out'],
@@ -67,7 +67,7 @@ const en: HowItWorksContent = {
       },
       {
         verb: 'Source can confirm',
-        body: 'WhatsApp one short link to whoever was there. They confirm or correct in seconds — no account, no password.',
+        body: 'Send one short link to whoever was there. They confirm or correct in seconds — no account, no password.',
         icon: 'source',
       },
       {

@@ -42,18 +42,18 @@ const en: HomeContent = {
   meta: {
     title: 'LOCK — Build a Passport that helps the next room understand you',
     description:
-      'LOCK helps artists start with one link, gather real show context in a private Radar, and publish one Passport when they are ready. No scores. No rankings.',
+      'LOCK helps artists start with one link, gather real show context, and publish one clear Passport when they are ready.',
   },
   hero: {
     eyebrow: 'Artist-first booking context',
     h1: 'Build a Passport that helps the next room understand you.',
     body: 'Start with one link. LOCK gathers the shows, rooms, clips, people and source context around your act into a private Radar — then helps you publish one Passport when you are ready.',
-    primaryCta: { label: 'Join free pilot', href: SIGNUP },
+    primaryCta: { label: 'Join pilot', href: SIGNUP },
     secondaryCta: { label: 'See Passport demo', href: '/passport/demo' },
-    trustLine: 'No scores. No rankings. Artist controls what goes public.',
+    trustLine: '',
     imageAlt:
       'Electronic artist in a night-show atmosphere preparing material for the next booking conversation',
-    chips: ['Radar', 'Passport', 'Source-linked', 'Free pilot'],
+    chips: [],
     radarCard: {
       label: 'Radar · Private',
       rows: ['Shows', 'Links', 'Sources'],
@@ -80,7 +80,7 @@ const en: HomeContent = {
       },
       {
         title: 'Teams need one clean version.',
-        body: 'Representation and production teams need the same story visible before calls, not buried in WhatsApp threads.',
+        body: 'Representation and production teams need the same story visible before calls, not buried in scattered message threads.',
       },
     ],
   },
@@ -160,7 +160,7 @@ const en: HomeContent = {
   finalCta: {
     title: 'Build the page you can proudly send before the next booking call.',
     body: 'We are opening the pilot with artists, bookers, private clients, representation teams and production teams who want booking to feel clearer, warmer and less random.',
-    primaryCta: { label: 'Join free pilot', href: SIGNUP },
+    primaryCta: { label: 'Join pilot', href: SIGNUP },
     secondaryLink: { label: 'How it works', href: '/how-it-works' },
   },
 }
@@ -169,7 +169,7 @@ const he: HomeContent = {
   meta: {
     title: 'LOCK — להפוך את מה שכבר קרה להזמנה הבאה',
     description:
-      'LOCK עוזרת להפוך הופעות, מקורות, לינקים ואנשים שהיו שם לפספורט קצר וברור שמזמין הופעות יכול להבין מהר. בלי ציון. בלי דירוג. האמן בוחר מה יוצא החוצה.',
+      'LOCK עוזרת להפוך הופעות, מקורות, לינקים ואנשים שהיו שם לפספורט קצר וברור שמזמין הופעות יכול להבין מהר.',
   },
   hero: {
     eyebrow: 'הקשר ברור לפני שמתחילים לדבר על בוקינג',
@@ -177,9 +177,9 @@ const he: HomeContent = {
     body: 'LOCK עוזרת להפוך הופעות, מקורות, לינקים ואנשים שהיו שם לפספורט קצר וברור שמזמין הופעות יכול להבין מהר.',
     primaryCta: { label: 'להצטרף לפיילוט', href: SIGNUP },
     secondaryCta: { label: 'לראות פספורט לדוגמה', href: '/passport/demo' },
-    trustLine: 'בלי ציון. בלי דירוג. בלי לחשוף חולשות. האמן בוחר מה יוצא החוצה.',
+    trustLine: '',
     imageAlt: TODO_HE,
-    chips: ['רדאר', 'פספורט', 'Source-linked', 'פיילוט חינמי'],
+    chips: [],
     radarCard: {
       label: 'רדאר · פרטי',
       rows: ['הופעות', 'לינקים', 'מקורות'],

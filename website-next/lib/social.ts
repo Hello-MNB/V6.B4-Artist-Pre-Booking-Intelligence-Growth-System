@@ -15,8 +15,9 @@ export const SOCIAL = [
   { key: 'linkedin',  label: 'LinkedIn',  href: 'https://www.linkedin.com/company/lock.show/' },
 ] as const
 
-// `sameAs` for structured data: the social profiles + the WhatsApp deep-link.
-export const SAME_AS = [...SOCIAL.map((s) => s.href), WHATSAPP_URL]
+// `sameAs` for structured data: public brand profiles only. Direct phone or
+// WhatsApp remains an operational/outreach channel, not public identity chrome.
+export const SAME_AS = SOCIAL.map((s) => s.href)
 
 // Official role-based inboxes on lock.show. One address per purpose so the right
 // context always uses the right mailbox (legal text → legal@, privacy → privacy@,

@@ -73,7 +73,7 @@ const en: ManagersContent = {
     body: 'LOCK helps artist-side representation turn scattered artist context into a clear Passport bookers and clients can trust before the first serious call.',
     primaryCta: { label: 'Join representation beta', href: SIGNUP },
     secondaryCta: { label: 'Register roster interest', href: '/contact' },
-    trustLine: 'No scores. No rankings. Artists keep ownership of their identity.',
+    trustLine: '',
     imageAlt:
       'Agency roster room — a manager reviewing roster context in a calm office',
     rosterCard: {

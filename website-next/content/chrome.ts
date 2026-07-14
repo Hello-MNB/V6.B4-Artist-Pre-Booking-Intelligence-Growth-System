@@ -70,20 +70,19 @@ const en: ChromeContent = {
   nav: {
     links: [
       { href: '/artists',       label: 'Artists' },
-      { href: '/managers',      label: 'Representation' },
-      { href: '/production',    label: 'Production teams' },
-      { href: '/bookers',       label: 'Bookers & clients' },
+      { href: '/managers',      label: 'Reps' },
+      { href: '/production',    label: 'Production' },
+      { href: '/bookers',       label: 'Buyers' },
       { href: '/how-it-works',  label: 'How it works' },
-      { href: '/passport/demo', label: 'Passport demo' },
     ],
-    cta: 'Join free pilot',
+    cta: 'Join pilot',
     login: 'Log in',
     openMenu: 'Open menu',
     closeMenu: 'Close menu',
   },
   footer: {
-    tagline: 'REAL NIGHTS · CHECKED PROOF · TEL AVIV',
-    cta: 'JOIN FREE PILOT →',
+    tagline: 'ARTIST CONTEXT · BOOKING CLARITY · TEL AVIV',
+    cta: 'JOIN PILOT →',
     columns: [
       {
         heading: 'PRODUCT',
@@ -122,7 +121,7 @@ const en: ChromeContent = {
     consentPrefs: 'Cookie preferences',
     connectHeading: 'CONNECT',
     microCopy:
-      'LOCK helps artists and booking people share clearer pre-booking context — no scores, no rankings, no hidden claims.',
+      'LOCK helps artists and booking people turn scattered context into a clearer first conversation.',
     copyright: '© 2026 LOCK · CLOSED BETA · TEL AVIV, ISRAEL',
   },
 }
@@ -131,11 +130,10 @@ const he: ChromeContent = {
   nav: {
     links: [
       { href: '/artists',       label: 'אמנים' },
-      { href: '/managers',      label: 'משרדי אמרגנות' },
-      { href: '/production',    label: 'משרדי הפקה' },
-      { href: '/bookers',       label: 'מזמיני הופעות' },
+      { href: '/managers',      label: 'נציגות' },
+      { href: '/production',    label: 'הפקה' },
+      { href: '/bookers',       label: 'מזמינים' },
       { href: '/how-it-works',  label: 'איך זה עובד' },
-      { href: '/passport/demo', label: 'פספורט לדוגמה' },
     ],
     cta: 'להצטרף לפיילוט',
     login: 'כניסה',
@@ -144,7 +142,7 @@ const he: ChromeContent = {
   },
   footer: {
     // EN mono brand label in both locales (existing chrome behavior).
-    tagline: 'REAL NIGHTS · CHECKED PROOF · TEL AVIV',
+    tagline: 'ARTIST CONTEXT · BOOKING CLARITY · TEL AVIV',
     cta: 'להצטרף לפיילוט',
     columns: [
       {
@@ -185,7 +183,7 @@ const he: ChromeContent = {
     consentPrefs: 'שינוי העדפות Cookie',
     connectHeading: 'CONNECT',
     microCopy:
-      'LOCK עוזרת לאמנים ולמזמיני הופעות לעבוד עם הקשר ברור יותר לפני בוקינג — בלי ציונים, בלי דירוגים ובלי מידע מוסתר.',
+      'LOCK עוזרת לאמנים ולמזמינים להפוך הקשר מפוזר לשיחה ראשונה ברורה יותר.',
     copyright: '© 2026 LOCK · בטא סגורה · תל אביב, ישראל',
   },
 }
