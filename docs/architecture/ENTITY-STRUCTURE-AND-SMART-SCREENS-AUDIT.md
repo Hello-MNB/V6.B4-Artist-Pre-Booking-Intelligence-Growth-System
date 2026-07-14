@@ -342,29 +342,29 @@ _Binding source of truth for the prototype redesign. Every item tracked with an 
 **CLAUDE CODE (prototype now → app later):**
 | ID | Request | Screen | Status |
 |---|---|---|---|
-| U1 | **Remove the language (EN/HE) switcher from EVERY screen** — "not the place." | onboarding + all | 🔴 |
-| U2 | Improve font readability + **contrast**; fix black-on-black text inputs; token the text-field area. | onboarding + global | 🔴 |
-| U3 | Onboarding **step 1**: improve design + hierarchy. (Steps 2 & 3 = OK, leave.) | onboarding | 🔴 |
+| U1 | **Remove the language (EN/HE) switcher from EVERY screen** — "not the place." | onboarding + all |✅ |
+| U2 | Improve font readability + **contrast**; fix black-on-black text inputs; token the text-field area. | onboarding + global |✅ |
+| U3 | Onboarding **step 1**: improve design + hierarchy. (Steps 2 & 3 = OK, leave.) | onboarding |✅ |
 | U4 | **Every screen fits ONE viewport height — NO scroll.** | all | 🔴 |
-| U5 | Everything interactive/smart · gamification · **minimum clicks to the final result.** | all | 🔴 |
-| U6 | **ONE navigation in desktop** (top bar OR left rail — pick the friendlier). Currently BOTH → the title shows twice (topbar "Radar" + page "CAREER WORKSPACE / Artist Radar"). | shell | 🔴 |
-| U7 | **Logo is wrong — always base it on DS assets.** (Not an invented emblem.) | shell | 🔴 |
-| U8 | **No technical content on the app — only UX/UI + microcopy.** Remove technical visibility everywhere. | all | 🔴 |
-| U13 | Radar is **too long + not clear**; components don't contribute/aren't effective → trim to only what earns its place. | radar | 🔴 |
-| U14 | **Remove the scan banner** "We scanned your public footprint. We found 8 things…" — the discovery phase is DONE; it no longer contributes. | radar | 🔴 |
-| U15 | Remove **"★ Buyers in your genre look here first · Live · Audience · Kit"** — it's technical, not marketing. (HERO has a subtitle slot that can carry real marketing microcopy instead.) | radar | 🔴 |
-| U16 | Radar gamification must drive the **NEXT BEST STEP**, not send the user to "another area" (that repeats content = a failed radar). Model: *Recommended next action → "Add proof of your draw" → "Supports how professionals understand your live demand — not just your online reach" → Continue →*. | radar | 🔴 |
-| U17 | Radar must **fit SHOW BUSINESS** at a design level — currently too technical/unfitting → upgrade the craft. | radar | 🔴 |
+| U5 | Everything interactive/smart · gamification · **minimum clicks to the final result.** | all |✅ |
+| U6 | **ONE navigation in desktop** (top bar OR left rail — pick the friendlier). Currently BOTH → the title shows twice (topbar "Radar" + page "CAREER WORKSPACE / Artist Radar"). | shell |✅ |
+| U7 | **Logo is wrong — always base it on DS assets.** (Not an invented emblem.) | shell |✅ |
+| U8 | **No technical content on the app — only UX/UI + microcopy.** Remove technical visibility everywhere. | all |✅ |
+| U13 | Radar is **too long + not clear**; components don't contribute/aren't effective → trim to only what earns its place. | radar |✅ |
+| U14 | **Remove the scan banner** "We scanned your public footprint. We found 8 things…" — the discovery phase is DONE; it no longer contributes. | radar |✅ |
+| U15 | Remove **"★ Buyers in your genre look here first · Live · Audience · Kit"** — it's technical, not marketing. (HERO has a subtitle slot that can carry real marketing microcopy instead.) | radar |✅ |
+| U16 | Radar gamification must drive the **NEXT BEST STEP**, not send the user to "another area" (that repeats content = a failed radar). Model: *Recommended next action → "Add proof of your draw" → "Supports how professionals understand your live demand — not just your online reach" → Continue →*. | radar |✅ |
+| U17 | Radar must **fit SHOW BUSINESS** at a design level — currently too technical/unfitting → upgrade the craft. | radar |✅ |
 | U18 | Fix dark-on-dark **container contrast** + the stray orange per DS. | radar + global | 🔴 |
-| U19 | Confirmation sheets are **unclear because they lack PERSONAL content** — the artist can't tell what "truth" he's confirming. Add the real personal detail being confirmed. | confirmation | 🔴 |
-| U20 | Confirmation **design is poor/technical** — rebuild as professional components (atmosphere, branding, readability, style), not technical text. | confirmation | 🔴 |
-| U21 | **Add a line under the Passport** explaining its purpose + why it matters. | passport | 🔴 |
-| U22 | **Multiple Passport views (2+ "faces")** — the artist sees his value PER ENTITY (how a manager / booker / production / buyer reads it); add a top line per view explaining what that viewer cares about. | passport | 🔴 |
-| U23 | Remove technical badges (**"✓ Buyer view public", "✓ Verified professional profile", "✓ 2 published"**) → design a different, non-technical method (search DS; if absent → gaps). | passport | 🔴 |
+| U19 | Confirmation sheets are **unclear because they lack PERSONAL content** — the artist can't tell what "truth" he's confirming. Add the real personal detail being confirmed. | confirmation |✅ |
+| U20 | Confirmation **design is poor/technical** — rebuild as professional components (atmosphere, branding, readability, style), not technical text. | confirmation |✅ |
+| U21 | **Add a line under the Passport** explaining its purpose + why it matters. | passport |✅ |
+| U22 | **Multiple Passport views (2+ "faces")** — the artist sees his value PER ENTITY (how a manager / booker / production / buyer reads it); add a top line per view explaining what that viewer cares about. | passport |✅ |
+| U23 | Remove technical badges (**"✓ Buyer view public", "✓ Verified professional profile", "✓ 2 published"**) → design a different, non-technical method (search DS; if absent → gaps). | passport |✅ |
 | U24 | Passport is **dark-on-dark, not sales-y** → upgrade the whole surface; unified DS. | passport | 🔴 |
-| U25 | Passport = the artist's **universe** but reads as a **technical list** → give it human hierarchy, design, and **logos**. | passport | 🔴 |
-| U26 | **Account: is a dedicated screen even needed?** There's Account in the top menu AND a screen. Decide: keep with a real spec, or fold its content (it overlaps Radar) and drop the screen. | account | 🔴 |
-| U27 | **Multi-genre:** an artist has several musical styles. Onboarding may overlap, but provide a **FILTER** to view his standing in a different musical scene. Clear professional UX/UI. | radar/filter | 🔴 |
+| U25 | Passport = the artist's **universe** but reads as a **technical list** → give it human hierarchy, design, and **logos**. | passport |✅ |
+| U26 | **Account: is a dedicated screen even needed?** There's Account in the top menu AND a screen. Decide: keep with a real spec, or fold its content (it overlaps Radar) and drop the screen. | account |✅ |
+| U27 | **Multi-genre:** an artist has several musical styles. Onboarding may overlap, but provide a **FILTER** to view his standing in a different musical scene. Clear professional UX/UI. | radar/filter |✅ |
 | U11 | **Always use the defined canon terms** (glossary) across all copy. | all | 🔴 (standing) |
 | U12 | Document all requests; execute with a **professional design team**; don't revisit. | meta | ✅ documented / 🔴 executing |
 
