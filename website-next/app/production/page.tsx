@@ -1,96 +1,388 @@
-import type { Metadata } from 'next'
-import WaitlistForm from '@/components/waitlist-form'
+// Production — rebuilt per Codex exact rebuild brief §5.5 (2026-07-14).
+// Audience: production offices / event production teams — event & lineup
+// value first, never team-admin first. Route separation (Codex law):
+// /producers = Source-Confirmer education · /production = THIS page.
+// Firewall: "under review" reads as reading context — no ranking implication,
+// no score/percentile language anywhere.
+// ALL copy lives in content/production.ts ({ en, he }); this page renders EN
+// for now — locale wiring is a later wave and stays mechanical.
 
-// S9 outreach page (rel-07.13) — production offices / event producer teams.
-// Content per Codex DS v1.6.11 handoff. Route separation (Codex law):
-// /producers = Source-Confirmer education · /production = THIS beta signup.
+import type { Metadata } from 'next'
+
+import { FinalCta } from '@/components/marketing/final-cta'
+import { Hero } from '@/components/marketing/hero'
+import { Icon } from '@/components/marketing/icons'
+import { Section, SectionHeading } from '@/components/marketing/section'
+import { productionContent, type RequestStatus } from '@/content/production'
+
+const t = productionContent.en
+
+const HERO_IMAGE = '/brand/lockshow-atmosphere-production-warehouse-v1.webp'
+
 export const metadata: Metadata = {
   alternates: { canonical: '/production' },
-  title: 'For Production Offices — Build Lineups With Clearer Artist Context',
-  description:
-    'Use LOCK Passports to understand artist fit, reliability and source-backed context before a lineup becomes a production risk. Join the production beta.',
+  title: t.meta.title,
+  description: t.meta.description,
   openGraph: {
     url: '/production',
-    title: 'For Production Offices | LOCK',
-    description: 'Build lineups with clearer artist context. Join the production beta.',
+    title: t.meta.title,
+    description: t.meta.description,
     type: 'website',
     images: [{ url: '/og/lockshow-og-production-v1.png', width: 1200, height: 630 }],
   },
 }
 
-const sections = [
-  {
-    num: '01',
-    title: 'Artist context before commitment.',
-    body: 'Every lineup slot is a promise to your audience and your name. Read an artist’s method-labeled Passport before you lock the slot — fit, reliability and history, checked and dated.',
+const MONO_LABEL = {
+  fontFamily: 'var(--font-space-mono)',
+  fontSize: '0.6rem',
+  fontWeight: 700,
+  letterSpacing: '0.12em',
+  textTransform: 'uppercase',
+} as const
+
+// Status chip palette — three distinct states, none reads as a grade.
+const STATUS_STYLE: Record<RequestStatus, { color: string; border: string; bg: string }> = {
+  sent: {
+    color: 'rgba(243,245,239,0.7)',
+    border: '1px solid rgba(243,245,239,0.25)',
+    bg: 'transparent',
   },
-  {
-    num: '02',
-    title: 'Requests and replies in one place.',
-    body: 'Availability requests your office sends, and the artists’ replies, live in one inbox with clear status — sent, answered, closed. No more WhatsApp archaeology before an event.',
+  answered: {
+    color: 'var(--color-stamp)',
+    border: '1px solid rgba(200,240,77,0.4)',
+    bg: 'rgba(200,240,77,0.1)',
   },
-  {
-    num: '03',
-    title: 'Source-backed claims, not popularity guesses.',
-    body: 'Every claim on a Passport carries its method and review date. You judge an unfamiliar act on checked evidence — never on follower counts or a hype reel.',
+  closed: {
+    color: 'rgba(243,245,239,0.45)',
+    border: '1px solid rgba(243,245,239,0.15)',
+    bg: 'rgba(243,245,239,0.04)',
   },
-  {
-    num: '04',
-    title: 'Join the production beta.',
-    body: 'The production workspace is in closed beta. Early offices shape how lineup building with verified context works — events, lineups and requests in one governed place.',
-  },
-]
+}
+
+function StatusChip({ status }: { status: RequestStatus }) {
+  const s = STATUS_STYLE[status]
+  return (
+    <span
+      style={{
+        ...MONO_LABEL,
+        color: s.color,
+        border: s.border,
+        background: s.bg,
+        borderRadius: '999px',
+        padding: '0.2rem 0.6rem',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {t.inbox.statusLabels[status]}
+    </span>
+  )
+}
+
+// ── Event-lineup overlay card on the hero image (brief §5.5 Add) ────────────
+// "Event: Friday night / Slot open / 3 artists under review" — method-safe:
+// review = reading context; the footnote says so explicitly.
+
+function EventOverlayCard() {
+  const c = t.hero.eventCard
+  return (
+    <div
+      style={{
+        background: 'rgba(10,13,11,0.78)',
+        border: '1px solid rgba(243,245,239,0.16)',
+        borderRadius: '18px',
+        padding: '0.9rem 1.1rem',
+        backdropFilter: 'blur(14px)',
+        WebkitBackdropFilter: 'blur(14px)',
+        minWidth: '215px',
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '0.6rem' }}>
+        <Icon id="production" size={14} color="var(--color-stamp)" />
+        <span style={{ ...MONO_LABEL, color: 'var(--color-stamp)' }}>{c.label}</span>
+      </div>
+      {[c.event, c.slot, c.review].map((line) => (
+        <div
+          key={line}
+          style={{ display: 'flex', alignItems: 'center', gap: '7px', padding: '0.22rem 0' }}
+        >
+          <span
+            aria-hidden="true"
+            style={{
+              width: '5px',
+              height: '5px',
+              borderRadius: '50%',
+              background: 'rgba(200,240,77,0.7)',
+              flexShrink: 0,
+            }}
+          />
+          <span
+            style={{
+              fontFamily: 'var(--font-space-mono)',
+              fontSize: '0.68rem',
+              letterSpacing: '0.05em',
+              color: 'rgba(243,245,239,0.8)',
+            }}
+          >
+            {line}
+          </span>
+        </div>
+      ))}
+      <p
+        style={{
+          fontFamily: 'var(--font-space-mono)',
+          fontSize: '0.55rem',
+          letterSpacing: '0.05em',
+          color: 'rgba(243,245,239,0.45)',
+          margin: '0.55rem 0 0',
+          borderTop: '1px solid rgba(243,245,239,0.1)',
+          paddingTop: '0.55rem',
+        }}
+      >
+        {c.footnote}
+      </p>
+    </div>
+  )
+}
+
+// ── Page ────────────────────────────────────────────────────────────────────
 
 export default function ProductionPage() {
   return (
-    <main style={{ backgroundColor: 'var(--color-paper)', color: 'var(--color-ink)', fontFamily: 'var(--font-heebo)' }}>
-      {/* ── HERO — full-bleed, atmosphere image ── */}
-      <section
-        style={{
-          position: 'relative',
-          minHeight: 'min(80svh, 720px)',
-          display: 'flex',
-          alignItems: 'flex-end',
-          backgroundImage: 'linear-gradient(rgba(10,13,11,0.55), rgba(10,13,11,0.75)), url(/brand/lockshow-atmosphere-production-warehouse-v1.webp)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      >
-        <div style={{ maxWidth: '820px', padding: 'clamp(32px, 6vw, 72px)' }}>
-          <p style={{ fontFamily: 'var(--font-space-mono)', fontSize: '0.7rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--color-stamp)', margin: '0 0 14px' }}>
-            FOR PRODUCTION OFFICES · EVENT PRODUCERS · TEAMS
-          </p>
-          <h1 style={{ fontFamily: 'var(--font-frank)', fontSize: 'clamp(2rem, 5vw, 3.4rem)', lineHeight: 1.1, color: '#fff', margin: '0 0 16px' }}>
-            Build lineups with clearer artist context.
-          </h1>
-          <p style={{ fontSize: 'clamp(1rem, 2vw, 1.15rem)', lineHeight: 1.65, color: 'rgba(255,255,255,0.88)', maxWidth: '58ch', margin: 0 }}>
-            Use LOCK Passports to understand artist fit, reliability and source-backed context before a
-            lineup becomes a production risk.
-          </p>
+    <main>
+      {/* ── HERO (brief §5.5): warehouse image + event-lineup overlay ── */}
+      <Hero
+        eyebrow={t.hero.eyebrow}
+        title={t.hero.h1}
+        body={t.hero.body}
+        primaryCta={t.hero.primaryCta}
+        secondaryCta={t.hero.secondaryCta}
+        trustLine={t.hero.trustLine}
+        image={{ src: HERO_IMAGE, alt: t.hero.imageAlt }}
+        floatingBottom={<EventOverlayCard />}
+      />
+
+      {/* ── 1 · BEFORE COMMITMENT (brief §5.5): fit · reliability ·
+             source context ── */}
+      <Section tone="paper">
+        <SectionHeading eyebrow={t.before.eyebrow} title={t.before.title} body={t.before.body} />
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+            gap: 'clamp(1rem, 2vw, 1.5rem)',
+          }}
+        >
+          {t.before.cards.map((card, i) => {
+            const dark = i === 1 // card rhythm: paper · dark · paper
+            return (
+              <div
+                key={card.title}
+                className="mk-card"
+                style={{
+                  background: dark ? 'var(--color-forest)' : '#ffffff',
+                  border: dark
+                    ? '1px solid rgba(243,245,239,0.1)'
+                    : '1px solid rgba(10,13,11,0.1)',
+                  padding: 'clamp(1.5rem, 3vw, 2rem)',
+                }}
+              >
+                <h3
+                  style={{
+                    fontFamily: 'var(--font-archivo)',
+                    fontSize: '1.1rem',
+                    fontWeight: 800,
+                    lineHeight: 1.35,
+                    color: dark ? 'var(--color-paper)' : 'var(--color-ink)',
+                    margin: '0 0 0.7rem',
+                  }}
+                >
+                  {card.title}
+                </h3>
+                <p
+                  style={{
+                    fontSize: '0.95rem',
+                    lineHeight: 1.65,
+                    color: dark ? 'rgba(243,245,239,0.65)' : 'var(--color-tally-onlight)',
+                    margin: 0,
+                  }}
+                >
+                  {card.body}
+                </p>
+              </div>
+            )
+          })}
         </div>
-      </section>
-
-      {/* ── SECTIONS ── */}
-      <section style={{ maxWidth: '860px', margin: '0 auto', padding: 'clamp(40px, 7vw, 88px) clamp(20px, 4vw, 40px)' }}>
-        {sections.map((s) => (
-          <div key={s.num} className="m-divide" style={{ display: 'grid', gridTemplateColumns: 'minmax(48px, 80px) 1fr', gap: '20px', padding: '28px 0', borderBottom: '1px solid rgba(10,13,11,0.1)' }}>
-            <span style={{ fontFamily: 'var(--font-space-mono)', fontSize: '0.8rem', color: 'var(--color-tally-onlight)' }}>{s.num}</span>
-            <div>
-              <h2 style={{ fontFamily: 'var(--font-frank)', fontSize: 'clamp(1.2rem, 2.4vw, 1.55rem)', margin: '0 0 8px' }}>{s.title}</h2>
-              <p style={{ fontSize: '0.98rem', lineHeight: 1.7, color: 'var(--color-tally-onlight)', margin: 0, maxWidth: '62ch' }}>{s.body}</p>
-            </div>
-          </div>
-        ))}
-      </section>
-
-      {/* ── SIGNUP — role + source preset (waitlist_signup, first-party) ── */}
-      <section id="join" style={{ maxWidth: '620px', margin: '0 auto', padding: '0 clamp(20px, 4vw, 40px) clamp(56px, 8vw, 104px)' }}>
-        <h2 style={{ fontFamily: 'var(--font-frank)', fontSize: 'clamp(1.5rem, 3vw, 2rem)', margin: '0 0 8px' }}>Join production beta</h2>
-        <p style={{ fontSize: '0.95rem', color: 'var(--color-tally-onlight)', margin: '0 0 24px', lineHeight: 1.65 }}>
-          For production offices, event producers and teams building lineups.
+        <p
+          style={{
+            textAlign: 'center',
+            fontFamily: 'var(--font-space-mono)',
+            fontSize: '0.75rem',
+            letterSpacing: '0.06em',
+            color: 'var(--color-tally-onlight)',
+            margin: '2rem 0 0',
+          }}
+        >
+          {t.before.note}
         </p>
-        <WaitlistForm presetRole="production" source="production_page" cta="JOIN PRODUCTION BETA →" helper="For production offices, event producers and teams building lineups." />
-      </section>
+      </Section>
+
+      {/* ── 2 · REQUESTS INBOX (brief §5.5): sent / answered / closed chips ── */}
+      <Section tone="forest" narrow>
+        <SectionHeading tone="forest" eyebrow={t.inbox.eyebrow} title={t.inbox.title} body={t.inbox.body} />
+        <div
+          className="mk-card"
+          style={{
+            background: 'rgba(243,245,239,0.04)',
+            border: '1px solid rgba(243,245,239,0.12)',
+            padding: 'clamp(1.25rem, 2.5vw, 1.75rem)',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '1rem' }}>
+            <Icon id="request" size={14} color="var(--color-stamp)" />
+            <span style={{ ...MONO_LABEL, color: 'var(--color-stamp)' }}>{t.inbox.panelLabel}</span>
+          </div>
+          <div style={{ display: 'grid', gap: '0.6rem' }}>
+            {t.inbox.rows.map((row) => (
+              <div
+                key={`${row.artist}-${row.request}`}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: '0.8rem',
+                  flexWrap: 'wrap',
+                  background: 'rgba(10,13,11,0.45)',
+                  border: '1px solid rgba(243,245,239,0.08)',
+                  borderRadius: '14px',
+                  padding: '0.85rem 1rem',
+                }}
+              >
+                <div style={{ minWidth: 0 }}>
+                  <p
+                    style={{
+                      fontFamily: 'var(--font-archivo)',
+                      fontSize: '0.92rem',
+                      fontWeight: 800,
+                      color: 'var(--color-paper)',
+                      margin: '0 0 0.15rem',
+                    }}
+                  >
+                    {row.artist}
+                  </p>
+                  <p
+                    style={{
+                      fontFamily: 'var(--font-space-mono)',
+                      fontSize: '0.66rem',
+                      letterSpacing: '0.06em',
+                      color: 'rgba(243,245,239,0.55)',
+                      margin: 0,
+                    }}
+                  >
+                    {row.request}
+                  </p>
+                </div>
+                <StatusChip status={row.status} />
+              </div>
+            ))}
+          </div>
+        </div>
+        <p
+          style={{
+            textAlign: 'center',
+            fontFamily: 'var(--font-space-mono)',
+            fontSize: '0.75rem',
+            letterSpacing: '0.06em',
+            color: 'rgba(243,245,239,0.55)',
+            margin: '2rem 0 0',
+          }}
+        >
+          {t.inbox.note}
+        </p>
+      </Section>
+
+      {/* ── 3 · LINEUP WORKSPACE (brief §5.5): team + events + artists.
+             Events first — never a Team-only default (brief §5.5 Remove). ── */}
+      <Section tone="paper">
+        <SectionHeading eyebrow={t.workspace.eyebrow} title={t.workspace.title} body={t.workspace.body} />
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+            gap: 'clamp(1rem, 2vw, 1.5rem)',
+          }}
+        >
+          {t.workspace.cards.map((card) => (
+            <div
+              key={card.title}
+              className="mk-card"
+              style={{
+                background: '#ffffff',
+                border: '1px solid rgba(10,13,11,0.1)',
+                padding: 'clamp(1.5rem, 3vw, 2rem)',
+              }}
+            >
+              <span
+                aria-hidden="true"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '2.4rem',
+                  height: '2.4rem',
+                  borderRadius: '12px',
+                  background: 'rgba(10,13,11,0.05)',
+                  border: '1px solid rgba(10,13,11,0.08)',
+                  color: 'var(--color-ink)',
+                  marginBottom: '0.8rem',
+                }}
+              >
+                <Icon id={card.icon} size={18} />
+              </span>
+              <h3
+                style={{
+                  fontFamily: 'var(--font-archivo)',
+                  fontSize: '1.05rem',
+                  fontWeight: 800,
+                  color: 'var(--color-ink)',
+                  margin: '0 0 0.6rem',
+                }}
+              >
+                {card.title}
+              </h3>
+              <p
+                style={{
+                  fontSize: '0.95rem',
+                  lineHeight: 1.65,
+                  color: 'var(--color-tally-onlight)',
+                  margin: 0,
+                }}
+              >
+                {card.body}
+              </p>
+            </div>
+          ))}
+        </div>
+        <p
+          style={{
+            textAlign: 'center',
+            fontFamily: 'var(--font-space-mono)',
+            fontSize: '0.75rem',
+            letterSpacing: '0.06em',
+            color: 'var(--color-tally-onlight)',
+            margin: '2rem 0 0',
+          }}
+        >
+          {t.workspace.note}
+        </p>
+      </Section>
+
+      {/* ── 4 · FINAL CTA: Join production beta ── */}
+      <FinalCta
+        title={t.finalCta.title}
+        body={t.finalCta.body}
+        primaryCta={t.finalCta.primaryCta}
+        secondaryLink={t.finalCta.secondaryLink}
+      />
     </main>
   )
 }
