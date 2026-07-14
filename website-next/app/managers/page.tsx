@@ -1,10 +1,9 @@
-// Managers — rebuilt per Codex exact rebuild brief §5.3 (2026-07-14).
-// Audience: artist-side manager / משרד אמרגנות (roster owner) — NOT the buyer.
+﻿// Managers ג€” rebuilt per Codex exact rebuild brief ֲ§5.3 (2026-07-14).
+// Audience: artist-side manager / ׳׳©׳¨׳“ ׳׳׳¨׳’׳ ׳•׳× (roster owner) ג€” NOT the buyer.
 // Goal: roster leverage. Readiness reads as next actions, never a grade.
 // ALL copy lives in content/managers.ts ({ en, he }); this page renders EN
-// for now — locale wiring is a later wave and stays mechanical.
+// for now ג€” locale wiring is a later wave and stays mechanical.
 
-import type { Metadata } from 'next'
 import { Fragment } from 'react'
 
 import { FinalCta } from '@/components/marketing/final-cta'
@@ -13,23 +12,13 @@ import { Icon } from '@/components/marketing/icons'
 import { Section, SectionHeading } from '@/components/marketing/section'
 import { TrustBadge } from '@/components/marketing/trust-badge'
 import { managersContent } from '@/content/managers'
+import { buildPageMetadata } from '@/lib/seo'
 
 const t = managersContent.en
 
 const HERO_IMAGE = '/brand/lockshow-atmosphere-agency-roster-room-v1.webp'
 
-export const metadata: Metadata = {
-  alternates: { canonical: '/managers' },
-  title: t.meta.title,
-  description: t.meta.description,
-  openGraph: {
-    url: '/managers',
-    title: t.meta.title,
-    description: t.meta.description,
-    type: 'website',
-    images: [{ url: '/og/lockshow-og-professional-buyers-v1.png', width: 1200, height: 630 }],
-  },
-}
+export const metadata = buildPageMetadata('managers')
 
 const MONO_LABEL = {
   fontFamily: 'var(--font-space-mono)',
@@ -39,7 +28,7 @@ const MONO_LABEL = {
   textTransform: 'uppercase',
 } as const
 
-// ── Floating roster mini-card on the hero image (brief §5.3 hero right) ────
+// ג”€ג”€ Floating roster mini-card on the hero image (brief ֲ§5.3 hero right) ג”€ג”€ג”€ג”€
 
 function RosterOverlayCard() {
   const c = t.hero.rosterCard
@@ -98,12 +87,12 @@ function RosterOverlayCard() {
   )
 }
 
-// ── Page ────────────────────────────────────────────────────────────────────
+// ג”€ג”€ Page ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€
 
 export default function ManagersPage() {
   return (
     <main data-accent="managers">
-      {/* ── HERO (brief §5.3): roster-room image + roster cards ── */}
+      {/* ג”€ג”€ HERO (brief ֲ§5.3): roster-room image + roster cards ג”€ג”€ */}
       <Hero
         eyebrow={t.hero.eyebrow}
         title={t.hero.h1}
@@ -115,8 +104,8 @@ export default function ManagersPage() {
         floatingBottom={<RosterOverlayCard />}
       />
 
-      {/* ── 1 · ROSTER PAIN (brief §5.3): scattered links · uneven readiness ·
-             buyer follow-up gaps ── */}
+      {/* ג”€ג”€ 1 ֲ· ROSTER PAIN (brief ֲ§5.3): scattered links ֲ· uneven readiness ֲ·
+             buyer follow-up gaps ג”€ג”€ */}
       <Section tone="paper">
         <SectionHeading eyebrow={t.pain.eyebrow} title={t.pain.title} />
         <div
@@ -127,7 +116,7 @@ export default function ManagersPage() {
           }}
         >
           {t.pain.cards.map((card, i) => {
-            const dark = i === 1 // card rhythm: paper · dark · paper
+            const dark = i === 1 // card rhythm: paper ֲ· dark ֲ· paper
             return (
               <div
                 key={card.title}
@@ -168,7 +157,7 @@ export default function ManagersPage() {
         </div>
       </Section>
 
-      {/* ── 2 · ROSTER COCKPIT (brief §5.3): artist cards, ONE next action ── */}
+      {/* ג”€ג”€ 2 ֲ· ROSTER COCKPIT (brief ֲ§5.3): artist cards, ONE next action ג”€ג”€ */}
       <Section tone="forest">
         <SectionHeading
           tone="forest"
@@ -282,9 +271,9 @@ export default function ManagersPage() {
         </p>
       </Section>
 
-      {/* ── 3 · ARTISTACCESS (brief §5.3): grant, not ownership + diagram
-             Artist owns identity → Manager gets scoped access → Buyer sees
-             Passport, plus the trust card ── */}
+      {/* ג”€ג”€ 3 ֲ· ARTISTACCESS (brief ֲ§5.3): grant, not ownership + diagram
+             Artist owns identity ג†’ Manager gets scoped access ג†’ Buyer sees
+             Passport, plus the trust card ג”€ג”€ */}
       <Section tone="paper">
         <SectionHeading eyebrow={t.access.eyebrow} title={t.access.title} body={t.access.body} />
         <div
@@ -365,7 +354,7 @@ export default function ManagersPage() {
             </Fragment>
           ))}
         </div>
-        {/* "Grant, not ownership" trust card (brief §5.3 Add) */}
+        {/* "Grant, not ownership" trust card (brief ֲ§5.3 Add) */}
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
           <TrustBadge
             methodLabel={t.access.trustCard.methodLabel}
@@ -376,9 +365,9 @@ export default function ManagersPage() {
         </div>
       </Section>
 
-      {/* ── 3b · REPRESENTATION FAMILY (entity-model audit 2026-07-14):
-             individual rep · booking agent · small team · agency — one
-             Representation workspace; roles separate from the organization ── */}
+      {/* ג”€ג”€ 3b ֲ· REPRESENTATION FAMILY (entity-model audit 2026-07-14):
+             individual rep ֲ· booking agent ֲ· small team ֲ· agency ג€” one
+             Representation workspace; roles separate from the organization ג”€ג”€ */}
       <Section tone="forest" narrow>
         <SectionHeading
           tone="forest"
@@ -387,8 +376,8 @@ export default function ManagersPage() {
         />
       </Section>
 
-      {/* ── 4 · ONE REACTION INBOX (brief §5.3) — method-safe text only,
-             never a count/%/score ── */}
+      {/* ג”€ג”€ 4 ֲ· ONE REACTION INBOX (brief ֲ§5.3) ג€” method-safe text only,
+             never a count/%/score ג”€ג”€ */}
       <Section tone="ink" narrow>
         <SectionHeading tone="ink" eyebrow={t.inbox.eyebrow} title={t.inbox.title} body={t.inbox.body} />
         <div
@@ -431,7 +420,7 @@ export default function ManagersPage() {
                       margin: '0 0 0.25rem',
                     }}
                   >
-                    {row.artist} · {row.when}
+                    {row.artist} ֲ· {row.when}
                   </p>
                   <p
                     style={{
@@ -450,7 +439,7 @@ export default function ManagersPage() {
         </div>
       </Section>
 
-      {/* ── 5 · FINAL CTA: Join manager beta ── */}
+      {/* ג”€ג”€ 5 ֲ· FINAL CTA: Join manager beta ג”€ג”€ */}
       <FinalCta
         title={t.finalCta.title}
         body={t.finalCta.body}

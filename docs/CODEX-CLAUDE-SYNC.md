@@ -942,3 +942,13 @@ src/server/supabase/migrations/secrets = Claude only (collision-safe per §33; f
 single-owner); production deploy = named train, owner-gated. Steps in docs/team/CODEX-ACCESS-GRANT.md.
 Merge flow: Codex codex/site (site only) → Claude merges + deploys train after Codex approval +
 owner taste. Owner may widen to full dev if she chooses; keep migrations+security single-owner.
+
+## 58. CODEX SITE BRANCH AUDITED + MERGED (14 Jul) — VALID
+Codex connected to repo, pushed codex/live-site-redesign-20260714 (SEO/AEO/GEO layer seo.ts +
+entity-model metadata on all pages + visual polish). AUDIT: branched from 1662c9d (AFTER my
+wave6 bec3adb — builds ON TOP, NO regression) · website-next/** only (disjoint from app src,
+clean merge, zero conflicts) · build 0 · firewall CLEAN (all score/rank hits are negations "does
+not score/no rankings by design") · lexicon clean (no דרכון). Merged to claude branch. Deploying
+preview → screenshot QA → promote per owner "פרסם". Open (Codex-flagged, honest): TODO_HE markers,
+OG images page-perfect, passport-demo emotional polish — all P1, ride next site pass.
+CODEX now = website manager (own website-next/**, SEO/GTM strategy); Claude = merge + deploy train.

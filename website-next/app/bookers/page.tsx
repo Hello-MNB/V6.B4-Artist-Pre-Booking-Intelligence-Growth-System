@@ -1,13 +1,12 @@
-// Bookers / Buyers — rebuilt per Codex exact rebuild brief §5.6 (2026-07-14).
+﻿// Bookers / Buyers ג€” rebuilt per Codex exact rebuild brief ֲ§5.6 (2026-07-14).
 // Goal: the page works for BOTH professional booking people and private
 // clients (weddings, company nights). Hero H1 "Understand the artist before
 // you say yes." + venue load-in image + Passport preview card; sections:
-// three buyer fears → what Passport answers → private-client explanation
-// (EN+HE, warm register) → no-account CTA. Ticket-sales overemphasis removed.
-// ALL copy lives in content/bookers.ts ({ en, he }); this page renders EN —
+// three buyer fears ג†’ what Passport answers ג†’ private-client explanation
+// (EN+HE, warm register) ג†’ no-account CTA. Ticket-sales overemphasis removed.
+// ALL copy lives in content/bookers.ts ({ en, he }); this page renders EN ג€”
 // locale wiring is a later wave and stays mechanical.
 
-import type { Metadata } from 'next'
 import Link from 'next/link'
 
 import { FinalCta } from '@/components/marketing/final-cta'
@@ -15,26 +14,16 @@ import { Hero } from '@/components/marketing/hero'
 import { Icon } from '@/components/marketing/icons'
 import { Section, SectionHeading } from '@/components/marketing/section'
 import { bookersContent } from '@/content/bookers'
+import { buildPageMetadata } from '@/lib/seo'
 
 const t = bookersContent.en
 const tHe = bookersContent.he
 
 const HERO_IMAGE = '/brand/lockshow-atmosphere-booker-context-venue-loadin-v1.webp'
 
-export const metadata: Metadata = {
-  alternates: { canonical: '/bookers' },
-  title: t.meta.title,
-  description: t.meta.description,
-  openGraph: {
-    url: '/bookers',
-    title: t.meta.title,
-    description: t.meta.description,
-    type: 'website',
-    images: [{ url: '/og/lockshow-og-professional-buyers-v1.png', width: 1200, height: 630 }],
-  },
-}
+export const metadata = buildPageMetadata('bookers')
 
-// ── Floating Passport preview card (brief §5.6 hero right) ─────────────────
+// ג”€ג”€ Floating Passport preview card (brief ֲ§5.6 hero right) ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€
 
 function PassportPreviewCard() {
   const c = t.hero.passportCard
@@ -132,12 +121,12 @@ function PassportPreviewCard() {
   )
 }
 
-// ── Page ────────────────────────────────────────────────────────────────────
+// ג”€ג”€ Page ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€
 
 export default function BookersPage() {
   return (
     <main data-accent="bookers">
-      {/* ── HERO (brief §5.6) ── */}
+      {/* ג”€ג”€ HERO (brief ֲ§5.6) ג”€ג”€ */}
       <Hero
         eyebrow={t.hero.eyebrow}
         title={t.hero.h1}
@@ -150,8 +139,8 @@ export default function BookersPage() {
         floatingBottom={<PassportPreviewCard />}
       />
 
-      {/* ── AUDIENCE BAND (entity-model audit 2026-07-14): private clients —
-          wedding couples, company events — visible at the top of the page,
+      {/* ג”€ג”€ AUDIENCE BAND (entity-model audit 2026-07-14): private clients ג€”
+          wedding couples, company events ג€” visible at the top of the page,
           EN+HE verbatim, rendered directly under the hero. */}
       <section
         style={{
@@ -196,7 +185,7 @@ export default function BookersPage() {
         </div>
       </section>
 
-      {/* ── SECTION 1 — THREE BUYER FEARS (brief §5.6) ── */}
+      {/* ג”€ג”€ SECTION 1 ג€” THREE BUYER FEARS (brief ֲ§5.6) ג”€ג”€ */}
       <Section tone="paper">
         <SectionHeading eyebrow={t.fears.eyebrow} title={t.fears.title} />
         <div
@@ -208,7 +197,7 @@ export default function BookersPage() {
           }}
         >
           {t.fears.cards.map((card, i) => {
-            const dark = i === 1 // card rhythm: paper · dark · paper (brief §3)
+            const dark = i === 1 // card rhythm: paper ֲ· dark ֲ· paper (brief ֲ§3)
             return (
               <div
                 key={card.title}
@@ -262,7 +251,7 @@ export default function BookersPage() {
         </div>
       </Section>
 
-      {/* ── SECTION 2 — WHAT THE PASSPORT ANSWERS (brief §5.6) ── */}
+      {/* ג”€ג”€ SECTION 2 ג€” WHAT THE PASSPORT ANSWERS (brief ֲ§5.6) ג”€ג”€ */}
       <Section tone="forest">
         <SectionHeading tone="forest" eyebrow={t.answers.eyebrow} title={t.answers.title} />
         <div style={{ maxWidth: '880px', margin: '0 auto' }}>
@@ -316,8 +305,8 @@ export default function BookersPage() {
         </div>
       </Section>
 
-      {/* ── SECTION 3 — PRIVATE-CLIENT EXPLANATION (brief §5.6) ──
-          MUST include the wedding/company-night copy EN+HE — private
+      {/* ג”€ג”€ SECTION 3 ג€” PRIVATE-CLIENT EXPLANATION (brief ֲ§5.6) ג”€ג”€
+          MUST include the wedding/company-night copy EN+HE ג€” private
           clients are valid buyers; warm register, no venue jargon. */}
       <Section tone="paper" narrow>
         <SectionHeading
@@ -348,7 +337,7 @@ export default function BookersPage() {
           >
             {t.privateClients.lead.en}
           </p>
-          {/* HE verbatim from the brief §5.6 — rendered alongside EN by design */}
+          {/* HE verbatim from the brief ֲ§5.6 ג€” rendered alongside EN by design */}
           <p
             dir="rtl"
             lang="he"
@@ -409,7 +398,7 @@ export default function BookersPage() {
         </div>
       </Section>
 
-      {/* ── SECTION 4 — NO-ACCOUNT CTA (brief §5.6) ── */}
+      {/* ג”€ג”€ SECTION 4 ג€” NO-ACCOUNT CTA (brief ֲ§5.6) ג”€ג”€ */}
       <section
         style={{
           background: 'var(--color-paper)',

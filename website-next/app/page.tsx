@@ -1,10 +1,9 @@
-// Home — rebuilt per Codex exact rebuild brief §5.1 (2026-07-14).
-// Goal: a visitor understands in 5 seconds —
+﻿// Home ג€” rebuilt per Codex exact rebuild brief ֲ§5.1 (2026-07-14).
+// Goal: a visitor understands in 5 seconds ג€”
 // LOCK = private Radar for the artist + public Passport for booking context.
 // ALL copy lives in content/home.ts ({ en, he }); this page renders EN for
-// now — locale wiring is a later wave and stays mechanical.
+// now ג€” locale wiring is a later wave and stays mechanical.
 
-import type { Metadata } from 'next'
 import Link from 'next/link'
 
 import { EntityCard } from '@/components/marketing/entity-card'
@@ -14,26 +13,17 @@ import { Hero } from '@/components/marketing/hero'
 import { Icon } from '@/components/marketing/icons'
 import { Section, SectionHeading } from '@/components/marketing/section'
 import { homeContent } from '@/content/home'
+import { buildPageMetadata } from '@/lib/seo'
 
 const t = homeContent.en
 
 const SITE_URL = 'https://lock.show'
 const HERO_IMAGE = '/brand/lockshow-atmosphere-artist-career-workspace-v1.webp'
 
-export const metadata: Metadata = {
-  alternates: { canonical: '/' },
-  title: t.meta.title,
-  description: t.meta.description,
-  openGraph: {
-    title: t.meta.title,
-    description: t.meta.description,
-    type: 'website',
-    url: `${SITE_URL}/`,
-  },
-}
+export const metadata = buildPageMetadata('home')
 
 // Page-level JSON-LD: FAQPage ONLY. WebSite/Organization live in the root
-// layout's graph — duplicating them here created a conflicting entity graph
+// layout's graph ג€” duplicating them here created a conflicting entity graph
 // (audit G8 finding).
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -46,7 +36,7 @@ const jsonLd = {
           name: 'What is a Passport?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'A Passport is a public, method-labelled page showing only what the artist approved about their live history. Every detail carries its source and date — so booking people can read real context without guessing.',
+            text: 'A Passport is a public, method-labelled page showing only what the artist approved about their live history. Every detail carries its source and date ג€” so booking people can read real context without guessing.',
           },
         },
         {
@@ -54,7 +44,7 @@ const jsonLd = {
           name: 'Is LOCK free?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Yes. LOCK is in a free pilot — artists build their Radar and Passport for free, and booking people open Passports at no cost.',
+            text: 'Yes. LOCK is in a free pilot ג€” artists build their Radar and Passport for free, and booking people open Passports at no cost.',
           },
         },
         {
@@ -70,7 +60,7 @@ const jsonLd = {
   ],
 }
 
-// ── Floating hero product cards (brief §5.1 hero right) ────────────────────
+// ג”€ג”€ Floating hero product cards (brief ֲ§5.1 hero right) ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€
 
 function MiniRadarCard() {
   const c = t.hero.radarCard
@@ -235,7 +225,7 @@ function PassportPreviewCard() {
   )
 }
 
-// ── Page ────────────────────────────────────────────────────────────────────
+// ג”€ג”€ Page ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€
 
 export default function HomePage() {
   return (
@@ -246,7 +236,7 @@ export default function HomePage() {
       />
 
       <main data-accent="home">
-        {/* ── HERO (brief §5.1) ── */}
+        {/* ג”€ג”€ HERO (brief ֲ§5.1) ג”€ג”€ */}
         <Hero
           eyebrow={t.hero.eyebrow}
           title={t.hero.h1}
@@ -260,7 +250,7 @@ export default function HomePage() {
           floatingBottom={<PassportPreviewCard />}
         />
 
-        {/* ── WHY IT EXISTS — 3 cards, varied rhythm (brief §3 + §5.1) ── */}
+        {/* ג”€ג”€ WHY IT EXISTS ג€” 3 cards, varied rhythm (brief ֲ§3 + ֲ§5.1) ג”€ג”€ */}
         <Section tone="paper">
           <SectionHeading eyebrow={t.why.eyebrow} title={t.why.title} />
           <div
@@ -272,7 +262,7 @@ export default function HomePage() {
             }}
           >
             {t.why.cards.map((card, i) => {
-              const dark = i === 1 // card rhythm: paper · dark · paper
+              const dark = i === 1 // card rhythm: paper ֲ· dark ֲ· paper
               return (
                 <div
                   key={card.title}
@@ -313,7 +303,7 @@ export default function HomePage() {
           </div>
         </Section>
 
-        {/* ── THE LOCK LOOP (brief §5.1) ── */}
+        {/* ג”€ג”€ THE LOCK LOOP (brief ֲ§5.1) ג”€ג”€ */}
         <Section tone="forest">
           <SectionHeading tone="forest" eyebrow={t.loop.eyebrow} title={t.loop.title} />
           <FlowRow cols={5}>
@@ -330,7 +320,7 @@ export default function HomePage() {
           </FlowRow>
         </Section>
 
-        {/* ── CHOOSE YOUR LANE — 5 entity cards (brief §5.1) ── */}
+        {/* ג”€ג”€ CHOOSE YOUR LANE ג€” 5 entity cards (brief ֲ§5.1) ג”€ג”€ */}
         <Section tone="paper">
           <SectionHeading eyebrow={t.lanes.eyebrow} title={t.lanes.title} body={t.lanes.body} />
           {/* 5 cards: mk-grid-5 lays them out 3 + 2 at desktop widths so the
@@ -350,7 +340,7 @@ export default function HomePage() {
           </div>
         </Section>
 
-        {/* ── FINAL CTA ── */}
+        {/* ג”€ג”€ FINAL CTA ג”€ג”€ */}
         <FinalCta
           title={t.finalCta.title}
           body={t.finalCta.body}

@@ -1,43 +1,32 @@
-// Producers / Source Confirmer — rebuilt per Codex exact rebuild brief §5.4
+﻿// Producers / Source Confirmer ג€” rebuilt per Codex exact rebuild brief ֲ§5.4
 // (2026-07-14). This page is NOT a production workspace: it explains one-tap
-// source confirmation (מאשר-מקור). One link. One claim. No account.
-// Per §5.4 the hero is less cinematic: the production-warehouse webp is a
+// source confirmation (׳׳׳©׳¨-׳׳§׳•׳¨). One link. One claim. No account.
+// Per ֲ§5.4 the hero is less cinematic: the production-warehouse webp is a
 // heavily-darkened subtle BACKGROUND (not the shared Hero image card), with
-// a CSS phone/WhatsApp confirmation-card mockup — no real number anywhere.
+// a CSS phone/WhatsApp confirmation-card mockup ג€” no real number anywhere.
 // The shared Hero component has no background-image mode, so the hero is
 // composed locally here (reported as a component gap).
 // ALL copy lives in content/producers.ts ({ en, he }); this page renders EN
-// for now — locale wiring is a later wave and stays mechanical.
+// for now ג€” locale wiring is a later wave and stays mechanical.
 
-import type { Metadata } from 'next'
 import Link from 'next/link'
 
 import { FinalCta } from '@/components/marketing/final-cta'
 import { Icon } from '@/components/marketing/icons'
 import { Section, SectionHeading } from '@/components/marketing/section'
 import { producersContent } from '@/content/producers'
+import { buildPageMetadata } from '@/lib/seo'
 
 const t = producersContent.en
 
 const BG_IMAGE = '/brand/lockshow-atmosphere-production-warehouse-v1.webp'
 
-export const metadata: Metadata = {
-  alternates: { canonical: '/producers' },
-  title: t.meta.title,
-  description: t.meta.description,
-  openGraph: {
-    url: '/producers',
-    title: t.meta.title,
-    description: t.meta.description,
-    type: 'website',
-    images: [{ url: '/og/lockshow-og-source-confirmer-v1.png', width: 1200, height: 630 }],
-  },
-}
+export const metadata = buildPageMetadata('sourceConfirmers')
 
 const MONO = 'var(--font-space-mono)'
 
-// ── Phone / WhatsApp confirmation-card mockup (brief §5.4) ──────────────────
-// Pure CSS mockup — no real phone number, no real chat screenshot.
+// ג”€ג”€ Phone / WhatsApp confirmation-card mockup (brief ֲ§5.4) ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€
+// Pure CSS mockup ג€” no real phone number, no real chat screenshot.
 
 function PhoneMockup() {
   const p = t.phone
@@ -195,7 +184,7 @@ function PhoneMockup() {
             >
               {p.claim.question}
             </p>
-            {/* confirm / correct / skip — mockup buttons, not page CTAs */}
+            {/* confirm / correct / skip ג€” mockup buttons, not page CTAs */}
             <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap' }}>
               <span
                 style={{
@@ -264,13 +253,13 @@ function PhoneMockup() {
   )
 }
 
-// ── Page ────────────────────────────────────────────────────────────────────
+// ג”€ג”€ Page ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€
 
 export default function ProducersPage() {
   return (
     <main data-accent="source">
-      {/* ── HERO (brief §5.4): warehouse webp as heavily-darkened subtle
-             background + phone confirmation mockup ── */}
+      {/* ג”€ג”€ HERO (brief ֲ§5.4): warehouse webp as heavily-darkened subtle
+             background + phone confirmation mockup ג”€ג”€ */}
       <section
         className="mk-hero"
         style={{
@@ -371,7 +360,7 @@ export default function ProducersPage() {
         </div>
       </section>
 
-      {/* ── 1 · WHAT YOU SEE (brief §5.4) ── */}
+      {/* ג”€ג”€ 1 ֲ· WHAT YOU SEE (brief ֲ§5.4) ג”€ג”€ */}
       <Section tone="paper">
         <SectionHeading eyebrow={t.see.eyebrow} title={t.see.title} body={t.see.body} />
         <div
@@ -382,7 +371,7 @@ export default function ProducersPage() {
           }}
         >
           {t.see.cards.map((card, i) => {
-            const dark = i === 1 // card rhythm: paper · dark · paper
+            const dark = i === 1 // card rhythm: paper ֲ· dark ֲ· paper
             return (
               <div
                 key={card.title}
@@ -423,7 +412,7 @@ export default function ProducersPage() {
         </div>
       </Section>
 
-      {/* ── 2 · CONFIRM / CORRECT / SKIP (brief §5.4) ── */}
+      {/* ג”€ג”€ 2 ֲ· CONFIRM / CORRECT / SKIP (brief ֲ§5.4) ג”€ג”€ */}
       <Section tone="forest" narrow>
         <SectionHeading
           tone="forest"
@@ -492,8 +481,8 @@ export default function ProducersPage() {
         </div>
       </Section>
 
-      {/* ── 3 · WHAT DOES NOT HAPPEN (brief §5.4): no account, no dashboard,
-             no ongoing role ── */}
+      {/* ג”€ג”€ 3 ֲ· WHAT DOES NOT HAPPEN (brief ֲ§5.4): no account, no dashboard,
+             no ongoing role ג”€ג”€ */}
       <Section tone="paper">
         <SectionHeading eyebrow={t.not.eyebrow} title={t.not.title} body={t.not.body} />
         <div
@@ -553,7 +542,7 @@ export default function ProducersPage() {
         </p>
       </Section>
 
-      {/* ── 4 · ARTIST STILL CONTROLS PUBLICATION (brief §5.4) ── */}
+      {/* ג”€ג”€ 4 ֲ· ARTIST STILL CONTROLS PUBLICATION (brief ֲ§5.4) ג”€ג”€ */}
       <Section tone="ink">
         <SectionHeading tone="ink" eyebrow={t.control.eyebrow} title={t.control.title} />
         <div
@@ -606,7 +595,7 @@ export default function ProducersPage() {
         </div>
       </Section>
 
-      {/* ── FINAL CTA ── */}
+      {/* ג”€ג”€ FINAL CTA ג”€ג”€ */}
       <FinalCta
         title={t.finalCta.title}
         body={t.finalCta.body}

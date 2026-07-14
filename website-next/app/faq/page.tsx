@@ -1,34 +1,24 @@
-// FAQ — rebuilt per Codex exact rebuild brief §5.10 (2026-07-14).
-// Hero "Questions before you try LOCK?" — categories Artists / Buyers +
+﻿// FAQ ג€” rebuilt per Codex exact rebuild brief ֲ§5.10 (2026-07-14).
+// Hero "Questions before you try LOCK?" ג€” categories Artists / Buyers +
 // private clients / Managers + production / Privacy + trust / Free pilot.
 // The brief's 8 required questions are all present (content/faq.ts marks
 // them `required`), and the page JSON-LD FAQPage mirrors exactly those.
 // ALL copy lives in content/faq.ts ({ en, he }); renders EN for now.
 
-import type { Metadata } from 'next'
 
 import { FinalCta } from '@/components/marketing/final-cta'
 import { Section, SectionHeading } from '@/components/marketing/section'
 import { faqContent } from '@/content/faq'
+import { buildPageMetadata } from '@/lib/seo'
 
 const t = faqContent.en
 
 const SITE_URL = 'https://lock.show'
 
-export const metadata: Metadata = {
-  alternates: { canonical: '/faq' },
-  title: t.meta.title,
-  description: t.meta.description,
-  openGraph: {
-    title: t.meta.title,
-    description: t.meta.description,
-    type: 'website',
-    url: `${SITE_URL}/faq`,
-  },
-}
+export const metadata = buildPageMetadata('faq')
 
-// JSON-LD FAQPage — kept in sync with the rendered copy by building it from
-// the same content module (required questions only, per brief §5.10).
+// JSON-LD FAQPage ג€” kept in sync with the rendered copy by building it from
+// the same content module (required questions only, per brief ֲ§5.10).
 const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -56,7 +46,7 @@ export default function FaqPage() {
       />
 
       <main>
-        {/* ── HERO — calm text header (brief §5.10) ── */}
+        {/* ג”€ג”€ HERO ג€” calm text header (brief ֲ§5.10) ג”€ג”€ */}
         <section
           className="mk-hero"
           style={{
@@ -106,10 +96,10 @@ export default function FaqPage() {
           </div>
         </section>
 
-        {/* ── CATEGORIES — Artists / Buyers + private clients / Managers +
-               production / Privacy + trust / Free pilot ── */}
+        {/* ג”€ג”€ CATEGORIES ג€” Artists / Buyers + private clients / Managers +
+               production / Privacy + trust / Free pilot ג”€ג”€ */}
         <Section tone="paper" narrow>
-          <SectionHeading eyebrow="Categories" title="Pick your lane — or read it all." />
+          <SectionHeading eyebrow="Categories" title="Pick your lane ג€” or read it all." />
           {t.categories.map((cat) => (
             <div key={cat.id} id={cat.id} style={{ marginBottom: 'clamp(2.5rem, 5vw, 4rem)' }}>
               <p
@@ -177,7 +167,7 @@ export default function FaqPage() {
           ))}
         </Section>
 
-        {/* ── FINAL CTA — "Still have questions?" ── */}
+        {/* ג”€ג”€ FINAL CTA ג€” "Still have questions?" ג”€ג”€ */}
         <FinalCta
           title={t.finalCta.title}
           primaryCta={t.finalCta.primaryCta}

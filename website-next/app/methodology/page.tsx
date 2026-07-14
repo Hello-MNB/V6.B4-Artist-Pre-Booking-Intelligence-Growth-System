@@ -1,42 +1,32 @@
-// Methodology — rebuilt per Codex exact rebuild brief §5.9 (2026-07-14).
+﻿// Methodology ג€” rebuilt per Codex exact rebuild brief ֲ§5.9 (2026-07-14).
 // Trust page: calm, not over-technical. Hero "Not every source means the
-// same thing. LOCK shows the method." Sections: method labels → source types
-// → what never becomes public → firewall rules. Governed chips (Source-linked
-// · Evidence-supported · Artist-declared · Producer-confirmed), icon row
+// same thing. LOCK shows the method." Sections: method labels ג†’ source types
+// ג†’ what never becomes public ג†’ firewall rules. Governed chips (Source-linked
+// ֲ· Evidence-supported ֲ· Artist-declared ֲ· Producer-confirmed), icon row
 // platform / document / person / artist-declared, source logos strip.
-// NO visual that resembles a scoring chart — labelled text cards only.
+// NO visual that resembles a scoring chart ג€” labelled text cards only.
 // ALL copy lives in content/methodology.ts ({ en, he }); renders EN for now.
 //
 // Local composition note (reported gap): components/marketing/icons.tsx has
-// no "document" / "person" / "declared" concepts, so the §5.9 icon row uses
+// no "document" / "person" / "declared" concepts, so the ֲ§5.9 icon row uses
 // small local glyphs below instead of the shared Icon set.
 
-import type { Metadata } from 'next'
 
 import { FinalCta } from '@/components/marketing/final-cta'
 import { FirewallCard } from '@/components/marketing/cards'
 import { Section, SectionHeading } from '@/components/marketing/section'
 import { methodologyContent, type SourceKind } from '@/content/methodology'
+import { buildPageMetadata } from '@/lib/seo'
 
 const t = methodologyContent.en
 
 const SITE_URL = 'https://lock.show'
 
-export const metadata: Metadata = {
-  alternates: { canonical: '/methodology' },
-  title: t.meta.title,
-  description: t.meta.description,
-  openGraph: {
-    title: t.meta.title,
-    description: t.meta.description,
-    type: 'website',
-    url: `${SITE_URL}/methodology`,
-  },
-}
+export const metadata = buildPageMetadata('methodology')
 
-// Source logos (brief §5.9 asset list) — /public/brand/source-logos/*.svg.
-// Each logo carries its source CATEGORY, coloured per SYNC §47:
-// platform=source-blue · document=amber · person=lime · artist-declared=smoke.
+// Source logos (brief ֲ§5.9 asset list) ג€” /public/brand/source-logos/*.svg.
+// Each logo carries its source CATEGORY, coloured per SYNC ֲ§47:
+// platform=source-blue ֲ· document=amber ֲ· person=lime ֲ· artist-declared=smoke.
 type SourceCategory = 'platform' | 'document' | 'person' | 'declared'
 
 const CATEGORY_COLOR: Record<SourceCategory, string> = {
@@ -61,7 +51,7 @@ const SOURCE_LOGOS: { src: string; alt: string; category: SourceCategory }[] = [
   { src: '/brand/source-logos/generic-ticket-export.svg', alt: 'Ticket export', category: 'document' },
 ]
 
-// ── Local icon glyphs for the §5.9 icon row (shared icons.tsx lacks these) ──
+// ג”€ג”€ Local icon glyphs for the ֲ§5.9 icon row (shared icons.tsx lacks these) ג”€ג”€
 const SOURCE_KIND_PATHS: Record<SourceKind, string> = {
   // platform: browser/platform window
   platform: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18M7 7h.01"/>',
@@ -94,12 +84,12 @@ function SourceKindGlyph({ kind }: { kind: SourceKind }) {
 export default function MethodologyPage() {
   return (
     <main data-accent="methodology">
-      {/* ── HERO — calm text header + governed chips, no image, nothing
-             that could read as a chart ── */}
+      {/* ג”€ג”€ HERO ג€” calm text header + governed chips, no image, nothing
+             that could read as a chart ג”€ג”€ */}
       <section
         className="mk-hero"
         style={{
-          // Trust-lab accent: source-blue + amber (SYNC §47), read from the
+          // Trust-lab accent: source-blue + amber (SYNC ֲ§47), read from the
           // page's [data-accent="methodology"] channel.
           background:
             'radial-gradient(720px 480px at 85% 0%, var(--accent-cool), transparent 60%), radial-gradient(560px 420px at 12% 100%, var(--accent-warm), transparent 62%), linear-gradient(160deg, var(--color-ink) 0%, var(--color-forest) 100%)',
@@ -175,7 +165,7 @@ export default function MethodologyPage() {
         </div>
       </section>
 
-      {/* ── 1 · METHOD LABELS — governed chips with plain-language text ── */}
+      {/* ג”€ג”€ 1 ֲ· METHOD LABELS ג€” governed chips with plain-language text ג”€ג”€ */}
       <Section tone="paper">
         <SectionHeading
           eyebrow={t.methodLabels.eyebrow}
@@ -247,7 +237,7 @@ export default function MethodologyPage() {
         </div>
       </Section>
 
-      {/* ── 2 · SOURCE TYPES — icon row + source-logo strip (brief §5.9) ── */}
+      {/* ג”€ג”€ 2 ֲ· SOURCE TYPES ג€” icon row + source-logo strip (brief ֲ§5.9) ג”€ג”€ */}
       <Section tone="forest">
         <SectionHeading tone="forest" eyebrow={t.sourceTypes.eyebrow} title={t.sourceTypes.title} />
         <div
@@ -314,7 +304,7 @@ export default function MethodologyPage() {
           ))}
         </div>
 
-        {/* Source-logo strip — credibility row, not a chart */}
+        {/* Source-logo strip ג€” credibility row, not a chart */}
         <div style={{ textAlign: 'center' }}>
           <p
             style={{
@@ -328,7 +318,7 @@ export default function MethodologyPage() {
           >
             {t.sourceTypes.logosLabel}
           </p>
-          {/* Source-ecosystem band (build scope §8) — bigger dark logo cards,
+          {/* Source-ecosystem band (build scope ֲ§8) ג€” bigger dark logo cards,
               each carrying its source CATEGORY with a category colour on the
               top rule + type label. A credibility ecosystem, not a chart.
               The badge SVGs share one geometry (56x56 icon tile at 8,8 inside a
@@ -369,7 +359,7 @@ export default function MethodologyPage() {
         </div>
       </Section>
 
-      {/* ── 3 · WHAT NEVER BECOMES PUBLIC ── */}
+      {/* ג”€ג”€ 3 ֲ· WHAT NEVER BECOMES PUBLIC ג”€ג”€ */}
       <Section tone="paper">
         <SectionHeading
           eyebrow={t.neverPublic.eyebrow}
@@ -425,9 +415,9 @@ export default function MethodologyPage() {
         </div>
       </Section>
 
-      {/* ── 4 · FIREWALL RULES — protection semantics via FirewallCard
-             (build scope §8: "what never becomes public" reads as a firewall,
-             warm-guard outline, shield glyph — not neutral badges) ── */}
+      {/* ג”€ג”€ 4 ֲ· FIREWALL RULES ג€” protection semantics via FirewallCard
+             (build scope ֲ§8: "what never becomes public" reads as a firewall,
+             warm-guard outline, shield glyph ג€” not neutral badges) ג”€ג”€ */}
       <Section tone="ink">
         <SectionHeading tone="ink" eyebrow={t.firewall.eyebrow} title={t.firewall.title} />
         <div
@@ -444,7 +434,7 @@ export default function MethodologyPage() {
         </div>
       </Section>
 
-      {/* ── FINAL CTA ── */}
+      {/* ג”€ג”€ FINAL CTA ג”€ג”€ */}
       <FinalCta
         title={t.finalCta.title}
         primaryCta={t.finalCta.primaryCta}

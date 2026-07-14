@@ -1,36 +1,25 @@
-// Production — rebuilt per Codex exact rebuild brief §5.5 (2026-07-14).
-// Audience: production offices / event production teams — event & lineup
+﻿// Production ג€” rebuilt per Codex exact rebuild brief ֲ§5.5 (2026-07-14).
+// Audience: production offices / event production teams ג€” event & lineup
 // value first, never team-admin first. Route separation (Codex law):
-// /producers = Source-Confirmer education · /production = THIS page.
-// Firewall: "under review" reads as reading context — no ranking implication,
+// /producers = Source-Confirmer education ֲ· /production = THIS page.
+// Firewall: "under review" reads as reading context ג€” no ranking implication,
 // no score/percentile language anywhere.
 // ALL copy lives in content/production.ts ({ en, he }); this page renders EN
-// for now — locale wiring is a later wave and stays mechanical.
+// for now ג€” locale wiring is a later wave and stays mechanical.
 
-import type { Metadata } from 'next'
 
 import { FinalCta } from '@/components/marketing/final-cta'
 import { Hero } from '@/components/marketing/hero'
 import { Icon } from '@/components/marketing/icons'
 import { Section, SectionHeading } from '@/components/marketing/section'
 import { productionContent, type RequestStatus } from '@/content/production'
+import { buildPageMetadata } from '@/lib/seo'
 
 const t = productionContent.en
 
 const HERO_IMAGE = '/brand/lockshow-atmosphere-production-warehouse-v1.webp'
 
-export const metadata: Metadata = {
-  alternates: { canonical: '/production' },
-  title: t.meta.title,
-  description: t.meta.description,
-  openGraph: {
-    url: '/production',
-    title: t.meta.title,
-    description: t.meta.description,
-    type: 'website',
-    images: [{ url: '/og/lockshow-og-production-v1.png', width: 1200, height: 630 }],
-  },
-}
+export const metadata = buildPageMetadata('production')
 
 const MONO_LABEL = {
   fontFamily: 'var(--font-space-mono)',
@@ -40,7 +29,7 @@ const MONO_LABEL = {
   textTransform: 'uppercase',
 } as const
 
-// Status chip palette — three distinct states, none reads as a grade.
+// Status chip palette ג€” three distinct states, none reads as a grade.
 const STATUS_STYLE: Record<RequestStatus, { color: string; border: string; bg: string }> = {
   sent: {
     color: 'rgba(243,245,239,0.7)',
@@ -78,8 +67,8 @@ function StatusChip({ status }: { status: RequestStatus }) {
   )
 }
 
-// ── Event-lineup overlay card on the hero image (brief §5.5 Add) ────────────
-// "Event: Friday night / Slot open / 3 artists under review" — method-safe:
+// ג”€ג”€ Event-lineup overlay card on the hero image (brief ֲ§5.5 Add) ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€
+// "Event: Friday night / Slot open / 3 artists under review" ג€” method-safe:
 // review = reading context; the footnote says so explicitly.
 
 function EventOverlayCard() {
@@ -144,12 +133,12 @@ function EventOverlayCard() {
   )
 }
 
-// ── Page ────────────────────────────────────────────────────────────────────
+// ג”€ג”€ Page ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€
 
 export default function ProductionPage() {
   return (
     <main data-accent="production">
-      {/* ── HERO (brief §5.5): warehouse image + event-lineup overlay ── */}
+      {/* ג”€ג”€ HERO (brief ֲ§5.5): warehouse image + event-lineup overlay ג”€ג”€ */}
       <Hero
         eyebrow={t.hero.eyebrow}
         title={t.hero.h1}
@@ -161,8 +150,8 @@ export default function ProductionPage() {
         floatingBottom={<EventOverlayCard />}
       />
 
-      {/* ── 1 · BEFORE COMMITMENT (brief §5.5): fit · reliability ·
-             source context ── */}
+      {/* ג”€ג”€ 1 ֲ· BEFORE COMMITMENT (brief ֲ§5.5): fit ֲ· reliability ֲ·
+             source context ג”€ג”€ */}
       <Section tone="paper">
         <SectionHeading eyebrow={t.before.eyebrow} title={t.before.title} body={t.before.body} />
         <div
@@ -173,7 +162,7 @@ export default function ProductionPage() {
           }}
         >
           {t.before.cards.map((card, i) => {
-            const dark = i === 1 // card rhythm: paper · dark · paper
+            const dark = i === 1 // card rhythm: paper ֲ· dark ֲ· paper
             return (
               <div
                 key={card.title}
@@ -226,7 +215,7 @@ export default function ProductionPage() {
         </p>
       </Section>
 
-      {/* ── 2 · REQUESTS INBOX (brief §5.5): sent / answered / closed chips ── */}
+      {/* ג”€ג”€ 2 ֲ· REQUESTS INBOX (brief ֲ§5.5): sent / answered / closed chips ג”€ג”€ */}
       <Section tone="forest" narrow>
         <SectionHeading tone="forest" eyebrow={t.inbox.eyebrow} title={t.inbox.title} body={t.inbox.body} />
         <div
@@ -300,11 +289,11 @@ export default function ProductionPage() {
         </p>
       </Section>
 
-      {/* ── 3 · LINEUP WORKSPACE (brief §5.5): team + events + artists.
-             Events first — never a Team-only default (brief §5.5 Remove). ── */}
+      {/* ג”€ג”€ 3 ֲ· LINEUP WORKSPACE (brief ֲ§5.5): team + events + artists.
+             Events first ג€” never a Team-only default (brief ֲ§5.5 Remove). ג”€ג”€ */}
       <Section tone="paper">
         <SectionHeading eyebrow={t.workspace.eyebrow} title={t.workspace.title} body={t.workspace.body} />
-        {/* Entity-model audit 2026-07-14 — freelancer / crew / company =
+        {/* Entity-model audit 2026-07-14 ג€” freelancer / crew / company =
             one Production family at different scale (verbatim). */}
         <p
           style={{
@@ -392,7 +381,7 @@ export default function ProductionPage() {
         </p>
       </Section>
 
-      {/* ── 4 · FINAL CTA: Join production beta ── */}
+      {/* ג”€ג”€ 4 ֲ· FINAL CTA: Join production beta ג”€ג”€ */}
       <FinalCta
         title={t.finalCta.title}
         body={t.finalCta.body}

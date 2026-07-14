@@ -1,10 +1,9 @@
-// Artists — rebuilt per Codex exact rebuild brief §5.2 (2026-07-14).
+﻿// Artists ג€” rebuilt per Codex exact rebuild brief ֲ§5.2 (2026-07-14).
 // Goal: the artist feels SUPPORTED, not evaluated. No "build proof" as main
 // language, nothing implying the artist is being judged.
 // ALL copy lives in content/artists.ts ({ en, he }); this page renders EN
-// for now — locale wiring is a later wave and stays mechanical.
+// for now ג€” locale wiring is a later wave and stays mechanical.
 
-import type { Metadata } from 'next'
 import { Fragment } from 'react'
 
 import { FinalCta } from '@/components/marketing/final-cta'
@@ -14,24 +13,15 @@ import { Icon } from '@/components/marketing/icons'
 import { Section, SectionHeading } from '@/components/marketing/section'
 import { TrustBadge } from '@/components/marketing/trust-badge'
 import { artistsContent } from '@/content/artists'
+import { buildPageMetadata } from '@/lib/seo'
 
 const t = artistsContent.en
 
 const HERO_IMAGE = '/brand/lockshow-atmosphere-artist-career-workspace-v1.webp'
 
-export const metadata: Metadata = {
-  alternates: { canonical: '/artists' },
-  title: t.meta.title,
-  description: t.meta.description,
-  openGraph: {
-    url: '/artists',
-    title: t.meta.title,
-    description: t.meta.description,
-    type: 'website',
-  },
-}
+export const metadata = buildPageMetadata('artists')
 
-// ── Floating Radar overlay on the hero image (brief §5.2 wireframe) ────────
+// ג”€ג”€ Floating Radar overlay on the hero image (brief ֲ§5.2 wireframe) ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€
 
 function RadarOverlayCard() {
   const c = t.hero.radarCard
@@ -93,12 +83,12 @@ function RadarOverlayCard() {
   )
 }
 
-// ── Page ────────────────────────────────────────────────────────────────────
+// ג”€ג”€ Page ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€
 
 export default function ArtistsPage() {
   return (
     <main data-accent="artists">
-      {/* ── HERO (brief §5.2): supported, not evaluated ── */}
+      {/* ג”€ג”€ HERO (brief ֲ§5.2): supported, not evaluated ג”€ג”€ */}
       <Hero
         eyebrow={t.hero.eyebrow}
         title={t.hero.h1}
@@ -117,14 +107,14 @@ export default function ArtistsPage() {
               gap: '0.9rem',
             }}
           >
-            {/* "Artist controls publication" badge (brief §5.2 Add) */}
+            {/* "Artist controls publication" badge (brief ֲ§5.2 Add) */}
             <TrustBadge
               methodLabel={t.hero.badge.methodLabel}
               explanation={t.hero.badge.explanation}
               visibility="private"
               tone="dark"
             />
-            {/* "Start with one link" micro-step (brief §5.2 Add) */}
+            {/* "Start with one link" micro-step (brief ֲ§5.2 Add) */}
             <span
               style={{
                 display: 'inline-flex',
@@ -144,7 +134,7 @@ export default function ArtistsPage() {
         }
       />
 
-      {/* ── MINI-FLOW STRIP: One link → Radar → Passport → Share ── */}
+      {/* ג”€ג”€ MINI-FLOW STRIP: One link ג†’ Radar ג†’ Passport ג†’ Share ג”€ג”€ */}
       <section
         style={{
           background: 'var(--color-ink)',
@@ -203,7 +193,7 @@ export default function ArtistsPage() {
         </div>
       </section>
 
-      {/* ── 3 TENSION CARDS (brief §5.2) ── */}
+      {/* ג”€ג”€ 3 TENSION CARDS (brief ֲ§5.2) ג”€ג”€ */}
       <Section tone="paper">
         <SectionHeading eyebrow={t.tension.eyebrow} title={t.tension.title} />
         <div
@@ -215,7 +205,7 @@ export default function ArtistsPage() {
           }}
         >
           {t.tension.cards.map((card, i) => {
-            const dark = i === 1 // card rhythm: paper · dark · paper
+            const dark = i === 1 // card rhythm: paper ֲ· dark ֲ· paper
             return (
               <div
                 key={card.title}
@@ -256,7 +246,7 @@ export default function ArtistsPage() {
         </div>
       </Section>
 
-      {/* ── TWO PRODUCT CARDS: private Radar / public Passport (brief §5.2) ── */}
+      {/* ג”€ג”€ TWO PRODUCT CARDS: private Radar / public Passport (brief ֲ§5.2) ג”€ג”€ */}
       <Section tone="forest">
         <SectionHeading tone="forest" eyebrow={t.products.eyebrow} title={t.products.title} />
         <div
@@ -267,7 +257,7 @@ export default function ArtistsPage() {
             alignItems: 'stretch',
           }}
         >
-          {/* Radar — dark card */}
+          {/* Radar ג€” dark card */}
           <article
             className="mk-card"
             style={{
@@ -329,7 +319,7 @@ export default function ArtistsPage() {
             </ul>
           </article>
 
-          {/* Passport — paper card */}
+          {/* Passport ג€” paper card */}
           <article
             className="mk-card"
             style={{
@@ -422,7 +412,7 @@ export default function ArtistsPage() {
         </div>
       </Section>
 
-      {/* ── 4-STEP FLOW (brief §5.2) ── */}
+      {/* ג”€ג”€ 4-STEP FLOW (brief ֲ§5.2) ג”€ג”€ */}
       <Section tone="paper">
         <SectionHeading eyebrow={t.flow.eyebrow} title={t.flow.title} />
         <FlowRow cols={4}>
@@ -439,7 +429,7 @@ export default function ArtistsPage() {
         </FlowRow>
       </Section>
 
-      {/* ── FINAL CTA ── */}
+      {/* ג”€ג”€ FINAL CTA ג”€ג”€ */}
       <FinalCta
         title={t.finalCta.title}
         body={t.finalCta.body}

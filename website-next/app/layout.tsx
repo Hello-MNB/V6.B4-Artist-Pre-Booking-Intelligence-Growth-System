@@ -37,16 +37,20 @@ export const viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'LOCK — Booking Proof for Independent Artists',
+    default: 'LOCK — Private Radar and public Passport for artist booking context',
     template: '%s | LOCK',
   },
   description:
-    'Standardized, method-labeled proof of live performance for independent artists. Built for booking managers who need to verify before they risk their name.',
+    'LOCK helps artists, representation teams, production offices and buyers share clearer pre-booking context through a private Radar and a public Passport.',
   keywords: [
-    'artist booking proof',
-    'live performance verification',
-    'booking manager',
+    'artist booking context',
     'artist passport',
+    'private artist radar',
+    'live performance context',
+    'artist representation',
+    'production office',
+    'private event artist',
+    'booking buyer',
     'מזמין הופעות',
     'אמרגן',
     'אמן',
@@ -77,7 +81,7 @@ export const metadata: Metadata = {
         url: OG_IMAGE,
         width: 1200,
         height: 630,
-        alt: 'LOCK — Booking Proof for Independent Artists',
+        alt: 'LOCK — private Radar and public Passport for artist booking context',
         type: 'image/png',
       },
     ],
@@ -110,7 +114,7 @@ const jsonLd = {
       url: SITE_URL,
       name: 'LOCK',
       description:
-        'Pre-booking proof and risk-reduction tool for independent artists and booking managers.',
+        'Pre-booking context tool for artists, representation teams, production offices and buyers.',
       publisher: { '@id': `${SITE_URL}/#organization` },
       inLanguage: ['en', 'he'],
     },
@@ -156,17 +160,17 @@ const jsonLd = {
         })),
       ],
       description:
-        'LOCK provides standardized, method-labeled proof of live performance for independent artists. Free for booking managers.',
+        'LOCK helps artists organize private context in a Radar and publish a controlled Passport for booking conversations.',
     },
     {
       '@type': 'SoftwareApplication',
       '@id': `${SITE_URL}/#software`,
-      name: 'LOCK — Bookability Passport',
+      name: 'LOCK — Artist Radar and Passport',
       url: SITE_URL,
       applicationCategory: 'BusinessApplication',
       operatingSystem: 'Web',
       description:
-        'A verification tool for the live-music industry: independent artists build a standardized, method-labeled record of their live performance history, and booking managers review it before booking — no scores, percentiles, or predictions, only labeled evidence.',
+        'A pre-booking context tool for the live-music industry: artists organize sources in a private Radar and approve a public Passport for buyers, representation teams and production offices — no scores, percentiles or predictions.',
       provider: { '@id': `${SITE_URL}/#organization` },
       areaServed: {
         '@type': 'Country',
@@ -178,7 +182,7 @@ const jsonLd = {
         price: '0',
         priceCurrency: 'USD',
         description:
-          'Free, unlimited access for booking managers to review a Passport. Artist access is by arrangement during the closed beta — no public pricing tier is locked yet.',
+          'Free pilot access. No public paid plan is active yet.',
       },
     },
   ],

@@ -1,25 +1,25 @@
-// Passport demo — rebuilt per Codex exact rebuild brief §6 (2026-07-14),
+﻿// Passport demo ג€” rebuilt per Codex exact rebuild brief ֲ§6 (2026-07-14),
 // the highest-impact visual fix. The demo SELLS ARTIST PRESENCE FIRST,
-// then trust context. Desktop order: hero (scene tag · name · positioning ·
-// genre pills · CTA) → Radar universe strip → media tiles → strongest
-// signals (3–5 ONLY) → method-labels explanation → footer/disclaimer.
-// Mobile order: image → name+genre → first-screen CTA → fit line → radar
-// strip → top-3 signals → media → method → footer.
+// then trust context. Desktop order: hero (scene tag ֲ· name ֲ· positioning ֲ·
+// genre pills ֲ· CTA) ג†’ Radar universe strip ג†’ media tiles ג†’ strongest
+// signals (3ג€“5 ONLY) ג†’ method-labels explanation ג†’ footer/disclaimer.
+// Mobile order: image ג†’ name+genre ג†’ first-screen CTA ג†’ fit line ג†’ radar
+// strip ג†’ top-3 signals ג†’ media ג†’ method ג†’ footer.
 //
-// PLACEHOLDER RULE (brief §6): a real Passport must use artist-approved
+// PLACEHOLDER RULE (brief ֲ§6): a real Passport must use artist-approved
 // image/video only. This demo uses the Shidapu imagery copied from Drive
 // into public/brand/artist-types/ plus repo atmosphere shots as stand-ins.
 //
-// Firewall: bands + binaries with method labels ONLY — never a count,
+// Firewall: bands + binaries with method labels ONLY ג€” never a count,
 // score, rank, percentile or prediction.
 // ALL copy lives in content/passport-demo.ts ({ en, he }); this page
-// renders EN — locale wiring is a later wave and stays mechanical.
+// renders EN ג€” locale wiring is a later wave and stays mechanical.
 
-import type { Metadata } from 'next'
 import Link from 'next/link'
 
 import { Icon } from '@/components/marketing/icons'
 import { passportDemoContent } from '@/content/passport-demo'
+import { buildPageMetadata } from '@/lib/seo'
 
 const t = passportDemoContent.en
 
@@ -27,13 +27,9 @@ const HERO_IMAGE = '/brand/artist-types/lockshow-artist-shidapu-goa-atmosphere-h
 const PORTRAIT_IMAGE =
   '/brand/artist-types/lockshow-artist-shidapu-roy-sason-profile-official-v1.jpg'
 
-export const metadata: Metadata = {
-  alternates: { canonical: '/passport/demo' },
-  title: t.meta.title,
-  description: t.meta.description,
-}
+export const metadata = buildPageMetadata('passportDemo')
 
-// ── Small building blocks ───────────────────────────────────────────────────
+// ג”€ג”€ Small building blocks ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€
 
 function MonoLabel({
   children,
@@ -81,12 +77,12 @@ function MethodChip({ chip, onLight = false }: { chip: string; onLight?: boolean
   )
 }
 
-// ── Page ────────────────────────────────────────────────────────────────────
+// ג”€ג”€ Page ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€ג”€
 
 export default function PassportDemo() {
   return (
     <main style={{ background: 'var(--color-ink)', color: 'var(--color-paper)' }}>
-      {/* ── SAMPLE BANNER ── */}
+      {/* ג”€ג”€ SAMPLE BANNER ג”€ג”€ */}
       <div
         style={{
           background: 'var(--color-stamp)',
@@ -102,7 +98,7 @@ export default function PassportDemo() {
         {t.banner}
       </div>
 
-      {/* ── HERO — artist presence first (brief §6) ── */}
+      {/* ג”€ג”€ HERO ג€” artist presence first (brief ֲ§6) ג”€ג”€ */}
       <section
         style={{
           background:
@@ -187,7 +183,7 @@ export default function PassportDemo() {
               ))}
             </div>
 
-            {/* CTA row — first-screen on mobile; ONE lime CTA per viewport */}
+            {/* CTA row ג€” first-screen on mobile; ONE lime CTA per viewport */}
             <div
               className="mk-cta-row"
               style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '1.25rem' }}
@@ -202,7 +198,7 @@ export default function PassportDemo() {
               </a>
             </div>
 
-            {/* One-line fit statement — mobile wireframe slot (brief §6) */}
+            {/* One-line fit statement ג€” mobile wireframe slot (brief ֲ§6) */}
             <p
               className="pd-fit"
               style={{
@@ -236,7 +232,7 @@ export default function PassportDemo() {
                 background: `linear-gradient(200deg, rgba(10,13,11,0) 45%, rgba(10,13,11,0.55) 85%, rgba(10,13,11,0.8) 100%), url('${HERO_IMAGE}') center / cover no-repeat`,
               }}
             >
-              {/* Portrait inset — identity anchor */}
+              {/* Portrait inset ג€” identity anchor */}
               <div
                 style={{
                   position: 'absolute',
@@ -288,7 +284,7 @@ export default function PassportDemo() {
                       color: 'var(--color-stamp)',
                     }}
                   >
-                    LOCK · PASSPORT
+                    LOCK ֲ· PASSPORT
                   </div>
                 </div>
               </div>
@@ -297,9 +293,9 @@ export default function PassportDemo() {
         </div>
       </section>
 
-      {/* ── FLOW — orderable on mobile (radar → signals → media → method) ── */}
+      {/* ג”€ג”€ FLOW ג€” orderable on mobile (radar ג†’ signals ג†’ media ג†’ method) ג”€ג”€ */}
       <div className="pd-flow">
-        {/* ── RADAR UNIVERSE STRIP — 6 icons, trust context (brief §6) ── */}
+        {/* ג”€ג”€ RADAR UNIVERSE STRIP ג€” 6 icons, trust context (brief ֲ§6) ג”€ג”€ */}
         <section
           className="pd-radar"
           style={{
@@ -383,8 +379,8 @@ export default function PassportDemo() {
           </div>
         </section>
 
-        {/* ── MEDIA TILES 3–6 (brief §6) ──
-            Placeholder rule: real Passports use artist-approved imagery only —
+        {/* ג”€ג”€ MEDIA TILES 3ג€“6 (brief ֲ§6) ג”€ג”€
+            Placeholder rule: real Passports use artist-approved imagery only ג€”
             the two Shidapu assets are Drive-approved; the atmosphere tiles are
             repo stand-ins for the demo. */}
         <section
@@ -448,7 +444,7 @@ export default function PassportDemo() {
           </div>
         </section>
 
-        {/* ── STRONGEST SIGNALS — 3–5 cards ONLY (brief §6) ── */}
+        {/* ג”€ג”€ STRONGEST SIGNALS ג€” 3ג€“5 cards ONLY (brief ֲ§6) ג”€ג”€ */}
         <section
           className="pd-signals"
           style={{
@@ -547,7 +543,7 @@ export default function PassportDemo() {
           </div>
         </section>
 
-        {/* ── METHOD-LABELS EXPLANATION (brief §6) ── */}
+        {/* ג”€ג”€ METHOD-LABELS EXPLANATION (brief ֲ§6) ג”€ג”€ */}
         <section
           className="pd-method"
           style={{
@@ -612,7 +608,7 @@ export default function PassportDemo() {
         </section>
       </div>
 
-      {/* ── PASSPORT FOOTER / FIREWALL DISCLAIMER (brief §6) ── */}
+      {/* ג”€ג”€ PASSPORT FOOTER / FIREWALL DISCLAIMER (brief ֲ§6) ג”€ג”€ */}
       <section
         style={{
           background: 'var(--color-ink)',
@@ -648,7 +644,7 @@ export default function PassportDemo() {
         </div>
       </section>
 
-      {/* ── BUILD-YOURS BAND ── */}
+      {/* ג”€ג”€ BUILD-YOURS BAND ג”€ג”€ */}
       <section
         style={{
           background:
@@ -689,7 +685,7 @@ export default function PassportDemo() {
         </div>
       </section>
 
-      {/* Local layout composition — brief §6 wireframes. The shared Hero
+      {/* Local layout composition ג€” brief ֲ§6 wireframes. The shared Hero
           component has no scene-tag/genre-pill/portrait-inset props, so the
           Passport hero is composed here (gap reported to the caller). */}
       <style>{`
@@ -709,8 +705,8 @@ export default function PassportDemo() {
           .pd-media-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
         @media (max-width: 960px) {
-          /* Mobile wireframe (brief §6): image → name+genre → CTA →
-             fit line → radar strip → top-3 signals → media → method */
+          /* Mobile wireframe (brief ֲ§6): image ג†’ name+genre ג†’ CTA ג†’
+             fit line ג†’ radar strip ג†’ top-3 signals ג†’ media ג†’ method */
           .pd-hero-grid { grid-template-columns: 1fr; gap: 1.75rem; }
           .pd-hero-media { order: -1; }
           .pd-fit { display: block; }
