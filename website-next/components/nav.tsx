@@ -17,7 +17,6 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useLocale } from '@/lib/locale-context'
 import type { Locale } from '@/lib/i18n'
-import { DoorStamp } from '@/components/door-stamp'
 import { chromeContent } from '@/content/chrome'
 
 import { APP_URL } from '@/lib/app-url'
@@ -96,7 +95,7 @@ export function Nav() {
         justifyContent: 'space-between',
         height: '64px',
       }}>
-        {/* Wordmark + stamp logo */}
+        {/* Governed DS wordmark: use physical brand asset, never an improvised mark. */}
         <Link
           href="/"
           style={{
@@ -113,7 +112,13 @@ export function Nav() {
           }}
           aria-label="LOCK home"
         >
-          <DoorStamp size={36} style={{ color: 'var(--color-stamp)' }} />
+          <img
+            src="/brand/lockshow-symbol-spotlight-lens-v2-master-lime.svg"
+            alt=""
+            width={32}
+            height={32}
+            style={{ display: 'block', width: 32, height: 32 }}
+          />
           LOCK
         </Link>
 
@@ -264,7 +269,13 @@ export function Nav() {
                   color: 'var(--color-paper)',
                 }}
               >
-                <DoorStamp size={32} style={{ color: 'var(--color-stamp)' }} />
+                <img
+                  src="/brand/lockshow-symbol-spotlight-lens-v2-master-lime.svg"
+                  alt=""
+                  width={32}
+                  height={32}
+                  style={{ display: 'block', width: 32, height: 32 }}
+                />
                 LOCK
               </span>
               <button

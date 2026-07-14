@@ -26,6 +26,7 @@ const GA_ID = process.env.NEXT_PUBLIC_GA_ID ?? 'G-ZX907M2NY8'
 
 const SITE_URL = 'https://lock.show'
 const OG_IMAGE = `${SITE_URL}/og/og-default.png`
+const LOGO_IMAGE = `${SITE_URL}/brand/lockshow-symbol-spotlight-lens-v2-master-lime.svg`
 
 // Next.js App Router viewport export
 export const viewport = {
@@ -97,8 +98,12 @@ export const metadata: Metadata = {
   // canonical (audit G8 finding: site-wide duplicate signal). No /he hreflang
   // until a real Hebrew route exists.
   icons: {
-    icon: [{ url: '/favicon.ico' }],
-    apple: [{ url: '/app/apple-touch-icon.png' }],
+    icon: [
+      { url: '/brand/lockshow-symbol-spotlight-lens-v2-master-lime.svg', type: 'image/svg+xml' },
+      { url: '/app/favicon-32.png', sizes: '32x32', type: 'image/png' },
+    ],
+    shortcut: [{ url: '/brand/lockshow-symbol-spotlight-lens-v2-master-lime.svg' }],
+    apple: [{ url: '/app/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
   },
 }
 
@@ -125,7 +130,7 @@ const jsonLd = {
       url: SITE_URL,
       logo: {
         '@type': 'ImageObject',
-        url: OG_IMAGE,
+        url: LOGO_IMAGE,
       },
       foundingLocation: {
         '@type': 'Place',
