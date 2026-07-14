@@ -37,6 +37,7 @@ b{color:var(--ink)}
 <button class="tab" data-t="p3">Next version · Scope</button>
 <button class="tab" data-t="p4">Gates · Tasks</button>
 <button class="tab" data-t="p5">Backlog</button>
+<button class="tab" data-t="p6">🔴 LIVE STATUS + QA</button>
 </div>
 
 <section class="panel active" id="p1">
@@ -132,6 +133,14 @@ b{color:var(--ink)}
 <section class="panel" id="p5">
 <h2>Backlog (later — honestly not scheduled)</h2>
 <div class="card small">Artist reply-channel (needs your product decision) · agency "own artist" legacy mode removal · open booker discovery (post-validation) · Hebrew site version · About page (needs your facts) · private-client site page (post-validation) · comparison mode (deferred, firewall watch) · Radar v5 emotional layer (radar-v4 prototype approved, build after mapping layer) · receipts/invoices + agency payment trail (legal, before real money) · structural migrations 033+ (workspace_type rename, enums — after Supabase Pro backups).</div>
+</section>
+<section class="panel" id="p6">
+<h2>🔴 LIVE STATUS + QA — updated 14 Jul 2026</h2>
+<div class="card"><b>SITE — lock.show</b> · <span class="ok">✅ LIVE</span> · rel-site-2026.07.14 @ <b>5890621</b> (deployed via Vercel API; rollback anchor 6183e81). <b>Production-QA round 1: GREEN</b> — 14/14 routes 200 (incl. /managers + /production, old 404s fixed), new-version copy live everywhere, old hero gone, no price language, footer/robots/sitemap OK, 0 console errors. Full 11-page rebuild + flat no-frames hero + entity-family messaging + Free-Pilot page. <b>Wave-6 visual upgrade (Codex mobile-first spec) BUILDING now.</b></div>
+<div class="card"><b>APP — app.lock.show</b> · production still OLD (a874ab5) · <b>candidate RC1 @ 439c38c</b> frozen; product-identical preview at lock-7uhzpu2hv-error4ik.vercel.app (private). State: <b>PREVIEW-DEPLOYABLE</b>. Ladder → QA-READY (G16 cycle) → Q8-READY → Maria Q8 → deploy. Target 16-17 Jul.</div>
+<div class="card"><b>GOOGLE LOGIN</b> · fix LIVE on www.lock.show/app/signup (verified: deployed embed bundle index-Dhjy-W_p.js carries origin-pinned redirectTo + exchangeCodeForSession). Final interactive proof = Maria's one Google test.</div>
+<div class="card"><b>QA CADENCE</b> · Production-QA agent runs EVERY production round (standing rule). Live screenshots: docs/design-system/current-screens/2026-07-14-LIVE/. Security-denial suite (25 assertions) in npm run verify. Firewall/canon gates green.</div>
+<div class="card"><b>INFRA</b> · Claude Code holds Vercel + Supabase API ownership. Deploy-train law: production = named trains only (site-train-2 = wave-6+HE target 16 Jul · app-train = post-Q8 16-17 Jul). Cost boundaries mapped (docs/COSTS-BOUNDARIES-2026.07.14.md): all free today; next paid = Supabase Pro $25 pre-launch.</div>
 </section>
 </div>
 <script>
