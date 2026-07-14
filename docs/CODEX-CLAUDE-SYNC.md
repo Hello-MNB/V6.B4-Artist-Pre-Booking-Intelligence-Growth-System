@@ -811,3 +811,20 @@ ADOPTED SPEC (from CODEX_SITE_VISUAL_ARCHITECTURE_CORRECTION_20260714.md):
 SEQUENCE: flat-hero lands → Maria taste-test → WAVE 6 agents (6a tokens+FreePilot composition+
 TrustLab · 6b card/chip variants+per-page accents · 6c cookie-banner screenshot fix) → re-shoot
 all → Codex visual DOD check → HE RTL wave uses the same layout-aware rules.
+
+## 48. INFRASTRUCTURE OWNERSHIP LIVE (14 Jul) — tokens received, root causes killed, previews unblocked
+Tokens: Maria delivered VERCEL_TOKEN + SUPABASE_ACCESS_TOKEN (pasted in chat → 🚩 ROTATION
+pending-item added, same as the old Anthropic/Tavily keys; stored in gitignored .env.local).
+VERIFIED: Vercel API = Maria's account, lock-app prj_ANv5… + lock-site prj_dUHn…; Supabase API =
+LOCK qexfndiyallwqhhzeerd ACTIVE_HEALTHY. Claude now reads deployment lists/logs directly — the
+stale-fetch/who-built-what debates are over.
+ROOT CAUSES (found via API in minutes): ① lock-site DASHBOARD setting commandForIgnoringBuildStep
+= "skip everything non-production" — the TRUE reason every site preview was CANCELED (repo-file
+fix alone couldn't help; dashboard overrides). CLEARED via PATCH → site previews now build.
+② lock-app ERROR deployments = Claude's §46 ignoreCommand: VERCEL_GIT_PREVIOUS_SHA absent from
+Vercel's shallow clone → git exit 128 → Vercel treats non-0/1 as deployment ERROR. FIXED:
+normalized to exit only 0 (skip) or 1 (build); any git failure → build (fail-open).
+EQUIVALENCE: app product code at tip == RC1 439c38c (git diff empty over src/server/supabase/
+scripts/package.json) — an app preview from the tip IS the RC1 candidate; recorded per §34 rule.
+Next push triggers both previews; URLs will be read from the API and distributed per rules
+(site = visual, shareable to Maria/Codex; app = VISUAL-ONLY until G16, no write QA).
