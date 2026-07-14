@@ -30,8 +30,9 @@ native-HE page copy (its craft per owner ruling: copy+localization+psychology = 
 Cowork = bilingual QA on preview.
 
 ## 3) TECH / API / INTEGRATIONS (what the product runs on)
-- Supabase (project qexfndiyallwqhhzeerd): database + login + security rules. Migrations 001–033
-  applied; 034 drafted (Maria's one word to Cowork).
+- Supabase (project qexfndiyallwqhhzeerd): database + login + security rules. Migrations 001–035
+  applied — incl. 034 in effect (DB CHECK = app CANON = 29 events, Cowork-verified SYNC §29) and
+  035 (workspace RPC, SYNC §28). 021 FROZEN. (Corrected 14 Jul per GPT RC0 audit.)
 - Anthropic API: AI claim extraction per evidence item (the live AI). Deep multi-source scan =
   planned only, per canon.
 - Vercel: hosting site + app. Previews on demand during QA, then production-only (Cowork).

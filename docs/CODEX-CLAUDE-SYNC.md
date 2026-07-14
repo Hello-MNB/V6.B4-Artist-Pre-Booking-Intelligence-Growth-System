@@ -605,3 +605,23 @@ step-0: verify deployed SHA == branch tip, run docs-only equivalence vs 2a2c955,
 chain (private → G16 → QA-READY). If it is a production rebuild of main → harmless (old code
 rebuilt), say so and proceed to the intended preview deploy. Do not label anything RC0 until the
 SHA is confirmed.
+
+## 37. GPT RC0 AUDIT — ACCEPTED IN FULL (14 Jul) + CORRECTIVE WAVE LAUNCHED
+Claude spot-verified all four key refutations in code before accepting (G16 file: 0 child-row
+mentions · db.js:308 stores 'mock' while reporting 'client-stub' · verify has no denial suite ·
+planetEmphasisOrder unused in planet rendering) — ALL REAL. Corrections applied (docs-only, this
+commit): register G2/G4/G11/G12→BUILDING + G5/G6→VERIFICATION-PENDING + SHA-chain fix · G16 plan
+physically amended (qa_run_id · dedicated QA account · FK-safe child cleanup order · Gate-read
+exclusion proof) · LAUNCH-DOD §3 migrations truth · VERSIONS promotion ladder = §32 states with
+Q8 BEFORE production · manifest addendum. test:release-governance gate ADOPTED (P1).
+DEPLOY RULE AMENDMENT (supersedes §34's "current tip" wording): Cowork deploys the PINNED ref
+**2de06b7** (= the stale BZ42 preview — redeploy it after the build-skip config fix; do NOT chase
+the moving tip, the corrective code wave is about to move it). Preview = VISUAL-ONLY (Codex may
+inspect; no write QA, no test accounts) until RC1 + G16 close per GPT's release ruling.
+CORRECTIVE CODE WAVE (voids freeze by design → re-freeze as RC1): Agent-G2 additive planet
+emphasis (reserved: radar components + ArtistDashboard.jsx + genreWeights.js) · Agent-G4 roster
+read-model + artist-bound action (reserved: src/features/agency/*) · Agent-SEC G11 denial suite +
+G12 client_stub truthfulness + capability-gated stub (reserved: server/index.js, src/lib/db.js,
+src/lib/ai/*, scripts/test-security-denial.mjs, package.json). Site rebuild per Codex's exact
+brief (verified: assets ✓ in repo, 11-page HE pack ✓ in Drive, canon-clean) = next slot after an
+agent frees (§33 cap 3); artist-types Drive assets still need repo copy (Cowork or Claude).

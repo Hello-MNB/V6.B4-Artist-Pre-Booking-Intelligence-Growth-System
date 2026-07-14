@@ -64,3 +64,22 @@ COWORK: correlate the failed-preview Vercel email → deploy private preview of 
 activate G16 → declare QA-READY → only then distribute URL + QA account. CODEX: Q4 18-screen
 audit + native-HE pass on that preview. RC1 fix wave after findings (Passport hero ·
 cookie-banner two-stage · admin recapture) → re-freeze RC1 per §32.
+
+---
+## ADDENDUM (14 Jul) — GPT ADVERSARIAL AUDIT OUTCOME: ACCEPTED IN FULL
+GPT's audit CONFIRMED RC0 product-code identity (freeze→tip docs-only, independently re-derived)
+and REFUTED parts of §4. Claude spot-verified the four key refutations in code — all real. This
+addendum corrects the record; the body above is retained as the audited original:
+- §4 corrections: G2 + G4 + G11 + G12 = BUILDING (not code-complete) — see the corrected register
+  in DEPLOY-GAPS. G5 + G6 = VERIFICATION-PENDING. G11/G12 closure evidence = the CHAIN
+  395d8ba→fbb3cec, not 395d8ba alone.
+- Taxonomy fix: the $-ledger + rate/spend caps listed under G11/G12 belong to G14 (still
+  BUILDING); hashed-token draft 036 belongs to G15 (still BUILDING).
+- G16: the child-row protocol was adopted in SYNC §33 by reference but was MISSING from the
+  physical plan file — now amended there (qa_run_id, dedicated QA account, FK-safe cleanup order,
+  Gate-read exclusion proof). G16 remains OPEN; write-path distribution stays blocked.
+- Release ruling adopted: private preview of pinned ref 2de06b7 MAY be created (visual-only,
+  no write QA, no test-account distribution); QA-READY blocked until the corrective candidate
+  (RC1) closes G2/G4/G11/G12 + G16 activates.
+- GPT's proactive `test:release-governance` gate: ADOPTED as P1 (rides RC1 wave or immediately
+  after).

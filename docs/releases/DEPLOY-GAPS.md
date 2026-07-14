@@ -9,17 +9,17 @@ Truth as of 13 Jul 2026 (branch `claude/b4-gigproof-discovery-e7749o`):
 | Gap | State | Closure SHA / evidence |
 |---|---|---|
 | G1 | CODE-COMPLETE | 92e4abd |
-| G2 | CODE-COMPLETE | 92e4abd |
+| G2 | BUILDING | reopened by GPT RC0 audit 14 Jul: emphasis order exists (genreWeights.js) but NOT rendered on planets — additive visual emphasis missing |
 | G3 | CODE-COMPLETE | 7bc1bc6 — migration 035 APPLIED ✓ (Cowork-verified, SYNC §28); former live-block cleared |
-| G4 | CODE-COMPLETE | 7bc1bc6 |
-| G5 | CODE-COMPLETE | 00b75e6 |
-| G6 | CODE-COMPLETE | 1c92208 |
+| G4 | BUILDING | reopened by GPT RC0 audit 14 Jul: fallback action generic ('Open radar', not artist-bound); roster read-model lacks publish/evidence state |
+| G5 | VERIFICATION-PENDING | 00b75e6 built; GPT 14 Jul: arrow-inventory/footer/type-floor evidence not repeatable — proof rides preview QA |
+| G6 | VERIFICATION-PENDING | 1c92208 built; GPT 14 Jul: purity lint can't catch EN-under-HE mixed values — rendered HE crawl + Codex native review required |
 | G7 | CODE-COMPLETE | 7bc1bc6 |
 | G8 | CODE-COMPLETE | 7bc1bc6 |
 | G9 | OPEN | QA-stage (rides with the train; embed parity proof) |
 | G10 | OPEN | QA-stage (attaches to the candidate SHA at PREVIEW-READY) |
-| G11 | CODE-COMPLETE | 395d8ba |
-| G12 | CODE-COMPLETE | 395d8ba |
+| G11 | BUILDING | impl chain 395d8ba→fbb3cec (SHA drift fixed); reopened 14 Jul: DOD's executable DENIAL TESTS missing from verify |
+| G12 | BUILDING | impl chain 395d8ba→fbb3cec (SHA drift fixed); reopened 14 Jul: client stub stored as 'mock' not 'client_stub' (db.js:308); non-JSON response auto-invokes stub |
 | G13 | BUILDING | — |
 | G14 | BUILDING | — |
 | G15 | BUILDING | — |

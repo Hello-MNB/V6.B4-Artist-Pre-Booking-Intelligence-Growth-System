@@ -43,10 +43,11 @@ Every app/site release row also records **which DS version it implements** (desi
 - Gap lifecycle truth (what is CODE-COMPLETE vs OPEN on the candidate): the register in
   docs/releases/DEPLOY-GAPS.md, not this file.
 
-## NEXT PROMOTION (rel-*.2026.07.13 — one atomic train)
+## NEXT PROMOTION (rel-*.2026.07.13 — one atomic train; ladder per SYNC §32, corrected 14 Jul per GPT audit)
 | Step | Gate |
 |---|---|
-| Candidate SHA frozen at PREVIEW-READY | all P0 gaps CODE-COMPLETE + `npm run verify` green |
-| Isolated preview → Q1–Q7 (Stage 1: candidate qualification) | rel-2026.07.13-PLAN §4 |
-| Atomic merge → live smoke → Maria Q8 (Stage 2: production acceptance) | owner word, recorded |
-| Tag + rollback anchor recorded | DEPLOY-LOG row + this file refreshed |
+| **PREVIEW-DEPLOYABLE** — RC frozen, `npm run verify` green | RC anchor record (SYNC §34): frozen SHA + docs-only equivalence |
+| **QA-READY** — private preview live, G16 isolation ACTIVE | G11+G12+G16 closed before any write-path URL distribution |
+| **Q8-READY** — all lanes green on ONE frozen SHA | Cowork Q1–Q7 EN/HE + Codex Q4 + GPT delta audit + CFRO final-RC check |
+| **Maria Q8 walk on that exact SHA** — BEFORE production promotion | owner word, recorded |
+| **PRODUCTION-READY → atomic merge + deploy + live smoke** | tag/SHA rollback anchor → DEPLOY-LOG row + this file refreshed |
