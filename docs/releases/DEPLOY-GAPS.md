@@ -9,17 +9,17 @@ Truth as of 13 Jul 2026 (branch `claude/b4-gigproof-discovery-e7749o`):
 | Gap | State | Closure SHA / evidence |
 |---|---|---|
 | G1 | CODE-COMPLETE | 92e4abd |
-| G2 | BUILDING | reopened by GPT RC0 audit 14 Jul: emphasis order exists (genreWeights.js) but NOT rendered on planets — additive visual emphasis missing |
+| G2 | CODE-COMPLETE | RC1 wave (THIS COMMIT = RC1 FREEZE): additive ring/scale/label on genre-primary planets, guarded hasGenreSignal API, non-primary full-opacity, EN+HE, data-genre-primary test hook. Codex design review pending |
 | G3 | CODE-COMPLETE | 7bc1bc6 — migration 035 APPLIED ✓ (Cowork-verified, SYNC §28); former live-block cleared |
-| G4 | BUILDING | reopened by GPT RC0 audit 14 Jul: fallback action generic ('Open radar', not artist-bound); roster read-model lacks publish/evidence state |
+| G4 | CODE-COMPLETE | RC1 wave: rosterNextAction.js 6-rung ladder from real state (requests/published/evidence-age-90d/kind), every destination artist-bound, scope-aware, RLS-unknown→view floor |
 | G5 | VERIFICATION-PENDING | 00b75e6 built; GPT 14 Jul: arrow-inventory/footer/type-floor evidence not repeatable — proof rides preview QA |
 | G6 | VERIFICATION-PENDING | 1c92208 built; GPT 14 Jul: purity lint can't catch EN-under-HE mixed values — rendered HE crawl + Codex native review required |
 | G7 | CODE-COMPLETE | 7bc1bc6 |
 | G8 | CODE-COMPLETE | 7bc1bc6 |
 | G9 | OPEN | QA-stage (rides with the train; embed parity proof) |
 | G10 | OPEN | QA-stage (attaches to the candidate SHA at PREVIEW-READY) |
-| G11 | BUILDING | impl chain 395d8ba→fbb3cec (SHA drift fixed); reopened 14 Jul: DOD's executable DENIAL TESTS missing from verify |
-| G12 | BUILDING | impl chain 395d8ba→fbb3cec (SHA drift fixed); reopened 14 Jul: client stub stored as 'mock' not 'client_stub' (db.js:308); non-JSON response auto-invokes stub |
+| G11 | CODE-COMPLETE | chain 395d8ba→fbb3cec→RC1: scripts/test-security-denial.mjs (8 cases/25 assertions vs real server + mock Supabase) wired into verify. Cowork runtime denial re-proof on preview pending |
+| G12 | CODE-COMPLETE | chain 395d8ba→fbb3cec→RC1: extraction_method='client_stub' stored truthfully (column unconstrained — verified, no migration); stub only on VITE_NO_API/embed-base/network-unreachable; non-JSON→retryable server_refused |
 | G13 | BUILDING | — |
 | G14 | BUILDING | — |
 | G15 | BUILDING | — |

@@ -625,3 +625,19 @@ G12 client_stub truthfulness + capability-gated stub (reserved: server/index.js,
 src/lib/ai/*, scripts/test-security-denial.mjs, package.json). Site rebuild per Codex's exact
 brief (verified: assets ✓ in repo, 11-page HE pack ✓ in Drive, canon-clean) = next slot after an
 agent frees (§33 cap 3); artist-types Drive assets still need repo copy (Cowork or Claude).
+
+## 38. RC1 FREEZE (14 Jul) — GPT corrective batch CLOSED in code; re-audit trigger fires
+THIS COMMIT = RC1 FREEZE (app corrective candidate; supersedes RC0 per §32 re-freeze law).
+Closed this wave, each independently verified by Claude before acceptance: G2 (additive planet
+emphasis, guarded, EN+HE) · G4 (artist-bound roster ladder, scope-aware, RLS-safe floors) ·
+G11 (executable denial suite — 8 cases/25 assertions — now a permanent verify gate) · G12
+(truthful client_stub provenance; non-JSON = retryable failure, never fake claims; column
+unconstrained so NO migration). Register updated. `npm run verify` exit 0 on the frozen tree
+(nav 34 · isolation 17 · canon 29 · security 25 · i18n · registry · deltas · builds).
+NOT in RC1 (working tree only, own wave): site-rebuild wave 1 (website-next/**, Codex-brief
+Home+Artists+shared system) — lands as the site train (RC2-era), per §35/§37.
+GPT TRIGGER: re-audit THIS frozen SHA per its §7 spec (G2/G4/G11/G12 + physical G16 amendment +
+governance corrections bd2af10). COWORK: preview ruling per §37 unchanged — deploy PINNED
+2de06b7 visual-only now, or supersede to pin THIS RC1 SHA once GPT re-audit passes (RC1 is the
+QA-READY candidate). Remaining to QA-READY: GPT re-audit green → preview of RC1 → G16 tagged
+cycle → G13/G15 real-DB proofs.
