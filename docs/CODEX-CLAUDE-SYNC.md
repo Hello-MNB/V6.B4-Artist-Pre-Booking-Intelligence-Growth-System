@@ -678,3 +678,21 @@ pages on the preview once live. → WAVE 3 (launched): nav/footer per brief §4 
 Managers · Production · Bookers · How it works · Passport demo; CTA Join free pilot; Pricing
 relabeled Free Pilot; Producers→Source confirmation; 4-column footer + micro-copy). HE locale
 wiring + RTL + full screenshot pass follow as the closing wave.
+
+## 41. SITE WAVE 3 (chrome) VERIFIED + /pricing REDIRECT REMOVED + BUILD-SKIP ROOT CAUSE FOUND (14 Jul)
+W3 verified: nav = Artists·Managers·Production·Bookers·How it works·Passport demo + Join-free-
+pilot CTA (dark/outline in header — page-hero lime keeps the one-lime law; footer lime own
+viewport); footer = Product/Trust/Company/Legal 4 columns + brief micro-copy EN+HE; chrome.ts
+100% HE (0 TODO_HE); no Pricing/GET-STARTED remnants in built HTML (grep-proven, 5 routes).
+Claude follow-ups: ① false-alarm resolved — 'missing' pricing/passport-demo pages = flat-file
+export layout (pricing.html), both verified with correct content; ② REMOVED the stale
+vercel.json redirect /pricing→/artists (predates the Free-Pilot page; would have orphaned it —
+old inbound links now land on pilot truth); ③ 🚨 ROOT-CAUSE FINDING for Cowork: website-next/
+vercel.json ignoreCommand = `git diff --quiet HEAD^ HEAD -- .` — compares ONLY the LAST commit,
+so any push ending in a docs-only commit skips the site build even when earlier commits changed
+the site. This is (at least part of) the canceled/'Stale' preview mystery. FIX RIDES MARIA'S
+PENDING CONFIG APPROVAL (same scope): proposed repo-side fix = compare against the last DEPLOYED
+SHA (Vercel provides VERCEL_GIT_PREVIOUS_SHA) or simply drop ignoreCommand on the site project
+during the QA period. Claude holds the edit until the owner word lands.
+REMAINING SITE WAVES: HE locale wiring + RTL → full screenshot pass → Codex TODO_HE batch
+(~250 strings) + design QA on preview.

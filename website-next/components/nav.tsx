@@ -1,24 +1,26 @@
 'use client'
 
+// Header chrome — structure/labels per Codex rebuild brief §4 (2026-07-14):
+// Artists · Managers · Production · Bookers · How it works · Passport demo,
+// then locale toggle + Log in + "Join free pilot" CTA. All strings live in
+// content/chrome.ts ({ en, he }); mechanics (sticky header, APP_URL signup
+// href, mobile hamburger, aria patterns) are unchanged from the previous nav.
+//
+// LIME-COLLISION DECISION: every rebuilt page hero renders a lime primary
+// CTA (.mk-btn--primary) above the fold, and the brief's layout tokens allow
+// only ONE lime CTA per viewport. The sticky header shares that viewport, so
+// the header CTA uses the DARK/OUTLINE variant (matches .mk-btn--outline-dark
+// tokens) instead of lime — in both desktop and mobile menus.
+
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { useLocale } from '@/lib/locale-context'
 import type { Locale } from '@/lib/i18n'
 import { DoorStamp } from '@/components/door-stamp'
+import { chromeContent } from '@/content/chrome'
 
 import { APP_URL } from '@/lib/app-url'
-
-const NAV_LINK_KEYS = [
-  { href: '/artists',      key: 'artists'      },
-  { href: '/bookers',      key: 'bookers'      },
-  { href: '/producers',    key: 'producers'    },
-  // How-it-works + Methodology demoted from the top nav (owner IA ruling 10 Jul:
-  // each audience page tells its own story; the reference pages stay reachable
-  // from the footer + deep links — never a 404).
-  // Pricing UNPUBLISHED (owner ruling 12 Jul night, S8): beta-signup focus —
-  // the page file stays in the repo for easy restore; /pricing redirects (vercel.json).
-] as const
 
 function LocaleToggle() {
   const { locale, setLocale } = useLocale()
@@ -48,14 +50,9 @@ function LocaleToggle() {
 
 export function Nav() {
   const [open, setOpen] = useState(false)
-  const { messages } = useLocale()
-  const nav = messages.nav
+  const { locale } = useLocale()
+  const t = chromeContent[locale].nav
   const pathname = usePathname()
-
-  const navLinks = NAV_LINK_KEYS.map(({ href, key }) => ({
-    href,
-    label: nav[key as keyof typeof nav] as string,
-  }))
 
   const isActive = (href: string) =>
     href === '/' ? pathname === '/' : pathname === href || pathname?.startsWith(`${href}/`)
@@ -109,11 +106,11 @@ export function Nav() {
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '28px',
+            gap: '22px',
           }}
           className="nav-desktop"
         >
-          {navLinks.map(({ href, label }) => {
+          {t.links.map(({ href, label }) => {
             const active = isActive(href)
             return (
               <Link
@@ -152,30 +149,33 @@ export function Nav() {
               fontWeight: 600,
             }}
           >
-            {nav.login}
+            {t.login}
           </a>
+          {/* Header CTA — outline variant, NOT lime (page heroes own the one
+              lime CTA in this viewport; see file header note). */}
           <a
             href={`${APP_URL}/signup`}
             style={{
               fontFamily: 'var(--font-space-mono)',
               fontSize: '0.75rem',
               letterSpacing: '0.08em',
-              color: 'var(--color-ink)',
+              color: 'var(--color-paper)',
               textDecoration: 'none',
-              backgroundColor: 'var(--color-stamp)',
-              padding: '15px 18px',
+              backgroundColor: 'transparent',
+              border: '1px solid rgba(243,245,239,0.28)',
+              padding: '14px 18px',
               borderRadius: '10px',
               whiteSpace: 'nowrap',
               fontWeight: 700,
             }}
           >
-            {nav.getStarted}
+            {t.cta}
           </a>
         </div>
 
         {/* Mobile hamburger — 44px min touch target */}
         <button
-          aria-label={open ? nav.closeMenu : nav.openMenu}
+          aria-label={open ? t.closeMenu : t.openMenu}
           aria-expanded={open}
           aria-controls="mobile-menu"
           onClick={() => setOpen(!open)}
@@ -211,7 +211,7 @@ export function Nav() {
           }}
           className="nav-mobile-menu"
         >
-          {navLinks.map(({ href, label }) => {
+          {t.links.map(({ href, label }) => {
             const active = isActive(href)
             return (
               <Link
@@ -256,16 +256,19 @@ export function Nav() {
               fontWeight: 600,
             }}
           >
-            {nav.login}
+            {t.login}
           </a>
+          {/* Mobile CTA — same outline variant as desktop (the hero lime can
+              remain visible below the dropdown menu on tall screens). */}
           <a
             href={`${APP_URL}/signup`}
             style={{
               display: 'block',
               marginTop: '10px',
               padding: '15px 20px',
-              backgroundColor: 'var(--color-stamp)',
-              color: 'var(--color-ink)',
+              backgroundColor: 'transparent',
+              border: '1px solid rgba(243,245,239,0.28)',
+              color: 'var(--color-paper)',
               fontFamily: 'var(--font-space-mono)',
               fontSize: '0.75rem',
               letterSpacing: '0.08em',
@@ -275,17 +278,17 @@ export function Nav() {
               fontWeight: 700,
             }}
           >
-            {nav.getStarted}
+            {t.cta}
           </a>
         </div>
       )}
 
       <style>{`
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
           .nav-desktop { display: none !important; }
           .nav-mobile-btn { display: flex !important; }
         }
-        @media (min-width: 769px) {
+        @media (min-width: 901px) {
           .nav-mobile-menu { display: none !important; }
         }
       `}</style>

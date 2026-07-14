@@ -1,7 +1,4 @@
 {
   "cleanUrls": true,
-  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- .",
-  "redirects": [
-    { "source": "/pricing", "destination": "/artists", "permanent": false }
-  ]
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- ."
 }
