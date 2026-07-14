@@ -99,7 +99,7 @@ export default function FaqPage() {
         {/* ג”€ג”€ CATEGORIES ג€” Artists / Buyers + private clients / Managers +
                production / Privacy + trust / Free pilot ג”€ג”€ */}
         <Section tone="paper" narrow>
-          <SectionHeading eyebrow="Categories" title="Pick your lane ג€” or read it all." />
+          <SectionHeading eyebrow="Categories" title="Pick your lane — or read it all." />
           {t.categories.map((cat) => (
             <div key={cat.id} id={cat.id} style={{ marginBottom: 'clamp(2.5rem, 5vw, 4rem)' }}>
               <p

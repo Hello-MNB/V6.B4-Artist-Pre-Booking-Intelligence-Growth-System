@@ -74,6 +74,7 @@ export function ConsentBanner({ gaId }: { gaId: string }) {
 
   return (
     <div
+      className="mk-consent"
       role="dialog"
       aria-label={t.ariaLabel}
       dir={dir}
@@ -89,6 +90,7 @@ export function ConsentBanner({ gaId }: { gaId: string }) {
       }}
     >
       <div
+        className="mk-consent__inner"
         style={{
           margin: '0 auto',
           maxWidth: 760,
@@ -98,13 +100,13 @@ export function ConsentBanner({ gaId }: { gaId: string }) {
           gap: 12,
         }}
       >
-        <p style={{ flex: '1 1 320px', fontSize: 14, color: 'var(--color-tally, #98A19A)', margin: 0 }}>
+        <p className="mk-consent__text" style={{ flex: '1 1 320px', fontSize: 14, color: 'var(--color-tally, #98A19A)', margin: 0 }}>
           {t.message}{' '}
           <Link href="/privacy" style={{ color: 'var(--color-paper, #F3F0E8)', textDecoration: 'underline' }}>
             {t.privacyLink}
           </Link>
         </p>
-        <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+        <div className="mk-consent__actions" style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
           <button
             type="button"
             onClick={() => decide('denied')}

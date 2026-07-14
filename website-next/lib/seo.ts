@@ -198,4 +198,3 @@ export function buildWebPageJsonLd(key: PageSeoKey) {
     inLanguage: ['en', 'he'],
   }
 }
-

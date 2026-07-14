@@ -148,6 +148,9 @@ export function Nav() {
                   textDecoration: 'none',
                   whiteSpace: 'nowrap',
                   position: 'relative',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  minHeight: '44px',
                   paddingBottom: '4px',
                   borderBottom: active
                     ? '2px solid var(--color-stamp)'

@@ -36,7 +36,7 @@ const jsonLd = {
           name: 'What is a Passport?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'A Passport is a public, method-labelled page showing only what the artist approved about their live history. Every detail carries its source and date ג€” so booking people can read real context without guessing.',
+            text: 'A Passport is a public, method-labelled page showing only what the artist approved about their live history. Every detail carries its source and date — so booking people can read real context without guessing.',
           },
         },
         {
@@ -44,7 +44,7 @@ const jsonLd = {
           name: 'Is LOCK free?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Yes. LOCK is in a free pilot ג€” artists build their Radar and Passport for free, and booking people open Passports at no cost.',
+            text: 'Yes. LOCK is in a free pilot — artists build their Radar and Passport for free, and booking people open Passports at no cost.',
           },
         },
         {

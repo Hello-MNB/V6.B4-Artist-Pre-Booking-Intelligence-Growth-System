@@ -147,6 +147,15 @@
   color: rgba(200, 240, 77, 0.55); /* quiet lime tick between labels */
 }
 
+/* Consent banner: legally present, visually subordinate. It should never
+   cut the product story in half on first mobile arrival. */
+.mk-consent {
+  box-shadow: 0 -18px 42px -28px rgba(0, 0, 0, 0.65);
+}
+.mk-consent__actions button {
+  min-height: 44px;
+}
+
 /* ── Cards ──────────────────────────────────────────── */
 .mk-card {
   border-radius: var(--mk-radius-card);
@@ -911,7 +920,13 @@ a.mk-v-card,
     margin-top: 1.15rem !important;
   }
   .mk-hero .mk-hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem 0;
     max-width: 28ch;
+  }
+  .mk-hero-tag {
+    white-space: normal;
   }
   .mk-hero .mk-btn,
   .mk-hero a.mk-btn {
@@ -921,6 +936,35 @@ a.mk-v-card,
   .mk-signal-card,
   .mk-decision-card {
     border-radius: 22px !important;
+  }
+  .mk-source-logo-card__tile img,
+  .mk-source-logo-card img {
+    max-width: 100%;
+    height: auto;
+  }
+  .mk-consent {
+    inset-inline: 12px !important;
+    bottom: 12px !important;
+    border: 1px solid rgba(255,255,255,0.10) !important;
+    border-radius: 22px !important;
+    padding: 12px !important;
+  }
+  .mk-consent__inner {
+    gap: 10px !important;
+  }
+  .mk-consent__text {
+    flex-basis: 100% !important;
+    font-size: 12px !important;
+    line-height: 1.45 !important;
+  }
+  .mk-consent__actions {
+    width: 100%;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+  }
+  .mk-consent__actions button {
+    width: 100%;
+    border-radius: var(--mk-radius-control) !important;
   }
   .mk-foot-cols {
     margin-bottom: 28px !important;
