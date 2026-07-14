@@ -707,3 +707,23 @@ card clips the image-card chip row ('...CE-LINKED' half-hidden) · P1 /pricing h
 webp crops to a near-black rectangle (needs a different asset or treatment; Codex to assign) ·
 P2 4+1 orphan-card layout in the five-lanes grids (home + pricing) · P2 methodology source-logo
 chips illegible at 1440 + page reads as monotonous card stack · P3 home-mobile hero low-impact.
+
+## 43. CODEX LIVE-SITE VERIFICATION RECONCILED (14 Jul) — live findings VALID; candidate claim STALE
+Codex's live verdict ACCEPTED for what it measured: PRODUCTION (old 10-12 Jul deploys) is not
+launch-ready — that is exactly why the rebuild train exists; nothing deployed today. Two of its
+live findings forwarded to Cowork's deploy-health lane: 🚨 verify live /managers + /production
+(Codex saw 404 — conflicts with the 12 Jul "10/10 inner pages 200" record; could be a real live
+regression, cleanUrls edge, or check error — needs a fresh live read).
+Its candidate-branch row ("still needs rebuild implementation") is STALE-FETCH — refuted by
+pushed evidence at b169265: waves 1-3 complete (SYNC §§39-42): shared marketing components BUILT
+(components/marketing/: hero, entity-card, flow-step, trust-badge, final-cta, section, icons) ·
+image map wired incl. Shidapu assets in-repo · Home/Artists/Passport-demo/Bookers/Managers/
+Production/Source-confirmation ALL rebuilt · Pricing = Free-Pilot page + removed from nav ·
+24-screenshot proof pack in docs/design-system/current-screens/2026-07-14-rebuild/. Codex's own
+items 1-5+7(EN) are DONE on the candidate; item 6 (HE wiring+RTL) = next wave; item 7(HE shots)
+after it; item 8 (Q4) after preview. PINNED-SHA RULE now applies to Codex too (as GPT adopted):
+verify the candidate at a named SHA (b169265+), never from memory/stale clone.
+Creative correction ADOPTED as wave-4 north star: emotional, image-led, interactive — "Private
+Radar for the artist + public Passport for booking context." Wave-4 polish agent launched (home
+hero card-clip fix · methodology logo legibility · 4+1 orphan grid). Pricing-hero asset choice =
+CODEX assignment (its §42 batch item).
