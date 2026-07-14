@@ -930,3 +930,15 @@ Artist/Act Identity Editor · role-from-membership+restrict-creation · retire /
 remove/flag payment route · Production signup path). Source mirrored to
 docs/prototypes/00_CURRENT/entity-optimization-plan.html. Canonical ruling flagged PENDING MARIA.
 This is the app fix-wave backlog once Maria approves the ruling; P0s ride the app train pre-Q8.
+
+## 57. PAYMENT SCREEN GATED OFF + CODEX ACCESS GRANT (14 Jul)
+P0 (GPT A5 / Codex): /artist/offer payment route now behind PAYMENTS_ENABLED flag (default OFF,
+free-pilot canon G17). Route redirects to /artist/home when off; both dashboard payment links
+suppressed; "Free during the pilot." shown instead. verify green. Reversible via VITE_PAYMENTS_
+ENABLED=1 post-Gate. (First executed P0 from the consensus plan — ruling-independent, no risk.)
+CODEX ACCESS GRANT (owner order): Codex gets WRITE website-next/** (site design/update, own Claude
+Code session on repo, branch codex/site) + app QA (preview URL + test logins). Boundaries: app
+src/server/supabase/migrations/secrets = Claude only (collision-safe per §33; firewall/security
+single-owner); production deploy = named train, owner-gated. Steps in docs/team/CODEX-ACCESS-GRANT.md.
+Merge flow: Codex codex/site (site only) → Claude merges + deploys train after Codex approval +
+owner taste. Owner may widen to full dev if she chooses; keep migrations+security single-owner.

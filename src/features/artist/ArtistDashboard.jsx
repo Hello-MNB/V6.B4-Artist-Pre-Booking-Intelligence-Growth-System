@@ -7,6 +7,7 @@ import { useLang } from '../../context/LangContext.jsx'
 import { isPassportDirty, clearPassportDirty, markPassportDirty } from '../../lib/passportState.js'
 import { logEvent, EVENTS } from '../../lib/analytics.js'
 import { isPrimaryPlanet, primaryPlanets } from '../../lib/genreWeights.js'
+import { PAYMENTS_ENABLED } from '../../lib/constants.js'
 import RadarUniverse from './RadarUniverse.jsx'
 
 // ── A9 Artist Radar (canon LF-A1, linear) ────────────────────────────────────
@@ -311,7 +312,8 @@ export default function ArtistDashboard() {
 
   const quickLinks = [
     { to: '/artist/readiness', label: T.dashboard.readiness },
-    { to: '/artist/offer', label: T.offer.getPassport },
+    // Free pilot: payment link hidden unless payments are activated (PAYMENTS_ENABLED).
+    ...(PAYMENTS_ENABLED ? [{ to: '/artist/offer', label: T.offer.getPassport }] : []),
   ]
 
   return (
@@ -423,7 +425,9 @@ export default function ArtistDashboard() {
             ? <>{T.offer.activeTitle}</>
             : ent?.status === 'pending'
               ? <>{T.offer.pendingTitle}</>
-              : <Link to="/artist/offer" className="font-semibold text-ink/80 underline decoration-line2 hover:text-ink">{T.offer.getPassport} · {T.offer.price}</Link>}
+              : PAYMENTS_ENABLED
+                ? <Link to="/artist/offer" className="font-semibold text-ink/80 underline decoration-line2 hover:text-ink">{T.offer.getPassport} · {T.offer.price}</Link>
+                : <>{T.offer.freePilot ?? 'Free during the pilot.'}</>}
           {artist.published && (
             <Link to={`/passport/${artist.id}`} className="ms-3 font-semibold text-ink/80 underline decoration-line2 hover:text-ink">{T.dashboard.viewPublic} →</Link>
           )}
