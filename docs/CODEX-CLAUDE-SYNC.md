@@ -952,3 +952,14 @@ not score/no rankings by design") · lexicon clean (no דרכון). Merged to cl
 preview → screenshot QA → promote per owner "פרסם". Open (Codex-flagged, honest): TODO_HE markers,
 OG images page-perfect, passport-demo emotional polish — all P1, ride next site pass.
 CODEX now = website manager (own website-next/**, SEO/GTM strategy); Claude = merge + deploy train.
+
+## 59. SITE FULLY LIVE @ 3e1b8a7 (14 Jul) — Codex SEO layer published; deploy root-cause documented
+lock.show now serves 3e1b8a7 = full rebuild + wave-6 + Codex merge (SEO/AEO/GEO seo.ts + entity
+metadata). Verified live: /artists <title> = Codex governed format "…without being scored | LOCK";
+all pages 200. Vercel Pro ACTIVE (cap gone). DEPLOY ROOT-CAUSE (for the record): repeated
+production deploys of 3e1b8a7 CANCELED because Vercel DEDUPES an identical commit SHA that already
+has a READY build — not the ignoreCommand (that was a red herring; nulled it anyway). FIX =
+alias-promote: assign www.lock.show + lock.show to the existing READY build (dpl_7rZF…). STANDING
+LESSON: to publish a SHA that already built as preview, promote/alias it — don't re-POST the same
+SHA. Rollback anchor: 5890621. Codex = site owner going forward (needs Maria's Vercel membership
+for its own publishes; until then Claude promotes).
