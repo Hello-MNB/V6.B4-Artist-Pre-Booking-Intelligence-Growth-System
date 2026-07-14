@@ -717,6 +717,24 @@ export default function PassportDemo() {
           .pd-method { order: 4; }
         }
         @media (max-width: 640px) {
+          section:first-of-type { padding: 34px 20px 48px !important; }
+          .pd-hero-grid { gap: 1rem; }
+          .pd-hero-copy h1 { font-size: clamp(2.6rem, 17vw, 4rem) !important; }
+          .pd-hero-copy p { font-size: 0.98rem !important; }
+          .pd-hero-copy .mk-cta-row { margin-bottom: 0.85rem !important; }
+          .pd-hero-copy .mk-btn { min-height: 46px; width: 100%; }
+          .pd-hero-copy [style*="genrePills"] { margin-bottom: 1rem !important; }
+          .pd-hero-media {
+            max-height: 250px;
+            overflow: hidden;
+            border-radius: 28px;
+            opacity: 0.92;
+          }
+          .pd-hero-media > div {
+            aspect-ratio: 16 / 10 !important;
+            max-height: 250px !important;
+            border-radius: 28px !important;
+          }
           .pd-media-grid { grid-template-columns: 1fr; }
           .pd-signal-extra { display: none; } /* top-3 signals on mobile */
         }

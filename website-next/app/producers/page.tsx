@@ -261,7 +261,7 @@ export default function ProducersPage() {
       {/* ג”€ג”€ HERO (brief ֲ§5.4): warehouse webp as heavily-darkened subtle
              background + phone confirmation mockup ג”€ג”€ */}
       <section
-        className="mk-hero"
+        className="mk-hero mk-source-hero"
         style={{
           background: `linear-gradient(160deg, rgba(10,13,11,0.94) 0%, rgba(10,13,11,0.88) 55%, rgba(10,13,11,0.96) 100%), url('${BG_IMAGE}') center / cover no-repeat`,
           color: 'var(--color-paper)',

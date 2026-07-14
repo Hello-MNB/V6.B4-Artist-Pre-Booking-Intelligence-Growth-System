@@ -109,6 +109,8 @@ export function Nav() {
             color: 'var(--color-paper)',
             textDecoration: 'none',
             flexShrink: 0,
+            minHeight: '44px',
+            padding: '6px 0',
           }}
           aria-label="LOCK home"
         >

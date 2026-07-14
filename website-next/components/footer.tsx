@@ -25,8 +25,11 @@ const footerLinkStyle = {
   fontSize: '0.875rem',
   color: 'rgba(243,245,239,0.7)',
   textDecoration: 'none',
-  display: 'inline-block',
-  padding: '0.4rem 0',
+  display: 'inline-flex',
+  alignItems: 'center',
+  minHeight: '44px',
+  minWidth: '44px',
+  padding: '0.35rem 0',
 } as const
 
 const columnHeadingStyle = {
@@ -52,7 +55,8 @@ function ConsentPrefsButton({ label }: { label: string }) {
       style={{
         display: 'block',
         marginTop: '2px',
-        padding: '0.4rem 0',
+        minHeight: '44px',
+        padding: '0.35rem 0',
         background: 'none',
         border: 'none',
         cursor: 'pointer',
@@ -121,6 +125,8 @@ export function Footer() {
                 color: 'var(--color-paper)',
                 textDecoration: 'none',
                 marginBottom: '6px',
+                minHeight: '44px',
+                minWidth: '44px',
               }}
             >
               <DoorStamp size={36} style={{ color: 'var(--color-stamp)' }} />

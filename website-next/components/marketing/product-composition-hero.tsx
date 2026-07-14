@@ -58,7 +58,7 @@ export function ProductCompositionHero({
 }) {
   return (
     <section
-      className="mk-hero"
+      className="mk-hero mk-product-hero"
       style={{
         background:
           'radial-gradient(680px 460px at 78% 8%, var(--accent-warm), transparent 62%), radial-gradient(520px 380px at 20% 96%, var(--accent-cool), transparent 60%), var(--gradient-nightlife)',
