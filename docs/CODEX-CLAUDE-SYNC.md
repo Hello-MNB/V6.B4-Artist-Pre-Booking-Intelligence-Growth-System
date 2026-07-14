@@ -921,3 +921,12 @@ Editor (write-once today) · SPA rewrites deploy+verify · deep-route reload smo
 readiness→Radar · agency/radar→Roster · production event-first · settings+org/*→Settings Hub ·
 Representation = 1 workspace, role-adapted modules (Manager vs Booking-Agent = roles not screens).
 Consolidated per-entity PLAN artifact building (entity-optimization-plan.html).
+
+## 56. PER-ENTITY OPTIMIZATION PLAN published (14 Jul) — artifact ddb50504
+Consolidated PLAN artifact from all 4 audits: https://claude.ai/code/artifact/ddb50504-8da0-4991-a650-8740a923774a
+8 tabs (6 entities + Cross-cutting P0 + Canonical Model), 42 priority rows (~33 distinct), 9
+distinct P0 initiatives (SPA fallback · embed skew · session-boot states · reload smoke test ·
+Artist/Act Identity Editor · role-from-membership+restrict-creation · retire /producer shell ·
+remove/flag payment route · Production signup path). Source mirrored to
+docs/prototypes/00_CURRENT/entity-optimization-plan.html. Canonical ruling flagged PENDING MARIA.
+This is the app fix-wave backlog once Maria approves the ruling; P0s ride the app train pre-Q8.
