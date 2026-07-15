@@ -2006,6 +2006,7 @@ main p {
   background:
     radial-gradient(740px 420px at 80% 8%, rgba(200, 240, 77, 0.08), transparent 64%),
     linear-gradient(180deg, #101c14 0%, #08100c 100%) !important;
+  color: var(--color-paper) !important;
 }
 
 .mk-card,
@@ -2034,6 +2035,38 @@ main p {
   color: var(--color-ink) !important;
   border: 1px solid rgba(243, 245, 239, 0.14) !important;
   box-shadow: var(--lock-shadow-dark-lift);
+}
+
+.mk-section:is([style*='var(--color-forest)'], [style*='var(--color-ink)']) .mk-section-eyebrow,
+.mk-section--forest .mk-section-eyebrow,
+.mk-section--ink .mk-section-eyebrow {
+  color: var(--color-stamp) !important;
+}
+
+.mk-section:is([style*='var(--color-forest)'], [style*='var(--color-ink)']) .mk-section-title,
+.mk-section:is([style*='var(--color-forest)'], [style*='var(--color-ink)']) .mk-section-body,
+.mk-section:is([style*='var(--color-forest)'], [style*='var(--color-ink)']) > div > h2,
+.mk-section:is([style*='var(--color-forest)'], [style*='var(--color-ink)']) > div > p,
+.mk-section--forest .mk-section-title,
+.mk-section--forest .mk-section-body,
+.mk-section--ink .mk-section-title,
+.mk-section--ink .mk-section-body {
+  color: var(--color-paper) !important;
+}
+
+.mk-section:is([style*='var(--color-forest)'], [style*='var(--color-ink)']) .mk-card,
+.mk-section:is([style*='var(--color-forest)'], [style*='var(--color-ink)']) .mk-v-card,
+.mk-section:is([style*='var(--color-forest)'], [style*='var(--color-ink)']) .mk-decision-card {
+  background: rgba(243, 245, 239, 0.94) !important;
+  color: var(--color-ink) !important;
+  border: 1px solid rgba(243, 245, 239, 0.14) !important;
+  box-shadow: var(--lock-shadow-dark-lift);
+}
+
+.mk-section:is([style*='var(--color-forest)'], [style*='var(--color-ink)']) .mk-card *,
+.mk-section:is([style*='var(--color-forest)'], [style*='var(--color-ink)']) .mk-v-card *,
+.mk-section:is([style*='var(--color-forest)'], [style*='var(--color-ink)']) .mk-decision-card * {
+  color: inherit !important;
 }
 
 .mk-section--forest .mk-card *,

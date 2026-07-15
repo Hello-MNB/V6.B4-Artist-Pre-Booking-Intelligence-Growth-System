@@ -152,17 +152,9 @@ export function Footer() {
           {/* Footer CTA — lime is fine here (own viewport, far from the hero) */}
           <a
             href={`${APP_URL}/signup`}
+            className="mk-btn mk-btn--primary"
             style={{
-              display: 'inline-block',
-              padding: '15px 24px',
-              backgroundColor: 'var(--color-stamp)',
-              color: 'var(--color-ink)',
-              fontFamily: 'var(--font-space-mono)',
-              fontSize: '0.75rem',
-              letterSpacing: '0.08em',
               textDecoration: 'none',
-              borderRadius: '10px',
-              fontWeight: 700,
               flexShrink: 0,
             }}
           >
