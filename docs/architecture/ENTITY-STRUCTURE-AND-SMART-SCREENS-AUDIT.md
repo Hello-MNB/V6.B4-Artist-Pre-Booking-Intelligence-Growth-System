@@ -424,3 +424,34 @@ Done + verified: U1,U2,U3,U5,U6,U7,U13,U14,U15,U16,U17,U19,U20,U21,U22,U23,U25,U
 ## PART 8 · §8.5 — PASSPORT UX corrections (owner 14 Jul, 3rd round) + firewall-narration rule
 - **U33 — Remove the firewall STRIP from the Passport.** "No score · No ranking · No prediction · No guarantee · Bands · Binaries · Method labels" = technical narration → owner FORBIDS on screen. **RULE (strengthened): the firewall is ENFORCED BY DESIGN (no score/rank component exists), NEVER NARRATED to the user.** Applies everywhere, not just Passport. Status: folded into the running pass.
 - **U34 — Unify the view-switcher.** The Passport buyer-view tabs (Booker/Representation/Production/Private) sit INSIDE the passport card = unclear. Replace with the SAME dropdown-chip pattern as the Radar scene switcher (shared component/CSS), placed in the PAGE HEADER (consistent location), label "Viewing as: {view} ▾" → popover with a check on active. Owner: "unified language + clear navigation." One consistent switcher pattern across screens (Radar scene · Passport view). Status: folded into the running pass.
+
+## PART 9 · CODEX APP-UX BRIEF (15 Jul) — THE NORTH STAR + done/partial/new map
+_Codex delivered a full app-UX audit. Core ruling: LOCK is NOT "pages" — it's **interactive workspaces made of smart widgets**. One screen = one job = one next action. Mobile-first. Radar = the central interactive engine. Human language, no internal terms. Firewall words only ("needs your touch"/"ready to support"/"private for now"/"can become public when you approve" — never score/rank/weak/missing). Full brief banked; this is the app design north star._
+
+### 9.1 · Global UX laws (apply everywhere)
+One-viewport per primary workflow · ONE dominant CTA + ≤2 quiet secondaries · no internal architecture language · immediate feedback on every action · **mobile is the default**, desktop uses space for context/comparison · Radar never static · Passport never a technical report · every proof explains "why this matters" · always show private/public · warm tone, never judging.
+
+### 9.2 · Component system to build + reuse (Codex §13)
+Smart Action Widget (title · why now · what happens next · primary CTA · optional secondary · privacy state) · Planet Inspector (name · state · source logos · what LOCK found · why it matters · next action · public/private preview) · Source Logo Ring (logos only when relevant; method label on tap; neutral icon if generic) · Passport Preview Card · Request Card (who · what · date · fit · missing info · one primary) · Workspace Switcher (human language).
+
+### 9.3 · Per-screen priorities (Codex §18)
+| Screen | Pri | Required change | Current status |
+|---|---|---|---|
+| Artist onboarding | P0 | form → one-link discovery widget | 🟡 partial (lang switcher gone, fields fixed; still modal-ish) |
+| Artist Radar | P0 | interactive planet inspector + source-logo ring + contextual action | 🟢 largely done (orbit widget) → deepen to full inspector (why-it-matters, publish-impact) |
+| Artist Passport | P0 | split owner-edit vs buyer-preview; publish/share widget | 🟡 multi-view done; edit/preview split + share widget = new |
+| Artist Requests | P1 | request cards → decision widgets (fit · missing info) | 🟡 redesigned; add fit/missing-info + swipe |
+| Buyer Passport | P0 | 60-second decision page + sticky availability CTA; non-pro language | 🔴 new (broaden buyer beyond "booker") |
+| Source Confirmer | P0 | one-screen, warm copy + hierarchy | 🟡 exists; warm up |
+| Workspace switcher | P0 | rewrite language | 🟢 DONE (§13.6 applied — human labels) |
+| Representation roster | P1 | priority board + action categories (cockpit) | 🔴 new (Artist-focused so far) |
+| Production events | P1 | event cards → lineup cockpit + slot widgets | 🔴 new |
+| Admin | P2 | operational, clarify metric source/timeframe/demo-excluded | 🟡 exists |
+| Mobile shell | P0 | bottom nav + bottom sheets + one widget/view | 🟢 bottom nav done; bottom-sheets/gestures = deepen |
+| Desktop shell | P0 | full-screen canvas + inspector panels | 🟢 largely done |
+
+### 9.4 · Nav model (Codex §4) — human identity switcher + per-entity context nav; on mobile the entity switch lives under "Me", not always in view. (Current hub is close; refine labels to My Artist / My Roster / My Lineups / View as Buyer / Confirm a Detail / Admin.)
+
+### 9.5 · Radar deepening (Codex §5, highest priority) — planet tap → inspector with: human explanation · what LOCK found · why-it-matters-in-this-genre · public/private · next action + secondary. Desktop: left rail (Act+genre+privacy) · center universe · right inspector · bottom action dock. Mobile "Radar Focus": tap→focus card, swipe between planets, logo ring, pull-down to return, CTA→bottom sheet. (Orbit widget is the base; add the why-it-matters + publish-impact + genre-reweight-on-change.)
+
+### 9.6 · Division of labor (accepted): **Codex delivers the per-screen wireframe + component map (name·layout·tokens·states·microcopy·desktop·mobile) — his §23 offer. Claude implements each into the prototype, one screen/entity at a time, verifies mobile+desktop, republishes. Maria reviews the visual + approves.** Sequence: finish Artist to full widget standard → Buyer 60-sec page → Source-Confirmer warmth → Representation cockpit → Production lineup → Admin clarity → then port the approved prototype into the real app (src/) screen-by-screen → Q8 → deploy.
