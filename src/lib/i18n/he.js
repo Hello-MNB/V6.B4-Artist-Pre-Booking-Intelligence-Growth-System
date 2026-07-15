@@ -355,7 +355,7 @@ export const T = {
     careerProof: 'הוכחת קריירה',
     audience: 'קהל — לא מדד גרירה',
     receipt: (action) => `${action} — נרשם באופן פרטי. זה לא יוצר הזמנה או שריון.`,
-    disclaimer: 'הפספורט מציג חוזקות מאומתות בלבד. ללא ציון · ללא דירוג · ללא ניבוי · ללא הבטחה. כל טענה נושאת את שיטת האימות והתאריך שלה. משיכת קהל מוצגת כטווח — לעולם לא מספר מדויק.',
+    // (passport.disclaimer removed 16 Jul — U33: the firewall is shown by the shape of the evidence, never a printed strip.)
     // ── מסכי טעינה ושגיאה (Passport loader) ──
     notFoundBody: 'בדוק את הקישור שקיבלת — קישורי פספורט מדויקים לתו. אם שיתפו אותו איתך, בקש מהשולח קישור עדכני.',
     unpublishedTitle: 'הפספורט הזה לא מפורסם כרגע',

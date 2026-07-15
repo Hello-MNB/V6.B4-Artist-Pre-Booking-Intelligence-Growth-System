@@ -358,7 +358,7 @@ export const T = {
     careerProof: 'Career proof',
     audience: 'Audience — not a draw metric',
     receipt: (action) => `${action} — recorded privately. This does not create a booking or hold.`,
-    disclaimer: 'THIS PASSPORT SHOWS VERIFIED STRENGTHS ONLY. NO SCORE · NO RANKING · NO PREDICTION · NO GUARANTEE. EVERY CLAIM CARRIES ITS VERIFICATION METHOD AND DATE. AUDIENCE DRAW IS SHOWN AS A BAND — NEVER AN EXACT FIGURE.',
+    // (passport.disclaimer removed 16 Jul — U33: the firewall is shown by the shape of the evidence, never a printed strip.)
     // ── load-state copy (Passport loader) ──
     notFoundBody: 'Check the link you received — passport links are exact. If it was shared with you, ask the sender for a fresh one.',
     unpublishedTitle: "This passport isn't published",
