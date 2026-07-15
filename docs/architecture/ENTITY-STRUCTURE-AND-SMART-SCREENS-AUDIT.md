@@ -455,3 +455,36 @@ Smart Action Widget (title · why now · what happens next · primary CTA · opt
 ### 9.5 · Radar deepening (Codex §5, highest priority) — planet tap → inspector with: human explanation · what LOCK found · why-it-matters-in-this-genre · public/private · next action + secondary. Desktop: left rail (Act+genre+privacy) · center universe · right inspector · bottom action dock. Mobile "Radar Focus": tap→focus card, swipe between planets, logo ring, pull-down to return, CTA→bottom sheet. (Orbit widget is the base; add the why-it-matters + publish-impact + genre-reweight-on-change.)
 
 ### 9.6 · Division of labor (accepted): **Codex delivers the per-screen wireframe + component map (name·layout·tokens·states·microcopy·desktop·mobile) — his §23 offer. Claude implements each into the prototype, one screen/entity at a time, verifies mobile+desktop, republishes. Maria reviews the visual + approves.** Sequence: finish Artist to full widget standard → Buyer 60-sec page → Source-Confirmer warmth → Representation cockpit → Production lineup → Admin clarity → then port the approved prototype into the real app (src/) screen-by-screen → Q8 → deploy.
+
+## PART 10 · CODEX FINAL AUDIT (15 Jul) — THE COMPLETE DESIGN SPEC (banked; Codex handover)
+_Codex's last full audit before subscription end. This is the executable master spec for the whole app. Owner's guiding sentence for EVERY screen: "LOCK found something real. Here is what it means. Here is the one thing to do next." — never "here are many panels of evidence and internal states."_
+
+### 10.1 · MASTER LAW
+Build **widget workspaces, not pages**. One screen = one job = one next action. Paper for work surfaces; dark ONLY for Radar/Passport atmosphere. Lime ONLY for action/signal. No duplicated CTAs. No score/rank language. No technical windows unless admin-only. HE+EN microcopy native, not mechanically translated.
+
+### 10.2 · WIDGET KIT (build once, reuse — each needs states: default·hover·selected·loading·empty·success·error·disabled/not-yet·mobile-collapsed·mobile-expanded)
+Radar canvas · Planet focus card · Source logo ring · Proof review card · Next-move strip · Passport preview card · Request decision card · Roster action card · Lineup slot card · Public proof card · One-statement confirmer · Gate metric tile.
+
+### 10.3 · PRIORITY ORDER (Codex §13)
+- **P0** Artist Radar interaction model (desktop + MOBILE separately) · **P0** inline proof review/edit widgets (every field QA'd with X/empty/long/Hebrew/URL/invalid) · **P1** Requests decision card · **P1** Buyer Passport first-viewport · **P1** Production lineup board · **P1** Representation roster cockpit · **P2** Source-Confirmer warmth · **P2** Admin hierarchy.
+
+### 10.4 · PER-SCREEN REQUIRED CHANGES
+- **Artist Radar (P0):** scene switch → top-center segmented (Melodic/Progressive/Afro/All), NEVER overlays the act card · planet click zooms/focuses in place, others fade to 40% (not gone), logos orbit the selected planet · inspector = SHORT 3-layer action widget (Meaning / Found proof / Next action), not a long drawer · ONE primary action (kill the duplicate: bottom CTA only when no planet selected, else mirrors it) · filters → "Show: All / Needs my review / Ready to publish" · locked planet → warm "Not needed yet / Coming later" · source logos = larger tactile proof chips.
+- **Inline edit (P0):** every missing/editable proof opens an inline mini-widget in the smart panel (type · immediate validation · visible save · undo · loading · error) — NOT a new page. DOD per field: empty=friendly helper, typing=active border, invalid=human explanation, saved=confirmation, undo, loading, error-retry.
+- **Mobile Radar (P0, designed SEPARATELY):** hand-held instrument — top Act+scene · center zoomable Radar · bottom one-action drawer. Tap planet→zoom; tap logo→small proof card; swipe→next proof; pull-down→close; tap center→overview; long-press logo→method. NO new page per tap, no long drawers, no endless stacks.
+- **Requests (P1):** decision cockpit — LOCK one-sentence fit summary · missing-info · safety cue ("no contact shared yet") · [I'm available]/[Ask one question]/[Not for me] · expandable details. Copy: "Say I may be available" / "Ask for missing details".
+- **Buyer Passport (P1):** first viewport answers fit·trust·readiness·availability immediately (name · "closing act for late-night melodic techno" · best fit band · why-trust bullets · [Check availability]/[Send to partner]). Evidence buyer-readable ("Can this artist carry a room?" not "Proof of draw"). Availability = compact inline widget. Booking-vs-representing changes copy/CTA.
+- **Production (P1):** lineup BOARD not rows — event header · timeline slots (22:00 warm-up confirmed / 23:30 peak awaiting / 01:00 closing open) · slot chips open/requested/confirmed · suggested-act cards with fit reason · one CTA per slot · stage/venue atmosphere.
+- **Representation (P1):** roster COCKPIT — "who needs help today", artist cards (Passport readiness · missing proof · buyer reaction · next action) · one next-action per artist · ArtistAccess state (NO "grants"/ownership language) · reaction inbox · filter urgent/ready/needs-approval. No CRM tables.
+- **Source Confirmer (P2):** one-minute WARM confirmation — statement · "Do you know this to be true?" · 3 large choices (Yes accurate / Mostly—fix one detail / No) · legal moved to expandable "What happens after I answer?". Copy: "One detail. One answer. No account."
+- **Admin (P2):** cockpit not pale dashboard — Gate tile = hero metric · visual funnel · AI-cost with budget-left/alert · publish freshness (stale vs unpublished) · risk top-level tile · demo-excluded badge consistent.
+- **Nav/switcher:** real app shows ONLY the roles a user has (not all 6). If demo needs all → visible "Demo switcher — shows all entity views" label.
+
+### 10.5 · MICROCOPY REWRITES (examples to match tone)
+"third-party proof that carries more weight…" → "the proof that helps someone believe the room was real — without you having to oversell it." · "Private for now — ready to support your Passport when you approve" → "Still private. It only helps your Passport after you approve it." · "Your proof here is ready — see it on your Passport" → "This proof is ready. Want to see how a buyer will read it?" (CTA: Preview on Passport).
+
+### 10.6 · KNOWN PROTOTYPE QA NOTES (Codex, to fix)
+Scene dropdown visually overlaps the act card · low-contrast inspector text · planet labels tiny · duplicate bottom CTA vs inspector CTA · Passport nav click unreliable in artifact wrapper · Review/"Not mine" actions sticky in artifact context · no visible editable fields yet (display-mode only) · mobile click-through not standalone-verifiable in the artifact frame.
+
+### 10.7 · HANDOVER NOTE (Codex subscription ending)
+This audit + DS v1.6.25 + PART 9 = the COMPLETE design law. No further Codex input is required to build. Continuation model: **Claude implements to this spec → self-audits each screen against these documented rules (design-critic pass + Playwright/DoD proof) → owner reviews the visual and approves.** Owner is the taste gate; Claude is executor + design-QA grounded in Codex's written standards. Codex may return for periodic taste-checks but is not a blocker.
