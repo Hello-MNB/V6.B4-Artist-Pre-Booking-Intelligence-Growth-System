@@ -29,7 +29,8 @@ _Status: consolidated master spec (complete) · Written 15 Jul 2026, scaling-rev
 - **16. Taxonomy & Business** — genre/format/venue/method/platform taxonomies (EN·HE); product goals; the Gate; business model; honest pre-Gate business case; unit economics; **GTM approach; monetization roadmap; growth loops; risk & assumptions register; trust & safety / anti-gaming / IP; post-Gate roadmap**; consolidated owner-decision list
 - **17. Interactivity, Motion Depth & Utility Screens** — the motion system (easing tokens + duration ladder + reduced-motion contract); per-screen interactivity depth (Radar + Inspector deepest); the inline-edit widget; the 11 missing utility screens (signup/login/reset/invite/settings/org/billing/consent/notifications/404/skeleton)
 - **18. Open Decisions** — owner rulings still pending (priority-tiered: pre-Gate / post-Gate / reserved)
-- **19. Scaling & Future-Readiness (RESERVED)** — international expansion · data/ops at scale · billing/finance · high-volume surfaces · ecosystem/moat · canon-change & release process (all post-Gate; named, not gold-plated)
+- **19. Scaling & Future-Readiness (RESERVED)** — international expansion · data/ops at scale · billing/finance · high-volume surfaces · ecosystem/moat · canon-change & release process · SEO/AEO/GEO · platformization/domain-template engine (all post-Gate; named, not gold-plated)
+- **20. Implementation notes for AI / code agents** — the executable negative-constraint guardrails (firewall · DB/migrations · state · localization · atomic spec slices) so Claude Code / Cursor build without drift
 
 ### 0.1 How to read
 Sections 1–7 are the laws every screen inherits. Section 8 is the buildable **screen** core: each screen carries PURPOSE · DESKTOP layout · MOBILE layout · COMPONENTS · STATES · INTERACTIONS · EXACT MICROCOPY · FIREWALL notes · DEFINITION OF DONE, and is buildable from its sub-spec alone. Sections 9–11 are the intelligence layer, acceptance, and current state. **Sections 13–17 are the deep build spec** — §13 Engineering & Architecture (the real DB schema, API/RPC contracts, auth, RLS, deploy/rollback, Q8), §14 Measurement/Payments/Notifications, §15 Legal/Consent/Localization (incl. the delivered Hebrew string set), §16 Taxonomy & Business, and §17 Interactivity/Motion depth + the 11 utility screens that §8 did not cover. Section 18 is the unresolved owner rulings. A developer can build the product from §§1–17; §18 lists what still needs an owner decision.
@@ -1377,6 +1378,11 @@ owner approval.
   line of defence; the durable upgrade is still a **BFF** (backend-for-frontend) keeping tokens in
   httpOnly cookies and proxying Supabase. Recommended before wider launch; not built.
 
+#### 13.5.6 Public-surface abuse: bot protection + durable rate-limiting (OWED)
+The **public, anonymous** write surfaces — `POST /api/availability-request` (`/passport/:id/request`) and the Source-Confirmer at `/confirm/:token` — will be scraped/spammed once shared.
+- **Bot protection — OWED (grep: 0 captcha refs).** Add **Cloudflare Turnstile / hCaptcha** on the availability-request and confirm forms. Firewall-safe (a challenge token, no scoring). High priority before the Passport is shared widely; not built today.
+- **Rate-limit durability — OWED.** The current limiter is an **in-memory sliding window** (`server/index.js:75`), which is **per-instance and resets on Vercel serverless cold starts** — so it under-protects at the edge. Upgrade public endpoints to a shared store (**Upstash Redis / Vercel Edge Config**) for durable, cross-instance limits. The in-memory limiter is an acceptable pilot floor, not a launch answer.
+
 ---
 
 ### 13.6 DB ops / environments / deploy / rollback
@@ -1973,6 +1979,8 @@ Retention rule (Privacy §11): keep data only as long as needed for its purpose;
 **Account deletion → data (the user-facing SLA):** Settings exposes "Request data deletion" with the copy *"This action is irreversible. All your data is deleted within 30 business days, as Israeli privacy law requires"* (`settings.deleteWarning` / `.deleteSubmitted`). The flow is a **request that is recorded, not an instant purge**: `requestAccountDeletion(userId)` writes a `consent_records` row with `scope='account-deletion'`, `status='withdrawn'` (see §15.2.3) — an auditable withdrawal event — and the operator console runs the actual cascade delete via `adminDeleteArtist(artistId, reason)`, which **writes an audit row before the cascade** (firewall/due-process) and requires a mandatory reason. Operator-side deletion is surfaced in the admin console (`admin.deleteData`, `admin.deleteAuditNote`: "Irreversible — this will be written to the audit log").
 
 > **Retention-period values — OWED.** The policy commits to "legally required periods" and "as long as necessary" but does **not** yet state concrete durations (e.g. accounting = 7 years per Israeli tax law; audit/consent logs = N years). Counsel must fill exact numbers; until then the drafts stay qualitative on purpose.
+
+> **Data portability / export (Amendment-13 & GDPR "right to access").** An **operator-side export exists** today — `adminExportArtist(id)` (OP12, `AdminDashboard.jsx:130/277`) generates a subject's data archive on request. A **self-serve user-facing export** (a "Download my data" button in Settings → JSON/ZIP of `claims`, `evidence`, `consent_records` for the `person_id`) is **OWED** — the right-to-access is currently satisfied by an operator action, not self-service. Add the self-serve endpoint before wider/paid launch. Firewall-safe (the export must exclude `internal_confidence` and any exact-count column, exactly like `buildSafePayload`).
 
 #### 15.1.5 Consent record model (legal view)
 
@@ -3781,6 +3789,50 @@ The public Passport is a distribution surface; search engines and AI agents shou
 - **AEO / GEO (AI-search)** — when a promoter asks an LLM "find a reliable techno DJ in Berlin," the answer needs structured data. Emit **JSON-LD** on public Passports built on standard `MusicGroup`/`Event` types, exposing **only firewall-safe fields**: `name`, `genre`, `drawBand` (a band string, never an exact number), `readinessBinaries` (booleans), `verificationMethod` (a method label). **Explicitly forbidden:** any `score`, `rank`, `rating`, or `bookabilityScore` field (§2.9). Done right, LOCK becomes a **method-labeled evidence source** for booking research — a genuine moat — without ever shipping a machine-readable grade.
 
 **Firewall note:** this section is the highest-risk for firewall drift (machine-readable = easy to add a hidden number). The constraint is absolute: structured data carries bands + binaries + method labels, never a numeric grade about a person. **OPEN (owner):** whether to invest here pre- or post-scale (recommendation: OG card early — it powers Loop 1 virality; full JSON-LD post-Gate).
+
+### 19.8 Platformization & ops maturity (RESERVED — post-Gate; several are do-NOT-build-pre-Gate)
+Surfaced by a technical/AI-readiness review. Reserved so they're named, not built prematurely:
+- **DR & backup runbook** (→ ops doc `docs/ops/`, not spec body) — RPO/RTO, Supabase point-in-time-recovery steps, seed-restore. **Trigger:** Supabase Pro (C-2) enabled — PITR needs it. Currently no DR runbook exists.
+- **Feature-flag system** — beyond the env flags today (`PAYMENTS_ENABLED`, `OAUTH_ENABLED`): a lightweight config-table/LaunchDarkly gate for gradual rollout of the deep-scan and new Radar dimensions without risking the Gate. Reserved.
+- **Public API / webhooks** — for Door-1 integrations (e.g. a ticketing platform pushing draw data): signed webhooks, API-key issuance, per-partner rate limits (§9.9). Post-Gate; pairs with the ticketing-partnership channel (§16.B.11).
+- **Performance CI** — automate the §6 law-12 budget: a Lighthouse-CI / Playwright performance trace in `npm run verify` asserting the Radar interaction budget. Today the budget is a rule with **no automated test — OWED**.
+- **Domain-template engine (the big one — deliberately DEFERRED).** A reviewer proposed abstracting the Radar planets, taxonomies, and method labels into per-industry **domain templates** (catering, corporate events, weddings, speakers/comedians), so "music" becomes the first installed template and an Act becomes a generic "service offering." **This is architecturally elegant and a real long-term platform play — and it is exactly the kind of pre-Gate gold-plating the STAGE rule forbids.** Abstracting the entire domain model before one buyer has reacted in *music/Israel* is premature. **Reserved as the post-Gate platform thesis; do NOT build pre-Gate.** The existing multi-Act + 3-tier-token + relational-taxonomy design keeps this *possible later* without a rewrite — which is the correct amount of readiness now. **OPEN (owner):** whether LOCK's post-Gate vision is "the music standard" or "the professional-bookability platform." (Note: the non-music genre families comedian-host/ceremony, §16.A.2, are a *small* step in this direction already — within music-adjacent live events, not a full platform pivot.)
+
+---
+
+## 20. Implementation notes for AI / code agents (the executable guardrails)
+
+An AI coding agent (Claude Code / Cursor) suffers context-window dilution — it can forget the firewall while building the Radar. These are **negative constraints** (what NOT to do), designed so a slice can be built in isolation without drift. They restate, in checklist form, rules already binding elsewhere (`CLAUDE.md`, §0.2, §2, §13). If a request violates one, **refuse and explain** rather than comply.
+
+**A · The firewall (never violate).**
+- NEVER create a DB column, API response field, or UI element holding a **score / rank / percentage / rating / exact headcount / prediction** about a person. Draw = **bands** only; readiness = **binaries** only (§2, §2.9).
+- NEVER surface a reaction to the artist as a **count/number** — method-safe **text** only (§2.5).
+- NEVER emit a numeric grade in **structured data / JSON-LD** either (§19.7). A number about a *person* is banned on every surface — public, internal-shown, or machine-readable. Numbers about *product events* (operator funnel) are fine.
+- NEVER use the retired word **"Mirror" / "המראה"** — use "Radar" / "האזור הפרטי" (§4).
+
+**B · Database & migrations (never violate).**
+- NEVER `DROP TABLE` / `DROP COLUMN` in a migration; migrations are additive and **diff-first** (check 001–036 before authoring 037+). Use `IF [NOT] EXISTS`.
+- NEVER alter the `analytics_event` CHECK without updating `src/lib/analytics.js` **in the same PR** (canon-drift test enforces this).
+- NEVER expose `internal_confidence` or any exact-count column to the **`anon`** role (§13.5; column grants + `buildSafePayload`).
+- Frozen enums stay frozen: `workspace_type='producer'`, roles `booker`/`agency`/`producer`; renames are governed migrations, never casual edits (§0.2 rule 5). Migration **021 is FROZEN**.
+
+**C · Architecture & state.**
+- The Radar is a **client-side derivation** of DB state — NEVER persist Radar states in the DB.
+- Evidence is scoped by **`act_id`** — NEVER join claims across Acts without explicit isolation (act-isolation test).
+- The **`service_role`** key bypasses RLS — NEVER write a server read without re-stating the `buildSafePayload` filters (§13.5.2).
+- Auth session persistence + the SPA deep-link rewrite are already solved (§13.4.4 + `vercel.json`) — a "refresh resets the app" symptom is a **deployment/config** matter, not new code.
+
+**D · Localization.**
+- NEVER hardcode HE/EN strings in JSX — always `T.section.key` (`src/lib/i18n/`); i18n-purity lint blocks mixed-language values.
+- Method-label chips render in **English even inside Hebrew UI** (by design, §15.4).
+
+**E · How to drive the agent (atomic spec slices, not "build the app").**
+- Good: *"Read §13.2 + §14.3.2. Write migration 037 adding `is_demo` to `analytics_event` with a down-migration. Do not touch the frontend."*
+- Good: *"Read §8.3 + §17.A.2. Build the Planet Inspector bottom-sheet with the confirm-bloom motion. Do not wire the DB yet."*
+- Bad: *"Build the Radar."* (too broad → drift).
+- Every slice ends with `npm run verify` green (nav · isolation · canon · security · i18n-purity · registry · deltas · build) — the mechanical firewall gate (§19.6).
+
+_This appendix is the spec-side mirror of `CLAUDE.md`; if the two ever diverge, `CLAUDE.md` wins (it is the binding repo instruction)._
 
 ---
 
