@@ -96,3 +96,119 @@ V16 artifact metadata (v4 stamped this commit) · V17 Version Map body refresh �
 CFRO v3.0 budget: delivered with web-verified prices; key flags adopted — Vercel Hobby is
 NON-COMMERCIAL (Pro $20 = ToS requirement at first revenue) · Supabase Pro $25 before structural
 migrations (backups). Claude spot-verified headline prices; full binding at Maria's budget approval.
+
+---
+
+# PRODUCT-WIDE SPEC-CONFORMANCE AUDIT (15 Jul 2026) — all screens + processes vs the complete spec
+
+Owner directive: *"all screens and processes — audit, fix, report; list processes, map gaps, accomplish spec."*
+Method: 5 independent domain auditors read the REAL `src/` code against `docs/LOCK-PRODUCT-SPECIFICATION.md`
+(the assembled complete spec), each returning a gap map with `file:line` evidence. This section = the
+consolidated map + the running fix report. STATE ∈ **BUILT** (matches spec) · **PARTIAL** (exists, diverges)
+· **TARGET** (spec'd, honestly not built) · **MISSING** (no code). Priority P0 (blocks core loop / firewall)
+· P1 (strong launch) · P2 (polish).
+
+## Headline
+The app is **substantially built** — most screens exist and are firewall-clean. The evidence firewall is
+physically enforced (server allowlist + column grants + `buildSafePayload` + `internal_confidence` never
+leaves the DB). The gaps cluster in: (a) a few firewall/correctness defects (now FIXED), (b) two artist
+screens that are thin (Act-editor, Passport multi-view), (c) the platform's outer processes (email transport,
+GA4 dual-emit, Hebrew wiring, governed taxonomy), and (d) two owner decisions (retire `/producer`; Resend).
+
+## MASTER P0 TRACKER (10 P0s — 5 CLOSED this session)
+| P0 | Domain | What | State |
+|---|---|---|---|
+| B3 | Buyer | Narrated firewall strip on public Passport footer (U33/§2.2 violation) | ✅ FIXED (b9514d1) |
+| A6 | Auth | Consent write used pre-021 scope names the live CHECK rejects → onboarding consent silently failed | ✅ FIXED (b9514d1) |
+| U10 | Auth | No real 404 — catch-all silently redirected, hiding broken links | ✅ FIXED (b9514d1) — warm NotFound |
+| SW1/SW2 | Workspaces | Base booker/producer switching into agency/production workspace was dead-ended (role not re-derived) | ✅ FIXED (b9514d1) |
+| S1 | Platform | Zero HTTP security headers (no CSP/HSTS); JWT in localStorage unmitigated | ✅ FIXED (b9514d1) — vercel.json headers |
+| P7/D1 | Artist | Act-Identity Editor — the owner's reported broken screen; no edit surface for stage_name/positioning/genre/city; confirmed Radar nodes can't be re-opened | 🔴 OPEN — wave-2 build |
+| S6 | Artist | Passport self-view is a bare redirect — no multi-view / edit-vs-buyer-preview / publish widget (§8.4, Codex P0) | 🔴 OPEN — wave-2 build |
+| S11 | Artist | No `/artist/access` and no `/artist/act/edit` routes; Account tab points to generic `/settings` | 🔴 OPEN — wave-2 (pairs with P7) |
+| N2/N3 | Platform | Gate-critical availability-request → artist EMAIL does not exist; no email transport at all | 🟠 OWNER-BLOCKED — needs a Resend account + `RESEND_API_KEY` |
+| D3 | Workspaces | Retire the `/producer` workspace shell (confirmer must live only at `/confirm/:token`) | 🟡 OWNER-DECISION — retire vs reclassify as Production |
+
+## GAP MAP — by domain (actionable rows; BUILT-and-conformant screens summarized as counts)
+
+### 1 · Artist journey — 3 BUILT / 8 PARTIAL / 1 TARGET / 2 MISSING
+| id | screen/process | spec | STATE | gap | fix | pri |
+|---|---|---|---|---|---|---|
+| P7 | Act-Identity Editor (D1) | §8.6/§17.A.10 | MISSING | no edit surface for identity; confirmed Radar nodes not re-openable | build inline-edit screen `/artist/act/edit` + edit affordance on confirmed nodes | **P0** |
+| S6 | Passport self-view | §8.4/§17.A.3 | TARGET | bare redirect to public read; no multi-view/edit-preview/publish widget | build 4-face switcher + owner-edit vs buyer-preview + publish/share | **P0** |
+| S11 | routes/nav plumbing | §8.5/§8.6 | PARTIAL | no `/artist/access` or `/artist/act/edit`; Account→`/settings` | add both routes; repoint Account | P0/P1 |
+| S3 | Radar Universe depth | §8.3/§17.A.2 | PARTIAL | no scene-lens control, no desktop right-rail inspector (bottom-sheet on all viewports), no orbit-logo widget, no constellation threads | add scene switch + ≥md right-rail + orbit logos + motion | P1 |
+| S7 | Requests inbox | §17.A.4 | PARTIAL | works+firewall-clean; missing fit-line, "ask one question", "no contact shared" cue | add decision-widget features | P1 |
+| P6 | Access "who can act for you" | §8.5 | PARTIAL | inbound grant mgmt lives in Settings; no dedicated screen, no artist-initiated invite | build `/artist/access` w/ invite + rep-card states | P1 |
+| S1o | Onboarding 3-step narrative | §8.1 | PARTIAL | 2-field min-viable (owner order 8 Jul, honest); scan-anim/found-grid deferred | label TARGET; keep entry | P2 |
+| S4 | ArtistReadiness (legacy) | §8.2 | PARTIAL | superseded by Radar; dead deep-link; internal 0-100 never rendered (firewall-safe) | retire or fold in | P2 |
+| BUILT | ArtistDashboard/Radar host, ClaimReview, EvidenceCapture, proofBits, OfferPayment, evidence→AI→approve loop | | BUILT | — | — | — |
+_Firewall: NO violations in artist surfaces (counts shown are the artist's own items, spec-permitted; no reaction count/%/score returns to the artist)._
+
+### 2 · Buyer + Source-Confirmer — mostly BUILT (highest firewall risk domain)
+| id | screen/process | spec | STATE | gap | fix | pri |
+|---|---|---|---|---|---|---|
+| B3 | Passport footer firewall strip | §2.2/U33 | ✅FIXED | narrated "NO SCORE·NO RANK…" strip | removed | ~~P0~~ |
+| B6 | Proof-unit source-peek | §8.7/§17.A.6 | MISSING | no hover/tap provenance popover (a DoD item) | add card-rise peek to ProofUnit | P1 |
+| S2c | Confirmer "partly right" inline correction | §8.9/§17.A.7 | PARTIAL | posts `partial` with no correction field | add inline correction textarea | P1 |
+| S5c | `/producer` shell (D3) | §8.9 | PARTIAL | producer workspace shell still exists | retire per D3 (owner decision) | P1 |
+| B7/B9 | reassurance microcopy · "bookability" fallback string | §8.7 | PARTIAL | missing "no login needed" line; fallback eyebrow says "BOOKABILITY" (never shown) | add line; rename fallback | P2 |
+| G2r | request bands pre-set from Passport | §8.8 | PARTIAL | bands are app-global, not the passport's shown bands | pass passport bands | P2 |
+| S3c/S4c | confirmer replay + legal expandable | §8.9 | MISSING/TARGET | no replay ghost; legal not in expandable | add both | P2 |
+| P2r | producer received-passports | task | PARTIAL | honest stub, no data layer | build query or keep stub | P2 |
+| BUILT | Public Passport loader, firewall-safe derivation (bands+method labels+remove-empty), booking/rep views, availability request + GATE event, receipt, `/confirm/:token` ceremony | | BUILT | — | — | — |
+_Firewall: public Passport shows zero score/rank/%/gauge; reaction to artist is method-safe text only. Confirmed clean (post B3 fix)._
+
+### 3 · Representation + Production + Admin — Rep/Admin BUILT, Production PARTIAL
+| id | screen/process | spec | STATE | gap | fix | pri |
+|---|---|---|---|---|---|---|
+| SW1/SW2 | effective-role derivation | §7.2/§3 | ✅FIXED | booker/producer dead-end on switch | added to ORG_DERIVED_ROLES | ~~P0~~ |
+| D3 | retire `/producer` shell | §8.9 | OPEN | routes still present; PRODUCER base role routed into it | remove routes + re-home (owner decision) | **P0** |
+| PR1 | Production lineup board | §8.11/§17.A.9 | PARTIAL | slots display-only; no per-slot CTA, no Production-as-Buyer link | add slot CTA + open-Passport | P1 |
+| PR2 | Production event/lineup CREATION | §8.11 | TARGET | honest view-only; but header "+New event/open slot" affordance entirely absent | add target-stub affordance | P1 |
+| A1/A2/A3 | Admin Gate hero · pilot funnel · AI-cost/freshness/risk tiles | §8.12 | MISSING | ops console exists but not the §8.12 cockpit (Gate tiles, funnel, cost) | add Gate tile row + funnel + 3 tiles | P1 |
+| R1 | Roster cards | §8.10 | PARTIAL | one action+band ✓; missing what-changed+why line; urgent cards not sorted first | add why-line; sort openReqs first | P1 |
+| PR3 | Production default section | §7.2 | PARTIAL | defaults to Team; spec = Events | default to events; reorder tabs | P2 |
+| P1i | Rep requests inbox forward/decline | §8.10 | PARTIAL | answer/close ✓; no forward/decline | add actions | P2 |
+| BUILT | Rep roster grant rows, next-best-action engine, invite handshake, access-requests lifecycle, RadarFeed, Admin ops console (GDPR export/erasure/audit), workspace switcher | | BUILT | — | — | — |
+_Firewall: no score/rank in roster/radar cards (counts are declared inbox/inventory, spec-permitted)._
+
+### 4 · Auth + Org + utility — largely BUILT + polished
+| id | screen/process | spec | STATE | gap | fix | pri |
+|---|---|---|---|---|---|---|
+| A6 | privacy consent scope | §15.2 | ✅FIXED | legacy scope names rejected by CHECK | canon `privacy-processing` | ~~P0~~ |
+| U10 | 404 not-found | §17.B.10 | ✅FIXED | silent redirect | warm NotFound | ~~P0~~ |
+| U11 | offline banner | §17.B.10 | MISSING | no `navigator.onLine` anywhere | add online/offline banner in AppShell | P1 |
+| U3 | 30-day deletion SLA | §17.B.5/§15 | PARTIAL | records request; no server purge job — SLA is copy-only | add ops queue / cron purge | P1 |
+| U5 | consent/cookie banner | §17.B.8 | PARTIAL | unequal button hierarchy; no Manage-prefs sheet; not re-openable from Account | equal-weight + Manage sheet + Account link | P1 |
+| A3o | Google OAuth | §13.4 | PARTIAL | code correct; provider not enabled server-side; no cancel-note | enable provider; add note | P2 |
+| U7 | notifications page | §17.B.9 | PARTIAL | dropdown only; no `/notifications` page | add route | P2 |
+| O1/U9/U12 | invite decline · error copy · skeleton breadth | | PARTIAL | minor divergences | align | P2 |
+| BUILT | Signup, Login, Forgot/Reset, role select, AuthProvider, invite→accept→scope→revoke, settings (name/WA/lang/marketing/delete), org members/roles/seats, org settings/transfer/delete, upgrade/billing (free-pilot), Consent Mode v2 default-denied, shell/nav, ErrorBoundary, skeleton pattern | | BUILT | — | — | — |
+
+### 5 · Platform processes — firewall/analytics-canon BUILT; outer processes thin
+| id | process | spec | STATE | gap | fix | pri |
+|---|---|---|---|---|---|---|
+| S1p | CSP/security headers (app) | §13.5 | ✅FIXED | zero headers | vercel.json CSP+HSTS+… | ~~P0~~ |
+| N2 | availability-request → artist EMAIL (Gate-critical) | §14.6 | MISSING | bell only; artist gets no email | send via Resend in the route | **P0** |
+| N3 | email transport (Resend/SMTP) | §14.6 | MISSING | none in repo; signup rides Supabase default | create Resend + transport util | **P0** |
+| S2p | security headers (marketing site) | §13.5 | MISSING | static export ships no headers | add to website-next/vercel.json | P1 |
+| M2 | GA4 dual-emit of the 29 events | §14.3 | MISSING | events never reach GA4 (pageviews only) → funnel invisible in GA | consent-gated gtag in logEvent | P1 |
+| M3 | demo/test-account funnel exclusion | §14.4 | PARTIAL | DEMO excluded, but @gigproof.test/operator pollute live funnel; no is_demo col | add is_demo + exclude at insert/view | P1 (migration) |
+| L2 | site body prose localization | §15.4 | PARTIAL | HE authored but pages hardcode `.en`; toggle switches chrome only | wire pages to `content[locale]` | P1 |
+| L3 | Hebrew webfont | §15.4 | MISSING | `--font-heebo` loads Manrope (Latin); HE falls back to OS font | load real Hebrew webfont | P1 |
+| N4 | org-invite email | §14.6 | MISSING | resendInvite is a no-op; UI toasts success | implement or disable button | P1 |
+| T1/T2 | governed taxonomy + comedian/ceremony families | §16.A | MISSING | genre free-text; format enum can't reach non-music families | reference tables + FKs (migration) | P1 (migration) |
+| L1 | app HE key coverage | §15.3 | PARTIAL | ~14% keys EN-fallback | native HE pass | P2 |
+| BUILT | 29-event CANON (file=DB=app), event RLS, in-app notifications, buildSafePayload firewall, internal_confidence DB-only, snapshot firewall, server rate-limit/CORS | | BUILT | — | — | — |
+
+## FIX REPORT — what happened this session
+**Wave-1 (DONE, committed b9514d1, verify-green, pushed):** B3 firewall strip · A6 consent scope · U10 404 · SW1/SW2 effective-role · S1 app security headers. → **5 of 10 P0s closed.**
+
+**Wave-2 (next, build — no owner input needed):** P7/D1 Act-Identity Editor + S11 routes · S6 Passport multi-view. These are the two thin artist screens; each is a focused build through the GO→AUDIT→FIX loop.
+
+**Owner-blocked / owner-decision (can't close without you):**
+- **N2/N3** Gate email — needs a **Resend account + `RESEND_API_KEY`** (I'll build the code path guarded on the env var so it activates the moment the key lands).
+- **D3** retire `/producer` — a product decision: fully retire the shell, or reclassify those screens as Production. Affects where the producer persona lands.
+
+**P1 backlog (strong-launch, after wave-2):** Radar depth (S3) · Production board CTAs (PR1/PR2) · Admin cockpit tiles (A1–A3) · offline banner (U11) · consent-banner equal-weight + Manage (U5) · deletion purge job (U3) · GA4 dual-emit (M2) · is_demo exclusion (M3) · site HE wiring + webfont (L2/L3) · governed taxonomy (T1/T2) · marketing-site headers (S2p).
