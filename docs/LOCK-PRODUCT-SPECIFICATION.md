@@ -26,7 +26,7 @@ _Status: consolidated master spec (complete) · Written 15 Jul 2026 · Firewall-
 - **13. Engineering & Architecture** — system surfaces & trust boundaries; the real DB schema (migrations 001–036); API/RPC contracts; the `buildSafePayload` claim-safe contract; auth/sessions; RLS + server-enforced firewall; DB ops / deploy / rollback; Q8 production-readiness gate
 - **14. Measurement, Payments & Notifications** — the 29-event analytics canon; measurement architecture; demo/test exclusion; the Gate measurement; free-pilot payments; transactional-email catalog
 - **15. Legal, Consent & Localization** — legal docs & status; Amendment-13/GDPR consent framework; Consent Mode v2; `consent_records`; localization architecture + RTL rules; the delivered Hebrew string set; legal placeholders (L-1…L-9) + HE ratification list (H-1…H-7)
-- **16. Taxonomy & Business** — genre/format/venue/method/platform taxonomies (EN·HE); product goals; the Gate; business model; honest pre-Gate business case; unit economics; consolidated owner-decision list
+- **16. Taxonomy & Business** — genre/format/venue/method/platform taxonomies (EN·HE); product goals; the Gate; business model; honest pre-Gate business case; unit economics; **GTM approach; monetization roadmap; growth loops; risk & assumptions register; trust & safety / anti-gaming / IP; post-Gate roadmap**; consolidated owner-decision list
 - **17. Interactivity, Motion Depth & Utility Screens** — the motion system (easing tokens + duration ladder + reduced-motion contract); per-screen interactivity depth (Radar + Inspector deepest); the inline-edit widget; the 11 missing utility screens (signup/login/reset/invite/settings/org/billing/consent/notifications/404/skeleton)
 - **18. Open Decisions** — owner rulings still pending
 
@@ -2802,6 +2802,109 @@ spend decisions arrive with the pilot: **Supabase Pro $25/mo** (OPEN — owner),
 
 ---
 
+### 16.B.11 Go-to-market (GTM) approach
+
+_Added 15 Jul (owner: "identify gaps — is GTM included?"). Pre-validation stage: this is a **hypothesis to test**, not a locked plan. Every ICP/channel/number is **OPEN** until the Gate produces evidence. No invented traction._
+
+**Positioning (the wedge).** LOCK sells *risk reduction to the demand side*: "check an unfamiliar artist in 60 seconds, on method-labeled evidence, before you put your name on the booking." To the artist it sells *provable bookability*: "prove you're a safe booking before they have to trust a stranger." The firewall (no score/hype) **is** the positioning — it is the credible alternative to inflated EPKs and follower vanity.
+
+**The cold-start problem (two-sided).** LOCK needs artists with real Passports *and* buyers who react. Solving both at once is the hard part. **Chosen wedge: artist-led supply.** The artist is the motivated party (they want the booking), so they do the distribution — they build a Passport and **send it to the exact buyer they already want to reach**. The buyer therefore arrives *warm* (an artist they were already considering), not cold. This sidesteps paid buyer acquisition entirely for the first cohort.
+
+**First-10-buyers playbook (concierge).** (1) Hand-pick artists who **already have a specific buyer in mind** (a promoter they're chasing). (2) Help them build a real Passport (onboarding). (3) Instrument the buyer's reaction (`availability_request_created`) and, on a real reaction, the willingness-to-pay conversation. (4) Learn per case: did the buyer find it useful? would they pay? which evidence mattered? This is manual, unscalable, and correct at this stage — the goal is the Gate, not volume.
+
+**Channel hypotheses (to validate, ranked by fit — none proven):**
+| # | Channel | Why it fits LOCK | First test |
+|---|---|---|---|
+| 1 | **Artist-led (the Passport IS the channel)** | zero CAC; the artist targets the exact buyer; buyer arrives warm | the first-10 playbook above |
+| 2 | **Scene communities** (Telegram/WhatsApp groups, genre scenes) | Israeli electronic/live scenes are tight, group-native | seed a few artists in one scene, watch referral |
+| 3 | **Direct outreach to booking managers / promoters** | the buyer whose reaction defines the Gate | warm intros first, then cold |
+| 4 | **Venue / promoter partnerships via the Source-Confirmer** | confirmers are real buyer-side contacts touching LOCK already | measure confirmer → curiosity → signup |
+| 5 | **Content / SEO** (marketing site) | long-tail "how to check an artist before booking" | already live; low priority pre-Gate |
+
+**OPEN (owner):** the beachhead ICP (ties to **B-1** — which buyer segment leads Gate 1), channel priority + any budget, launch timing, and whether to run the pilot in one scene or across several.
+
+### 16.B.12 Monetization roadmap (post-Gate)
+
+_Principle (CLAUDE.md STAGE): monetisation is **measured, not required**; **no price or ICP is locked until the Gate.** This section fixes the **structure**; every number stays **OPEN.**_
+
+**The ladder (structure fixed, prices OPEN).**
+| Plan | Who pays | What it is | Gates (feature hypotheses) | Price |
+|---|---|---|---|---|
+| **Passport** | artist | **free forever** | build one Act's Passport, per-evidence claim extraction, public buyer view, availability requests | **₪0** |
+| **Momentum** | artist | paid upgrade | deeper/more evidence, momentum insights, (target) multi-source scan, more Acts | **OPEN** (placeholder ₪179, unproven) |
+| **Roster** | manager / agency | paid upgrade | multi-artist roster, team seats, roster radar, org tools | **OPEN** |
+| **Buyer** | booking manager / promoter / private / corporate | **free forever** | view Passports, send availability requests | **₪0 — never charged** |
+
+**Two load-bearing rules (trust, not revenue-max):** (1) **the demand side never pays to view** — charging buyers would kill the adoption LOCK depends on. (2) **No booking commission, ever** (§16.B.8) — LOCK is a *proof tool*, not a marketplace taking a cut; a take-rate would compromise its neutrality and the firewall's credibility. Monetization is **subscription only** (artist/manager side).
+
+**Feature-gating truth (honest):** `plan_flags` exist (migration 028, live) but **enforcement is display-only today** (P1-7) — no plan actually blocks a feature yet. The gating column above is the *intended* map, to wire **after** the price decision.
+
+**Expansion revenue (structure):** seats (Roster grows by team seats) · multi-Act (one artist, several paid Acts) · the built-in **booker→agency upgrade path** (§3, same account grows into Roster) · manager brings a whole roster (supply + seats).
+
+**Pricing method:** willingness-to-pay is **measured at the Gate** (the real pay signal), not guessed a priori. Post-Gate, test monthly vs annual, trial length, and the Momentum/Roster boundary against real conversion.
+
+**OPEN (owner):** every price, the Momentum/Roster feature boundaries, annual vs monthly, trial length, and when to flip enforcement from display-only to real.
+
+### 16.B.13 Growth loops (the engine behind "Growth System")
+
+_The product is a pre-booking **Growth System**; this is the loop model. All loops are **hypotheses** — the share mechanics are BUILT, the loop **measurement is OWED** (nothing here is proven yet). Firewall: every loop metric is a **product-event count, never a per-person score.**_
+
+**Loop 1 — Artist-led viral loop (the primary engine).**
+`Artist builds Passport → shares the public link (built: `?s=1`, WhatsApp share, migration 029) → buyer views with no login → buyer reacts (Gate) AND is exposed to LOCK → buyer starts asking OTHER artists for their LOCK Passport → those artists sign up to make one.` The buyer becomes a **distribution channel for artist signups** — that is the viral coefficient. Loop metric (to instrument): *rate at which a viewed Passport produces a new artist signup.*
+
+**Loop 2 — Source-Confirmer exposure loop.** `Artist requests a venue/promoter to confirm a detail → confirmer opens the magic link (built: `/confirm/:token`) → a real buyer-side contact touches LOCK → curiosity → signup / brand exposure.` Loop metric: *confirmer → return-visit / signup rate.*
+
+**Loop 3 — Representation supply-injection loop.** `A manager on Roster onboards their whole roster → N artists arrive at once (built: ArtistAccess grants, migration 027).` Not viral but a **supply multiplier**.
+
+**Loop 4 — Multi-Act within-person expansion.** `One artist, several Acts, each its own Passport (built: `act` spine, migration 020)` — deepens engagement + expansion revenue without new-user acquisition.
+
+**What's honest here:** the *mechanics* of all four loops exist in code (share link, confirmer, grants, Acts). **None of the loops is instrumented or proven** — no funnel measures "share → new signup" yet (ties to §14 GA4 dual-emit + is_demo OWED). Building that measurement is the prerequisite to claiming any growth loop works. **Do not present these loops as validated.**
+
+**OPEN (owner):** which loop to instrument and push first (recommendation: Loop 1, since it needs no new supply).
+
+### 16.B.14 Risk & assumptions register + validation experiments
+
+_The riskiest-assumption-first list. Qualitative L/I (pre-data). Each risk carries the experiment that would de-risk it._
+
+| # | Risk / assumption | L·I | Validation experiment | Mitigation |
+|---|---|---|---|---|
+| R1 | **Buyers won't react** to a Passport (the core Gate bet) | H·H | first-10 concierge playbook (§16.B.11); watch `availability_request_created` | make the buyer view a genuine 60-sec decision (§8.7) |
+| R2 | **Artists won't complete** a Passport (activation) | M·H | onboarding→`onboarding_completed` rate; the D1 editor now lets them finish/edit | reduce fields; the one-viewport onboarding |
+| R3 | **The firewall (no score) feels less useful** than a number | M·H | buyer comprehension test — do they trust bands+method labels? | lead with method labels + the confirmer human anchor |
+| R4 | **Evidence gaming / fakes** erode trust | M·H | see §16.B.15 anti-gaming | provenance labels + Source-Confirmer + artist-approval gate |
+| R5 | **Two-sided cold start** never ignites | M·H | artist-led wedge removes buyer-acq; measure warm-buyer arrival | Loop 1 first |
+| R6 | **Israeli market too small** without i18n expansion | M·M | measure pilot density in one scene first | locale-aware discovery is TARGET (§9.2) |
+| R7 | **Legal / Amendment-13** exposure | M·H | counsel review (L-1…L-9); consent model built | consent-gated scan, RLS, deletion SLA |
+| R8 | **Deep-scan cost** (~$1) unproven at scale | M·M | measure real per-artist cost before pricing on it | per-evidence extraction is the only BUILT cost |
+| R9 | **Codex / DS dependency** (v1.6.25 values off-repo) | M·M | design-critic loop replaces Codex feedback | build in current app style; re-theme later |
+| R10 | **Single-founder bandwidth** | M·M | this build/audit cadence; delegate to agents | prioritize the Gate ruthlessly |
+
+**Riskiest assumption to test first: R1** — everything else is moot if a real buyer won't react to a real Passport.
+
+### 16.B.15 Trust & safety · anti-gaming · IP & content rights
+
+**Anti-gaming — the design already resists it.** LOCK cannot be gamed for a *higher score* because **there is no score** (the firewall). What a bad actor could try is **fabricated evidence**. Defenses, built vs needed:
+- **BUILT:** the method-label hierarchy (confirmed > evidence > declared) means a self-declared claim is *labeled* self-declared — inflation is visible, not hidden; the **artist-approval gate** (every claim the artist approves); **rate limits + spend caps** (server); the **Source-Confirmer** as the external human trust anchor (a venue/promoter vouches).
+- **NEEDED (OWED):** detection of fabricated links / evidence (basic URL/asset validation); a **dispute / flag path** (a buyer or confirmer flags a claim → operator reviews in the ops console, which exists) → **formal takedown flow OPEN**; **impersonation** handling (someone building a Passport for an artist they're not) — identity verification is light today (**OPEN**; the confirmer + evidence provenance are the current mitigations).
+
+**IP & content rights (needs counsel — ties to §15.1 L-placeholders).** Uploaded evidence (photos, links, media) requires: the artist **warrants they hold the rights**; LOCK stores + displays **on the artist's behalf** (a license to display, not ownership); **takedown on request**; **no resale** of artist data; clear handling of third-party evidence (a venue's photo). These are **ToS clauses to author with counsel** — currently absent from the drafts (a real gap, flagged).
+
+**OPEN (owner + counsel):** the dispute/takedown flow, identity-verification bar, and the IP/content-rights ToS clauses.
+
+### 16.B.16 Post-Gate roadmap / phasing
+
+_Ties the business to the release ladder (`VERSIONS.md`, `DEPLOY-GAPS.md`). Q8 (§13.7) is the gate between Phase 0 and production._
+
+- **Phase 0 — pre-validation (now):** finish the spec (done), harden the app (P0 waves), get a **real Passport in front of a real buyer**. Success = the Gate is *reachable*.
+- **Phase 1 — the Gate:** one booking manager reacts **and** one pays; instrument willingness-to-pay. Success = §16.B.7 met.
+- **Phase 2 — monetization on:** flip plan enforcement from display-only to real; set prices from Gate evidence; (counsel-gated) turn on the target deep-scan.
+- **Phase 3 — growth + depth:** instrument the growth loops (§16.B.13); finish Representation/Production depth; Hebrew launch.
+- **Phase 4 — expansion:** locale-aware discovery beyond HE/EN; new buyer segments (§3.5).
+
+**OPEN (owner):** the phase-gate criteria beyond the Gate, and whether Phases 2–3 run in parallel.
+
+---
+
 ### 16.C — Items needing the owner's decision (consolidated OPEN list)
 
 Everything this section could not close because it requires Maria's ruling:
@@ -3523,6 +3626,10 @@ Assembling the deep build spec surfaced additional decisions that only the owner
 | T-1 | **Genre-family HE labels** — comedian-host & corporate-ceremony (MC/עורך אירוע) are now in the taxonomy (§16.A.1/§16.A.2, reachable from `act.format`); their **Hebrew labels are proposed, pending owner ratification** | OPEN (owner taxonomy) | families are first-class in the spec; ratify HE wording + authorize the CHECK-widening migration (036+). |
 | — | **027/028 applied-state confirmation** | OPEN (owner confirm) | VERSIONS records head 035 but no explicit "027/028 applied ✓"; 030/031 imply they are live. One-line confirmation requested (§13.2). |
 | B-2 | **Billing model** — self-serve checkout vs operator-approved upgrade request | OPEN (owner) | today it is an operator-approved request; no price/ICP locked pre-Gate (§17.B.7). |
+| G-1 | **Beachhead ICP + GTM** — which buyer segment leads Gate 1; channel priority; launch scope (one scene vs many) | OPEN (owner) | frameworks in §16.B.11; ties to B-1. |
+| G-2 | **Monetization numbers** — all prices, Momentum/Roster feature boundaries, monthly vs annual, trial length, when to flip enforcement | OPEN (owner) | ladder structure fixed in §16.B.12; numbers deferred to Gate evidence. |
+| G-3 | **Growth-loop to instrument first** (rec: Loop 1, artist-led) | OPEN (owner) | loops in §16.B.13; measurement OWED (ties to GA4 dual-emit §14). |
+| G-4 | **Trust & safety rulings** — dispute/takedown flow, identity-verification bar, IP/content-rights ToS clauses (counsel) | OPEN (owner + counsel) | §16.B.15; IP clauses currently absent from legal drafts. |
 
 **Two engineering bugs found while grounding (build-fix, NOT owner decisions — flagged for the board):**
 1. `ConsentLegal.jsx` `recordPrivacyConsent` still writes the **pre-021 legacy scope names** (`privacy-policy` / `data-processing`) while the live DB CHECK only accepts canon `privacy-processing` → inserts would be rejected (§15.2, §13.2).
