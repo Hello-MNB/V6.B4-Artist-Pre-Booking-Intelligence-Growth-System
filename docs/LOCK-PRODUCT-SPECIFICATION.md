@@ -31,6 +31,7 @@ _Status: consolidated master spec (complete) · Written 15 Jul 2026, scaling-rev
 - **18. Open Decisions** — owner rulings still pending (priority-tiered: pre-Gate / post-Gate / reserved)
 - **19. Scaling & Future-Readiness (RESERVED)** — international expansion · data/ops at scale · billing/finance · high-volume surfaces · ecosystem/moat · canon-change & release process · SEO/AEO/GEO · platformization/domain-template engine (all post-Gate; named, not gold-plated)
 - **20. Implementation notes for AI / code agents** — the executable negative-constraint guardrails (firewall · DB/migrations · state · localization · atomic spec slices) so Claude Code / Cursor build without drift
+- **21. The Signal Engine** — pre-booking intelligence layer: signal taxonomy (8 families) · signal→action decision system · next-best-action engine · per-persona signal journeys · the AI intelligence layer (firewall-bound) · data-quality/provenance policy · launch- & scale-readiness matrix
 
 ### 0.1 How to read
 Sections 1–7 are the laws every screen inherits. Section 8 is the buildable **screen** core: each screen carries PURPOSE · DESKTOP layout · MOBILE layout · COMPONENTS · STATES · INTERACTIONS · EXACT MICROCOPY · FIREWALL notes · DEFINITION OF DONE, and is buildable from its sub-spec alone. Sections 9–11 are the intelligence layer, acceptance, and current state. **Sections 13–17 are the deep build spec** — §13 Engineering & Architecture (the real DB schema, API/RPC contracts, auth, RLS, deploy/rollback, Q8), §14 Measurement/Payments/Notifications, §15 Legal/Consent/Localization (incl. the delivered Hebrew string set), §16 Taxonomy & Business, and §17 Interactivity/Motion depth + the 11 utility screens that §8 did not cover. Section 18 is the unresolved owner rulings. A developer can build the product from §§1–17; §18 lists what still needs an owner decision.
@@ -3967,6 +3968,75 @@ An AI coding agent (Claude Code / Cursor) suffers context-window dilution — it
 - Every slice ends with `npm run verify` green (nav · isolation · canon · security · i18n-purity · registry · deltas · build) — the mechanical firewall gate (§19.6).
 
 _This appendix is the spec-side mirror of `CLAUDE.md`; if the two ever diverge, `CLAUDE.md` wins (it is the binding repo instruction)._
+
+---
+
+## 21. The Signal Engine (pre-booking intelligence layer)
+
+Multiple reviews converged on one frame: LOCK is not a *page* system, it is a *signal* system — every action is a measurable signal that either unlocks a workflow, triggers a method-safe insight, or feeds a growth loop, and Gate 1 is the first validated milestone, not the ceiling. This section formalises that layer.
+
+> **THE LOAD-BEARING FIREWALL RULE FOR THIS ENTIRE SECTION.** A "signal" is **internal, event-derived data.** It MAY (a) drive a **method-safe user action/prompt**, or (b) feed an **operator-internal metric**. It may **NEVER** be rendered as a score / rank / percentage / count **about a person** on **any** surface — public, artist-facing, or "internal-shown-to-a-user." "Confidence" and "readiness" are **DB-only** pipeline values (`internal_confidence`, §13.5) that never reach a screen. The signal engine makes the product smarter; it never makes it a scoreboard. Every row below inherits this rule.
+
+### 21.1 Signal taxonomy (8 families, derived from the 29-event canon §14.1)
+| Family | Captures | Example source events | Firewall note |
+|---|---|---|---|
+| **Identity** | who the Act is, profile completeness | `onboarding_completed`, `evidence_added` | drives the artist's own gaps (invitations), never a completeness % |
+| **Intent** | active building / distribution intent | `evidence_added`, `share_link_created` | triggers scan + upsell prompts (capability, not score) |
+| **Trust** | provenance strength gained | `claim_confirmed`, `producer_confirmation_received` | raises the **method label**, never a numeric trust score |
+| **Readiness** | booking-ops binaries | invoice/rider binaries | shown as binaries/"Turnkey", never a readiness % |
+| **Relationship** | consented grants & delegation | `invite_member`, ArtistAccess grants (027) | powers Roster; never a network-influence number |
+| **Conversion (the Gate)** | real demand + payment | `availability_request_created`, `entitlement_activated` | the Gate; the reaction returns to the artist as **method-safe text only** (§2.5) |
+| **Retention** | freshness / re-engagement | staleness (`expires_at`), re-login | drives re-sync invitations about the artist's **own** data |
+| **Growth** | viral distribution | `share_link_created` → `share_link_opened` → `signup_completed` | operator K-factor metric; never surfaced per-person |
+
+### 21.2 Signal → action decision system (signal · threshold · action · downstream)
+The rule that keeps this firewall-safe: an action derived from a signal is **either** an operator-internal metric **or** a method-safe user prompt — never a number about a person shown to a person.
+| Signal | Threshold | Action (method-safe) | Downstream |
+|---|---|---|---|
+| Buyer attention (`passport_view`) | any | **operator dashboard only** — NOT told to the artist as a count (§2.9 rejection) | outreach prioritisation (operator) |
+| Evidence stale (`expires_at` passed) | 1 item | re-sync **invitation** about the artist's own data (§16.B.11) | keeps Passport fresh |
+| Gate reaction (`availability_request_created`) | 1 | **Gate email to the artist** (§14.6.5) + operator flag | the Gate; concierge follow-up |
+| Upsell intent (2nd Act / auto-scan / seats) | 1 | contextual upsell prompt (capability) (§16.B.12.c) | conversion |
+| Low claim-confirm rate (internal) | operator threshold | improve the extraction prompt | AI quality (operator) |
+
+### 21.3 Next-best-action (NBA) engine
+**BUILT (partial):** one primary next action per screen, computed from signal state — `pickNextAction` (Artist, §8.2), `rosterNextAction` (Rep, §8.10). Always **method-safe** ("Review your live draw", "Reply to a request"), never "your score is low." **TARGET:** AI-suggested NBA + personalised follow-up prompts — firewall-bound (a suggestion references a capability or a step, never a person-number).
+
+### 21.4 Per-persona signal journeys (captured → appears → who sees → what changes → next action)
+| Persona | Captured | Appears | Who sees | Changes | Next action |
+|---|---|---|---|---|---|
+| **Artist** | pastes/【confirms evidence | Radar node (found→confirmed) | artist only (private) | method label + gaps | "Review / confirm" |
+| **Buyer** | opens Passport, sends request | receipt + (to artist) method-safe text | buyer; artist gets text-only | Gate conversion signal | "Check availability" |
+| **Manager** | roster grant + request | Roster cockpit | manager (scoped) | one action per artist | roster next-best-action |
+| **Confirmer** | opens magic link, confirms | `/confirm/:token` done state | confirmer (accountless) | claim → producer-confirmed | (optional) "Build a Roster" |
+| **Operator** | all product events | Admin cockpit (§8.12) | operator only | Gate tiles + funnel | manual concierge follow-up |
+
+### 21.5 The AI intelligence layer (BUILT vs TARGET — every line firewall-bound)
+- **BUILT:** per-evidence claim **extraction + method labeling** (the only built intelligence — protect it).
+- **TARGET (each firewall-bound):** NBA suggestions · personalised follow-up prompts · buyer-response **summarisation** (method-safe) · **staleness** detection · **gap** detection (artist-private invitations) · growth-loop recommendations (operator) · automated dispute moderation → auto-downgrade to self-declared (§16.B.15).
+- **Internal-only (NEVER rendered):** `internal_confidence` and any "readiness" value — DB-only pipeline signals (§13.5, §2). The AI may **never** output a score/rank/% about a person on any surface. This is the single line that separates LOCK from every EPK-with-a-score.
+
+### 21.6 Data-quality & provenance policy
+- Every claim carries a **method label** (the 4 data doors §9.9) **+ a date**; provenance is explicit.
+- `internal_confidence` is **DB-only**, never returned to any client (§13.5.5 / §2).
+- **Staleness:** `expires_at` → a **"stale" binary** buyer-side (firewall-safe), a **re-sync invitation** artist-side; `buildSafePayload` strips `expires_at` and emits only the "stale" label.
+- **Dispute** → auto-downgrade toward `self-declared` pending review (§16.B.15) — changes provenance, never a score.
+- **No claim reaches the public Passport without `artist_approved`** (the load-bearing gate, §13.5.2).
+
+### 21.7 Launch-readiness matrix + scale-readiness checklist
+The single "does it pass in practice, not just on paper?" view. Live truth in `docs/releases/DEPLOY-GAPS.md`; this is the consolidated matrix.
+**Launch-critical non-negotiables (Gate 1):**
+| # | Non-negotiable | State |
+|---|---|---|
+| 1 | `artist_approved` firewall on every read path | ✅ BUILT (§13.5.2) |
+| 2 | Demo/seed exclusion from Gate metrics (`is_demo`) | ⚠️ OWED (migration 037, §14.3.2) |
+| 3 | Deep-link reload durability (no reset on refresh) | ✅ fix in `vercel.json` (§13.4.4) — rides the candidate deploy |
+| 4 | Off-app Gate email to the artist | ⚠️ OWED (Resend key, §14.6.5) |
+| 5 | Rollback anchor verified (SHA) | ✅ practice (§13.6); rehearse before Q8 |
+| 6 | Firewall clean (0 leaks) | ✅ re-verified this document |
+**Scale-readiness (before wider rollout):** durable rate-limit (Upstash, §13.5.6) · bot protection (Turnstile, §13.5.6) · session BFF/httpOnly (§13.5.5) · performance CI for the Radar budget (§19.8) · embed-sync CI gate (§13.1) · production observability/alerting (§19.2). All **OWED**, none blocks Gate 1, each blocks broad launch.
+
+_The signal engine is what turns LOCK from a static profile tool into a compounding pre-booking **intelligence** system — while the firewall guarantees it never becomes the scoreboard it exists to replace._
 
 ---
 
