@@ -236,7 +236,7 @@ Gate later phases. **OWNER must supply:** B-1 beachhead ICP · pilot price + ann
 
 ### Phase 1 — Port the approved prototype into the real `src/` app (the core build)
 The live app is the OLD dark build (`a874ab5`); the spec + prototype ③ are the target. Screen-by-screen, each an atomic slice + design-critic + Playwright:
-1. **DS foundation** — §5.11 tokens into code + §5.10 humanized-rendering renderer (pure function + test).
+1. **DS foundation** (✅ done) — §5.11 tokens into code (`tailwind.config.js` fontSize/radius + `tokens.ts` `type`) + §5.10 humanized-rendering renderer (`src/lib/humanize.js` pure fns + `scripts/test-humanize.mjs` 10/10). Verify-green.
 2. **Artist canvas** (§7.7 one-canvas) — Radar (§8.2/§8.3/§17.A.2) · Passport multi-view **S6** (§8.4) · Requests (§8.13/§17.A.4) · Act-editor **D1** (✅ done) · Access (§8.5).
 3. **Buyer** — public Passport (§8.7) + availability request/receipt (§8.8) — highest firewall care.
 4. **Confirmer** — `/confirm/:token` refinements (§8.9).
@@ -244,7 +244,7 @@ The live app is the OLD dark build (`a874ab5`); the spec + prototype ③ are the
 6. **Utility screens** — the 11 (§17.B): 404 (✅) · offline · consent-banner equal-weight · notifications page · etc.
 
 ### Phase 2 — Close the P0 build gaps
-D2/D3 effective-role + producer-shell (needs your ruling) · Gate email (§14.6.5, needs Resend key) · is_demo exclusion (migration 037) · firewall-strip already removed (✅) · consent scope already canon (✅).
+D2/D3 effective-role + producer-shell (needs your ruling) · Gate email (§14.6.5, needs Resend key) · is_demo exclusion (**migration 037 authored + verify-green** — owner applies when Supabase Pro/C-2 is enabled; the `.eq('is_demo', false)` read-model filter ships WITH the server change, not before) · firewall-strip already removed (✅) · consent scope already canon (✅).
 
 ### Phase 3 — Gate-readiness (the §21.7 non-negotiables)
 artist_approved (✅) · is_demo · deep-link durability (✅, rides the deploy) · Gate email · rollback rehearsal · firewall clean (✅) → then **your Q8 walk** on the frozen SHA.
