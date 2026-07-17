@@ -57,7 +57,7 @@ export default function NotificationBell() {
         aria-label={T.notifications.title}
         aria-expanded={open}
         aria-haspopup="true"
-        className="relative flex h-9 w-9 items-center justify-center rounded-full text-muted transition hover:bg-surface hover:text-ink"
+        className="relative flex h-11 w-11 items-center justify-center rounded-full text-muted transition hover:bg-surface hover:text-ink md:h-9 md:w-9"
       >
         <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75"
           strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -74,7 +74,7 @@ export default function NotificationBell() {
               {T.notifications.title}
             </span>
             {unread && (
-              <button onClick={onMarkAll} className="text-xs text-accent hover:underline">
+              <button onClick={onMarkAll} className="tap-target text-xs text-accent hover:underline">
                 {T.notifications.markAllRead}
               </button>
             )}

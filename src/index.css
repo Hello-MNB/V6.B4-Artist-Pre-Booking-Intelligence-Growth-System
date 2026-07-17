@@ -56,6 +56,8 @@ body {
            font-bold text-sm
            transition active:scale-[0.99] active:translate-y-px
            disabled:opacity-50 disabled:pointer-events-none;
+    /* §5.7 mobile tap target — survives px/py/text-size overrides */
+    min-height: 44px;
   }
   .btn-primary {
     /* lime gradient with DARK text — never light text on lime (contrast) */
@@ -76,6 +78,7 @@ body {
            placeholder:text-faint outline-none transition;
     border-radius: 11px;
     padding: 12px 14px;
+    min-height: 44px; /* §5.7 mobile tap target */
   }
   .field:focus {
     border-color: theme('colors.accent');
@@ -93,6 +96,26 @@ body {
     /* status pills: small (≤24px tall), quiet tints (≤10% alpha), text does
        the work — color is punctuation, never a gauge, never a big fill */
     @apply inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium leading-4;
+  }
+  /* §5.7 mobile tap targets — the LOOK of small pills/links stays compact,
+     but the invisible HIT AREA is raised to ≥44×44 via a centered ::before
+     overlay. Applied automatically to any chip rendered as a button/link,
+     and opt-in via .tap-target for other visually-small controls. */
+  .tap-target,
+  button.chip,
+  a.chip {
+    position: relative;
+  }
+  .tap-target::before,
+  button.chip::before,
+  a.chip::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
   }
   .skeleton {
     /* skeleton loading shimmer (prefer over spinners) */

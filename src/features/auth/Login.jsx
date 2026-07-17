@@ -57,7 +57,7 @@ export default function Login() {
         <div className="mb-4 flex flex-wrap gap-2">
           {personas.map(([role, label, route]) => (
             <button key={role} onClick={() => { setDemoRole(role); nav(route) }}
-              className="rounded-full border border-line bg-surface2 px-4 py-2.5 text-sm font-semibold text-ink transition hover:border-accent/60 hover:bg-raise">
+              className="min-h-[44px] rounded-full border border-line bg-surface2 px-4 py-2.5 text-sm font-semibold text-ink transition hover:border-accent/60 hover:bg-raise">
               {label}
             </button>
           ))}

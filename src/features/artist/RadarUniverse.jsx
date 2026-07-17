@@ -375,7 +375,7 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
           <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.08em] text-faint">{S.sceneLabel}</span>
           {[null, ...scenes].map((g) => (
             <button key={g || 'all'} role="tab" aria-selected={scene === g} onClick={() => setScene(g)}
-              className={`shrink-0 rounded-full border px-3 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] transition-colors ${
+              className={`tap-target shrink-0 rounded-full border px-3 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] transition-colors ${
                 scene === g ? 'border-gold/60 bg-gold/10 text-gold' : 'border-transparent bg-surface2 text-muted hover:bg-raise'
               }`}>
               {g || S.sceneAll}
@@ -389,7 +389,7 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
       <div className="relative z-10 mb-3 flex items-center gap-1.5 overflow-x-auto pb-1 md:absolute md:start-8 md:top-8 md:mb-0 md:w-auto md:pb-0" role="tablist" aria-label="radar filters">
         {FILTERS.map((f) => (
           <button key={f.key} role="tab" aria-selected={filter === f.key} onClick={() => pickFilter(f.key)}
-            className={`relative flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] transition-colors ${
+            className={`tap-target relative flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] transition-colors ${
               filter === f.key ? 'border-line2 bg-line text-ink' : 'border-transparent bg-surface2 text-muted hover:bg-raise'
             }`}>
             {f.label}
@@ -402,7 +402,7 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
             value={world || ''}
             onChange={(e) => setWorld(e.target.value || null)}
             aria-label={S.worldsHint}
-            className={`ms-auto shrink-0 appearance-none rounded-full border bg-surface2 px-3 py-1 font-mono text-[10px] outline-none ${
+            className={`ms-auto min-h-[44px] shrink-0 appearance-none rounded-full border bg-surface2 px-3 py-1 font-mono text-[10px] outline-none md:min-h-0 ${
               world ? 'border-line2 text-ink' : 'border-line text-faint'
             }`}>
             <option value="">{S.allWorlds}</option>
@@ -505,7 +505,7 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
                 {isConnect ? (
                   <button type="button" onClick={goEvidence}
                     aria-label={S.platformConnectAria} title={S.platformConnectAria}
-                    className="grid h-7 w-7 place-items-center rounded-full border border-dashed border-line2 bg-surface2 text-faint transition-colors hover:border-line2 hover:text-ink">
+                    className="tap-target grid h-7 w-7 place-items-center rounded-full border border-dashed border-line2 bg-surface2 text-faint transition-colors hover:border-line2 hover:text-ink">
                     <span aria-hidden className="text-xs font-bold leading-none">+</span>
                   </button>
                 ) : (
@@ -555,7 +555,7 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
               <span className="block truncate text-muted">“{undo.claim.value || human(undo.claim.claim_type)}”</span>
             </span>
           </span>
-          <button className="shrink-0 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-accent underline" onClick={undoConfirm}>
+          <button className="tap-target shrink-0 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-accent underline" onClick={undoConfirm}>
             {S.undo}
           </button>
         </div>
@@ -727,7 +727,7 @@ function PlanetRow({ node: n, planet, S, T, busy, bloom, onConfirm, onEvidence, 
 
       <div className="mt-2 flex flex-wrap items-center gap-2">
         {n.state === NODE.MISSING && !n.fill && n.evidence && (
-          <button className="rounded-lg border border-line2 bg-surface2 px-3 py-1.5 text-xs font-bold text-ink transition-colors hover:bg-raise" onClick={onEvidence}>
+          <button className="min-h-[44px] rounded-lg border border-line2 bg-surface2 px-3 py-1.5 text-xs font-bold text-ink transition-colors hover:bg-raise" onClick={onEvidence}>
             {S.fill.openEvidence}
           </button>
         )}

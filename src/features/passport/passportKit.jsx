@@ -161,11 +161,17 @@ export function PerformanceSection({ data, T, label }) {
     <PassportSection label={label || T.passport.performance}>
       <div className="rounded-[18px] border border-line bg-surface px-5">
         {data.exp.map((i) => (
-          <div key={i.id} className="flex items-center justify-between gap-3 border-b border-line py-3.5 last:border-0">
-            <span className="min-w-0 truncate text-[15px] text-ink">
+          // Narrow screens stack to two lines — title WRAPS (venue lives inside it,
+          // so it must never clip) and the date drops to a mono micro line. Buyers
+          // must always see WHEN and WHERE. ≥sm keeps the original one-line row.
+          <div key={i.id} className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1.5 border-b border-line py-3.5 last:border-0 sm:flex-nowrap">
+            <span className="min-w-0 basis-full text-[15px] text-ink sm:basis-auto sm:truncate">
               {i.title}
-              {i.item_date ? <span className="text-faint"> · {i.item_date}</span> : null}
+              {i.item_date ? <span className="hidden text-faint sm:inline"> · {i.item_date}</span> : null}
             </span>
+            {i.item_date && (
+              <span className="font-mono text-[10.5px] uppercase tracking-[0.08em] text-faint sm:hidden">{i.item_date}</span>
+            )}
             <MethodLabel status={i.source_status === SOURCE_STATUS.PUBLIC_VERIFIED ? 'supporting' : 'self-reported'} />
           </div>
         ))}

@@ -296,7 +296,7 @@ export function LanguageToggle() {
   return (
     <button
       onClick={() => setLang(lang === 'he' ? 'en' : 'he')}
-      className="text-xs font-mono font-semibold text-muted border border-line rounded-full px-3 py-1 hover:text-ink hover:border-line2 transition"
+      className="tap-target text-xs font-mono font-semibold text-muted border border-line rounded-full px-3 py-1 hover:text-ink hover:border-line2 transition"
       title={T.common.switchLanguage}
       aria-label={T.common.switchLanguage}
     >

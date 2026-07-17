@@ -148,7 +148,7 @@ function InlineEditRow({ fieldKey, type = 'text', max, value, onSave, T }) {
         </div>
 
         {mode === 'display' && (
-          <button type="button" className="shrink-0 font-mono text-[11px] font-bold uppercase tracking-[0.07em] text-accent hover:underline" onClick={begin}>
+          <button type="button" className="inline-flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center font-mono text-[11px] font-bold uppercase tracking-[0.07em] text-accent hover:underline" onClick={begin}>
             {f.edit}
           </button>
         )}
@@ -158,13 +158,13 @@ function InlineEditRow({ fieldKey, type = 'text', max, value, onSave, T }) {
       {mode === 'saved' && (
         <p className="mt-2 flex items-center gap-3 text-xs text-accent">
           <span>✓ {f.saved}</span>
-          <button type="button" className="underline" onClick={undo}>{f.undo}</button>
+          <button type="button" className="tap-target underline" onClick={undo}>{f.undo}</button>
         </p>
       )}
       {mode === 'error' && (
         <p className="mt-2 flex items-center gap-3 text-xs text-need">
           <span>{f.error}</span>
-          <button type="button" className="underline" onClick={() => commit()}>{f.save}</button>
+          <button type="button" className="tap-target underline" onClick={() => commit()}>{f.save}</button>
         </p>
       )}
     </div>
@@ -202,7 +202,7 @@ export default function ActEditor() {
   return (
     <PageShell>
       <div className="mt-2">
-        <Link to="/artist/home" className="font-mono text-[11px] uppercase tracking-[0.07em] text-muted hover:text-ink">← {f.backToRadar}</Link>
+        <Link to="/artist/home" className="inline-flex min-h-[44px] items-center font-mono text-[11px] uppercase tracking-[0.07em] text-muted hover:text-ink">← {f.backToRadar}</Link>
       </div>
       <h1 className="mt-4 font-display text-2xl text-ink">{f.title}</h1>
       <p className="mt-1 text-sm text-muted">{f.intro}</p>
