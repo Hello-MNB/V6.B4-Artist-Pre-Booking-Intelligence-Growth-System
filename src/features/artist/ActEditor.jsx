@@ -200,28 +200,36 @@ export default function ActEditor() {
   if (loading) return <PageShell><div className="mt-16 flex justify-center"><Spinner /></div></PageShell>
 
   return (
-    <PageShell>
-      <div className="mt-2">
-        <Link to="/artist/home" className="inline-flex min-h-[44px] items-center font-mono text-[11px] uppercase tracking-[0.07em] text-muted hover:text-ink">← {f.backToRadar}</Link>
-      </div>
-      <h1 className="mt-4 font-display text-2xl text-ink">{f.title}</h1>
-      <p className="mt-1 text-sm text-muted">{f.intro}</p>
+    // W3-2 (§10.2 owner no-scroll law): bounded to the viewport — 100dvh minus
+    // the AppShell chrome (56px sticky header, +64px bottom-nav padding under
+    // md). Back link + title stay fixed; the field rows (which grow while
+    // editing — genre chips, hints) scroll inside ONE internal area instead of
+    // overflowing the page (W2 measured +94px @390).
+    <div className="flex h-[calc(100dvh-7.5rem)] flex-col overflow-hidden px-4 pt-3 sm:px-8 md:h-[calc(100dvh-3.5rem)] md:pt-5">
+      <div className="mx-auto flex min-h-0 w-full max-w-xl flex-1 flex-col animate-fade-in">
+        <div className="shrink-0">
+          <Link to="/artist/home" className="inline-flex min-h-[44px] items-center font-mono text-[11px] uppercase tracking-[0.07em] text-muted hover:text-ink">← {f.backToRadar}</Link>
+          <h1 className="mt-1 font-display text-2xl text-ink">{f.title}</h1>
+          <p className="mt-1 text-sm text-muted">{f.intro}</p>
+          {loadErr && <div className="mt-4"><ErrorNote>{loadErr}</ErrorNote></div>}
+        </div>
 
-      {loadErr && <div className="mt-4"><ErrorNote>{loadErr}</ErrorNote></div>}
-
-      <div className="card mt-5">
-        {FIELDS.map((fl) => (
-          <InlineEditRow
-            key={fl.key}
-            fieldKey={fl.key}
-            type={fl.type || 'text'}
-            max={fl.max}
-            value={artist?.[fl.key] || ''}
-            onSave={saveField}
-            T={T}
-          />
-        ))}
+        <div className="mt-4 min-h-0 flex-1 overflow-y-auto pb-4">
+          <div className="card">
+            {FIELDS.map((fl) => (
+              <InlineEditRow
+                key={fl.key}
+                fieldKey={fl.key}
+                type={fl.type || 'text'}
+                max={fl.max}
+                value={artist?.[fl.key] || ''}
+                onSave={saveField}
+                T={T}
+              />
+            ))}
+          </div>
+        </div>
       </div>
-    </PageShell>
+    </div>
   )
 }

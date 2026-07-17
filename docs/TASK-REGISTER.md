@@ -28,10 +28,15 @@ _Created 17 Jul 2026 from the real, witnessed state of the product — not from 
 13. **Token economy:** every wave report states its measured token cost; low-risk docs-only µ-tasks may skip L5 (Team D) at the orchestrator's discretion ONLY when no code changed; waves are sized to the owner's remaining plan budget — Gate-critical tasks first, heavy build programs (site S4-S8) deferred if the budget tightens.
 
 **Marks:** ✅ done · ⚠️ partial/unwitnessed (note says what's missing) · ❌ not built · — not applicable (non-screen task).
+**Deployment-state labels (PM-audit upgrade, 17 Jul — never blur code-state with live-state):** `in-code` (work branch) · `merged` (on main) · `deployed-live` (production answered a live probe). A status may claim `deployed-live` ONLY with an L7 probe as evidence.
 
 ---
 
-## NOW — Wave 2 (dispatched 17 Jul, evening)
+## NOW — S0 site-audit wave (5 read-only agents) · Wave 3 staged
+
+_Wave 2 SHIPPED 17 Jul (4/4 Team-D SHIP, live-smoked: fonts self-hosted confirmed live — zero Google Fonts requests). The table below is kept as the shipped record:_
+
+### Shipped Wave 2 record
 
 Four builds in disjoint territories + Team D verification each + Team E wave-close ship:
 
@@ -289,7 +294,23 @@ The register is the ONLY work source. The loop runs continuously; the owner is i
 6. **SHIP** — wave-close: verify green → embed/site rebuild → owner-authorized main merge → deploy watch → L7 smoke.
 7. **CLOSE** — register status flips in the SAME commit as the ship; findings discovered en route are ROUTED (new µ-task with team + wave), never dropped.
 8. **REPORT** — one verified wave report to the owner (rule 8: post-verification only), with doc links (rule 9) + OWNER-PENDING refresh.
-9. **LOOP** — return to 1. Anti-drift audit (register-vs-reality) runs every 3 waves or on any owner challenge.
+9. **LOOP** — return to 1.
+
+**SPEC-RETURN & ANTI-DRIFT CADENCE (owner directive 17 Jul — "prove the autonomy is justified"):**
+- **Every µ-task:** the builder reads its cited spec sections BEFORE code (loop step 3) + guardrails pass.
+- **Every wave close:** full 10-inspector gate · rule-12 cargo check on the merge diff · register statuses synced in the ship commit.
+- **Every 3 waves, ANY owner challenge, or ANY regression:** the full ANTI-DRIFT CHECKLIST below, reported to the owner as a checklist with evidence.
+- **Every 10 waves:** deep pass — re-read changed spec sections end-to-end · architecture review (territories, file ownership, dependency direction) · SESSION-MEMORY refresh.
+
+**THE ANTI-DRIFT CHECKLIST (the autonomy proof, run + reported):**
+□ 10-inspector gate green · □ canon-drift in-sync (app==DB) · □ zero unnumbered work in commits · □ working tree committed+pushed · □ register NOW/BLOCKED = reality · □ every shipped µ-task carries a Team-D verdict · □ rule-12 cargo check ran on last merge · □ rule-11 boundary attestation (no real-data/email/money/live-DB actions without owner word) · □ docs synced (MEMORY · OWNER-PENDING · SITE-MANAGEMENT · LESSONS) · □ open debts listed honestly · □ all prior-wave findings ROUTED (nothing produced-then-dropped).
+
+**PROCESS PATCHES (17 Jul hole-hunt — owner: "find the holes that permit drift"):**
+- **P-1 attribution:** wave-close commits are made PER TERRITORY (one commit per µ-task's files), and Team D verifiers receive the µ-task's explicit file-scope list — no more commingled-checkpoint archaeology.
+- **P-2 lessons injection:** `docs/LESSONS.md` (new ledger) is referenced in every workflow agent's brief — past failures become standing instructions, not memories.
+- **P-3 witness-debt gate:** when unwitnessed live screens exceed EIGHT, screen-building waves PAUSE (ops/infra waves may continue) until the owner witnesses — debt cannot compound silently.
+- **P-4 preview-first option:** app changes can ship to a PREVIEW deployment for owner testing before main when the change is owner-visible UX (the site already must, rule 12).
+- **Known holes accepted-open (honest):** L4 spec-conformance diffs not yet run for the Radar screens (T-03…T-06, queued Wave 4) · app-side rollback never rehearsed (T-27) · no production error-monitoring (§19.2, deliberately post-Gate) · bundle 538kB>500kB (perf pass queued) · B1 login-QA findings produced but not yet folded into T-01 (routing debt — Wave 3).
 
 **Cheap-agent allocation law:** builder low/medium ≤40–90k by µ-task class (measured baselines: QA 41k · audit 71k · build 50–80k) · verifier high ≤70k · wave overhead (E) ≤40k. Wave ceiling ≈ 500k. Hardware note: this 4-core box executes 2–3 agents concurrently; waves of 4–6 µ-tasks keep the pipeline full.
 
@@ -330,10 +351,53 @@ The register is the ONLY work source. The loop runs continuously; the owner is i
 | S6 | Supporting pages (How-it-works · Free pilot · Trust/Methodology) | preview URL | ≤80k |
 | S7 | CTA/conversion pass: one primary per page; join-pilot funnel; consent-gated events only (rule 11) | preview URL | ≤50k |
 | S8 | Site QA: L2 390/1360 · lexicon · contrast · asset/logo integrity | QA report | ≤50k |
-**Order:** S1 → owner taste-pick → S2‖S3 → S4 → owner preview-approve → S5‖S6‖S7 → S8 → Team D → ship on owner GO. Program cost ≈ 570k + verification.
-**State:** program approved-to-plan; S1+S2 dispatch after Wave 2 closes (budget-gated per rule 13).
+**Order:** S0 audits → S1 → owner taste-pick → S2‖S3 → S4 → owner preview-approve → S5‖S6‖S7 → S8 → Team D → ship on owner GO. Program cost ≈ 570k + S0 ≈ 220k + verification.
+**State:** S0 COMPLETE 17 Jul (5 agents · 438k · all reported). **Digest → S1 inputs:**
+- **Owner's instincts all VALIDATED by measurement:** font hierarchy broken (THREE different H2 systems across pages: sans-900 vs serif-400 vs sans-400) · container widths inconsistent (home sections 600–1100px vs subpages 1120 vs nav 1100 — no single grid) · lime over-used on home (401k px² incl. giant decorative blobs; 2 lime primaries in the first viewport) and as wallpaper on /producers · images missing on most pages (only home/artists/bookers have any).
+- **Content:** /artists and /bookers are EXCELLENT (pure single-audience voice, benefit-led — keep as the gold standard). Home: 3 different labels for the SAME signup CTA (P1); "The Design Principle" kicker = builder-speak; JSON-LD carries technical strings Google can surface.
+- **Broken facts:** `llms.txt` advertises /managers and /production — both 404 (routes don't exist; real route is /producers). Footer links 34px + logo 23px tap targets (<44). 
+- **Mobile:** all real pages PASS h-scroll/hero/stacking — the approved site is structurally mobile-sound.
+- **Infra:** legacy `website/` confirmed UNREFERENCED + undeployed → archive plan ready (no deletion without owner visibility). Vercel config audit archived in wave transcript.
+- **Routing:** hygiene fixes (llms.txt routes · footer/logo tap sizes) join T-41's named train — pending owner GO (M-15); design-level items (H2 unification · one grid · lime discipline · one CTA label · images) = S1 brief inputs for the taste-pick. Site ops doc created: `docs/SITE-MANAGEMENT.md` (version log · deploy truths · rule-12 pipeline · owner brand bar · Codex-DS absorption · housekeeping).
+
+**S0 audit µ-tasks (read-only, owner brief 17 Jul):**
+| µ | Audit | Criteria (owner's words operationalized) | Budget |
+|---|---|---|---|
+| S0-content | Content/messaging per page | marketing-human not technical · ONE audience per container, never mixed · CTA clarity | ≤50k |
+| S0-design | Brand as a super-brand | lime only where it should be · uniform font hierarchy · identical full-screen content width · image usage | ≤50k |
+| S0-mobile | Mobile-first conformance | 390px-first per page · no h-scroll · hero legibility | ≤45k |
+| S0-flows | Internal links + signup/login | every internal link valid · site→app entries work end-to-end · legal pages | ≤45k |
+| S0-infra | Repo folder order + Vercel professional config | legacy website/ archive plan (no silent deletions) · Vercel projects/settings/domains audit (read-only) | ≤40k |
+
+
+### T-38 · Consolidated ARCHITECTURE.md — §13 (engineering) · §3 (entity model)
+The one professional document found MISSING in the 17 Jul documents inventory: a single consolidated architecture map (app structure · server · DB · embed · site · team territories · dependency direction). Partial pieces exist (PASSPORT-ARCHITECTURE.md, CODEX-FUNCTIONAL-CONTRACTS.md, GIGPROOF-DB-STRUCTURE.md, spec §13) — T-38 consolidates, it does not duplicate. **Who:** Team G, Wave 3. Budget ≤60k.
+
+
+### T-39 · SECURITY-BOUNDARY-MATRIX.md — §13.5
+One page: every surface (public passport · app · server API · DB · site) × every actor (anon · artist · buyer · confirmer · operator · service-role) → what each may reach, with the enforcing mechanism (RLS/grant/CSP/rate-limit) and its test. Consolidates what security-denial already proves. **Who:** Team G, Wave 3-4. ≤50k.
+
+### T-40 · Machine-readable event registry — §14.3
+`docs/registry/events.json` generated FROM `src/lib/analytics.js` (name · actor · surface · Gate-relevance), regenerated by a script wired into verify — so external tools (Cowork's measurement plan) consume the same canon the code enforces, never a hand-copied list. **Who:** Team F, Wave 3-4. ≤40k.
+
+### T-41 · Site security headers — §13.5.5 (site half, was OWED)
+`website-next/vercel.json` gains CSP/nosniff/referrer/permissions headers (site-appropriate CSP — GA + fonts). Ships as a named site train (rule 12 — infra, no visual change, still cargo-checked). **Who:** Team C2, Wave 3. ≤30k. Verified live 17 Jul: app.lock.show has FULL headers `deployed-live`; www.lock.show has HSTS only.
+
+
+### T-42 · Current Risk Register — §16.B.14 (risk)
+docs/RISK-REGISTER.md: live venture risks (platform concentration · key-person · legal-gate · token-budget · single-repo) each with likelihood/impact/mitigation/owner. The archived one is stale. **Who:** Team G + Maria review. ≤40k.
+
+### T-43 · Data-retention & deletion policy — §15.1
+One page, counsel-ready: what data · why · how long · deletion path (pairs with T-22 purge job). Feeds the M-4 lawyer pack. **Who:** Team G draft → counsel. ≤40k.
+
+
+### T-44 · The Gate pay-path, end-to-end (Cowork E#1 — the one catch that matters) — §1.6 · §14.4
+**Owner ruling 17 Jul: real payment PROVIDER connects only when development ends.** The Gate's "pay" half is the MANUAL pilot path and must work pre-Gate: artist marks "I've paid" (Bit reference → `payment_reference_created`) → operator activates (`entitlement_activated`). Mechanics exist (OfferPayment.jsx + entitlements 007 + both events in the 29-canon); `/artist/offer` currently redirects while `PAYMENTS_ENABLED` off, and the operator activation UI + Admin Gate tiles are T-11 backlog. **Task:** verify the artist mark-paid flow works flag-on in DEMO, build the operator activate control + Gate tiles (product-event numbers — firewall-fine), witness. Without this the Gate literally cannot be recorded as met. **Who:** A1+F, Wave 4. ≤120k.
+
+### T-45 · Reverse coverage sweep (Cowork E#4) — every spec sub-section → an owner
+One-time agent sweep: list every §0–21 sub-section → confirm each has an owning doc, a task number, or an explicit post-Gate/not-needed mark. Output: coverage table appended here; gaps become tasks. **Who:** Team G, Wave 4. ≤60k.
 
 
 ## Register maintenance log
 - 2026-07-17 · Register created from real state; T-01…T-16 assigned (T-01…T-11 = owner's build order; T-12…T-16 = pre-register work needing permanent numbers).
-- 2026-07-17 (later) · Owner: "does this cover A-Z for full launch?" → LAUNCH A-Z section added (T-19…T-30). Owner: "set up teams" → TEAMS section; Team B launched. T-17 (genre↔scene correlation) + T-18 (skeleton-hang fix) built, verify-green, in NOW awaiting ship. `docs/OWNER-PENDING.md` created — appears at the end of every reply (standing directive). T-15 applied+verified live (owner "apply it", 17 Jul) → moved to DONE. Team B QA sweep folded → T-31/T-32/T-33 opened. Resend live (key in Vercel, test email delivered); first REAL USER confirmed (shydavid, techno/trance DJ, 11 Jul). T-34 opened (share/deep-link repair — owner screenshot evidence). TEAMS restructured to FIVE with measured token budgets + binding NO-DRIFT procedures (owner directive). T-35 (viewport-fit) + T-36 (nav e2e) opened per owner directives. Standing rules 9-10 added. WORK BREAKDOWN waves 1-3 allocated. TEAMS scaled 5→10. AUTONOMOUS OPERATING LOOP formalized (owner directive: run autonomous, all-level test ladder L0-L8, task-closure loop). T-37 site-rebrand program registered (Team S, rule 12 taste-gate). Rules 12-13 added. Next number: **T-38**.
+- 2026-07-17 (later) · Owner: "does this cover A-Z for full launch?" → LAUNCH A-Z section added (T-19…T-30). Owner: "set up teams" → TEAMS section; Team B launched. T-17 (genre↔scene correlation) + T-18 (skeleton-hang fix) built, verify-green, in NOW awaiting ship. `docs/OWNER-PENDING.md` created — appears at the end of every reply (standing directive). T-15 applied+verified live (owner "apply it", 17 Jul) → moved to DONE. Team B QA sweep folded → T-31/T-32/T-33 opened. Resend live (key in Vercel, test email delivered); first REAL USER confirmed (shydavid, techno/trance DJ, 11 Jul). T-34 opened (share/deep-link repair — owner screenshot evidence). TEAMS restructured to FIVE with measured token budgets + binding NO-DRIFT procedures (owner directive). T-35 (viewport-fit) + T-36 (nav e2e) opened per owner directives. Standing rules 9-10 added. WORK BREAKDOWN waves 1-3 allocated. TEAMS scaled 5→10. AUTONOMOUS OPERATING LOOP formalized (owner directive: run autonomous, all-level test ladder L0-L8, task-closure loop). T-37 registered. Rules 12-13 added. 17 Jul hole-hunt: LESSONS.md + P-1..P-4; T-38 opened. PM-audit verification: canon 29 CONFIRMED live (auditor stale), app headers CONFIRMED deployed-live, spec copies IDENTICAL; 3-state labels adopted; T-39/T-40/T-41 opened; ADR-1 canonical origin → owner M-14. Cowork v2 audit adopted: DOCS-INDEX created (docs/INDEX.md) · ADR folder opened (ADR-0001 pending M-14) · T-42 risk register · T-43 retention policy. Cowork E-notes folded: E#1 pay-path → T-44 (the real catch) · E#2 confirmer screen VERIFIED BUILT (ProducerConfirm ceremony exists; T-36 walked /confirm/:token; witness queued with screen QA) · E#3 post-Gate deferrals confirmed correct (buyer→pay path needs none of §8.5/8.10/8.11 pre-Gate) · E#4 → T-45 reverse sweep · E#5 entity-artifact sync owner = Team G (INDEX). Owner ruling recorded: real payment provider = post-development; pilot pay = manual Bit path. Next number: **T-46**.
