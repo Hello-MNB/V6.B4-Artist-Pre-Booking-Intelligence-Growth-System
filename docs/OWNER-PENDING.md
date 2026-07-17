@@ -7,7 +7,8 @@ Each item: what it is → what you do → what it unblocks. Sorted by impact._
 
 | # | What | What you do (plain steps) | Unblocks |
 |---|---|---|---|
-| M-2 | **Resend — 2 final clicks** | Key received ✓ (send-only — good). Now: (a) my safety system needs YOUR word for the 2 remaining actions — reply **"send the test email"** (one email to your own inbox proving it works) and **"store the key in Vercel"** (so production can send); or do (b) yourself: Vercel → lock-app → Settings → Environment Variables → Add `RESEND_API_KEY` (Sensitive). ⚠️ The key was pasted in chat — after it's stored, rotate it in Resend (Revoke → new key → update Vercel). | Gate email (T-10/T-25) |
+| M-11 | **Verify lock.show in Resend** (the last email step) | Test email worked ✓ but Resend only delivers to hello@lock.show until the domain is verified. Do: Resend dashboard → Domains → Add Domain → `lock.show` → it shows 2-3 DNS records → **paste those records to me** (they're public DNS, safe in chat) and I'll install them in Vercel DNS and confirm verification. | Real Gate emails to artists (T-25) |
+| M-12 | **Rotate the Resend key** (hygiene) | The key was pasted in chat. After everything works: Resend → API Keys → Revoke → create new (send-only) → Vercel → lock-app → Environment Variables → edit `RESEND_API_KEY`. | closes the exposure |
 | M-3 | **Re-test the live fixes** | Refresh any app page · open your Passport link fresh · check "Sign in" in the site header · confirm the home screen no longer hangs (after next deploy) | Upgrades T-16 to owner-witnessed; closes your 4 findings |
 | M-4 | **Counsel sign-off L-1…L-9** | Send `docs/legal/` drafts to your lawyer; return their fixes | Legal launch gate (T-24) |
 
@@ -27,7 +28,4 @@ Each item: what it is → what you do → what it unblocks. Sorted by impact._
 | M-9 | Rename test domain off "gigproof" (`@lock.test`) | Say the word; purely cosmetic |
 | M-10 | Canonical tagline + 2nd market | One sentence each |
 
-## ❓ One small question for you (no rush)
-The database cleanup found **3 events that stay counted as REAL**: a signup + onboarding + login on 11 Jul by `shydaviddjnattaly@gmail.com`. If that's a team member testing, tell me and I'll mark it as test activity; if it's a real early user — congratulations, they stay counted.
-
-_Resolved (kept for the record): ~~C-2 Supabase Pro~~ ✅ 16 Jul · ~~merge-to-main authorization for audit fixes~~ ✅ 17 Jul · ~~M-1 migration 037~~ ✅ applied+verified 17 Jul._
+_Resolved (kept for the record): ~~M-2 Resend key~~ ✅ stored in Vercel + test email delivered 17 Jul · ~~shydavid question~~ ✅ **FIRST REAL USER** (DJ, techno/trance) — events stay counted · ~~C-2 Supabase Pro~~ ✅ 16 Jul · ~~merge-to-main authorization for audit fixes~~ ✅ 17 Jul · ~~M-1 migration 037~~ ✅ applied+verified 17 Jul._
