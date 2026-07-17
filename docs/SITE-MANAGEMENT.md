@@ -19,6 +19,11 @@ _Owner-ordered 17 Jul 2026 ("document site management professionally, including 
 - **The restore trap:** `git checkout <old> -- dir` does NOT delete newer-only files → mixed-tree type errors (hit twice on 17 Jul). Exact-state restore = `git rm -rqf dir && git checkout <old> -- dir`, then re-apply keepers.
 - Rollback: exact-state restore to the last version-log anchor, keep the keepers (rescue 404, rewrites, embed), push main; a failed Vercel build leaves the previous deploy live (safe).
 
+## 2b. TRIGGER LAW (T-50 P1, 17 Jul — binding)
+- **Production deploys are triggered by `git push origin main` ONLY.** The deploy hooks are for EXPLICIT preview builds and must never be fired alongside a main push (duplicates → CANCELED noise → owner failure-emails).
+- Team E records every production ship here: sha · state · smoke result (the deploy log lives in the register's wave records).
+- KNOWN NOISE SOURCE until T-50 P2 ships: every work-branch push auto-builds previews of BOTH projects; mid-surgery branch states produce legitimate-looking failure emails. P2 (preview-skip when website-next unchanged) rides the M-15 hygiene train.
+
 ## 3. Ship pipeline for ANY site change (rule 12)
 1. Build on the work branch (Team S territory only).
 2. Preview deployment (deploy hook) → owner gets the preview URL.
