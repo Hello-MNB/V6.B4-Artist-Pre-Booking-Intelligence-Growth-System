@@ -32,7 +32,11 @@ _Created 17 Jul 2026 from the real, witnessed state of the product — not from 
 
 ---
 
-## NOW — WAVE 4 DISPATCHED (17 Jul, 8 µ-tasks · est ≤650k)
+## NOW — Wave 5 staging (Radar builds from the W4-4 conformance plan) · WAVE 4 SHIPPED
+
+**Wave 4 record (17 Jul, 754k actual, 7/7 SHIP):** **T-44 `merged`** — operator activate control + Admin Gate tiles built (funnel counts, firewall-verified); artist mark-paid flow proven in demo → **the Gate is now RECORDABLE** · **T-46 ✅ wired** — DS-drift inspector in the gate (tokens sync · rogue-hex · asset law; existing legit hexes allowlisted with TODO migration) · **T-47 ✅ wired** — component-styles registry generated from code, --check in gate · **T-03 conformance table delivered** (wave transcript; feeds Wave 5 Radar builds) · **T-39 ✅** security-boundary matrix · **T-42 ✅** risk register · **T-43 ✅** retention-policy draft (lawyer pack M-4) · **T-45 ✅** reverse sweep (coverage table in transcript). **The verify gate now runs 13 checks.** Routed cleanups: vite process-group kill in the W4-1 helper script · hex allowlist file-scoping (T-46 backlog).
+
+## Prior — WAVE 4 dispatch record
 
 | µ | Task | Team | Type |
 |---|---|---|---|
