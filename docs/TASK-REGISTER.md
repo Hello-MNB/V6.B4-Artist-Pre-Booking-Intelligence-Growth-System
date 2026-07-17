@@ -441,8 +441,8 @@ Owner directive 17 Jul: "styling documented for every component; hermetic, unamb
 Owner directive 17 Jul: characterize site nav + entity transitions end-to-end; no pages without navigation; break to µ-tasks and build. **Spec written (SITE-NAVIGATION-SPEC.md, S0-grounded).** µ-tasks:
 | µ | What | Team | State |
 |---|---|---|---|
-| N1 | "Not you?" cross-entity lane on /artists /bookers /producers (law 5) — in-code + preview for taste | S | 🔨 dispatched |
-| N2 | Nav-conformance test script (laws 1-3 as a re-runnable crawl, per site train) | S/B | 🔨 dispatched |
+| N1 | "Not you?" cross-entity lane on /artists /bookers /producers (law 5) | S | ✅ built · **Team D: SHIP** (break-test passed) · preview live · awaiting owner taste word (M-16) |
+| N2 | Nav-conformance test (laws 1-3, re-runnable crawl) | S/B | ✅ built · **Team D: SHIP** — 14 pages / 24 links green; proven to FAIL on a hidden page |
 | N3 | Home CTA-label unification (law 4) | S1 design lane | queued (taste-gated) |
 | N4 | llms.txt dead routes | held hygiene train | awaiting M-15 |
 Ships per rule 12: preview URL → owner approval → named train.
