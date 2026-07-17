@@ -1,7 +1,7 @@
 # LOCK — PRODUCT SPECIFICATION
 
 **The single source of truth for building the LOCK product.**
-_Status: consolidated master spec (complete) · Written 15 Jul 2026, scaling-review pass 16 Jul · Firewall-safe · Repo doc (shareable — contains no credentials or secrets) · §§1–11 = product/design law · §§13–17 = deep build spec (engineering · measurement · legal/localization · taxonomy/business · interactivity/utility-screens) · §16.B.11–16 = strategy (GTM · monetization · growth · risk · trust&safety) · §18 = open rulings (priority-tiered) · §19 = scaling & future-readiness (reserved, post-Gate)._
+_Status: consolidated master spec (complete) · Written 15 Jul 2026, scaling-review pass 16 Jul, **Radar-universe / taxonomy pass 17 Jul** (owner R00 order: §8.2 two-jobs + 8-family emphasis · §8.3 coaching lines · §16.A Registry B + WhatsApp-group source + migration structure · §18 OWED/OPEN incl. R-10) · Firewall-safe · Repo doc (shareable — contains no credentials or secrets) · §§1–11 = product/design law · §§13–17 = deep build spec (engineering · measurement · legal/localization · taxonomy/business · interactivity/utility-screens) · §16.B.11–16 = strategy (GTM · monetization · growth · risk · trust&safety) · §18 = open rulings (priority-tiered) · §19 = scaling & future-readiness (reserved, post-Gate)._
 
 > This document is written so that a developer or a fresh AI session could build the entire LOCK product from it alone, with no other context. It synthesizes and reconciles the full canon doc set (see §0.3 Sources). Where the interactive prototype and the newest design law differ from an older doc, **the prototype + the newest doc win** and the reconciliation is noted inline.
 >
@@ -557,6 +557,14 @@ Each screen is buildable from its sub-spec alone. Routes shown are the prototype
 
 **PURPOSE.** The artist's private, living picture of their own professional proof — six dimensions a booking manager weighs — where LOCK shows what it *found* on public sources and the artist *confirms* what's really theirs, one tap at a time. It is where evidence is reviewed and confirmed; it is **not** a dashboard, and buyers never see it. Two readings for every component: **Artist read** = "what's strong, what still needs me, what to do next" (gaps are invitations); **Buyer relevance** = the same signal, once confirmed + method-labeled, becomes a checkable strength on the public Passport.
 
+**THE TWO JOBS (owner R00, 16 Jul — canon).** "The Radar's purpose is to COLLECT information — with AI scanners and bots — about the artist's UNIVERSE, and to help the artist IMPROVE that universe. The startup's meaning is PRE-BOOKING." The Radar therefore has **two jobs, both first-class**, and a Radar build that delivers only the first has failed the spec:
+1. **COLLECT** — discover the artist's public universe (scanners + the artist's own additions) and let the artist confirm what's really theirs.
+2. **UPGRADE** — actively help the artist *improve* that universe: every planet state produces guidance (the coaching line §8.3, the next-best-move dock, the fill widgets) that names the one thing worth strengthening and why a buyer cares. **A Radar that only collects is a form. A form is not the product.**
+
+**The loop (the screen's core mechanic, running continuously):**
+`scan → ✦ found → artist confirms ✓ → LOCK advises what to strengthen → artist adds it → scan again`
+Each pass around the loop makes the universe more provable; the loop never ends, it only slows as planets reach Ready. Every stage is already specified: scan = §9 (honesty per §2.8 below) · ✦ found = node states · confirm = the Inspector §8.3 · advise = coaching line + next-best-step engine · add = inline fill widgets · re-scan = incremental re-scan (TARGET, §9).
+
 **DESKTOP layout — the 4-zone canvas** (`.radar-work`):
 - **TOP-CENTER · scene lens** (`.rwscene`) — a segmented control ("Your standing in" + Melodic / Progressive / Afro / All). It **never overlays the act card**.
 - **LEFT · Act identity + privacy + lens** (`identityCol`) — round photo, "Your Act", stage name; a privacy line ("Private to you — nothing is public until you approve it." / when published: "Some strengths are public on your Passport — you approved them."); a "Show" lens rail (All · Needs my review · Ready to publish).
@@ -577,6 +585,21 @@ Each screen is buildable from its sub-spec alone. Routes shown are the prototype
 | **Professional Kit** | book you without friction (binaries + bands) | set length, regions, technical rider, invoice-ready, contact | techno |
 | **Career Proof** | third-party proof that outranks a self-claim | producer-confirmed rebookings, press mentions, draw claims, "ask a producer to confirm" | afro |
 
+**EIGHT RADARS — one geometry, family-derived emphasis (the family→planet model).** The six planets and their fixed orbit are identical for every artist — but there is not one Radar, **there are EIGHT: same six planets, different emphasis per `genre_family`** (`genreWeights.js:GENRE_FAMILIES`, reference table §16.A.1.a). The family decides which planets carry the ★/gold-ring emphasis, the order the next-best-step engine walks candidates, and the scene named in the coaching line (§8.3). The full model, verbatim from code:
+
+| `genre_family` | PRIMARY planets (emphasis + ★) | SECONDARY | The buyer logic behind it |
+|---|---|---|---|
+| `dj-club` | live · audience · prokit | proof · identity | a club booker asks: crowd, room, frictionless night |
+| `dj-festival` | music · live · proof | audience · identity | a festival curator asks: sound, stage history, third-party proof |
+| `open-format` | prokit · live · proof | audience · identity | an events buyer asks: reliability, range, references |
+| `live-band` | live · prokit · proof | audience · identity | a band is booked on show + logistics + references |
+| `original-artist` | music · identity · live | proof · audience | an original act leads with the music and the story |
+| `live-electronic` | music · live · identity | prokit · proof | a live act leads with the sound and the performance |
+| `comedian-host` | live · identity · prokit | proof · audience | a host is booked on stage presence + persona + reliability |
+| `corporate-ceremony` | prokit · proof · live | identity · music | a corporate buyer asks: zero surprises, references, delivery |
+
+**Family-derived, all four:** planet **emphasis order** (`planetEmphasisOrder`) · the **★ / gold ring** (`isPrimaryPlanet`) · the **next-best-step** candidate order · the **coaching line** wording (§8.3). Family resolution is format-led (`familyFor()`: `act.format` decides; genre text only refines the DJ split — the `FESTIVAL_HINT` heuristic is TEMPORARY until the `genre_scene` FK ships, §16.A.1.b/§16.A.6). **FIREWALL (§2.7):** this is INTERNAL prioritization only — it renders exclusively as the i18n guidance wording `radar.genreFocus` ("A useful place to focus in your genre: …") and `genrePrimary` ("Central in your genre"), never a weight, number, rank, %, leaderboard, or buyer-facing weakness. **The G2 guard stays absolute:** no genre/format signal → no family → no emphasis at all — every planet renders equal; a missing genre never produces a guessed emphasis.
+
 **Planet states (bounded rollup — never a count on the face):** **Needs you** (something found is waiting to confirm, OR still empty) · **Developing** (some confirmed, gaps remain) · **Ready** (confirmed, no gaps) · **Locked / "Not needed yet"** (Professional Kit stays locked until Live Show is backed — a sequencing hook, not a judgement). Node marks: ✓ (settled) · ✦ (found dot) · ? / + . Each planet also shows its **plain-language state word** under it (Ready · Developing · Needs you · Not needed yet). Genre-primary planets carry a second gold ring + a ★ and a topline; additive only (non-primary planets keep full opacity/interactivity/order).
 
 **Supporting components:**
@@ -588,6 +611,8 @@ Each screen is buildable from its sub-spec alone. Routes shown are the prototype
 **INTERACTIONS.** Scene switch (`pickScene`) re-weights which planets carry the ★ (a reading lens on the SAME evidence — never a data change). Lens/filter (`pickFilter`) dims/highlights. Tap a planet (`openPlanet`) selects it → inspector + orbiting source logos. `nextStep` from the bottom dock jumps to the computed next-best action's planet/target. The **next-best-step engine** computes ONE action from real planet state (priority: a genre-primary planet in Needs-you with found items → any planet with found items → a locked planet's unlock → all-lit → publish → else add the missing proof), each carrying a `why` line; firewall-safe (action + reason only).
 
 **EXACT MICROCOPY (samples).** Scene "Your standing in" · lens "All / Needs my review / Ready to publish" · privacy "Private to you — nothing is public until you approve it." · dock eyebrow "Your next move" · sample dock title "Confirm your live-draw proof" + why "One tap turns what we found into a strength on your Passport. Nothing goes public until you say so." + CTA "Continue →". State words: Ready · Developing · Needs you · Not needed yet.
+
+**SCANNER HONESTY (§2.8 applied to this screen).** The COLLECT job must never overstate what the scanner is. **BUILT today:** per-evidence Anthropic claim extraction — the artist supplies an item, LOCK extracts and method-labels claims from it. **TARGET (not built):** the multi-source deep scan at onboarding (≈$1 target cost) + cheap automatic incremental re-scans that keep the universe fresh without the artist asking. Wherever the Radar shows or implies scanning (the platform ring caption, the found-tally, empty-scan states), the honest-scope line ships verbatim: **"A wider multi-source auto-scan is in development."** Copy may present the intended discovery experience as vision, but a ✦ found item always states how it was actually found, and no surface claims automatic scanning that did not run. No business case may price or assume the target scan until it is implemented and its cost measured (CLAUDE.md).
 
 **FIREWALL.** Bands + binaries + method labels only. No score/rank/%/gauge/headcount/leaderboard. The sweep is thematic, not a gauge. Scene ★ is guidance, never grading; no signal → no emphasis. The found count appears only inside panel copy ("we found 2 things here"), never as a grading badge on the face.
 
@@ -604,9 +629,27 @@ Each screen is buildable from its sub-spec alone. Routes shown are the prototype
 **Planet states surfaced in the inspector:** Found (✦, waiting) · Needs-you · Ready · Private · Published (public on Passport) · Locked / Not-needed-yet. The status chip reads one of: **"Still private"** (default — "Still private. It only helps your Passport after you approve it.") · **"Ready on your Passport"** (public — "This proof is ready. Want to see how a buyer will read it?") · **"Not needed yet"** (locked — "This isn't needed yet — it opens once your live draw is backed.").
 
 **The 3 layers** (desktop right-rail; mobile bottom-sheet):
-1. **Layer 1 · Meaning** — one short, scene-aware line: "In {Scene}, {why this dimension matters}." (e.g. "In Melodic Techno, live-room proof matters more than follower count.")
+1. **Layer 1 · Meaning — the COACHING LINE (the UPGRADE job's voice, full spec below)** — one short, scene-aware line: "In {Scene}, {why this dimension matters}." (e.g. "In Melodic Techno, live-room proof matters more than follower count.")
+
+   **The coaching line (owner R00 — canonical example, verbatim):**
+   > *"In techno, your Instagram CONTENT matters more than your follower count. Your reels are where a booker decides. Worth strengthening."*
+
+   **Rules (all binding):**
+   - **Names the scene** — the artist's actual declared scene ("In techno…"), never a generic "in your genre". No scene signal → no coaching line (G2, §2.7) — the layer falls back to the neutral dimension meaning.
+   - **ONE thing** — a single concrete item worth strengthening, never a list, never a second clause of homework.
+   - **Says why a buyer cares** — the line carries the buyer's reasoning ("your reels are where a booker decides"), sourced from the node's `why_a_buyer_cares` key (below / §16.A.5b).
+   - **Warm, coach voice** (§4.5 / §6.8) — an invitation ("Worth strengthening"), never "weak / missing / behind".
+   - **Derived, never stored** — computed at render time from Registry B applicability (§16.A.5b) + the planet's live state + the family emphasis (§8.2). It is wording over existing bounded state; no coaching text, rating, or judgment is ever persisted.
+   - **Renders in Inspector Layer 1** — this extends the existing Meaning layer; it is NOT a new surface, panel, or notification.
+
+   **Firewall pair (the line every builder checks against §2.1):**
+   - ✅ ALLOWED — *"In techno, content carries more weight than follower count."* (a fact about the scene)
+   - ❌ FORBIDDEN — *"Your content is better than most techno acts."* (a peer comparison — a rank in words)
+   A coaching line may state what the scene weighs; it may never state where the artist stands relative to anyone else.
 2. **Layer 2 · Found proof** — a brief human summary of what LOCK found ("LOCK found fourteen lineup listings under your name and six Resident Advisor bookings.") + the **source-logo ring** (each row = source mark + a **human source line**: **"from your Instagram"** for own accounts, **"from …"** for third-party listings — the raw "Source-linked" label is de-technicalised here while the Passport keeps canon vocabulary) + a per-row tag (Confirmed / Found / Needs you) + the status chip.
 3. **Layer 3 · Next action** — the **single primary CTA** + an optional quiet secondary. CTA is computed: if found items exist → "Review your {dimension}" (`confirmTop`) with a secondary "Not mine / later" (`dismissTop`); if locked → "Confirm your live draw first"; if public-ready → "Preview on Passport"; if only empty → the add-source label ("Add a ticket export", etc.); else "Preview on Passport".
+
+**Every node carries `why_a_buyer_cares` (per-field, i18n key — the UPGRADE job at node level).** Each evidence field in Registry B (§16.A.5b) declares a `why_a_buyer_cares` i18n key; the Inspector surfaces it on the node's row/peek so the artist always sees the buyer's reasoning next to the ask — this is what turns a form field into coaching. Examples of the register: WhatsApp group → *"a private room the artist owns and can activate — demand that does not depend on the venue's marketing"* · ticket export → *"the only proof of paid demand"* · technical rider → *"why the night doesn't break"*. Always an i18n key (localizes, never hardcoded), always about **why the buyer cares** — never about how the artist compares.
 
 **Source-logo ring / orbit behavior.** On select, source logos **orbit the selected planet in place** (percent geometry, fanned inward toward the star, ~84° spread, emerging with a stagger unless reduced-motion). Confirmed logos carry a ✓; a confirm "blooms" at the planet centre with a small celebration (`justLockLogo`). Tap/long-press a logo → its method + human source line. Locked Kit shows no orbiting evidence.
 
@@ -2443,11 +2486,12 @@ migration would create so that genre, format, venue/region, method/status, and s
 free text and start being governed enums with EN + HE labels. Part A is the taxonomy. Part B captures
 the documented business model and clearly flags what still needs the owner.
 
-**Migration note:** the migration head is already past 029 (VERSIONS.md: applied 032/033/034/035; 021
-FROZEN). The historical "029" label from the taxonomy audit is superseded — **these reference tables
-should be authored as a NEW migration (036+), diffed against existing tables first (CLAUDE.md rule),
-never recreating existing tables.** Wherever this section says "migration 029" it means "the bilingual
-reference-table migration, now 036+."
+**Migration note (updated 17 Jul):** the migration head is already past 029 (VERSIONS.md; 021 FROZEN;
+**037 `is_demo` applied 17 Jul; 036 stays `.DRAFT`** with its own rollout). The historical "029" label
+from the taxonomy audit is superseded — **these reference tables should be authored as a NEW migration
+(next free number ≥038), diffed against existing tables first (CLAUDE.md rule), never recreating
+existing tables.** Wherever this section says "migration 029" or "036+" it means "the bilingual
+reference-table migration, structure specified in §16.A.6.a."
 
 ---
 
@@ -2732,10 +2776,20 @@ are the canon `PROVES` map (`radarUniverse.js:PROVES`, shown verbatim at the con
 | `facebook` | Facebook | פייסבוק | `audience` | Community / events footprint | |
 | `twitter-x` | X (Twitter) | X (טוויטר) | `audience` | Community footprint | |
 | `telegram` | Telegram | טלגרם | `audience` | Community channel | |
+| `whatsapp-group` | WhatsApp group | קבוצת וואטסאפ | `audience` | A private room the artist owns and can activate — demand that does not depend on the venue's marketing | ✅ |
 | `eventer` | Eventer | אוונטר | `proof` | IL ticketing — ticket export / settlement = real sourced draw | ✅ |
 | `tickchak` | Tickchak | טיקצ'אק | `proof` | IL ticketing — ticket export / settlement | ✅ |
 | `go-out` | Go-Out | גו-אאוט | `proof` | IL events/ticketing — event history / ticket export | ✅ |
 
+> **`whatsapp-group` (NEW, 17 Jul — owner R00):** the deliberately Israeli-first audience source — a
+> WhatsApp group the artist owns is *activatable demand independent of the venue's marketing*, which is
+> exactly what an Israeli buyer weighs. Firewall handling is identical to every audience source: the
+> group size surfaces **only as a BAND via `bandFromCount`** (the integer stays working-only, never
+> shown); provenance is `source_type='self-band'` (artist-declared band) or `'self-reported'`, whose
+> canon `PROVES` honesty lines ship verbatim — *"Your own declaration, shown as a band"* / *"Nothing
+> beyond your declaration — strengthen with a source"* (`radarUniverse.js:PROVES`). Never a member
+> count, never upgraded provenance without a real source.
+>
 > **Firewall guards baked into the model:**
 > - Streaming (`music` planet) is **secondary context** by canon — a footprint that "does not establish
 >   local ticket demand" (`PROVES['public-profile'].notProves`). It never becomes a draw claim.
@@ -2752,10 +2806,54 @@ are the canon `PROVES` map (`radarUniverse.js:PROVES`, shown verbatim at the con
 
 ---
 
+### 16.A.5b Registry B — the field-applicability registry (NEW, 17 Jul — fills the empty "Registry B" contract)
+
+**What it is.** The registry that answers, per evidence field × per genre family: *does this field apply,
+and why does a buyer care?* This is the table the taxonomy audit found EMPTY in the Google Sheet (G1 —
+"the whole claims contract hangs on an empty table") and that the DB has no representation of (D1 — no
+`field_id`; `claims.claim_type` is free text). Registry B is what makes the eight-family Radar (§8.2)
+and the coaching line (§8.3) **data-driven instead of hand-coded** — `radarUniverse.js` today hand-builds
+the DJ case (audit D4); when Registry B fills, the same code reads applicability instead.
+
+**Schema (the five columns, canon):**
+
+| Column | Type / values | Meaning |
+|---|---|---|
+| `field_id` | PK, `lower-kebab` code (e.g. `ticket_export`, `technical_rider`, `whatsapp_group`) | the frozen evidence-field identifier — the end of free-text `claim_type` |
+| `genre_family` | FK → `genre_family.id` (§16.A.1.a) | one row per field × family |
+| `applicability` | **`R` / `C` / `O` / `N`** — Required / Common / Optional / Not-applicable | how this family's buyers weigh the field |
+| `planet_key` | one of `identity · music · live · audience · prokit · proof` | which planet the field's node lives on |
+| `why_a_buyer_cares` | **i18n key** (never raw text) | the buyer's reasoning, surfaced on the node + in the coaching line (§8.3) |
+
+**THE `N` RULE (binding):** `N` = **never shown, never asked, never counted as a gap.** A field marked
+`N` for the artist's family simply does not exist on their Radar — it is not a greyed row, not a
+"not applicable" chip, not a private gap. (An `instruments` ask on a club DJ's Radar is noise; noise
+erodes the coach's credibility.)
+
+**Worked examples (the seed rows — the register the full fill follows):**
+
+| `field_id` | Applicability by family | Why a buyer cares (register of the i18n value) |
+|---|---|---|
+| `instruments` | `live-band`: **C** · `dj-club`: **N** | a band's instrumentation shapes the booking; a club DJ is never asked |
+| `technical_rider` | `live-band`: **R** · `corporate-ceremony`: **R** · `dj-club`: **C** | why the night doesn't break |
+| `ticket_export` | **every family: R** | the only proof of paid demand |
+| `beatport_presence` | `dj-festival`: **C** · `corporate-ceremony`: **N** | scene presence where the scene checks it; meaningless to a corporate buyer |
+| `set_length_range` | `dj-club`: **C** · `original-artist`: **O** | a club programs by slot; an original act is booked for the show |
+
+**Rules:** the full family-by-family fill is **OWED from the Google Sheet / owner R00** (§18) — structure
+proceeds now, content lands when the sheet fill is ratified; every `why_a_buyer_cares` value is an i18n
+key (EN + HE, HE proposed until owner signs); applicability describes **what buyers in that family weigh —
+never how a specific artist performs** (it is per-family metadata, not per-artist data; nothing here
+scores anyone); the G2 guard inherits — no family signal → no applicability read → the neutral all-equal
+Radar.
+
+---
+
 ### 16.A.6 Migration & implementation note (Part A summary)
 
 All six taxonomies above should land as **bilingual DB reference tables** in one migration
-(historically called "029 bilingual reference tables"; author now as **036+**, diff-first). Proposed set:
+(historically called "029 bilingual reference tables"; author now as the **next free number ≥038**,
+diff-first — full structure in §16.A.6.a). Proposed set:
 
 | Table | Replaces (free text today) | Keyed by |
 |---|---|---|
@@ -2766,12 +2864,45 @@ All six taxonomies above should land as **bilingual DB reference tables** in one
 | `venue_type` | `radarUniverse.CONTEXT_WORLDS` regexes | code |
 | `room_size_band` | (none — new) | code |
 | `source_platform` | `linkPlanet()` regex routing | code → planet + source_type |
+| `registry_b` (field applicability, §16.A.5b) | `claims.claim_type` free text + hand-coded `radarUniverse.js` field lists | (`field_id`, `genre_family`) composite |
 | method/status enums | `constants.js` (already bounded) | keep as CHECK or promote to lookup |
 
 Common column shape: `id` (PK) · `en_label` · `he_label` · `sort_order` · `active`, plus the mapping
 FKs noted per table. **Rules:** frozen code identifiers stay frozen (§0.2 rule 5); every user-facing
 label resolves through i18n keys, never hardcoded; the G2 guard (no signal → no emphasis) must survive
 the migration; `mirror-only` is not dropped while 021 is FROZEN.
+
+#### 16.A.6.a — The taxonomy migration STRUCTURE (specified 17 Jul — **spec only: this migration is NOT authored and NOT run by this task**)
+
+The concrete shape the migration set takes when authorized. Migration head is past 035 (037 applied
+17 Jul; 036 stays `.DRAFT` with its own dual-read rollout) — so the taxonomy set is **authored as the
+next free number ≥038, diff-first against migrations 001–037 (CLAUDE.md rule), never recreating an
+existing table**, additive-only (no `DROP` in an UP migration — §20 inspector 3 enforces this).
+
+**Step 1 — reference tables (all NEW; nothing exists yet — audit D1 confirmed zero taxonomy representation in the DB):**
+- `genre_family` — `id` PK · `en_label` · `he_label` · `sort_order` · `active` · the primary/secondary planet arrays (or a child `family_planet` table: `family_id` FK · `planet_key` · `tier ('primary'|'secondary')` · `rank`). Seed = the 8 rows of §16.A.1.a (mirrors `genreWeights.js`).
+- `genre_scene` — `id` PK · `en_label` · `he_label` · `family_id` FK→`genre_family` · `sort_order` · `active`. Seed = §16.A.1.b; extensible without code changes.
+- `act_format` — `id` PK · `en_label` · `he_label` · `default_family_id` FK→`genre_family` · `sort_order` · `active`. Seed = §16.A.2 (9 values; includes `comedian-host`, `ceremony-act` — the CHECK-widening rides here).
+- `il_region` · `venue_type` · `room_size_band` — common shape, seeds §16.A.3.
+- `source_platform` — §16.A.5 shape incl. `planet_key` · `signal_note_key` (i18n key) · `is_israeli` · `source_type` · `active`. Seed includes `whatsapp-group`.
+- `evidence_field` — `field_id` PK · `en_label` · `he_label` · `planet_key` · `active` (the field registry that ends free-text `claim_type`).
+- `registry_b` — `field_id` FK→`evidence_field` · `genre_family` FK→`genre_family` · `applicability CHECK (applicability IN ('R','C','O','N'))` · `why_buyer_cares_key` (i18n key) · PK (`field_id`,`genre_family`) — §16.A.5b.
+
+**Step 2 — wiring columns on EXISTING tables (additive, nullable, dual-read):**
+- `act`: add nullable `scene_id` FK→`genre_scene` (+ keep free-text `genre` during transition; code reads FK-first, falls back to text) · `format` stays, its CHECK widened or FK'd to `act_format`.
+- `artist`: `regions` free text → join table `act_region` (`act_id` · `region_id`), old string retained during transition.
+- `claims`: add nullable `field_id` FK→`evidence_field`; `claim_type` free text retained until backfill completes.
+
+**Step 3 — seeds vs OWED content:** the migration ships with the spec's seed rows only. The **full
+Registry B fill + the full scene/subtype/instrument lists (6 families · 55 subtypes · 32 DJ
+specializations · 42 instruments · 121 legacy labels) are OWED from the Google Sheet via owner R00**
+(§18) — the structure lands first and empty-but-governed beats full-but-free-text; content arrives as
+data inserts, not schema changes.
+
+**Rollout rules:** paired `.down.sql` per migration · dual-read in code (FK-first, free-text fallback)
+until backfill is verified · `familyFor()`'s `FESTIVAL_HINT` heuristic retires only after `scene_id`
+is live and backfilled · G2 guard proven unchanged in the same PR (`test:guardrails` + Radar
+conformance) · owner applies via SQL editor as always — **the build agent never touches the live DB.**
 
 ---
 
@@ -3865,6 +3996,14 @@ Assembling the deep build spec surfaced additional decisions that only the owner
 | G-2 | **Monetization numbers** — all prices, Momentum/Roster feature boundaries, monthly vs annual, trial length, when to flip enforcement | OPEN (owner) | ladder structure fixed in §16.B.12; numbers deferred to Gate evidence. |
 | G-3 | **Growth-loop to instrument first** (rec: Loop 1, artist-led) | OPEN (owner) | loops in §16.B.13; measurement OWED (ties to GA4 dual-emit §14). |
 | G-4 | **Trust & safety rulings** — dispute/takedown flow, identity-verification bar, IP/content-rights ToS clauses (counsel) | OPEN (owner + counsel) | §16.B.15; IP clauses currently absent from legal drafts. |
+
+### 18.2 Radar-universe / taxonomy pass records (17 Jul — owner R00 order)
+
+| # | Item | Type | Notes / where |
+|---|---|---|---|
+| — | **Taxonomy Sheet content** — the full Registry B fill + full scene/subtype lists (6 families · 55 subtypes · 32 DJ specializations · 42 instruments · 121 legacy labels) live only in the Google Sheet | **OWED (owner R00)** | The **structure may proceed without it** — §16.A.5b schema + §16.A.6.a migration structure are specified; content lands later as data inserts, never schema changes. |
+| — | **HE labels across all §16.A tables + Registry B `why_a_buyer_cares` HE values** | OPEN (owner) | Every HE label in §16.A (incl. `whatsapp-group` = קבוצת וואטסאפ) is a **proposed seed only — R00 owns Hebrew**; nothing is canon until she signs it. |
+| R-10 | **Does "asset value" language require a method label?** — when the Radar/coaching layer describes something the artist owns as an asset (e.g. the WhatsApp group as "a private room the artist owns and can activate") | OPEN (owner) — **R16 reads YES** | Working read until ruled: any asset-value statement surfaces as a **band + method label** per §5.10 (warm wording over bounded, provenance-labeled truth — e.g. band via `bandFromCount` + `Self-declared`), never an unlabeled asset claim. If the ruling lands NO, only the label placement changes — never toward a number. |
 
 **Two engineering bugs found while grounding (build-fix, NOT owner decisions — flagged for the board):**
 1. ✅ **FIXED (15 Jul, wave-1) — rationale corrected 16 Jul:** `ConsentLegal.jsx` `recordPrivacyConsent` wrote the pre-021 legacy scope names. The live DB has **no scope CHECK** (021 FROZEN, §13.2.1), so those writes were **not** actually rejected — but the code now writes the canon `privacy-processing` (write + read paths) as the **forward-compatible** choice for when the canon-scope constraint lands (§15.2.3, §13.2).
