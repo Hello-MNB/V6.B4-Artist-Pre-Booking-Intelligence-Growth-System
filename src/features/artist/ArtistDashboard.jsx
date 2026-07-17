@@ -8,7 +8,7 @@ import { isPassportDirty, clearPassportDirty, markPassportDirty } from '../../li
 import { logEvent, EVENTS } from '../../lib/analytics.js'
 import { isPrimaryPlanet, primaryPlanets } from '../../lib/genreWeights.js'
 import { PAYMENTS_ENABLED } from '../../lib/constants.js'
-import RadarUniverse from './RadarUniverse.jsx'
+import RadarUniverse, { useFullStage } from './RadarUniverse.jsx'
 import { appUrl } from '../../lib/appUrl.js'
 
 // ── A9 Artist Radar (canon LF-A1, linear) ────────────────────────────────────
@@ -140,6 +140,10 @@ export default function ArtistDashboard() {
   // G7 — share ladder: copied-state for the share-link button in the sheet.
   const [linkCopied, setLinkCopied] = useState(false)
   const copiedTimer = useRef(null)
+  // CTA law (§10.2/§8.2): on md+ the RadarUniverse dock owns the ONE lime
+  // primary; below md this screen's next-step card owns it. Render XOR — never
+  // both .btn-primary nodes in the DOM at once (T-31 residue).
+  const fullStage = useFullStage()
 
   async function load() {
     setLoadError(false)
@@ -359,7 +363,9 @@ export default function ArtistDashboard() {
 
       {/* ── ONE dominant next step — the coach's single clearest move. Mobile
             only: on the full-stage (md+) this same card floats over the
-            universe itself (RadarUniverse's internal next-action overlay). ── */}
+            universe itself (RadarUniverse's internal next-action overlay), so
+            this card renders ONLY below md — one .btn-primary per view. ── */}
+      {!fullStage && (
       <div className="mb-4 rounded-2xl border border-line bg-surface p-5 shadow-card md:hidden">
         <p className="mb-1 font-mono text-[9px] uppercase tracking-[0.14em] text-muted">{T.radar.nextActionEyebrow}</p>
         <p className="font-display text-lg font-bold tracking-[-0.01em] text-ink">{nextAction.title}</p>
@@ -373,6 +379,7 @@ export default function ArtistDashboard() {
           </button>
         )}
       </div>
+      )}
 
       {/* quick links — private readiness + the offer; evidence/claims live in the Radar */}
       <div className="mb-4 grid grid-cols-2 gap-2">
@@ -411,7 +418,8 @@ export default function ArtistDashboard() {
             <p className="mb-1 font-bold text-ink">{T.consent.publishTitle}</p>
             <p className="mb-3 text-xs text-muted">{T.consent.publishBody}</p>
             <div className="flex gap-2">
-              <button className="btn-primary flex-1" onClick={agreeAndPublish} disabled={publishing}>{T.consent.publishAgree}</button>
+              {/* CTA law: the radar's Continue is this view's ONE primary — sheet controls stay quiet (ghost), full function kept */}
+              <button className="btn-ghost flex-1" onClick={agreeAndPublish} disabled={publishing}>{T.consent.publishAgree}</button>
               <button className="btn-ghost" onClick={() => setNeedPubConsent(false)} disabled={publishing}>{T.common.cancel}</button>
             </div>
           </div>
@@ -422,14 +430,14 @@ export default function ArtistDashboard() {
               ? <p className="mt-3 text-xs font-bold text-need">{T.dashboard.unpublishedBadge}</p>
               : <p className="mt-3 text-xs text-muted">{T.dashboard.publishedHint}</p>}
             <button onClick={refreshPublic} disabled={publishing}
-              className={`mt-2 w-full text-sm ${dirty ? 'btn-primary' : 'btn-ghost'}`}>
+              className="btn-ghost mt-2 w-full text-sm">
               {T.dashboard.refreshPublic}
             </button>
             {/* ── G7 share step — copy the public link (carries the ?s=1 share
                   marker so opens of THIS link are measurable). Link stays
                   visible + selectable as the no-clipboard fallback. ── */}
             <div className="mt-3 border-t border-line pt-3">
-              <button onClick={copyShareLink} className="btn-primary w-full text-sm">
+              <button onClick={copyShareLink} className="btn-ghost w-full text-sm">
                 {linkCopied ? T.dashboard.shareLinkCopied : T.dashboard.shareLinkCta}
               </button>
               <p className="mt-1.5 break-all text-center font-mono text-[10px] text-faint" dir="ltr">{shareUrl}</p>

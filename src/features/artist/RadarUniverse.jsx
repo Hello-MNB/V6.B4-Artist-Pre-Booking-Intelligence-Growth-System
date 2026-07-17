@@ -84,10 +84,27 @@ function derivePlatformNodes(items = [], claims = []) {
   return [...byKey.values()]
 }
 
+// ── Breakpoint gate (Tailwind md, 768px) — CTA law (§10.2 / §8.2): the md+
+// next-move dock and the mobile next-step card are ONE logical CTA, so exactly
+// ONE of them may exist per view. CSS show/hide left BOTH .btn-primary nodes in
+// the DOM (T-31 residue); this hook lets each side render conditionally instead,
+// guaranteeing a single lime primary at any width (dock XOR mobile card).
+export function useFullStage() {
+  const [full, setFull] = useState(() => window.matchMedia('(min-width: 768px)').matches)
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 768px)')
+    const onChange = (e) => setFull(e.matches)
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
+  return full
+}
+
 export default function RadarUniverse({ artist, act, items, claims, onClaimsChange, nextAction, onNextAction, onArtistChange, onActChange, onItemsRefresh, reviewSignal = 0, focusPlanet = null, focusSignal = 0 }) {
   const { T } = useLang()
   const S = T.radar.universe
   const nav = useNavigate()
+  const fullStage = useFullStage() // md+ ⇒ this component owns the ONE next-move CTA
   const [selected, setSelected] = useState(null)       // planet key → opens the ONE panel
   const [review, setReview] = useState(false)          // "Needs you" batch-review mode (inside the radar)
   const [filter, setFilter] = useState('needsYou')
@@ -528,9 +545,10 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
 
       {/* ── ONE next move — full-stage (md+) ONLY: floats bottom-start OVER
             the universe, like the prototype's .next card. Mobile keeps its
-            existing separate card below the radar (ArtistDashboard) unchanged
-            — this one stays hidden below md so nothing doubles up. ── */}
-      {!blossom && nextAction && (
+            separate card below the radar (ArtistDashboard), which renders only
+            below md — the fullStage gate keeps exactly ONE .btn-primary in the
+            DOM per view (CTA law §10.2/§8.2), never two hidden twins. ── */}
+      {fullStage && !blossom && nextAction && (
         <div className="relative z-10 hidden items-center justify-between gap-3 rounded-xl border border-gold/25 bg-surface/95 px-3 py-2.5 shadow-card backdrop-blur md:absolute md:bottom-8 md:start-8 md:flex md:w-[380px] md:max-w-[calc(100%-4rem)]">
           <div className="min-w-0">
             <p className="font-mono text-[8px] uppercase tracking-[0.14em] text-faint">{T.radar.nextActionEyebrow}</p>
