@@ -24,6 +24,8 @@ _Created 17 Jul 2026 from the real, witnessed state of the product — not from 
 9. **Document links in every reply (owner directive 17 Jul):** every reply to the owner ends with clickable links to this register, OWNER-PENDING, and the spec (GitHub, work branch).
 10. **Micro-task work breakdown (owner directive 17 Jul):** the WORK BREAKDOWN section below decomposes every active task into per-team micro-tasks with precise budgets; progress is reported BY TASK NUMBER against it.
 11. **The permanence boundary (owner + external review, 17 Jul):** autonomy NEVER touches real people's data, sends real email, moves real money, or changes the live database. Each such act requires the owner's explicit per-instance word; where legality is the question, it is lawyer-gated (T-24). The email send-path ships FLAG-OFF until counsel signs. All autonomous building/testing runs on demo/seed fixtures. A µ-task that turns out to touch the boundary STOPS the loop and asks first.
+12. **The named-train law (site):** the marketing site NEVER ships as cargo of an app merge (17 Jul regression: unapproved branch-only redesign rode whole-branch merges into production). Site changes ship only on their own train, after the owner's TASTE approval of a preview. For the site, owner approval comes BEFORE production — L8 moves ahead of SHIP.
+13. **Token economy:** every wave report states its measured token cost; low-risk docs-only µ-tasks may skip L5 (Team D) at the orchestrator's discretion ONLY when no code changed; waves are sized to the owner's remaining plan budget — Gate-critical tasks first, heavy build programs (site S4-S8) deferred if the budget tightens.
 
 **Marks:** ✅ done · ⚠️ partial/unwitnessed (note says what's missing) · ❌ not built · — not applicable (non-screen task).
 
@@ -314,6 +316,24 @@ The register is the ONLY work source. The loop runs continuously; the owner is i
 **In flight now:** T-36 nav agent (≤60k, background) · Wave 1 dispatch next.
 
 
+### T-37 · Marketing-site rebrand program — §16.B.11 (GTM) · §5 (DS) · §4.5 (voice) · §19.7 (SEO)
+**Owner brief (17 Jul):** impressive brand design · per-page microcopy · deliberate CTAs · "NOT a tour of the system — a marketing site." Regression context: the unapproved wave-1..6 redesigns (the "many rounds on nothing") live in git history — S1 mines them for salvage, none auto-ships.
+**Team S (11th team) · territory `website-next/**` exclusive · governed by rule 12 (taste-gate BEFORE production).**
+
+| µ | What | Deliverable to owner | Budget |
+|---|---|---|---|
+| S1 | Brand & design directions: 2-3 static hero-page mockups from the app's own DS (§5 night/lime/gold + §5.11 paper variant) | preview screenshots → **owner picks (M-13)** | ≤90k |
+| S2 | Information architecture: page map + ONE job + ONE CTA per page | 1-page map in the register | ≤40k |
+| S3 | Per-page microcopy EN (localization-matrix: EN first, HE via matrix later) — headline · subhead · 3 proof points · CTA per page, voice law §4.5 | copy doc | ≤80k |
+| S4 | Homepage build in the chosen direction | Vercel preview URL → owner approves | ≤90k |
+| S5 | Entity pages (Artists · Bookers · Managers) | preview URL | ≤90k |
+| S6 | Supporting pages (How-it-works · Free pilot · Trust/Methodology) | preview URL | ≤80k |
+| S7 | CTA/conversion pass: one primary per page; join-pilot funnel; consent-gated events only (rule 11) | preview URL | ≤50k |
+| S8 | Site QA: L2 390/1360 · lexicon · contrast · asset/logo integrity | QA report | ≤50k |
+**Order:** S1 → owner taste-pick → S2‖S3 → S4 → owner preview-approve → S5‖S6‖S7 → S8 → Team D → ship on owner GO. Program cost ≈ 570k + verification.
+**State:** program approved-to-plan; S1+S2 dispatch after Wave 2 closes (budget-gated per rule 13).
+
+
 ## Register maintenance log
 - 2026-07-17 · Register created from real state; T-01…T-16 assigned (T-01…T-11 = owner's build order; T-12…T-16 = pre-register work needing permanent numbers).
-- 2026-07-17 (later) · Owner: "does this cover A-Z for full launch?" → LAUNCH A-Z section added (T-19…T-30). Owner: "set up teams" → TEAMS section; Team B launched. T-17 (genre↔scene correlation) + T-18 (skeleton-hang fix) built, verify-green, in NOW awaiting ship. `docs/OWNER-PENDING.md` created — appears at the end of every reply (standing directive). T-15 applied+verified live (owner "apply it", 17 Jul) → moved to DONE. Team B QA sweep folded → T-31/T-32/T-33 opened. Resend live (key in Vercel, test email delivered); first REAL USER confirmed (shydavid, techno/trance DJ, 11 Jul). T-34 opened (share/deep-link repair — owner screenshot evidence). TEAMS restructured to FIVE with measured token budgets + binding NO-DRIFT procedures (owner directive). T-35 (viewport-fit) + T-36 (nav e2e) opened per owner directives. Standing rules 9-10 added. WORK BREAKDOWN waves 1-3 allocated. TEAMS scaled 5→10. AUTONOMOUS OPERATING LOOP formalized (owner directive: run autonomous, all-level test ladder L0-L8, task-closure loop). Next number: **T-37**.
+- 2026-07-17 (later) · Owner: "does this cover A-Z for full launch?" → LAUNCH A-Z section added (T-19…T-30). Owner: "set up teams" → TEAMS section; Team B launched. T-17 (genre↔scene correlation) + T-18 (skeleton-hang fix) built, verify-green, in NOW awaiting ship. `docs/OWNER-PENDING.md` created — appears at the end of every reply (standing directive). T-15 applied+verified live (owner "apply it", 17 Jul) → moved to DONE. Team B QA sweep folded → T-31/T-32/T-33 opened. Resend live (key in Vercel, test email delivered); first REAL USER confirmed (shydavid, techno/trance DJ, 11 Jul). T-34 opened (share/deep-link repair — owner screenshot evidence). TEAMS restructured to FIVE with measured token budgets + binding NO-DRIFT procedures (owner directive). T-35 (viewport-fit) + T-36 (nav e2e) opened per owner directives. Standing rules 9-10 added. WORK BREAKDOWN waves 1-3 allocated. TEAMS scaled 5→10. AUTONOMOUS OPERATING LOOP formalized (owner directive: run autonomous, all-level test ladder L0-L8, task-closure loop). T-37 site-rebrand program registered (Team S, rule 12 taste-gate). Rules 12-13 added. Next number: **T-38**.
