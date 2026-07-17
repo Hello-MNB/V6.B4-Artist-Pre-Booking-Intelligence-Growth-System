@@ -575,6 +575,64 @@ app.post('/api/notify', requireAuth, async (req, res) => {
 })
 
 // ──────────────────────────────────────────────────────────
+// Gate email (§14.6.5, key `email.request`) — the off-app "someone asked
+// about your date" email to the artist. RULE 11: built DARK. It sends ONLY
+// when BOTH process.env.EMAIL_ENABLED === '1' AND a real RESEND_API_KEY are
+// present; otherwise it logs '[email] dark (flag off)' and returns without
+// touching the network. The flag is OFF everywhere until the owner flips it.
+// Template law (§14.6.5): {name} and {link} are the ONLY interpolations —
+// requesterOrg is accepted in the signature (future per-recipient routing)
+// but is NEVER inserted into subject or body (no free buyer text in email),
+// and the body says THAT a buyer asked, never how many (firewall).
+// EN body hardcoded verbatim from §14.6.5 (no email.* keys exist in
+// en.js/he.js yet); HE body + stored-language selection land when Resend is
+// wired (§14.6.3). Env vars read at CALL time so the flag governs each send.
+// NOTE: brief W3-5 fixes FROM 'LOCK <hello@lock.show>'; spec §14.6.5 authors
+// `LOCK <notifications@lock.show>` — EMAIL_FROM env resolves that conflict
+// at wiring time without a code change.
+// ──────────────────────────────────────────────────────────
+function gateEmailEnabled() {
+  return process.env.EMAIL_ENABLED === '1' && !!realValue(process.env.RESEND_API_KEY)
+}
+export async function sendGateEmail({ to, artistName, requesterOrg } = {}) {
+  void requesterOrg // accepted, deliberately unused — see template law above
+  if (!gateEmailEnabled()) {
+    console.log('[email] dark (flag off)')
+    return { sent: false, dark: true }
+  }
+  if (!to) {
+    console.warn('[email] gate email skipped: no recipient')
+    return { sent: false, dark: false }
+  }
+  const name = typeof artistName === 'string' && artistName.trim() ? artistName.trim() : 'there'
+  const link = 'https://app.lock.show/artist/requests'
+  const payload = {
+    from: realValue(process.env.EMAIL_FROM) || 'LOCK <hello@lock.show>',
+    to: [to],
+    // §14.6.5 `email.request` subject (EN)
+    subject: 'Someone asked about your date',
+    // §14.6.5 `email.request` body (EN), verbatim; CTA "See the request" → /artist/requests
+    text:
+      `Hi ${name} — a booking manager just asked about your availability through your LOCK Passport. ` +
+      `It's a question, not a booking or a hold. Open your Requests to see it and reply.\n\n` +
+      `See the request: ${link}`,
+  }
+  const resp = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${realValue(process.env.RESEND_API_KEY)}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  })
+  if (!resp.ok) {
+    console.warn('[email] resend rejected:', resp.status)
+    return { sent: false, dark: false, status: resp.status }
+  }
+  return { sent: true, dark: false }
+}
+
+// ──────────────────────────────────────────────────────────
 // POST /api/availability-request — PUBLIC (no JWT: bookers have no login).
 // G11 fix for the anonymous-buyer notification: the client's direct
 // availability_requests insert satisfied RLS, but its /api/notify call could
@@ -621,6 +679,20 @@ app.post('/api/availability-request', async (req, res) => {
       body: en.notifications.newRequest(requesterName),
       link: '/artist/requests',
     })
+    // §14.6.5 Gate email to the artist — fire-and-forget: never awaited on the
+    // request path, never blocks or fails the response. DARK unless
+    // EMAIL_ENABLED=1 + RESEND_API_KEY (rule 11). Recipient = artist owner's
+    // auth email, resolved only when the flag is actually on.
+    ;(async () => {
+      if (!gateEmailEnabled()) { console.log('[email] dark (flag off)'); return }
+      const { data: owner } = await admin
+        .from('artists').select('created_by, stage_name').eq('id', artistId).maybeSingle()
+      if (!owner?.created_by) return
+      const { data: u } = await admin.auth.admin.getUserById(owner.created_by)
+      const to = u?.user?.email
+      if (!to) return
+      await sendGateEmail({ to, artistName: owner.stage_name, requesterOrg: row.requester_org })
+    })().catch((e) => console.warn('[email] gate send failed:', e?.message || e))
     res.json({ ok: true, request: created })
   } catch (e) {
     console.error('[availability-request]', e)

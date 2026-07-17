@@ -4,7 +4,7 @@ import { useAuth } from './AuthProvider.jsx'
 import { upsertProfile, requestAccountDeletion, hasConsent, recordConsentScope, getMyArtist, saveArtistWhatsApp } from '../../lib/db.js'
 import { listIncomingAccessRequests, respondToAccessRequest, revokeArtistAccess } from '../../lib/orgs.js'
 import { ROLES } from '../../lib/constants.js'
-import { PageShell, Field, ErrorNote, LanguageToggle, BottomSheet, Spinner, useToast } from '../../components/ui.jsx'
+import { Field, ErrorNote, LanguageToggle, BottomSheet, Spinner, useToast } from '../../components/ui.jsx'
 import { useLang } from '../../context/LangContext.jsx'
 import { useOrg } from '../../context/OrgContext.jsx'
 import ContextSwitcher from '../org/ContextSwitcher.jsx'
@@ -13,6 +13,32 @@ import { logEvent, EVENTS } from '../../lib/analytics.js'
 // The exact 5 canon scope values (DB-STRUCTURE.md Layer 1).
 const ALL_SCOPES = ['view', 'upload', 'edit', 'share', 'publish']
 const scopeWord = (T, s) => T.access[`scope${s.charAt(0).toUpperCase()}${s.slice(1)}`] || s
+
+// ── Collapsible settings group (§10.2 owner no-scroll law, µ-task W3-2).
+// The screen previously stacked every card open → +1521px page overflow @390.
+// Each group is now an accordion card: header = a real <button> inside the <h2>
+// (standard disclosure pattern — aria-expanded/aria-controls carry the state,
+// so no extra i18n copy is needed), body mounts only while open. Nothing was
+// removed — every control is re-housed one tap away.
+function Section({ id, title, open, onToggle, tone = '', titleClass = 'text-ink', children }) {
+  return (
+    <section className={`card mb-3 p-0 ${tone}`}>
+      <h2 className="m-0">
+        <button type="button" aria-expanded={open} aria-controls={`settings-sect-${id}`}
+          onClick={onToggle}
+          className="flex min-h-[48px] w-full items-center justify-between gap-2 px-5 py-3 text-start">
+          <span className={`truncate font-bold ${titleClass}`}>{title}</span>
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+            className={`h-4 w-4 shrink-0 text-muted transition-transform ${open ? 'rotate-180' : ''}`}>
+            <path d="m6 9 6 6 6-6" />
+          </svg>
+        </button>
+      </h2>
+      {open && <div id={`settings-sect-${id}`} className="px-5 pb-5">{children}</div>}
+    </section>
+  )
+}
 
 // ── Representation — "who wants access to me / who already has it"
 // (REPRESENTATION-CANON §1.1/§1.5). Pending grants show ONLY the requesting
@@ -71,9 +97,10 @@ function RepresentationSection({ T, toast }) {
   const active = requests.filter((r) => r.status === 'active')
   const revoked = requests.filter((r) => r.status === 'revoked' || r.status === 'disputed')
 
+  // Body only — the collapsible card/heading around it is the Section wrapper
+  // in Settings below (W3-2 re-housing; same content, same order).
   return (
-    <div className="card mb-3">
-      <SectionHead className="mb-1">{T.representation.title}</SectionHead>
+    <div>
       <p className="mb-3 text-xs text-muted">{T.representation.subtitle}</p>
       {loading ? (
         <p className="text-xs text-muted">{T.common.loading}</p>
@@ -155,6 +182,10 @@ export default function Settings() {
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState('')
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  // W3-2 accordion state — which settings groups are expanded. Profile starts
+  // open (the screen's one primary job); everything else is one tap away.
+  const [openSections, setOpenSections] = useState({ profile: true })
+  const toggleSection = (id) => setOpenSections((cur) => ({ ...cur, [id]: !cur[id] }))
   const [deleteSubmitted, setDeleteSubmitted] = useState(false)
   const [deleteBusy, setDeleteBusy] = useState(false)
   // Marketing consent (4th, optional purpose) — moved here per canon; privacy +
@@ -251,25 +282,33 @@ export default function Settings() {
   }
 
   return (
-    <PageShell max="max-w-md">
-      <div className="mb-7 flex items-center justify-end">
-        <Link to={role === ROLES.ARTIST ? '/artist/home' : role === ROLES.AGENCY ? (isProducerWorkspace ? '/production' : '/agency') : '/'}
-          className="text-sm text-muted transition hover:text-ink">
-          {T.common.back}
-        </Link>
-      </div>
-      <h1 className="mb-5 text-2xl font-bold text-ink">{T.settings.title}</h1>
+    // W3-2 (§10.2 owner no-scroll law): the screen is bounded to the viewport —
+    // 100dvh minus the AppShell chrome (56px sticky header everywhere, +64px
+    // bottom-nav padding under md). The title row stays fixed; the settings
+    // groups live in ONE internal scroll area, folded into accordion Sections.
+    <div className="flex h-[calc(100dvh-7.5rem)] flex-col overflow-hidden px-4 pt-4 sm:px-8 md:h-[calc(100dvh-3.5rem)] md:pt-6">
+      <div className="mx-auto flex min-h-0 w-full max-w-md flex-1 flex-col animate-fade-in">
+        <div className="shrink-0">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <h1 className="text-2xl font-bold text-ink">{T.settings.title}</h1>
+            <Link to={role === ROLES.ARTIST ? '/artist/home' : role === ROLES.AGENCY ? (isProducerWorkspace ? '/production' : '/agency') : '/'}
+              className="flex min-h-[44px] items-center text-sm text-muted transition hover:text-ink">
+              {T.common.back}
+            </Link>
+          </div>
 
-      <ErrorNote>{error}</ErrorNote>
-      {deleteSubmitted && (
-        <div className="card mb-4 border-accent/30 bg-accent/10">
-          <p className="text-sm text-accent">{T.settings.deleteSubmitted}</p>
+          <ErrorNote>{error}</ErrorNote>
+          {deleteSubmitted && (
+            <div className="card mb-4 border-accent/30 bg-accent/10">
+              <p className="text-sm text-accent">{T.settings.deleteSubmitted}</p>
+            </div>
+          )}
         </div>
-      )}
+
+        <div className="min-h-0 flex-1 overflow-y-auto pb-4">
 
       {/* Profile */}
-      <div className="card mb-3">
-        <SectionHead>{T.settings.profile}</SectionHead>
+      <Section id="profile" title={T.settings.profile} open={!!openSections.profile} onToggle={() => toggleSection('profile')}>
         <Field label={T.settings.displayName}>
           <input className="field" value={name} onChange={(e) => setName(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && saveProfile()} />
@@ -280,14 +319,13 @@ export default function Settings() {
         <button className="btn-primary w-full" onClick={saveProfile} disabled={saving}>
           {saving ? T.common.loading : saved ? T.settings.saved + ' ✓' : T.settings.save}
         </button>
-      </div>
+      </Section>
 
       {/* Artist personal details — WhatsApp + the artist's own sharing opt-in.
           The number stays private; a booking manager only sees it after sending
           a request, and only if the artist opted in here (default off). */}
       {isArtist && (
-        <div className="card mb-3">
-          <SectionHead>{T.settings.waTitle}</SectionHead>
+        <Section id="whatsapp" title={T.settings.waTitle} open={!!openSections.whatsapp} onToggle={() => toggleSection('whatsapp')}>
           <p className="mb-3 text-sm text-muted">{T.settings.waIntro}</p>
           <Field label={T.settings.waNumber} hint={T.settings.waNumberHint}>
             <input className="field" dir="ltr" inputMode="tel" autoComplete="tel"
@@ -305,15 +343,15 @@ export default function Settings() {
           <button className="btn-primary mt-4 w-full" onClick={saveWhatsApp} disabled={waSaving}>
             {waSaving ? T.common.loading : waSaved ? T.settings.saved + ' ✓' : T.settings.save}
           </button>
-        </div>
+        </Section>
       )}
 
       {/* Organization (org-first account model) */}
-      <div className="card mb-3">
-        <div className="mb-3 flex items-center justify-between">
-          <SectionHead className="mb-0 truncate">{activeOrg?.name || (isAgency ? T.org.entityAgency : T.org.entitySolo)}</SectionHead>
-          <ContextSwitcher />
-        </div>
+      <Section id="org" title={activeOrg?.name || (isAgency ? T.org.entityAgency : T.org.entitySolo)}
+        open={!!openSections.org} onToggle={() => toggleSection('org')}>
+        {/* ContextSwitcher can't nest inside the header button (no interactive
+            nesting) — it opens the body's first row instead; also in the top bar. */}
+        <div className="mb-3 flex justify-end"><ContextSwitcher /></div>
         <div className="flex flex-col gap-2">
           <Link to="/org/settings" className="btn-ghost">{T.org.settingsTitle}</Link>
           <Link to="/org/members" className="btn-ghost">{T.org.membersTitle}</Link>
@@ -327,25 +365,28 @@ export default function Settings() {
             </Link>
           )}
         </div>
-      </div>
+      </Section>
 
       {/* Representation — incoming/active artist_access grants (both directions
           of the consent handshake live here: artist approves/declines/revokes).
           Artist-facing only — an org with no artist of its own has nothing to show. */}
-      {role === ROLES.ARTIST && <RepresentationSection T={T} toast={toast} />}
+      {role === ROLES.ARTIST && (
+        <Section id="representation" title={T.representation.title}
+          open={!!openSections.representation} onToggle={() => toggleSection('representation')}>
+          <RepresentationSection T={T} toast={toast} />
+        </Section>
+      )}
 
       {/* Language */}
-      <div className="card mb-3">
-        <SectionHead>{T.settings.language}</SectionHead>
+      <Section id="language" title={T.settings.language} open={!!openSections.language} onToggle={() => toggleSection('language')}>
         <div className="flex items-center justify-between">
           <span className="text-sm text-ink">{lang === 'he' ? T.settings.languageHe : T.settings.languageEn}</span>
           <LanguageToggle />
         </div>
-      </div>
+      </Section>
 
       {/* Consents */}
-      <div className="card mb-3">
-        <SectionHead className="mb-1">{T.settings.consents}</SectionHead>
+      <Section id="consents" title={T.settings.consents} open={!!openSections.consents} onToggle={() => toggleSection('consents')}>
         <p className="mb-3 text-xs text-muted">{T.settings.consentsHint}</p>
         <div className="space-y-1.5 text-xs text-muted">
           <p><span className="text-accent" aria-hidden>✓</span> {T.settings.consentPrivacy} — {T.settings.accepted}</p>
@@ -371,7 +412,7 @@ export default function Settings() {
         </div>
 
         <p className="mt-3 text-[11px] italic text-faint">{T.settings.consentsContact}</p>
-      </div>
+      </Section>
 
       {/* Sign out */}
       <button className="btn-ghost mb-3 w-full" onClick={handleSignOut}>
@@ -379,8 +420,8 @@ export default function Settings() {
       </button>
 
       {/* Delete account */}
-      <div className="card mb-5 border-amber/30">
-        <SectionHead className="mb-1 text-amber">{T.settings.dangerZone}</SectionHead>
+      <Section id="danger" title={T.settings.dangerZone} titleClass="text-amber" tone="border-amber/30"
+        open={!!openSections.danger} onToggle={() => toggleSection('danger')}>
         <p className="mb-3 text-xs text-muted">{T.settings.deleteWarning}</p>
         {!showDeleteConfirm ? (
           <button className="min-h-[44px] w-full rounded-xl border border-amber/40 bg-amber/10 py-2 text-sm text-amber transition hover:bg-amber/20"
@@ -401,16 +442,15 @@ export default function Settings() {
             </div>
           </div>
         )}
-      </div>
+      </Section>
 
-      <div className="flex items-center justify-center gap-2 text-[11px] text-faint">
+      <div className="flex items-center justify-center gap-2 pt-2 text-[11px] text-faint">
         <span className="rounded-full border border-line px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.1em] text-muted">{T.settings.betaBadge}</span>
         <span>LOCK v1</span>
       </div>
-    </PageShell>
-  )
-}
 
-function SectionHead({ children, className = 'mb-3' }) {
-  return <h2 className={`font-bold text-ink ${className}`}>{children}</h2>
+        </div>
+      </div>
+    </div>
+  )
 }
