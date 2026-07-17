@@ -169,20 +169,26 @@ These are pre-Gate necessities that are not screens. Screen-style MOBILE/DESKTOP
 
 ---
 
-## TEAMS — the build machine (owner directive 17 Jul: "several teams, minimal budget per agent, including testing and fixing")
+## TEAMS — five development teams (owner directive 17 Jul: "5 teams, minimum tokens that allow work, procedures, NO DRIFT")
 
-Multi-agent teams run as orchestrated workflows. Budget discipline: default model, LOW reasoning effort for mechanical sweeps, higher effort ONLY for adversarial verification; ~1 agent per screen/task; every team's output passes the verify gate + firewall inspectors before merge.
+**Token allocation — measured minimums, not guesses** (basis: Team B's real sweep = ~41k tokens per screen-QA agent). Budgets are per-agent ceilings; an agent that needs more STOPS and reports instead of drifting.
 
-| Team | Mandate | Tasks fed | Shape (agents · effort) |
-|---|---|---|---|
-| **A · Screens** | Gap-diff each screen vs its spec DoD, then close gaps | T-02…T-07 | 1 gap-diff + 1 fixer per screen · low/medium |
-| **B · QA** | Run the §10.2/§10.3/LEXICON/INTERACT/NAV/A11Y passes per screen; produce Maria's one-page witness checklists + screenshots (390px + 1360px) | T-01, T-02, T-08, T-09 first | 1 QA agent per screen · low |
-| **C · Launch-ops** | The non-screen A-Z: HE pass, a11y, utility screens, purge, GA4, bots | T-19…T-23, T-26 | 1 agent per task · low/medium |
-| **D · Critic** | Adversarial verify of every A/B/C output: firewall, design law, reproduce-before-claiming | all | 1 verifier per batch · high |
+| Team | Mandate | Tasks fed | Agent shape | Budget/agent | Budget/wave |
+|---|---|---|---|---|---|
+| **A · Screens-Build** | Gap-diff a screen vs its spec DoD, then close the gaps | T-02…T-07 · T-31 · T-33 | 1 differ + 1 fixer per screen · low/medium effort | ≤ 60k | ≤ 150k per screen |
+| **B · QA-Checklists** | §10.2/§10.3/LEXICON/INTERACT/NAV/A11Y passes; produce Maria's one-page witness checklists + 390/1360 screenshots | every screen task | 1 QA agent per screen · low effort | ≤ 50k | ≤ 250k per 5-screen sweep |
+| **C · Launch-Ops** | The non-screen A-Z: HE pass, a11y, utility screens, purge, GA4, bots, fonts | T-19…T-23 · T-26 · T-32 | 1 agent per task · low/medium | ≤ 80k | ≤ 200k per batch |
+| **D · Critic-Verify** | Rule 8: independent adversarial verification of EVERY task start-to-end; SHIP / DO-NOT-SHIP verdict | all teams' output | 1 verifier per task · high effort | ≤ 70k | — |
+| **E · Ship-Regression** | verify suite + embed/site builds + replica tests + deploy watch + live smoke after every production merge | every ship | 1 agent per ship · low | ≤ 40k | — |
 
-Rule: teams never touch `main` — everything lands on the work branch, verify-green, and ships only through the owner-authorized main pipeline.
+**Procedures (binding, NO DRIFT):**
+- **DEVELOP:** work exists ONLY as a numbered register task (no unnumbered work, ever) · one atomic task per agent · the agent reads the task's spec sections FIRST · all work on the work branch · `npm run verify` (10 inspectors) green before hand-off.
+- **TEST:** builder self-test with reproduction (Playwright/replica — screenshots or it didn't happen) → **Team D independent adversarial verification** of the whole flow start-to-end → explicit SHIP verdict. No task is reported on a self-test alone (rule 8).
+- **REPORT:** to the owner ONLY after Team D's verdict · plain language · evidence attached · register updated in the SAME commit · OWNER-PENDING refreshed and appended to every reply.
+- **SHIP:** production merges to `main` are owner-authorized only · Team E runs live smoke immediately after every deploy · owner gets the exact live URLs to re-test (M-3 pattern).
+- **BUDGET:** an agent hitting its ceiling stops and reports partial state — it never silently expands scope.
 
-**Status: Team B launched 17 Jul (first QA sweep running).**
+**Active now:** Team D verifying T-34 (share/deep-link repair) · Team B's first sweep folded (T-31/T-32/T-33).
 
 ---
 
@@ -230,4 +236,4 @@ Attached to existing tasks: cookie banner steals the primary-CTA style + covers 
 
 ## Register maintenance log
 - 2026-07-17 · Register created from real state; T-01…T-16 assigned (T-01…T-11 = owner's build order; T-12…T-16 = pre-register work needing permanent numbers).
-- 2026-07-17 (later) · Owner: "does this cover A-Z for full launch?" → LAUNCH A-Z section added (T-19…T-30). Owner: "set up teams" → TEAMS section; Team B launched. T-17 (genre↔scene correlation) + T-18 (skeleton-hang fix) built, verify-green, in NOW awaiting ship. `docs/OWNER-PENDING.md` created — appears at the end of every reply (standing directive). T-15 applied+verified live (owner "apply it", 17 Jul) → moved to DONE. Team B QA sweep folded → T-31/T-32/T-33 opened. Resend live (key in Vercel, test email delivered); first REAL USER confirmed (shydavid, techno/trance DJ, 11 Jul). T-34 opened (share/deep-link repair — owner screenshot evidence). Next number: **T-35**.
+- 2026-07-17 (later) · Owner: "does this cover A-Z for full launch?" → LAUNCH A-Z section added (T-19…T-30). Owner: "set up teams" → TEAMS section; Team B launched. T-17 (genre↔scene correlation) + T-18 (skeleton-hang fix) built, verify-green, in NOW awaiting ship. `docs/OWNER-PENDING.md` created — appears at the end of every reply (standing directive). T-15 applied+verified live (owner "apply it", 17 Jul) → moved to DONE. Team B QA sweep folded → T-31/T-32/T-33 opened. Resend live (key in Vercel, test email delivered); first REAL USER confirmed (shydavid, techno/trance DJ, 11 Jul). T-34 opened (share/deep-link repair — owner screenshot evidence). TEAMS restructured to FIVE with measured token budgets + binding NO-DRIFT procedures (owner directive). Next number: **T-35**.
