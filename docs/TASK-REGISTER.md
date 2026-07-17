@@ -196,7 +196,13 @@ These are pre-Gate necessities that are not screens. Screen-style MOBILE/DESKTOP
 5. G updates docs at wave close, single writer — no doc races.
 6. Budgets: per-agent ceilings from the allocation table (measured: QA ≈41k · build ≈60-80k · verify ≈70k). An agent at its ceiling STOPS and reports partial.
 
-**Active now:** Wave 1 workflow IN FLIGHT (A1-tap-targets · A2-passport-rows · C3-banner→C2 territory · B1-real-login-QA · B2-witness-docs — each with its D verification) · T-36 nav agent running.
+**Wave 1 CLOSED (17 Jul):** 8 agents · 521k tokens · 3 builds, 3 independent SHIP verdicts → shipped to production:
+- **T-31 (A1):** 44px floor into the primitives (`.btn`/`.field` min-height; invisible 44px hit-overlay for chips via `.tap-target`) + shell stragglers (bell, language toggle, Settings, role picker, Act-editor EDIT buttons). D-verified 21/22 sampled targets clean; the 1 marginal case (center-star chip edge overlap, low severity) logged for A1's next pass.
+- **T-33 (A2):** passport evidence rows stack at 390px — title wraps, date on its own mono line; 14/14 rows assert-visible; desktop unchanged. D-verified.
+- **T-21-part (C3):** consent banner Accept demoted to equal-weight (§15.2) — zero primary CTAs added to any screen; banner is now a docked bar that RESERVES space (shrinks the scroll container) so it can never cover fields/CTAs; stacks above the passport CTA bar. D-verified.
+- **B1:** real-login-form QA executed (findings in wave transcript → T-01 closure input).
+- **B2:** `docs/qa/WITNESS-CHECKLISTS.md` written for the owner (M-5 unblocked).
+**New findings routed:** /artist/home has a PRE-EXISTING double-primary-CTA of its own (not the banner) → A1 next wave. Residency date renders bare ISO on mobile (cosmetic) → A2 backlog.
 
 ---
 
