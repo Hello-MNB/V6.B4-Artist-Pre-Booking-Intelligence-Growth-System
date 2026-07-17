@@ -10,3 +10,6 @@ desktop.ini
 dev-out.txt
 dev-err.txt
 vite.config.js.timestamp-*.mjs
+
+# throwaway Playwright/QA driver scripts (agents create + delete these)
+._*
