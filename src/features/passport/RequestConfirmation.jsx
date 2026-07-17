@@ -4,6 +4,7 @@ import { getArtist, getSharedWhatsApp } from '../../lib/db.js'
 import { PageShell, Wordmark } from '../../components/ui.jsx'
 import { useLang } from '../../context/LangContext.jsx'
 import { logEvent, EVENTS } from '../../lib/analytics.js'
+import { appUrl } from '../../lib/appUrl.js'
 
 function formatWaNumber(raw) {
   if (!raw) return null
@@ -44,7 +45,7 @@ export default function RequestConfirmation() {
   const waNumber = formatWaNumber(rawWa)
   const waMsg = encodeURIComponent(T.request.whatsappMsg(artistName, requesterName))
   const waUrl = waNumber ? `https://wa.me/${waNumber}?text=${waMsg}` : null
-  const passportUrl = `${window.location.origin}/passport/${id}`
+  const passportUrl = appUrl(`/passport/${id}`)
 
   function onWaClick() {
     logEvent(EVENTS.REQUEST_WHATSAPP_CLICK, { artist_id: id })

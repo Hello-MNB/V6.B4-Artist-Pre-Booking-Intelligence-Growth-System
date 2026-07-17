@@ -9,6 +9,7 @@ import { logEvent, EVENTS } from '../../lib/analytics.js'
 import { isPrimaryPlanet, primaryPlanets } from '../../lib/genreWeights.js'
 import { PAYMENTS_ENABLED } from '../../lib/constants.js'
 import RadarUniverse from './RadarUniverse.jsx'
+import { appUrl } from '../../lib/appUrl.js'
 
 // ── A9 Artist Radar (canon LF-A1, linear) ────────────────────────────────────
 // Bounded dimension states + ONE next action. FIREWALL: rule-based states only —
@@ -186,7 +187,7 @@ export default function ArtistDashboard() {
   // only — never a score/percent, firewall-safe). share_link_created fires on
   // the real copy action; if the clipboard is blocked the visible link below
   // the button stays selectable, and no event is logged (nothing was copied).
-  const shareUrl = artist ? `${window.location.origin}/passport/${artist.id}?s=1` : ''
+  const shareUrl = artist ? appUrl(`/passport/${artist.id}?s=1`) : ''
   async function copyShareLink() {
     try {
       await navigator.clipboard.writeText(shareUrl)

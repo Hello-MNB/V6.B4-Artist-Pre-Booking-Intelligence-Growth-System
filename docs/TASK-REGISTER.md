@@ -20,6 +20,7 @@ _Created 17 Jul 2026 from the real, witnessed state of the product — not from 
 5. §6 law 2: mobile is the DEFAULT, designed separately — two checks, never one.
 6. Never mark DONE what was not witnessed running.
 7. Every task names its blocker and who unblocks it (owner = Maria · agent = Claude).
+8. **QA-before-report (owner directive 17 Jul):** every executed task is verified by an independent test agent (Team D) START-TO-END before it is reported to the owner. No self-reported "done."
 
 **Marks:** ✅ done · ⚠️ partial/unwitnessed (note says what's missing) · ❌ not built · — not applicable (non-screen task).
 
@@ -217,6 +218,16 @@ All 8 applicable ✅. 17 Jul 2026, **live on production** (merges `b49d568`, `5e
 Attached to existing tasks: cookie banner steals the primary-CTA style + covers content/form fields on every screen at 390px → **T-21** (its evidence). Radar label collisions ("INSTAGRAM.CO" clip, "CENTRAL IN YOUR GENRE" overlapping the LIVE SHOW node) → **T-03/T-04** (their evidence). Login-screen notes → **T-01**.
 
 
+### T-34 · Share/deep-link navigation repair — §7.6 (deep-link & share schema — virality-critical) · §10.6 · §8.7
+**Owner evidence (17 Jul):** her screenshot — `lock.show/passport/<id>?s=1` → site 404. The `?s=1` proves the app ITSELF generated the dead link.
+**Root cause:** 4 call sites built outbound links from the domain alone, losing the `/app` base on the website embed: the artist share button (`ArtistDashboard`), the producer confirmation link ×2 (`ClaimReview` — producers were getting dead magic links), and the request-receipt passport URL (`RequestConfirmation`).
+**Fix (detailed):**
+1. New `src/lib/appUrl.js` — the ONE outbound-link builder, base-aware (`/` standalone · `/app` embedded); all 4 sites patched to use it. Auth screens already base-aware — untouched.
+2. Safety net for dead links ALREADY in the wild: the site 404 now rescues app-only paths missing `/app` (`/passport/<id>`, `/confirm/<token>`, `/invite/`, `/evidence/`, login/signup/onboarding/…) → bounces into the app with the full path + query preserved. Site pages (`/passport` demo, `/production`, `/radar`…) explicitly excluded from the bounce.
+3. Embed + site rebuilt; verify suite green.
+**Builder's own tests passed** (bare share link → lands on the rendered passport with `?s=1` intact; site pages unaffected). **Team D independent verification: in progress** (rule 8) — ships only on its SHIP verdict + owner-authorized main merge.
+
+
 ## Register maintenance log
 - 2026-07-17 · Register created from real state; T-01…T-16 assigned (T-01…T-11 = owner's build order; T-12…T-16 = pre-register work needing permanent numbers).
-- 2026-07-17 (later) · Owner: "does this cover A-Z for full launch?" → LAUNCH A-Z section added (T-19…T-30). Owner: "set up teams" → TEAMS section; Team B launched. T-17 (genre↔scene correlation) + T-18 (skeleton-hang fix) built, verify-green, in NOW awaiting ship. `docs/OWNER-PENDING.md` created — appears at the end of every reply (standing directive). T-15 applied+verified live (owner "apply it", 17 Jul) → moved to DONE. Team B QA sweep folded → T-31/T-32/T-33 opened. Resend live (key in Vercel, test email delivered); first REAL USER confirmed (shydavid, techno/trance DJ, 11 Jul). Next number: **T-34**.
+- 2026-07-17 (later) · Owner: "does this cover A-Z for full launch?" → LAUNCH A-Z section added (T-19…T-30). Owner: "set up teams" → TEAMS section; Team B launched. T-17 (genre↔scene correlation) + T-18 (skeleton-hang fix) built, verify-green, in NOW awaiting ship. `docs/OWNER-PENDING.md` created — appears at the end of every reply (standing directive). T-15 applied+verified live (owner "apply it", 17 Jul) → moved to DONE. Team B QA sweep folded → T-31/T-32/T-33 opened. Resend live (key in Vercel, test email delivered); first REAL USER confirmed (shydavid, techno/trance DJ, 11 Jul). T-34 opened (share/deep-link repair — owner screenshot evidence). Next number: **T-35**.

@@ -11,6 +11,16 @@ import Link from 'next/link'
 const BOUNCE = `(function(){var p=location.pathname;
 if(p.indexOf('/app/')===0||p==='/app'){
   location.replace('/app/?dl='+encodeURIComponent(p+location.search));
+  return;
+}
+// T-34 rescue: app links shared WITHOUT the /app prefix (a pre-fix share bug
+// put such links in the wild — e.g. lock.show/passport/<id>?s=1). App-ONLY
+// prefixes here; never site pages (/passport alone is the site's demo page,
+// /production and /radar are site pages — excluded by requiring the deeper
+// segment or being app-exclusive).
+var APP_ONLY=/^\\/(passport\\/|confirm\\/|invite\\/|evidence\\/|artist\\/|agency(\\/|$)|org\\/|admin$|login$|signup$|select$|onboarding$|discover$|forgot-password$|reset-password$)/;
+if(APP_ONLY.test(p)){
+  location.replace('/app/?dl='+encodeURIComponent('/app'+p+location.search));
 }})();`
 
 export default function NotFound() {

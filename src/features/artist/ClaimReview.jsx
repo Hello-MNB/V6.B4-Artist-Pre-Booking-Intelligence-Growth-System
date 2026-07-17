@@ -9,6 +9,7 @@ import { useLang } from '../../context/LangContext.jsx'
 import { logEvent, EVENTS } from '../../lib/analytics.js'
 import { markPassportDirty, clearPassportDirty, isPassportDirty } from '../../lib/passportState.js'
 import { DEMO } from '../../lib/demo.js'
+import { appUrl } from '../../lib/appUrl.js'
 
 // Honest receipt destination — only confirmed verified/supporting passport-ok
 // claims actually reach the public Passport; everything else stays private.
@@ -376,7 +377,7 @@ function ClaimRow({ claim, onToggle, toggling, T, bloom, canPublish, onApprove, 
     if (reqBusy) return
     setReqError('')
     if (DEMO) {
-      setLink(`${window.location.origin}/confirm/demo-token-preview`)
+      setLink(appUrl('/confirm/demo-token-preview'))
       return
     }
     setReqBusy(true)
@@ -387,7 +388,7 @@ function ClaimRow({ claim, onToggle, toggling, T, bloom, canPublish, onApprove, 
       })
       const json = await res.json().catch(() => ({}))
       if (res.ok && json.path) {
-        setLink(`${window.location.origin}${json.path}`)
+        setLink(appUrl(json.path))
         logEvent(EVENTS.PRODUCER_CONFIRMATION_SENT, { claim_id: claim.id }) // pilot signal (A10)
       }
       else setReqError(json.error || T.producer.serverOffline)
