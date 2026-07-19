@@ -406,9 +406,10 @@ export default function ArtistDashboard() {
             <div className="grid grid-cols-2 gap-2">
               {quickLinks.map((q) => (
                 <Link key={q.to} to={q.to}
-                  className="flex min-h-[44px] items-center justify-between rounded-xl border border-line bg-surface2 px-3 py-2.5 text-sm font-semibold text-ink transition-colors hover:border-line2">
-                  <span className="truncate">{q.label}</span>
-                  <span aria-hidden className="text-faint">→</span>
+                  className="flex min-h-[44px] items-center justify-between gap-2 rounded-xl border border-line bg-surface2 px-3 py-2.5 text-sm font-semibold text-ink transition-colors hover:border-line2">
+                  {/* L1 fit law: labels WRAP, never truncate ("Readiness (private)" clipped at 360px — retro-run catch) */}
+                  <span className="min-w-0 leading-snug">{q.label}</span>
+                  <span aria-hidden className="shrink-0 text-faint">→</span>
                 </Link>
               ))}
             </div>

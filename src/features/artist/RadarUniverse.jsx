@@ -426,7 +426,10 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
           the artist against their own past. Renders only when something new
           exists; never a %, never a comparison. Artist-private (N5 test). */}
       {history && (
-        <p className="relative z-10 mb-2 font-mono text-[10px] uppercase tracking-[0.08em] text-gold/80 md:absolute md:end-8 md:top-8 md:mb-0">
+        /* L1 fit law (HOW-TO-BUILD-A-TASK): bottom-END corner — the scene rail
+           owns top-center/end and the next-move card owns bottom-START; this
+           corner is free at every width (retro-run caught the top-end collision). */
+        <p className="relative z-10 mb-2 font-mono text-[10px] uppercase tracking-[0.08em] text-gold/80 md:absolute md:bottom-8 md:end-8 md:mb-0">
           {S.historyLine(history.n, history.since.toLocaleDateString(undefined, { month: 'long' }))}
         </p>
       )}
