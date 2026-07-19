@@ -95,7 +95,7 @@ export default function ContextSwitcher() {
         onClick={() => setOpen(true)}
         aria-haspopup="menu"
         aria-expanded={open}
-        className="flex items-center gap-2 rounded-full border border-line bg-surface py-1 pe-3 ps-1 transition hover:border-accent/50"
+        className="tap-target flex items-center gap-2 rounded-full border border-line bg-surface py-1 pe-3 ps-1 transition hover:border-accent/50"
       >
         <span aria-hidden className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-surface2 text-sm font-bold text-ink">
           {initial}

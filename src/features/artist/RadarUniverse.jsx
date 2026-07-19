@@ -426,7 +426,10 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
           the artist against their own past. Renders only when something new
           exists; never a %, never a comparison. Artist-private (N5 test). */}
       {history && (
-        <p className="relative z-10 mb-2 font-mono text-[10px] uppercase tracking-[0.08em] text-gold/80 md:absolute md:end-8 md:top-8 md:mb-0">
+        /* L1 fit law (HOW-TO-BUILD-A-TASK): bottom-END corner — the scene rail
+           owns top-center/end and the next-move card owns bottom-START; this
+           corner is free at every width (retro-run caught the top-end collision). */
+        <p className="relative z-10 mb-2 font-mono text-[10px] uppercase tracking-[0.08em] text-gold/80 md:absolute md:bottom-8 md:end-8 md:mb-0">
           {S.historyLine(history.n, history.since.toLocaleDateString(undefined, { month: 'long' }))}
         </p>
       )}
@@ -1014,7 +1017,7 @@ function CenterStar({ artist, T, S, dim, onOpenSwitch, onTagClick }) {
   return (
     <div className={`text-center transition-opacity ${dim ? 'opacity-50' : ''}`}>
       <button type="button" onClick={onOpenSwitch} aria-haspopup="dialog" aria-label={S?.actSwitch?.switchAria}
-        className="mx-auto flex flex-col items-center rounded-2xl px-2 py-1 transition-opacity hover:opacity-90">
+        className="tap-target mx-auto flex flex-col items-center rounded-2xl px-2 py-1 transition-opacity hover:opacity-90">
         {artist.photo_url
           ? <img src={artist.photo_url} alt="" className="glow-found mx-auto h-20 w-20 rounded-full border border-gold/70 object-cover shadow-[0_0_28px_rgba(242,192,99,0.25)] md:h-24 md:w-24" />
           : <span className="glow-found mx-auto grid h-20 w-20 place-items-center rounded-full border border-gold/70 bg-surface2 font-display text-xl text-ink shadow-[0_0_28px_rgba(242,192,99,0.18)] md:h-24 md:w-24 md:text-2xl">
@@ -1028,7 +1031,7 @@ function CenterStar({ artist, T, S, dim, onOpenSwitch, onTagClick }) {
       {artist.genre && (
         <button type="button" onClick={(e) => { e.stopPropagation(); onTagClick?.() }}
           aria-label={S?.actSwitch?.genreTagAria ? S.actSwitch.genreTagAria(artist.genre) : artist.genre}
-          className="chip mt-1 bg-na-bg text-[10px] text-muted transition-colors hover:text-ink">
+          className="tap-target chip mt-1 bg-na-bg text-[10px] text-muted transition-colors hover:text-ink">
           {artist.genre}
         </button>
       )}

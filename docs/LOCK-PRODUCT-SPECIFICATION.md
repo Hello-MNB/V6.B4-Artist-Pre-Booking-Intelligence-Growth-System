@@ -235,6 +235,20 @@ Binding for every UI string, page, doc, and DS component. A surface that violate
 | Evidence display | method-labeled evidence; **bands + binaries with method labels** | ראיות מתויגות-שיטה | any score/percentile/rank/gauge/prediction |
 | Proof unit | Proof Unit | יחידת הוכחה | — |
 
+#### 4.1a Milestone waypoints (G-8, 18 Jul — canon terminology from the built i18n; HE **ratify: R00**)
+The artist journey's eight waypoint NAMES are canon terms (the codes `M1–M8` are internal only and never render):
+| # | EN (locked) | HE (built — ratify: R00) |
+|---|---|---|
+| M1 | Arrived | הגעת |
+| M2 | First light | אור ראשון |
+| M3 | Radar alive | הרדאר חי |
+| M4 | Focused | ממוקד |
+| M5 | Backed | מגובה |
+| M6 | Published | הפספורט בחוץ |
+| M7 | In the market | נראה בשוק |
+| M8 | Answered | תגובה ראשונה |
+State words: done · "you are here" · ahead (הושלם · אתה כאן · בהמשך). Lighting conditions + render law: §8.2. Firewall: names + own step states only — no %, no grade, no comparison.
+
 ### 4.2 Personas / entities
 | Persona | EN | HE | Notes |
 |---|---|---|---|
@@ -525,6 +539,22 @@ The direction: **each workspace is one primary canvas**, with everything else fo
 
 **Guardrails (so consolidation helps, not hurts):** never merge two genuinely distinct *jobs* onto one canvas just to cut a route; keep **one primary CTA at a time** (law 3) even inside a tabbed canvas; a tab is not a screen — the canvas keeps a single "what's next." The reviewer's ~67% route-reduction figure is an *estimate of direction*, not a target to hit blindly. **Priority:** Artist first (highest-traffic; D1/inline pieces already exist), then Representation/Production as their depth is built.
 
+#### 7.7.a — THE ENTITY→SCREEN MAP (T-67, 18 Jul — the binding one-view of every entity's screen system)
+
+Each entity: its ONE main canvas · the interactive ENGINE that canvas runs · every secondary screen with its nav path in AND back (§10.6 no-dead-end) · the signals it must fire (§21.1/§14.1.5). Build tasks cite this row + the screen's §8/§17.B section; a screen not on this map is a flagged ruling, never an invention.
+
+| Entity (§3.4) | Main canvas | The interactive ENGINE | Secondary screens (path in → back) | Nav shell (§7.1–7.5) | Signals (§21.1) |
+|---|---|---|---|---|---|
+| **ARTIST** | Radar canvas `/artist/home` (§8.2) | **Radar + Planet Inspector** (§8.2/§8.3): planets → panel → confirm/fill → coaching (N2–N4) | Passport preview §8.4 (nav tab → back via nav) · Requests §8.13 (tab) · Access §8.5 (hub → back) · Act editor §8.6 (Radar EDIT → inline, returns in place) · Evidence §8.13 (planet panel → back to Radar) · Onboarding §8.1 (entry-only → lands Radar) | chrome §7.1 · hub §7.2 · nav Radar·Passport·Requests (§7.3) · bottom-nav §7.5 | Identity+Intent+Trust (build events) · Retention (`login`/restore) — §14.1.5 FIRING |
+| **REPRESENTATION** | Roster cockpit `/representation/roster` (§8.10) | **Roster action cards**: per-artist what-changed · why · ONE bound action | Requests inbox `/reqs` · Roster Radar `/radar` · Team `/team` (all §8.10 — nav tabs → back via nav) | nav Roster·Requests·Radar·Team (§7.3) | Relationship (grants — ⚠ NOT-WIRED §21.1) + Conversion (request handling) |
+| **PRODUCTION** | Events board `/production/events` (§8.11) | **Lineup-slot board**: time-ordered slots, one CTA per slot; books via Buyer path | Requests `/reqs` · Workspace `/workspace` (§8.11, tabs → back) · Passport (Buyer mode) §8.7 → back via history | nav Events·Requests·Workspace (§7.3) | Conversion (`availability_request_created` as buyer) |
+| **BUYER (public)** | Public Passport `/passport/:id` (§8.7) — no login, no shell | **Persona toggle + proof cards + ONE sticky CTA** → availability request §8.8 (in-page → receipt → back to Passport) | Signed-in `/discover` (§8.13 — ⚠ THIN, flagged) | public mode: Passport·Availability (§7.3); deep-links §7.6 | Conversion (`passport_view`+`return_visit` · reaction · request) — FIRING |
+| **SOURCE-CONFIRMER** | `/confirm/:token` single card (§8.9) — accountless | **One-minute confirm ceremony**: yes / partial / no / wrong-person | none by design (no shell; exit = done screen) | confirm mode §7.3 | Trust (`claim_confirmed` server-side) — FIRING |
+| **OPERATOR** | Admin cockpit `/admin` (§8.12) | **Gate + Retention tiles + queues** (payments · claims · consents · audit) | anchor-scrolled sections in one page (§8.12) → sticky section nav | internal only | reads ALL families; fires none |
+| **UTILITY (cross-entity)** | — | — | signup/login/reset §17.B.1–3 · invite §17.B.4 · settings §17.B.5 · org/team §17.B.6 · billing §17.B.7 · consent §17.B.8 · notifications §17.B.9 · 404/error §17.B.10 · skeletons §17.B.11 | per §17.B each carries its own entry/exit | Identity (auth events) + Retention (§14.1.5) |
+
+**FLAGGED THIN (owner ruling before build — not invented here):** (1) **Representation secondaries** — `/reqs`·`/radar`·`/team` are one-liners in §8.10; the recovered AG1–AG4 canon (B4-35.50: invitation/grant states · request statuses · team capability matrix) is the natural fill — needs owner adoption before deepening; (2) **Production creation flows** — event/slot creation UI is TARGET (§8.11 note), states exist only as names; (3) **Buyer signed-in home `/discover`** — one line in §8.13; (4) **Roster mini-Radar** (`/representation/radar`) — named, never spec'd. Each is a queue task on ruling, per HOW-TO-BUILD-A-TASK.
+
 ---
 
 ## 8. Per-Screen Specification (THE CORE)
@@ -618,7 +648,20 @@ Each pass around the loop makes the universe more provable; the loop never ends,
 **Supporting components:**
 - **Constellation threads** — one thread center↔each planet, coloured by live state (amber=Needs you, teal=Developing, lime=Ready, faint=Locked); confirmed threads glow and flow energy inward (growth made visible). Firewall: colour is a state only; geometry is fixed by planet angle, identical for every artist — it grades nothing.
 - **Platform ring** ("Where your proof comes from") — one tile per platform **actually detected in this Act's data**; connected = full colour + lime dot, not-yet = greyed + one "+ connect". Per-source hover meaning in plain language (Instagram = "your lineup listings & community", Spotify = "your streaming catalogue", Eventer/Tickchak/Go-Out = your Israeli ticketed events / ticket sales / event listings, etc.). Caption stays honest: "5 sources connected · buyers check these to verify you. A wider automatic scan is in development." META-FIELD LAW: never an invented count/follower number.
-- **Milestone journey M1–M8** (optional frame; the prototype shows a compact version) — named waypoints **Arrived → First light → Radar alive → Focused → Backed → Published → In market → Answered** mapping to the analytics funnel; a "N of 8 milestones" count-up. Firewall: named waypoints + the artist's OWN step count — no %, no bar-as-grade, no peer comparison.
+- **Milestone journey M1–M8 (G-8 backfill from the build, 18 Jul — ratify: R00).** The full ladder as BUILT (`ArtistDashboard.jsx:MilestoneStrip`; names = §4.1a canon, EN+HE from i18n):
+  | # | Waypoint (EN · HE) | Lights when (the real state) |
+  |---|---|---|
+  | M1 | Arrived · הגעת | always (the artist exists) |
+  | M2 | First light · אור ראשון | first evidence item exists |
+  | M3 | Radar alive · הרדאר חי | the claim pipeline produced its first claim |
+  | M4 | Focused · ממוקד | photo + ≥1 link + ≥3 track-record items |
+  | M5 | Backed · מגובה | ≥1 claim verified/supporting |
+  | M6 | Published · הפספורט בחוץ | public Passport live (`artist.published`) |
+  | M7 | In the market · נראה בשוק | published AND (a share link created OR any buyer request arrived) — reachable without M8 |
+  | M8 | Answered · תגובה ראשונה | a real availability request exists |
+  **Render:** one horizontally-scrollable row on mobile (bounded internal panel, §10.2 viewport law), wrapping on md+; dot states done (filled) / current (ringed, "you are here") / ahead (hollow), each with an accessible state label. **Firewall (restated as law):** named waypoints + the artist's OWN step states only — never a %, never a bar-as-grade, never a peer comparison; `M1–M8` codes never appear on screen (§5.10).
+- **The own-history line (G-9 backfill from the build, 18 Jul — ratify: R00).** "Since {month}: N new confirmations" (`ownHistory()`, §5.10 own-history frame). **Slot:** desktop (md+) = the stage's **bottom-end corner** — the four stage corners each own ONE tenant: scene rail top-center/end · lens rail top-start · next-move card bottom-start · history line bottom-end (the D3 collision law: one tenant per corner, asserted by the L1 overlap check); mobile = an in-flow mono line above the control row, never absolute. **Data:** the artist's OWN confirmed claims in the last ~60 days (`reviewed_at/updated_at`), additive and positive-only — renders nothing when nothing is new. **Firewall:** an own-history count, never a rate, never versus anyone (§2.9); count-based per §5.10 (a % stays behind R-11).
+- **Mobile scene rail (G-10 backfill from the build, 18 Jul — ratify: R00; §6 law 2 — designed, not shrunk).** At ≤ md the scene rail leaves the stage and becomes an **in-flow, horizontally-scrollable chip row** above the universe (visible label "Your standing in", then All + one chip per declared scene), `overflow-x-auto`, every chip a ≥44px touch target (`.tap-target`), no wrap, no absolute positioning — which is WHY the D3 collision cannot occur on mobile: nothing floats over the stage at ≤ md; the stage's corner-tenant system is a desktop-only geometry. Scene pick behavior identical to desktop (a reading lens, never a data change, §2.7/G2).
 - **Lenses** (the "Show" rail): **All · Needs my review · Ready to publish** — a focus filter that dims off-lens planets to ~22% (reversible), never removes them. "Needs my review" is the review entry.
 
 **INTERACTIONS.** Scene switch (`pickScene`) re-weights which planets carry the ★ (a reading lens on the SAME evidence — never a data change). Lens/filter (`pickFilter`) dims/highlights. Tap a planet (`openPlanet`) selects it → inspector + orbiting source logos. `nextStep` from the bottom dock jumps to the computed next-best action's planet/target. The **next-best-step engine** computes ONE action from real planet state (priority: a genre-primary planet in Needs-you with found items → any planet with found items → a locked planet's unlock → all-lit → publish → else add the missing proof), each carrying a `why` line; firewall-safe (action + reason only).

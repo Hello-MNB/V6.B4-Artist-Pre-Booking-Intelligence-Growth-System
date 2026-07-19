@@ -351,7 +351,7 @@ export default function ArtistDashboard() {
           <p className="text-xs text-muted">{T.radar.artistSubtitle}</p>
         </div>
         {/* D1: identity is now editable after onboarding (§8.6 Act-Identity Editor). */}
-        <Link to="/artist/act/edit" className="shrink-0 font-mono text-[11px] font-bold uppercase tracking-[0.07em] text-accent hover:underline">{T.actEditor.edit} ›</Link>
+        <Link to="/artist/act/edit" className="tap-target shrink-0 font-mono text-[11px] font-bold uppercase tracking-[0.07em] text-accent hover:underline">{T.actEditor.edit} ›</Link>
       </div>
 
       {/* ── THE UNIVERSE — the Radar IS evidence collection; review/confirm
@@ -406,9 +406,10 @@ export default function ArtistDashboard() {
             <div className="grid grid-cols-2 gap-2">
               {quickLinks.map((q) => (
                 <Link key={q.to} to={q.to}
-                  className="flex min-h-[44px] items-center justify-between rounded-xl border border-line bg-surface2 px-3 py-2.5 text-sm font-semibold text-ink transition-colors hover:border-line2">
-                  <span className="truncate">{q.label}</span>
-                  <span aria-hidden className="text-faint">→</span>
+                  className="flex min-h-[44px] items-center justify-between gap-2 rounded-xl border border-line bg-surface2 px-3 py-2.5 text-sm font-semibold text-ink transition-colors hover:border-line2">
+                  {/* L1 fit law: labels WRAP, never truncate ("Readiness (private)" clipped at 360px — retro-run catch) */}
+                  <span className="min-w-0 leading-snug">{q.label}</span>
+                  <span aria-hidden className="shrink-0 text-faint">→</span>
                 </Link>
               ))}
             </div>
@@ -416,7 +417,7 @@ export default function ArtistDashboard() {
             {/* passport state — ONE line; controls live in a sheet, not on the screen */}
             <button
               onClick={() => setPubSheet(true)}
-              className="flex w-full items-center justify-between rounded-xl border border-line bg-surface px-3 py-2.5 text-start transition-colors hover:border-line2">
+              className="flex min-h-[44px] w-full items-center justify-between rounded-xl border border-line bg-surface px-3 py-2.5 text-start transition-colors hover:border-line2">
               <span className="text-xs text-muted">
                 <span className={`me-2 inline-block h-2 w-2 rounded-full align-middle ${artist.published ? 'bg-accent' : 'bg-faint'}`} aria-hidden />
                 <span className="font-semibold text-ink">{artist.published ? T.dashboard.statusActive : T.dashboard.statusOff}</span>
