@@ -32,7 +32,11 @@ _Created 17 Jul 2026 from the real, witnessed state of the product — not from 
 
 ---
 
-## NOW — TRAIN SHIPPED TO PRODUCTION 18 Jul: T-52+T-55+T-59 (+T-58 reveal, T-60 label) — LIVE-VERIFIED
+## NOW — PHASE-N TRAIN SHIPPED 18 Jul (2nd train of the day) — LIVE-VERIFIED BOTH SURFACES
+
+**Ship record:** main merge `d30e74f` + embed `3f2fab8` → single push trigger. **Live-verified (L-7):** app.lock.show bundle `index-BQIX2P5b.js` carries N2 ("night does not break at soundcheck", "paid demand") · N3 ("live-room proof") · N4 EN+HE ("מאז", "אישורים חדשים") · T-61/T-62 ("Show"/"הצג") · prior-train strings intact. **Embed `index-RY69YSvd.js` (lock.show/app) carries Phase-N too — no surface skew.** Rule-12 quarantine held again (4 site files stay on branch). Labels: T-61 · T-62 · T-63(a) · N2–N5 all **deployed-live**. **MOBILE/DESKTOP marks stay "awaiting owner witness"** (rule 4) — the owner's phone walk of the 4-item batch is the open step; probe-poll false-negative lesson: long template strings split in minified bundles — fingerprint with short literals.
+
+## Prior — TRAIN SHIPPED TO PRODUCTION 18 Jul: T-52+T-55+T-59 (+T-58 reveal, T-60 label) — LIVE-VERIFIED
 
 **Ship record (owner-authorized merge, 18 Jul):** main `e36edc9` (merge) + `a6a4eba` (embed rebuild) → `git push origin main` (THE trigger, T-50 P1; no hooks fired). **Live-verified (L-7):** production bundle `index-CPUm3Qf-.js` on app.lock.show carries the train fingerprints ("Returning accounts" · "what we found") — replaced `index-P14llzut.js`. **Face verified** (live-DB witness, DOM assertions): bare-band captions on the Radar face = **0** · visible "Central in your genre" labels = **1**. Embed rebuilt in the same train (no surface skew). **Rule-12 quarantine held:** the 4 site files (3 nav-lane pages → M-16 · consent-banner GA4 guard → M-15) were excluded from the merge and remain on the work branch; back-merge of main into the branch deferred so the quarantined site work is not clobbered — reconcile at the next train. Deployment labels: T-52 · T-55 · T-58 · T-59 · T-60 all **deployed-live**.
 
