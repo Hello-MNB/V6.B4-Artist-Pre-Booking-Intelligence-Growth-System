@@ -58,3 +58,23 @@ Autonomy boundary: run this without being asked; fix forward mismatches and back
 **L1 is AUTOMATED** (`scripts/test-fit.mjs`, wired into `npm run verify`): the repo's build environment carries Playwright + Chromium, and the DEMO build renders every core screen from fixtures with no network — so truncation/overlap/h-scroll/tap/CTA assertions run headlessly on every verify, failing the build exactly like a score-defect. Live-data screens additionally get a manual L1 pass (the same assertions over the live-backed local run) before witness handoff, because demo fixtures cannot reproduce every live data shape (the history-line collision only appears when recent confirmations exist).
 
 _Standing-loop wiring: the AUTONOMOUS OPERATING LOOP's TEST stage now reads "L0 verify → **L1 fit (automated + live-shape manual)** → L2 states → L3 nav → L4 two-view → L5 screenshot-proof → then Team-D adversarial → then owner witness." Recorded in TASK-REGISTER._
+
+## PART 6 — TEAM DOCTRINE: maximum controlled parallelism at minimum tokens (owner, 18 Jul)
+
+**Parallelism is capped by exactly two constraints, never by ambition:** (1) **COLLISION** — two teams never touch the same file; max teams = the non-overlapping file territories available right now; (2) **TOKEN WASTE** — an expensive model never does cheap work. Max speed at min cost = the most zero-file-overlap teams, each on the cheapest model that can do its tier.
+
+**The team brief (complete, self-contained — a team never asks, re-reads the whole spec, or guesses; guessing = drift + waste). Contains, and nothing more:**
+- TEAM ID + its ONE file territory (explicit file/dir list — its sandbox)
+- the EXACT spec sections it needs (quoted or line-cited — never "read the spec")
+- the screens/defects in scope, by ID
+- its done-sentence (one line) + its DoD (the applicable 8 points, made specific)
+- its model tier
+- its self-verify obligation (L0–L5 + close-out audit, silent)
+- STOP conditions (owner ruling · migration · merge · real data · payment flag)
+A team never reads outside its territory or its cited sections.
+
+**Model tiering:** BUILDER (clear-spec code) = cheapest capable model · VERIFIER (L1 fit / checklist runs) = cheap, mechanical · ARCHITECT (genuine judgment — spec gaps, schema choices) = expensive model ONLY where judgment is real, and those STOP for owner ruling anyway. Report the tier per team so waste is visible.
+
+**Shared-component law:** if a wave's teams all depend on a shared component (`src/components/**`), the shared piece is built FIRST, solo, then the teams parallelize on top. Shared = collision risk by definition.
+
+**Wave close = ONE witness batch.** MOBILE/DESKTOP green only after the owner looks.

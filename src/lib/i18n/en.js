@@ -1064,6 +1064,10 @@ export const T = {
         numberPlaceholder: '1200',
         photoOr: 'or paste an image link',
         savedInPlace: 'Saved — right in place',
+        // D6 (T-72, §8.3): invalid = a human explanation, never a silent disabled button; undo on every field save.
+        undo: 'Undo',
+        urlInvalid: 'A link starts with https:// — paste the full address.',
+        numberInvalid: 'A whole number above zero — just the count.',
         openEvidence: 'Open evidence capture (consent applies)',
       },
       state: { established: 'Established', developing: 'Developing', needs: 'Needs you' },

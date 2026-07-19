@@ -1039,6 +1039,10 @@ export const T = {
         numberPlaceholder: '1200',
         photoOr: 'או הדבק קישור לתמונה',
         savedInPlace: 'נשמר — בדיוק במקום',
+        // D6 (T-72, §8.3): קלט שגוי מקבל הסבר אנושי; ביטול על כל שמירת שדה.
+        undo: 'ביטול',
+        urlInvalid: 'קישור מתחיל ב-https:// — הדבק את הכתובת המלאה.',
+        numberInvalid: 'מספר שלם מעל אפס — רק הכמות.',
         openEvidence: 'פתח לכידת ראיות (בכפוף להסכמה)',
       },
       state: { established: 'מבוסס', developing: 'מתפתח', needs: 'דורש אותך' },

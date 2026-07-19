@@ -204,10 +204,14 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
     }
   }
 
-  function flash(msg) {
+  // D6 (T-72, §8.3 per-field DoD): a field save flashes WITH an undo action —
+  // 7s window, same contract as the claim-confirm undo. Item-creating fills
+  // (event/link) pass no undo (deleting an item is a different, heavier path).
+  const [flashUndo, setFlashUndo] = useState(null)
+  function flash(msg, undoFn = null) {
     clearTimeout(flashRef.current)
-    setFlashMsg(msg)
-    flashRef.current = setTimeout(() => setFlashMsg(''), 3200)
+    setFlashMsg(msg); setFlashUndo(() => undoFn)
+    flashRef.current = setTimeout(() => { setFlashMsg(''); setFlashUndo(null) }, undoFn ? 7000 : 3200)
   }
 
   // + New Act (rel-07.13 A3/N12) — creates an EMPTY second universe for the
@@ -629,7 +633,16 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
       )}
 
       {/* generic saved / bulk receipt */}
-      {flashMsg && !undo && (
+      {flashMsg && !undo && flashUndo && (
+        <div className="fixed bottom-20 left-1/2 z-40 flex -translate-x-1/2 items-center gap-3 rounded-full border border-line2 bg-surface px-4 py-2 text-xs text-ink shadow-card" role="status">
+          <span className="truncate">{flashMsg}</span>
+          <button type="button" className="tap-target shrink-0 font-bold text-accent hover:underline"
+            onClick={() => { const u = flashUndo; setFlashMsg(''); setFlashUndo(null); u?.() }}>
+            {S.fill.undo}
+          </button>
+        </div>
+      )}
+      {flashMsg && !undo && !flashUndo && (
         <div role="status" className="fixed inset-x-4 bottom-4 z-[70] mx-auto flex max-w-md items-center gap-2 rounded-xl border border-accent/25 bg-surface px-3.5 py-2.5 text-xs font-semibold text-ink shadow-[0_24px_60px_-24px_rgba(0,0,0,0.75)]">
           <span aria-hidden className="h-2 w-2 shrink-0 rounded-full bg-accent" />
           <span className="truncate">{flashMsg}</span>
@@ -662,7 +675,7 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
                   busy={confirming === n.id}
                   bloom={bloomIds.has(n.id)}
                   onConfirm={() => confirm(n)}
-                  onSaved={() => flash(S.fill.savedInPlace)} />
+                  onSaved={(undoFn) => flash(S.fill.savedInPlace, undoFn)} />
               ))}
               {panelNodes.length === 0 && (
                 <p className="py-6 text-center font-mono text-[10px] text-muted">—</p>
@@ -688,7 +701,7 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
                 busy={confirming === n.id}
                 bloom={bloomIds.has(n.id)}
                 onConfirm={() => confirm(n)}
-                onSaved={() => flash(S.fill.savedInPlace)} />
+                onSaved={(undoFn) => flash(S.fill.savedInPlace, undoFn)} />
             ))}
             {needsNodes.length === 0 && (
               <p className="py-6 text-center text-xs text-muted">{S.nothingNeedsYou}</p>
@@ -837,7 +850,7 @@ function PlanetRow({ node: n, planet, S, T, busy, bloom, onConfirm, onEvidence, 
               onActChange={onActChange}
               onItemsRefresh={onItemsRefresh}
               onClaimsChange={onClaimsChange}
-              onDone={() => { setOpen(false); onSaved() }}
+              onDone={(undoFn) => { setOpen(false); onSaved(undoFn) }}
             />
           )}
         </div>
@@ -858,14 +871,20 @@ function MissingFill({ node, artist, S, onArtistChange, onActChange, onItemsRefr
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState('')
 
-  async function run(fn) {
+  async function run(fn, undoFn = null) {
     setBusy(true); setErr('')
-    try { await fn(); onDone() }
+    try { await fn(); onDone(undoFn) }
     catch (e) { setErr(e.message || T.common.error) }
     finally { setBusy(false) }
   }
 
-  const saveArtist = (patch) => run(async () => { await onArtistChange(patch) })
+  // D6 undo: restore the field's PREVIOUS value (usually empty — the node
+  // returns to its invitation state). Firewall-neutral: a data restore only.
+  const saveArtist = (patch) => {
+    const prev = {}
+    for (const k of Object.keys(patch)) prev[k] = artist[k] ?? null
+    return run(async () => { await onArtistChange(patch) }, () => onArtistChange(prev))
+  }
 
   async function onPhotoFile(e) {
     const file = e.target.files?.[0]; if (!file) return
@@ -931,7 +950,10 @@ function MissingFill({ node, artist, S, onArtistChange, onActChange, onItemsRefr
           <input className="field" dir={kind === 'url' ? 'ltr' : undefined} maxLength={max}
             placeholder={kind === 'url' ? S.fill.urlPlaceholder : (placeholder || node.label)}
             value={v} onChange={(e) => setV(e.target.value)} />
-          <button className="btn-ghost w-full" disabled={busy || !v.trim()} onClick={() => saveArtist({ [field]: v.trim() })}>
+          {kind === 'url' && v.trim() && !/^https?:\/\//i.test(v.trim()) && (
+            <p className="text-[11px] text-need" role="status">{S.fill.urlInvalid}</p>
+          )}
+          <button className="btn-ghost w-full" disabled={busy || !v.trim() || (kind === 'url' && !/^https?:\/\//i.test(v.trim()))} onClick={() => saveArtist({ [field]: v.trim() })}>
             {busy ? <Spinner /> : S.fill.save}
           </button>
         </>
@@ -954,6 +976,9 @@ function MissingFill({ node, artist, S, onArtistChange, onActChange, onItemsRefr
         <>
           <input className="field" type="number" min="1" inputMode="numeric"
             placeholder={S.fill.numberPlaceholder} value={v} onChange={(e) => setV(e.target.value)} />
+          {v !== '' && !(parseInt(v, 10) > 0) && (
+            <p className="text-[11px] text-need" role="status">{S.fill.numberInvalid}</p>
+          )}
           <button className="btn-ghost w-full" disabled={busy || !(parseInt(v, 10) > 0)}
             onClick={() => run(async () => {
               const n = parseInt(v, 10)
@@ -982,6 +1007,9 @@ function MissingFill({ node, artist, S, onArtistChange, onActChange, onItemsRefr
       {kind === 'link' && (
         <>
           <input className="field" dir="ltr" placeholder={S.fill.urlPlaceholder} value={v} onChange={(e) => setV(e.target.value)} />
+          {v.trim() && !/^https?:\/\//i.test(v.trim()) && (
+            <p className="text-[11px] text-need" role="status">{S.fill.urlInvalid}</p>
+          )}
           <button className="btn-ghost w-full" disabled={busy || !/^https?:\/\//i.test(v.trim())}
             onClick={() => run(async () => {
               const value = v.trim()
