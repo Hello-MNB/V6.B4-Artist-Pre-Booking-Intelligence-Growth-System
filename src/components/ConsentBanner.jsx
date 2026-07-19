@@ -146,7 +146,7 @@ export default function ConsentBanner() {
             href="https://lock.show/privacy"
             target="_blank"
             rel="noreferrer"
-            className="text-ink underline decoration-line2 underline-offset-2 hover:text-accent"
+            className="tap-target inline-block text-ink underline decoration-line2 underline-offset-2 hover:text-accent"
           >
             {t.privacyLink}
           </a>

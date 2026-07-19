@@ -351,7 +351,7 @@ export default function ArtistDashboard() {
           <p className="text-xs text-muted">{T.radar.artistSubtitle}</p>
         </div>
         {/* D1: identity is now editable after onboarding (§8.6 Act-Identity Editor). */}
-        <Link to="/artist/act/edit" className="shrink-0 font-mono text-[11px] font-bold uppercase tracking-[0.07em] text-accent hover:underline">{T.actEditor.edit} ›</Link>
+        <Link to="/artist/act/edit" className="tap-target shrink-0 font-mono text-[11px] font-bold uppercase tracking-[0.07em] text-accent hover:underline">{T.actEditor.edit} ›</Link>
       </div>
 
       {/* ── THE UNIVERSE — the Radar IS evidence collection; review/confirm
@@ -417,7 +417,7 @@ export default function ArtistDashboard() {
             {/* passport state — ONE line; controls live in a sheet, not on the screen */}
             <button
               onClick={() => setPubSheet(true)}
-              className="flex w-full items-center justify-between rounded-xl border border-line bg-surface px-3 py-2.5 text-start transition-colors hover:border-line2">
+              className="flex min-h-[44px] w-full items-center justify-between rounded-xl border border-line bg-surface px-3 py-2.5 text-start transition-colors hover:border-line2">
               <span className="text-xs text-muted">
                 <span className={`me-2 inline-block h-2 w-2 rounded-full align-middle ${artist.published ? 'bg-accent' : 'bg-faint'}`} aria-hidden />
                 <span className="font-semibold text-ink">{artist.published ? T.dashboard.statusActive : T.dashboard.statusOff}</span>

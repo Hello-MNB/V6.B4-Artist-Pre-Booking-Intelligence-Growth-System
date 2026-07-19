@@ -57,7 +57,7 @@ export default function NotificationBell() {
         aria-label={T.notifications.title}
         aria-expanded={open}
         aria-haspopup="true"
-        className="relative flex h-11 w-11 items-center justify-center rounded-full text-muted transition hover:bg-surface hover:text-ink md:h-9 md:w-9"
+        className="tap-target relative flex h-11 w-11 items-center justify-center rounded-full text-muted transition hover:bg-surface hover:text-ink md:h-9 md:w-9"
       >
         <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75"
           strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

@@ -24,7 +24,7 @@ export default function SideNav() {
             to={tab.to}
             end={tab.end}
             className={({ isActive }) =>
-              `relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14.5px] font-medium transition-colors ${
+              `tap-target relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14.5px] font-medium transition-colors ${
                 isActive ? 'text-ink' : 'text-muted hover:text-ink hover:bg-surface'
               }`
             }

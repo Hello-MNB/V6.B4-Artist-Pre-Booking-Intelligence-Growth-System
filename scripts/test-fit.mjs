@@ -5,8 +5,8 @@
 //   2. no overlap between positioned control-layer elements (rails/docks)
 //   3. no horizontal scroll
 //   4. tap targets >= 44px on mobile (elements with the .tap-target hit-area
-//      expansion are compliant by construction and excluded; violations WARN
-//      in v1 — promoted to FAIL after the tap-target sweep, see register)
+//      expansion are compliant by construction and excluded; a violation FAILS
+//      — promoted from WARN after the T-68 sweep reached zero)
 //   5. exactly ONE visible primary CTA
 // Runs on `dist` AFTER build:demo (verify order guarantees the demo build is
 // the one on disk). A machine without the Playwright browser prints a loud
@@ -66,11 +66,16 @@ const ASSERT = () => {
     }
   }
   out.hscroll = document.documentElement.scrollWidth > window.innerWidth + 1
-  for (const el of document.querySelectorAll('button,a,select')) {
-    if (!el.offsetParent || el.closest('[aria-hidden]')) continue
-    if (el.className.includes && String(el.className).includes('tap-target')) continue // expanded hit area (T-31)
-    const r = el.getBoundingClientRect()
-    if (r.width > 0 && r.height > 0 && (r.height < 43 || r.width < 43)) out.smallTaps.push(el.textContent.trim().slice(0, 20) || el.getAttribute('aria-label') || '?')
+  // 44px is a TOUCH-target law (§10.5) — asserted on the mobile pass only.
+  // <select> cannot host the .tap-target pseudo-expansion; it must carry a real
+  // min-height on mobile (and does — md:min-h-0 relaxes it desktop-side only).
+  if (window.innerWidth < 700) {
+    for (const el of document.querySelectorAll('button,a,select')) {
+      if (!el.offsetParent || el.closest('[aria-hidden]')) continue
+      if (el.className.includes && String(el.className).includes('tap-target')) continue // expanded hit area (T-31)
+      const r = el.getBoundingClientRect()
+      if (r.width > 0 && r.height > 0 && (r.height < 43 || r.width < 43)) out.smallTaps.push(el.textContent.trim().slice(0, 20) || el.getAttribute('aria-label') || '?')
+    }
   }
   out.primaryCtas = Array.from(document.querySelectorAll('.btn-primary')).filter((e) => e.offsetParent).length
   return out
@@ -91,10 +96,14 @@ for (const [w, h, label] of [[360, 780, 'MOBILE-360'], [1360, 850, 'DESKTOP-1360
   await page.waitForTimeout(2000)
   if (!page.url().includes('/artist/home')) { console.log(`  ✗ [${label}] radar route unreachable (landed ${page.url()})`); failures++ }
   const radar = await page.evaluate(ASSERT)
-  for (const [screen, r] of [['login', login], ['radar', radar]]) {
-    const bad = r.truncated.length || r.overlaps.length || r.hscroll || r.primaryCtas > 1
+  // Screen 3 (D5): the onboarding entry — same demo auth, direct route.
+  await page.goto(`http://127.0.0.1:${port}/onboarding`, { waitUntil: 'networkidle' })
+  await page.waitForTimeout(1500)
+  const onboarding = await page.evaluate(ASSERT)
+  for (const [screen, r] of [['login', login], ['radar', radar], ['onboarding', onboarding]]) {
+    const bad = r.truncated.length || r.overlaps.length || r.hscroll || r.primaryCtas > 1 || r.smallTaps.length
     if (bad) failures++
-    console.log(`${bad ? '  ✗' : '  ·'} [${label} ${screen}] truncated: ${r.truncated.length}${r.truncated.length ? ' ' + JSON.stringify(r.truncated.slice(0, 3)) : ''} · overlaps: ${r.overlaps.length}${r.overlaps.length ? ' ' + JSON.stringify(r.overlaps.slice(0, 3)) : ''} · h-scroll: ${r.hscroll ? 'YES' : 'none'} · primary CTAs: ${r.primaryCtas}${r.smallTaps.length ? ` · ⚠ taps<44 (warn v1): ${r.smallTaps.length}` : ''}`)
+    console.log(`${bad ? '  ✗' : '  ·'} [${label} ${screen}] truncated: ${r.truncated.length}${r.truncated.length ? ' ' + JSON.stringify(r.truncated.slice(0, 3)) : ''} · overlaps: ${r.overlaps.length}${r.overlaps.length ? ' ' + JSON.stringify(r.overlaps.slice(0, 3)) : ''} · h-scroll: ${r.hscroll ? 'YES' : 'none'} · primary CTAs: ${r.primaryCtas}${r.smallTaps.length ? ` · ✗ taps<44: ${r.smallTaps.length} ${JSON.stringify(r.smallTaps.slice(0, 8))}` : ''}`)
   }
   await page.context().close()
 }
