@@ -201,7 +201,14 @@ export const T = {
   onboarding: {
     // ── Minimum viable entry (owner order, 8 Jul): 2 screens, 4 fields.
     // The Radar collects everything else — these keys carry that promise.
-    entryStepLabels: ['Who you are', 'Strongest link'],
+    entryStepLabels: ['Who you are', 'Strongest link', 'What we found'],
+    // T-58 — step 3, the reveal (§8.1). Real captured data only, never a tally.
+    revealTitle: "Here's what we found",
+    revealSub: 'Your link is in — captured as a found signal, waiting in your Radar. From here it’s simple: you confirm what’s really yours. Nothing is published until you say so.',
+    revealRowSub: 'Public profile — captured just now',
+    revealFound: 'Found',
+    revealScope: 'We start from the link you gave. A wider multi-source auto-scan is in development — your Radar collects the rest with you, at your pace.',
+    revealCta: 'Open my Radar & confirm →',
     entryTitle: 'Your name on the flyer',
     entryHint: 'Two quick questions and your Radar takes over — it collects everything else with you, at your pace.',
     entryOptional: 'optional',

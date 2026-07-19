@@ -533,7 +533,13 @@ Each screen is buildable from its sub-spec alone. Routes shown are the prototype
 
 ---
 
-### 8.1 Onboarding (`/onboarding`) — the discover→confirm narrative (TARGET 3-step; BUILT 2-step)
+### 8.1 Onboarding (`/onboarding`) — the discover→confirm narrative (BUILT 3-step as of 18 Jul, T-58 — reveal ships the REAL-data version; the animated multi-source scan moment stays TARGET)
+
+> **T-58 provenance note (18 Jul):** step 3 "Here's what we found" is now BUILT in its honest form —
+> it reveals the artist's actually-captured link as a ✦ found signal with the §2.8 honest-scope line
+> ("a wider multi-source auto-scan is in development"), never an invented tally. The full animated
+> Step-2 scan + multi-source found-grid below remains the TARGET experience, unlocked by the real
+> deep-scan (§9). With no link given, the flow completes from step 2 — a reveal never fabricates.
 
 **PURPOSE.** Turn a cold artist into a live Passport-in-progress with the least possible effort: the artist gives only the basics; LOCK discovers the public footprint; the artist confirms. "You don't build from scratch — you approve what we found." Warm conversion copy, never technical. EN + HE, locale-aware.
 
