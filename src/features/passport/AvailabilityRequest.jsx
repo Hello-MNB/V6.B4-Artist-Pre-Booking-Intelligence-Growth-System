@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { getArtist, createRequest } from '../../lib/db.js'
 import { DEMO } from '../../lib/demo.js'
@@ -21,7 +21,16 @@ export default function AvailabilityRequest() {
     requester_name: '', requester_org: '', event_date: '', location: '',
     capacity_band: '', budget_band: '', message: '',
   })
+  // availability_request_started (§14.1.6, R00 — pending 040): fires once,
+  // on the FIRST field interaction of this form visit — the "began" half of
+  // the funnel that availability_request_created (the "submitted" half,
+  // fired on successful submit below) already covers.
+  const startedRef = useRef(false)
   const set = (k) => (e) => {
+    if (!startedRef.current) {
+      startedRef.current = true
+      logEvent(EVENTS.REQUEST_STARTED, { artist_id: id })
+    }
     setF({ ...f, [k]: e.target.value })
     if (fieldErr[k]) setFieldErr({ ...fieldErr, [k]: '' }) // clear the note, never the input
   }

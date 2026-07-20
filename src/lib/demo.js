@@ -4,10 +4,12 @@
 // Every db.js function and the public Passport short-circuit to these fixtures.
 // FIREWALL: fixtures contain only bands + bounded labels — no score/head-count.
 //
-// FLAGSHIP DEMO ARTIST — SHAI PERLMAN ("PERLMAN"), underground techno, Tel Aviv.
+// FLAGSHIP DEMO ARTIST — MAYA VALE (the one canonical demo persona, owner
+// ruling 21 Jul — supersedes the retired "Shai Perlman"/"PERLMAN" identity),
+// underground techno, Tel Aviv.
 // Built from real public-footprint research (Drive "ARTIST EXAMPLES", Jul 2026):
 // resident headline DJ + owner/lead producer of the INSOMNIA TLV event brand
-// (Gagarin TLV). His profile has NO documented attendance/fee/follower numbers —
+// (Gagarin TLV). Her profile has NO documented attendance/fee/follower numbers —
 // so price_band and community_size_band are honestly null (the app's missing /
 // "needs you" states show instead). The only counts kept are the ones the
 // firewall allows: event counts, 8 SoundCloud uploads, set durations.
@@ -15,7 +17,7 @@
 // LANGUAGE PURITY: fixture DATA is bilingual. Displayed Hebrew fields are getters
 // that return EN or HE based on the active language (set by LangContext via
 // setDemoLang). A fresh load in EN shows pure-English data; in HE, pure Hebrew —
-// no language mixing in the visible DOM. Brand names (PERLMAN, INSOMNIA TLV,
+// no language mixing in the visible DOM. Brand names (MAYA VALE, INSOMNIA TLV,
 // Gagarin, SoundCloud) stay Latin in both languages, as they do in the wild.
 // ============================================================
 export const DEMO = import.meta.env.VITE_DEMO === '1'
@@ -28,8 +30,8 @@ const DEMO_ARTIST_ID = 'demo-artist'
 
 export const demoArtist = {
   id: DEMO_ARTIST_ID, created_by: 'demo-user',
-  get name() { return L('Shai Perlman', 'שי פרלמן') },
-  stage_name: 'PERLMAN',
+  get name() { return L('Maya Vale', 'Maya Vale') },
+  stage_name: 'Maya Vale',
   get genre() { return L('Underground Techno', 'טכנו אנדרגראונד') },
   get city() { return L('Tel Aviv', 'תל אביב') },
   get one_line() { return L('Underground techno built for long-form journeys — extended and five-hour sets, midnight to sunrise', 'טכנו אנדרגראונד של מסעות ארוכים — סטים מורחבים של עד חמש שעות, מחצות עד הזריחה') },
@@ -38,7 +40,7 @@ export const demoArtist = {
   get set_length() { return L('Extended — up to 5 hours', 'מורחב — עד 5 שעות') },
   // Legal/invoicing structure not documented (real gap) — null, never a fake "yes".
   invoice_ready: null, rider_url: null,
-  music_links: ['https://soundcloud.com/shai-perlman'],
+  music_links: ['https://soundcloud.com/maya-vale'],
   // Frequency IS publicly documented (numbered event listings) — event counts are
   // firewall-safe. Fee + community numbers are NOT documented anywhere → null.
   get lineup_frequency_band() { return L('10+ shows/year', '10+ הופעות בשנה') },

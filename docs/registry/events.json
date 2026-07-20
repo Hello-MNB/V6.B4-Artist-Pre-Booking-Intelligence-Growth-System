@@ -30,6 +30,12 @@
     "surface": "app"
   },
   {
+    "name": "availability_request_started",
+    "constant": "REQUEST_STARTED",
+    "gateRelevant": true,
+    "surface": "app"
+  },
+  {
     "name": "claim_confirmed",
     "constant": "CLAIM_CONFIRMED",
     "gateRelevant": false,
@@ -78,6 +84,12 @@
     "surface": "app"
   },
   {
+    "name": "method_label_peeked",
+    "constant": "METHOD_LABEL_PEEKED",
+    "gateRelevant": false,
+    "surface": "app"
+  },
+  {
     "name": "oauth_login",
     "constant": "OAUTH_LOGIN",
     "gateRelevant": false,
@@ -120,6 +132,12 @@
     "surface": "app"
   },
   {
+    "name": "persona_toggled",
+    "constant": "PERSONA_TOGGLED",
+    "gateRelevant": false,
+    "surface": "app"
+  },
+  {
     "name": "producer_confirmation_received",
     "constant": "PRODUCER_CONFIRMATION_RECEIVED",
     "gateRelevant": false,
@@ -136,6 +154,12 @@
     "constant": "PROFESSIONAL_REACTION",
     "gateRelevant": true,
     "surface": "both"
+  },
+  {
+    "name": "proof_unit_expanded",
+    "constant": "PROOF_UNIT_EXPANDED",
+    "gateRelevant": false,
+    "surface": "app"
   },
   {
     "name": "radar_opened",
