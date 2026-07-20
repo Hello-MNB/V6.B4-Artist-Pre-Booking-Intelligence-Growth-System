@@ -492,8 +492,8 @@ export default function AdminDashboard() {
                 {pagedRequests.slice.map((r) => (
                   <div key={r.id} className="card flex items-center justify-between gap-3 py-3">
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-medium text-ink">{r.requester_name}{r.requester_org ? ` · ${r.requester_org}` : ''}</p>
-                      <p className="truncate text-xs text-muted">{T.admin.forArtist} {r.artists?.stage_name || '—'}</p>
+                      <p className="line-clamp-2 whitespace-normal break-words text-sm font-medium leading-snug text-ink">{r.requester_name}{r.requester_org ? ` · ${r.requester_org}` : ''}</p>
+                      <p className="line-clamp-2 whitespace-normal break-words text-xs leading-snug text-muted">{T.admin.forArtist} {r.artists?.stage_name || '—'}</p>
                     </div>
                     <span className={`chip shrink-0 px-2.5 py-1 text-xs ${
                       r.status === 'new' ? 'bg-amber/15 text-amber' : r.status === 'replied' ? 'bg-accent/15 text-accent' : 'bg-surface2 text-muted'
@@ -513,7 +513,7 @@ export default function AdminDashboard() {
               <div className="space-y-2">
                 {pagedClaims.slice.map((c) => (
                   <div key={c.id} className="card flex items-center justify-between gap-3 py-3">
-                    <span className="truncate text-sm text-ink">{c.value || c.claim_type || '—'}</span>
+                    <span className="line-clamp-2 min-w-0 whitespace-normal break-words text-sm leading-snug text-ink">{c.value || c.claim_type || '—'}</span>
                     <SourceLabel status={c.verification_status} methodLabel={c.method_label} expiresAt={c.expires_at} />
                   </div>
                 ))}
@@ -531,7 +531,7 @@ export default function AdminDashboard() {
                 {pagedConsents.slice.map((c) => (
                   <div key={c.id} className="card flex items-center justify-between gap-3 py-3">
                     <div className="min-w-0">
-                      <p className="truncate text-sm text-ink">{c.scope} <span className="text-muted">· {c.version}</span></p>
+                      <p className="line-clamp-2 whitespace-normal break-words text-sm leading-snug text-ink">{c.scope} <span className="text-muted">· {c.version}</span></p>
                       <p className="font-mono text-xs text-faint">{new Date(c.timestamp).toLocaleDateString()}{c.marketing_opt_in ? ` · ${T.admin.consentMarketing}` : ''}</p>
                     </div>
                     <span className="chip shrink-0 bg-accent/15 px-2.5 py-1 text-xs text-accent">{c.status}</span>
