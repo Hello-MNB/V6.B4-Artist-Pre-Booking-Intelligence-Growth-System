@@ -51,3 +51,17 @@ distinguishing `utm_content` when a page has 2+ CTAs to one destination), so `ca
 carries any utm (audited 20 Jul) — attribution falls back to referrer, which in-app browsers strip.
 Internal site-to-site links need none. Params meant for app use (e.g. `?role=artist`) are either
 captured by analytics or their exclusion is documented — never silently dropped.
+
+## THE NO-TECHNICAL-CONTENT LAW — U33 extended to the SITE (owner, 21 Jul — ratify: R00)
+The owner has banned technical content on marketing surfaces repeatedly; this makes it law.
+Trust and firewall content on ANY site page renders ONLY as: (a) warm human sentences in the
+brand voice, or (b) the SHAPE of the evidence itself (a sample Passport card whose bands +
+method chips demonstrate the rules wordlessly). NEVER as mono-caps technical/legal banners,
+never spec vocabulary ("DISTINCT ROLES, NEVER MERGED", "SHOWN AS A RANGE"), never printed
+rule-strips. Exhibit (the violation that triggered this law): the footer/mockup block
+"BOOKING MANAGER ≠ PRODUCER — DISTINCT ROLES, NEVER MERGED. EVERY CLAIM SHOWS HOW IT WAS
+CHECKED..." — that content's JOB stays (the distinction matters) but its FORM must be human,
+e.g. narrative copy + the sample card carrying the chips. Every such block on the live site is
+a defect to rewrite in the content pass; final wording = owner-approved copy, never invented.
+Per-page CONTENT אפיון is mandatory: each page's spec names its sections, each section's ONE
+message, its register (warm/human), and what trust content it carries in which FORM.
