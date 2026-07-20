@@ -499,21 +499,26 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
   )
 
   // Owner screenshot defect (20 Jul, §8.2 corner-tenant law/D3 collision law):
-  // the scene rail's `md:end-8` anchors to the OUTER stage container (below),
-  // which also holds the 300px right-rail Inspector `<aside>` (§8.3) as a flex
-  // sibling once a planet is selected — so at ≥1024 the rail's fixed end-8
-  // lands directly over the Inspector's OWN top-end corner, clipping its
-  // title ("Career Proof" etc.) under the "Your standing in" chips. The
-  // Inspector only ever renders under this exact condition (see the `<aside>`
-  // below, `{fullStage && sel && (…)}`), so reserving the aside's real
-  // footprint (300px width + the gap-5 flex gap = 1.25rem + the existing
-  // end-8 = 2rem inset ⇒ 22rem) — ONLY while it is actually mounted — moves
-  // the rail's own end-edge to sit flush against the Inspector's start edge
-  // instead of on top of it, at every width ≥1024 (the Inspector never
-  // renders below md, so no mobile-layout change). One-tenant-per-corner is
-  // restored without touching the Inspector, the mobile layout, or any other
-  // corner tenant (lens rail/history line/next-move card, all untouched).
-  const inspectorOpen = fullStage && !!sel
+  // the scene rail is `absolute md:end-8 md:top-8` against the OUTER stage
+  // container (below), which also holds the 300px right-rail Inspector
+  // `<aside>` (§8.3) as a flex sibling once a planet is selected — the
+  // Inspector's own content starts flush at its box's top (no offset), which
+  // is the SAME y as the scene rail's positioning origin, so at ≥1024 the
+  // rail's chip row floats directly over the Inspector's own top-end corner,
+  // clipping its title ("Career Proof" etc.) under the "Your standing in"
+  // chips. Tried-and-reverted: shrinking the rail's own `end` inset by the
+  // Inspector's footprint (300px + gap) instead moved the collision onto the
+  // top-START lens/filter rail (test-fit DESKTOP-1360 caught it) — the two
+  // rails already share the container's full width by design when no planet
+  // is selected, so narrowing the scene rail's box pushes it into the lens
+  // rail's space instead of fixing anything. The rail itself (and the lens
+  // rail, history line, next-move card — every corner tenant) is therefore
+  // UNTOUCHED; only the Inspector's own top padding gets pushed down (below,
+  // at the `<aside>`) enough to clear the rail's real footprint, ONLY while
+  // both are actually on screen together — the Inspector never renders below
+  // md, so mobile is unaffected, and with no scene rail declared the
+  // Inspector keeps its original padding.
+  const inspectorClearsSceneRail = scenes.length > 0
 
   return (
     // Viewport law (T-35/§10.2): inside the dashboard's fixed-height column this
@@ -530,9 +535,7 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
           genres; picking one re-weights the ★ through genreWeights (additive
           emphasis only — never dims, never grades). */}
       {scenes.length > 0 && (
-        <div className={`relative z-10 mb-2 flex items-center gap-1.5 overflow-x-auto pb-1 md:absolute md:top-8 md:mb-0 md:pb-0 ${
-            inspectorOpen ? 'md:end-[22rem]' : 'md:end-8'
-          }`}
+        <div className="relative z-10 mb-2 flex items-center gap-1.5 overflow-x-auto pb-1 md:absolute md:end-8 md:top-8 md:mb-0 md:pb-0"
           role="tablist" aria-label={S.sceneLabel}>
           {/* V4 (owner witness-fix 20 Jul): the label WAS already rendering
               unconditionally at every width (no hidden/md: gate) — the defect
@@ -806,7 +809,9 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
             keeps the BottomSheet below exactly as-is. Same panel content
             (PlanetPanelContent) as the sheet — no forked copy. */}
       {fullStage && sel && (
-        <aside aria-label={S.planets[selected]} className="relative hidden shrink-0 flex-col rounded-2xl border border-line bg-surface2/60 p-4 md:flex md:w-[300px] md:min-h-0">
+        <aside aria-label={S.planets[selected]} className={`relative hidden shrink-0 flex-col rounded-2xl border border-line bg-surface2/60 px-4 pb-4 pt-4 md:flex md:w-[300px] md:min-h-0 ${
+            inspectorClearsSceneRail ? 'md:pt-16' : 'md:pt-4'
+          }`}>
           <div className="mb-3 flex shrink-0 items-center justify-between gap-2">
             <h2 className="font-display text-sm font-bold text-ink">{S.planets[selected]}</h2>
             <button type="button" onClick={() => setSelected(null)}

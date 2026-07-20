@@ -729,6 +729,8 @@ Each screen is buildable from its sub-spec alone. Routes shown are the prototype
 
 ---
 
+**LINK-VALIDITY RULE (A1 backfill, 21 Jul — ratify: R00):** a bare domain/handle paste (no `https://` prefix, e.g. `instagram.com/name`) NORMALIZES and counts as a valid link — matching `detectPlatform`'s protocol-less recognition; only genuinely non-link text (no dot / contains whitespace) falls to the honest no-link path, with a human `linkInvalid` explanation, never a silent drop.
+
 ### 8.1 Onboarding (`/onboarding`) — the discover→confirm narrative (BUILT 3-step as of 18 Jul, T-58 — reveal ships the REAL-data version; the animated multi-source scan moment stays TARGET) — flow-stage (a), full stage spec at §8.0.a
 
 > **T-58 provenance note (18 Jul):** step 3 "Here's what we found" is now BUILT in its honest form —
