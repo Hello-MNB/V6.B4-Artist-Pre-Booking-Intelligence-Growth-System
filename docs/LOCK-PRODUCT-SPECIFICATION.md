@@ -764,6 +764,14 @@ Each screen is buildable from its sub-spec alone. Routes shown are the prototype
 
 ### 8.2 Artist Radar (`/artist/radar`) — the central interactive engine — flow-stages (a) inline fills, (b) inline half, (c) artist-confirm half, (d) coaching+NBA, full stage spec at §8.0
 
+**THE RADAR FACE RULING (owner design-sprint pick, 21 Jul — ratify: R00; SUPERSEDES the radial-face-as-hero layout below wherever they conflict).** The Radar's job is to land in 5 SECONDS — it is the artist's PRIVATE WORKSHOP, instantly clear, never a constellation to parse. The rebuilt face:
+1. **Structure = direction A ("the coach's desk"):** ONE warm coach card owns the screen — the scene-aware coaching headline + the single next move with its reason (the §8.3 Layer-1 voice + the NBA, promoted to the screen's center of gravity).
+2. **Below it, the calm shelf = B's warm language:** the six dimensions as a horizontal shelf of cards with PLAIN names ("Who you are · Your sound · Your stage · Your crowd · The essentials · Your track record" — display names; the internal planet keys stay frozen §0.2) and ONE honest sentence each (state + meaning in the §5.10 warm words). Tapping a shelf card opens the existing Inspector (panel/sheet — all §8.3 content, unchanged).
+3. **The radial visual survives as FAINT ATMOSPHERE ONLY** behind the coach card — ambient, non-interactive, never the navigation.
+4. **The radial identity AS HERO moves to the PASSPORT** (§8.7): the buyer-facing surface is where beauty leads; the artist-facing surface is where clarity leads. (Passport radial-hero design = its own task under §8.7, sequenced after this rebuild.)
+5. Everything else in this section (states, engine, milestones, gestures where still applicable, firewall, signals, no-scroll law) continues to bind the new face.
+
+
 **PURPOSE.** The artist's private, living picture of their own professional proof — six dimensions a booking manager weighs — where LOCK shows what it *found* on public sources and the artist *confirms* what's really theirs, one tap at a time. It is where evidence is reviewed and confirmed; it is **not** a dashboard, and buyers never see it. Two readings for every component: **Artist read** = "what's strong, what still needs me, what to do next" (gaps are invitations); **Buyer relevance** = the same signal, once confirmed + method-labeled, becomes a checkable strength on the public Passport.
 
 **THE TWO JOBS (owner R00, 16 Jul — canon).** "The Radar's purpose is to COLLECT information — with AI scanners and bots — about the artist's UNIVERSE, and to help the artist IMPROVE that universe. The startup's meaning is PRE-BOOKING." The Radar therefore has **two jobs, both first-class**, and a Radar build that delivers only the first has failed the spec:
