@@ -6,7 +6,7 @@ import {
   adminListConsents, adminExportArtist, adminDeleteArtist, adminListAudit,
 } from '../../lib/db.js'
 import { listUpgradeRequests, approveUpgrade } from '../../lib/orgs.js'
-import { fetchGateCounts, fetchRetention } from './gateCounts.js'
+import { fetchGateCounts, fetchRetention, fetchFunnelCounts, FUNNEL_EVENTS } from './gateCounts.js'
 import { createNotification } from '../../lib/notifications.js'
 import { logEvent, EVENTS } from '../../lib/analytics.js'
 import {
@@ -86,6 +86,21 @@ export default function AdminDashboard() {
     }
   }, [])
   useEffect(() => { loadRet() }, [loadRet])
+
+  // B5-a (T-81, §8.12) — PILOT FUNNEL: whole-funnel product-milestone counts
+  // (signup → onboarded → radar → evidence → claim → published → shared →
+  // requested). Same isolation contract as Gate/Retention: own state, a
+  // metrics hiccup never blanks the console.
+  const [funnel, setFunnel] = useState({ loading: true, error: false, counts: null })
+  const loadFunnel = useCallback(async () => {
+    setFunnel((f) => ({ ...f, loading: true, error: false }))
+    try {
+      setFunnel({ loading: false, error: false, counts: await fetchFunnelCounts() })
+    } catch {
+      setFunnel({ loading: false, error: true, counts: null })
+    }
+  }, [])
+  useEffect(() => { loadFunnel() }, [loadFunnel])
 
   const load = useCallback(async () => {
     setLoading(true); setError(false)
@@ -187,7 +202,7 @@ export default function AdminDashboard() {
   const statusLabel = (s) =>
     s === 'replied' ? T.agency.statusReplied : s === 'closed' ? T.agency.statusClosed : T.agency.statusNew
 
-  const anchors = ['gate', 'payments', 'upgrades', 'artists', 'requests', 'claims', 'consents', 'audit']
+  const anchors = ['gate', 'funnel', 'payments', 'upgrades', 'artists', 'requests', 'claims', 'consents', 'audit']
     .map((id) => [id, T.admin.anchors[id]])
 
   // W4-1 Gate tiles — funnel order; each event stays its OWN number (§14.4.1:
@@ -200,6 +215,22 @@ export default function AdminDashboard() {
     { key: 'payment_reference_created', label: T.admin.gateRefs, tag: T.admin.gateTagIntent },
     { key: 'entitlement_activated', label: T.admin.gateActivated, tag: T.admin.gateTagPaid },
   ]
+
+  // B5-a — funnel stage labels, keyed off the canon FUNNEL_EVENTS order so the
+  // rendered list can never drift from the source-of-truth event list.
+  const funnelLabelByKey = {
+    signup_completed: T.admin.funnelSignup,
+    onboarding_completed: T.admin.funnelOnboarding,
+    radar_opened: T.admin.funnelRadar,
+    evidence_added: T.admin.funnelEvidence,
+    claim_confirmed: T.admin.funnelClaim,
+    passport_published: T.admin.funnelPublished,
+    share_link_created: T.admin.funnelShared,
+    availability_request_created: T.admin.funnelRequested,
+  }
+  const funnelStages = FUNNEL_EVENTS.map((key) => ({ key, label: funnelLabelByKey[key] }))
+  // fill-bar denominator — the funnel's OWN max, never a per-person figure.
+  const funnelMax = Math.max(1, ...FUNNEL_EVENTS.map((key) => funnel.counts?.[key] ?? 0))
 
   return (
     <PageShell max="max-w-2xl">
@@ -215,7 +246,7 @@ export default function AdminDashboard() {
             <div className="flex gap-1.5 whitespace-nowrap">
               {anchors.map(([id, label]) => (
                 <a key={id} href={`#${id}`}
-                  className="rounded-full border border-line px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.08em] text-muted transition hover:border-line2 hover:text-ink">
+                  className="tap-target rounded-full border border-line px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.08em] text-muted transition hover:border-line2 hover:text-ink">
                   {label}
                 </a>
               ))}
@@ -292,6 +323,71 @@ export default function AdminDashboard() {
             )}
           </Section>
 
+          {/* B5-a (T-81, §8.12) — PILOT FUNNEL: whole-funnel product-milestone
+              counts. Own loading/error/retry state, same isolation contract as
+              the Gate tiles above. Fill-bar width = count / the funnel's OWN
+              max — a product-event visual (§2.1 allowed), never a score or a
+              per-person figure. */}
+          <Section id="funnel" title={T.admin.funnelTitle}>
+            {funnel.loading ? (
+              <div className="card py-5" role="status" aria-live="polite">
+                <div className="skeleton h-4 w-2/5" />
+                <span className="sr-only">{T.common.loading}</span>
+              </div>
+            ) : funnel.error ? (
+              <div className="card py-4 text-center" role="alert">
+                <p className="text-sm text-ink">{T.admin.gateError}</p>
+                <button onClick={loadFunnel} className="btn-ghost mt-3 text-xs">{T.admin.gateRetry}</button>
+              </div>
+            ) : (
+              <>
+                <div className="card space-y-3.5 py-4">
+                  {funnelStages.map((s) => {
+                    const n = funnel.counts?.[s.key] ?? 0
+                    const pct = Math.round((n / funnelMax) * 100)
+                    return (
+                      <div key={s.key} data-testid={`funnel-${s.key}`}>
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="min-w-0 truncate text-sm text-ink">{s.label}</span>
+                          <span className="shrink-0 font-mono text-sm font-bold text-ink" data-testid={`funnel-${s.key}-n`}>{n}</span>
+                        </div>
+                        <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-surface2" aria-hidden="true">
+                          <div className="h-full rounded-full bg-accent/70" style={{ width: `${pct}%` }} />
+                        </div>
+                        <p className="mt-0.5 font-mono text-[9.5px] uppercase tracking-[0.06em] text-faint">{s.key}</p>
+                      </div>
+                    )
+                  })}
+                </div>
+                <p className="mt-2 text-xs text-faint">{T.admin.funnelNote}</p>
+              </>
+            )}
+
+            {/* B5-c (T-81, §8.12) — publish freshness: the ONLY honest split
+                derivable client-side from the artists list already loaded
+                above (no item dates fetched, so published-with-stale-items is
+                NOT derivable here — that needs a dedicated read model; not
+                guessed). Reuses the main dashboard's own loading/error gate
+                since it reads the same `artists` state, not a new query.
+                FLAG (out of B5 territory / not yet built, see report):
+                a risk tile — no risk field exists in any state fetched by
+                this dashboard, so nothing honest to render; and the AI-cost
+                ledger — needs a server read path (server/**), which is
+                explicitly out of B5 territory. Neither is stubbed. */}
+            <p className="mb-2 mt-5 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">{T.admin.freshTitle}</p>
+            <div className="grid gap-2 [grid-template-columns:repeat(auto-fit,minmax(150px,1fr))]">
+              <div data-testid="fresh-published" className="card py-3 text-center">
+                <p className="text-2xl font-extrabold text-ink">{artists.filter((a) => a.published).length}</p>
+                <p className="mt-0.5 font-mono text-[10.5px] uppercase tracking-[0.08em] text-muted">{T.admin.freshPublished}</p>
+              </div>
+              <div data-testid="fresh-unpublished" className="card py-3 text-center">
+                <p className="text-2xl font-extrabold text-ink">{artists.filter((a) => !a.published).length}</p>
+                <p className="mt-0.5 font-mono text-[10.5px] uppercase tracking-[0.08em] text-muted">{T.admin.freshUnpublished}</p>
+              </div>
+            </div>
+            <p className="mt-2 text-xs text-faint">{T.admin.freshNote}</p>
+          </Section>
+
           {/* OP4 — SEC-01 compliance posture (read-only status) */}
           <SectionTitle>{T.admin.sec01Title}</SectionTitle>
           <div className="card mb-7 space-y-1.5">
@@ -311,14 +407,15 @@ export default function AdminDashboard() {
                 {payments.map((p) => (
                   <div key={p.id} className="card py-3">
                     <div className="flex items-center justify-between gap-3">
-                      <span className="truncate text-sm font-bold text-ink">{p.artists?.stage_name || '—'}</span>
+                      <span className="min-w-0 truncate text-sm font-bold text-ink">{p.artists?.stage_name || '—'}</span>
                       <button onClick={() => activate(p.id)}
                         className="btn-primary min-h-[44px] shrink-0 px-4 py-1.5 text-xs">
                         {T.admin.markActive}
                       </button>
                     </div>
-                    {/* reference + amount, so the owner can match this row against her Bit app */}
-                    <p dir="ltr" className="mt-2 truncate font-mono text-sm font-bold text-ink">
+                    {/* reference + amount, so the owner can match this row against her Bit app —
+                        never truncated: a cut-off reference is unmatchable, not just illegible */}
+                    <p dir="ltr" className="mt-2 whitespace-normal break-words font-mono text-sm font-bold leading-snug text-ink">
                       {p.amount_note || T.admin.noAmountNote}
                     </p>
                     <p className="font-mono text-xs text-faint">
@@ -338,7 +435,7 @@ export default function AdminDashboard() {
               <div className="space-y-2">
                 {upgrades.map((u) => (
                   <div key={u.organization_id} className="card flex items-center justify-between gap-3 py-3">
-                    <span className="truncate text-sm text-ink">{u.organization?.name || u.organization_id}</span>
+                    <span className="min-w-0 truncate text-sm text-ink">{u.organization?.name || u.organization_id}</span>
                     <button onClick={() => approve(u.organization_id)}
                       className="btn-primary min-h-[44px] shrink-0 px-4 py-1.5 text-xs">
                       {T.admin.approveUpgrade}
@@ -360,11 +457,11 @@ export default function AdminDashboard() {
                   <div key={a.id} className="card py-3.5">
                     <div className="flex items-center justify-between gap-3">
                       <div className="min-w-0">
-                        <p className="truncate font-medium text-ink">{a.stage_name || '—'}</p>
-                        <p className="truncate text-xs text-muted">{[a.genre, a.city].filter(Boolean).join(' · ') || '—'}</p>
+                        <p className="line-clamp-2 whitespace-normal break-words font-medium leading-snug text-ink">{a.stage_name || '—'}</p>
+                        <p className="line-clamp-2 whitespace-normal break-words text-xs leading-snug text-muted">{[a.genre, a.city].filter(Boolean).join(' · ') || '—'}</p>
                       </div>
                       <div className="flex shrink-0 items-center gap-2">
-                        <Link to={`/passport/${a.id}`} className="text-xs text-accent hover:underline">{T.admin.viewPassport}</Link>
+                        <Link to={`/passport/${a.id}`} className="tap-target text-xs text-accent hover:underline">{T.admin.viewPassport}</Link>
                         <button
                           onClick={() => togglePublished(a)}
                           disabled={toggling === a.id}
@@ -376,8 +473,8 @@ export default function AdminDashboard() {
                       </div>
                     </div>
                     <div className="mt-2 flex items-center gap-4 border-t border-line pt-2">
-                      <button onClick={() => exportArtist(a)} className="text-xs text-muted transition hover:text-ink">{T.admin.exportData}</button>
-                      <button onClick={() => { setDeleteTarget(a); setDeleteReason('') }} className="text-xs text-amber hover:underline">{T.admin.deleteData}</button>
+                      <button onClick={() => exportArtist(a)} className="tap-target text-xs text-muted transition hover:text-ink">{T.admin.exportData}</button>
+                      <button onClick={() => { setDeleteTarget(a); setDeleteReason('') }} className="tap-target text-xs text-amber hover:underline">{T.admin.deleteData}</button>
                     </div>
                   </div>
                 ))}

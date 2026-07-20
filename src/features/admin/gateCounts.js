@@ -103,3 +103,67 @@ export async function fetchGateCounts() {
   }))
   return Object.fromEntries(pairs)
 }
+
+// B5-a (T-81, §8.12) — PILOT FUNNEL: the artist's OWN product-milestone
+// events, build → distribution → the first buyer action. Counts of PRODUCT
+// EVENTS only (never a per-artist figure); rendered as a proportional fill
+// bar in AdminDashboard, which is explicitly allowed (§2.1) because the fill
+// is relative to the funnel's OWN max, not a score/percentile about a person.
+// `availability_request_created` is the same canon event as the Gate
+// "requests" tile above — kept as its own funnel stage per §14.4.1 (each
+// event stays its own number; no merging).
+export const FUNNEL_EVENTS = [
+  'signup_completed',
+  'onboarding_completed',
+  'radar_opened',
+  'evidence_added',
+  'claim_confirmed',
+  'passport_published',
+  'share_link_created',
+  'availability_request_created',
+]
+
+// DEMO fixture baseline — same posture as DEMO_BASE above (no analytics_event
+// rows in a demo build; fixtures only, §14.3.1 rule 11). Monotonically
+// non-increasing, matching a funnel shape. The shared event
+// (availability_request_created) intentionally equals DEMO_BASE's value so
+// the Gate tile and the funnel's last stage never disagree in DEMO.
+const FUNNEL_DEMO_BASE = {
+  signup_completed: 9,
+  onboarding_completed: 7,
+  radar_opened: 6,
+  evidence_added: 5,
+  claim_confirmed: 4,
+  passport_published: 3,
+  share_link_created: 2,
+  availability_request_created: DEMO_BASE.availability_request_created,
+}
+
+function demoFunnelCounts() {
+  const counts = { ...FUNNEL_DEMO_BASE }
+  try {
+    const ring = JSON.parse(localStorage.getItem(RING_KEY) || '[]')
+    for (const e of ring) {
+      if (e && Object.prototype.hasOwnProperty.call(counts, e.name)) counts[e.name] += 1
+    }
+  } catch { /* ring unreadable — fixtures alone */ }
+  return counts
+}
+
+// → { signup_completed: n, ... } — one head-count query per funnel event.
+// Same contract as fetchGateCounts: throws on error (real, retryable error
+// state instead of a silently-wrong zero); is_demo=false excludes seed/test
+// activity (§14.3.2).
+export async function fetchFunnelCounts() {
+  if (DEMO) return demoFunnelCounts()
+  const pairs = await Promise.all(FUNNEL_EVENTS.map(async (name) => {
+    const { count, error } = await supabase
+      .from('analytics_event')
+      .select('id', { count: 'exact', head: true })
+      .eq('event_name', name)
+      .eq('is_demo', false)
+    if (error) throw error
+    return [name, count ?? 0]
+  }))
+  return Object.fromEntries(pairs)
+}

@@ -154,8 +154,14 @@ export const T = {
     serverOffline: 'Link generation requires the API server (npm run dev).',
     // ── one-tap confirmation ceremony (ProducerConfirm) ──
     linkExpiredTitle: 'This link has expired',
+    linkExpiredBody: 'Confirmation links are short-lived on purpose — ask the artist to send a fresh one.',
+    linkUsedTitle: 'This link already did its job',
+    linkUsedBody: 'This confirmation was already recorded through this link. If something looks wrong, ask the artist for a fresh link.',
+    linkRevokedTitle: 'This link was cancelled',
+    linkRevokedBody: 'The artist cancelled this confirmation link, so it can no longer be used. Ask them for a new one if you still want to help.',
     linkInactiveTitle: 'This link is no longer active',
     linkDeadBody: 'Confirmation links are one-time and short-lived on purpose — ask the artist for a fresh one.',
+    closeNote: 'You can close this window now — there is nothing else to do here.',
     oneStatementEyebrow: 'One-statement confirmation',
     askedToConfirm: (name) => `${name} asked you to confirm one statement.`,
     noAccountNote: 'No account needed. Your reply applies to this statement only.',
@@ -565,8 +571,29 @@ export const T = {
     retRepeat: 'Repeat Passport opens',
     retRepeatTag: 'same browser returned · passport_view',
     retNote: 'Accounts seen on more than one day, and Passport pages reopened by a returning browser. Counts of product events only — no identity, never shown to artists or buyers. Seed and test-account activity is excluded.',
+    // B5-a (T-81, §8.12) — pilot funnel: whole-funnel product-milestone counts,
+    // a proportional fill bar (relative to the funnel's own max — never a
+    // per-person figure).
+    funnelTitle: 'Pilot funnel — product milestones',
+    funnelNote: 'Counts of product events for the whole pilot funnel — never about a single person. Demo activity excluded. Source event shown in mono under each stage.',
+    funnelSignup: 'Signed up',
+    funnelOnboarding: 'Onboarding completed',
+    funnelRadar: 'Radar opened',
+    funnelEvidence: 'Evidence added',
+    funnelClaim: 'Claim confirmed',
+    funnelPublished: 'Passport published',
+    funnelShared: 'Share link created',
+    funnelRequested: 'Availability requested',
+    // B5-c (T-81, §8.12) — publish-freshness: only what's honestly derivable
+    // from the artists list already fetched (published vs unpublished).
+    // Per-item staleness needs a read model with item dates — not yet built.
+    freshTitle: 'Publish freshness',
+    freshPublished: 'Published',
+    freshUnpublished: 'Unpublished',
+    freshNote: 'Published vs. unpublished counts from the artists list already loaded. Stale-item detection (last-updated per published Passport) needs a dedicated read model with item dates — not yet built; not shown here rather than guessed.',
     anchors: {
       gate: 'Gate',
+      funnel: 'Funnel',
       payments: 'Payments',
       upgrades: 'Upgrades',
       artists: 'Artists',

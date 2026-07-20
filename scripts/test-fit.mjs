@@ -105,7 +105,13 @@ for (const [w, h, label] of [[360, 780, 'MOBILE-360'], [1360, 850, 'DESKTOP-1360
   await page.goto(`http://127.0.0.1:${port}/onboarding`, { waitUntil: 'networkidle' })
   await page.waitForTimeout(1500)
   const onboarding = await page.evaluate(ASSERT)
-  for (const [screen, r] of [['login', login], ['radar', radar], ['radar-panel', panel], ['onboarding', onboarding]]) {
+  // Screen 5 (B2, §8.9): the Source-Confirmer ceremony — an accountless magic
+  // link (/confirm/:token), no login/role needed; DEMO renders the fixture
+  // ceremony from any token with zero network, so a direct route is enough.
+  await page.goto(`http://127.0.0.1:${port}/confirm/demo-token`, { waitUntil: 'networkidle' })
+  await page.waitForTimeout(800)
+  const confirm = await page.evaluate(ASSERT)
+  for (const [screen, r] of [['login', login], ['radar', radar], ['radar-panel', panel], ['onboarding', onboarding], ['confirm', confirm]]) {
     const bad = r.truncated.length || r.overlaps.length || r.hscroll || r.primaryCtas > 1 || r.smallTaps.length
     if (bad) failures++
     console.log(`${bad ? '  ✗' : '  ·'} [${label} ${screen}] truncated: ${r.truncated.length}${r.truncated.length ? ' ' + JSON.stringify(r.truncated.slice(0, 3)) : ''} · overlaps: ${r.overlaps.length}${r.overlaps.length ? ' ' + JSON.stringify(r.overlaps.slice(0, 3)) : ''} · h-scroll: ${r.hscroll ? 'YES' : 'none'} · primary CTAs: ${r.primaryCtas}${r.smallTaps.length ? ` · ✗ taps<44: ${r.smallTaps.length} ${JSON.stringify(r.smallTaps.slice(0, 8))}` : ''}`)
