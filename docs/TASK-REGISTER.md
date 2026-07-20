@@ -703,3 +703,91 @@ Territory: `src/features/passport/**` (one builder; may create components in-dir
 - 2026-07-21 · **T-87 · P-SIGNUP — site→app free-signup E2E (Launch-Plan Module 4) · BUILT, verify-green, awaiting witness.** 11-hop table walked live (Playwright vs the real embed build; real Supabase POSTs fired). 3 fixes: ① `/artists` CTAs missing utm attribution (`artists/page.tsx:242,901`) ② Signup had no per-field i18n validation states — native browser bubbles only, EN-only in HE mode; added `noValidate` + 6 per-field messages EN+HE mirroring Login's B1 pattern (`Signup.jsx:26-38,55,140-166`) ③ raw "Failed to fetch" leaked on failed submit — wired `classifyAuthError` + `errorNetwork`/`errorRateLimited` keys EN+HE (`Signup.jsx:10,94-104`). PAYMENTS gate verified OFF end-to-end (no dead pay links). OWNER LIVE-TEST OWED: Google OAuth · already-registered-confirmed branch · email-confirm return hop. CLEANUP OWED (owner, Supabase Auth): delete test rows `test-artist-e2e@example.com` + `e2e-embed-*@example.com`. FLAGGED FOLLOW-UP (out of lane territory): identical raw-error leak in `ui.jsx:124` SocialAuthButtons.
 - 2026-07-21 · **T-88 · P-POLISH — confirmer correction box + Maya Vale rename (Launch-Plan Module 5) · BUILT, verify-green, awaiting witness.** ① §8.9 "Partly right" now opens an inline bounded correction field (200-char, warm copy EN+HE, one-focus ceremony, cancel-without-loss, receipt quotes the note) — `ProducerConfirm.jsx`; **honest gap: the correction reaches the server but nothing persists it** (`server/index.js:772` drops unknown keys; confirmations table has no column) — persisting needs a future authored-never-run migration + server write, flagged in code, owner call. ② All ~30 demo.js "Shai Perlman" refs → **Maya Vale** (identity strings only; story/genre untouched) + site hero "Lior Noy"→Maya Vale (`page.tsx:427`) + §8.4 gap-notes closed. Fit all-zeros both widths; full aux suite green.
 - 2026-07-21 · **T-89 · MASTER FIX PLAN (owner order: every screen × every entity, current·target·checklist·machine-vs-taste·fix tasks; approve-from module by module) · COMPILING** — 3 read-only teams (Artist / Buyer / Rep+Production+Confirmer+Admin), spec-read-fresh per screen with §+line cites. Plan rows land IN THIS REGISTER when compiled; NO fixing before owner approval. Part 1 of the same order DONE: artifact `1c9b0030` recovered = `docs/prototypes/00_CURRENT/lock-full-prototype.html` (was already committed, verified identical); `flows-per-entity-v1.html` updated in place to current (`d877ca1`); all 3 LOCK artifacts sent as downloads. Next number: **T-90**.
+
+---
+
+## T-89 · MASTER FIX PLAN — every screen × every entity (compiled 21 Jul 2026, HEAD `d877ca1`)
+_Owner order: per screen — current state · target · checklist · machine-vs-taste split · fix tasks; ordered Artist → Buyer → rest, worst-first within each; each marked SPEC-COMPLETE / NEEDS-SPEC / OWNER-GATED. Approval flows FROM this plan module by module; NO fixing before the owner's word. Spec read fresh per row by 3 compile teams (§+line cites verified at HEAD). Firewall held in every proposal._
+
+### MODULE A — ARTIST (11 screens · 6 SPEC-COMPLETE · 2 NEEDS-SPEC · 3 OWNER-GATED · severity order below)
+
+**A1 · RADAR (dashboard) · `/artist/home` · §8.2 L767–853 + §8.0 L578–728 · SPEC-COMPLETE · SEV 4.**
+CURRENT: coach-desk face rebuilt (T-82) but engine thin — only 16/376 registry fields carry a `why_a_buyer_cares` reason; HE registry namespace unauthored (0/376); nodes still ~20 hand-derived; gestures+thread-glow built but unwitnessed. TARGET: 5-second warm landing — coach card with one reasoned move, calm 6-card shelf, radial = faint atmosphere. MACHINE: fit/guardrails/ds cover it; NEW assertions — every rendered gap-node has non-empty `why`; `pickNextAction` claims-route opens sheet not navigation; wired `why` keys have HE twins. TASTE: ally-feel of coach card; radial faintness; gesture feel. FIX: wire F1.csv registry as node+why source · author/fallback HE seeds · add `next_action_followed` event · backfill effect-layer classes to DS doc · fix prose function-name drift · owner witness.
+
+**A2 · EVIDENCE/UPLOADS · `/evidence/:artistId` · §8.13.2 L1416–1449 · OWNER-GATED (§8.0.e#1) · SEV 4.**
+CURRENT: worst layout citizen — unbounded scroll (consent→paths→form→lists→button all in DOM); not in fit harness. TARGET: one intent → one method-labeled item → back to Radar, one bounded viewport. GATING RULING: fold into Planet Inspector as inline widgets VS keep as named contained-scroll with height cap. FIX (after ruling): port or cap + add to fit harness; verify `evidence.*` HE keys.
+
+**A3 · READINESS · `/artist/readiness` · no §8.x home · NEEDS-SPEC · SEV 3.**
+CURRENT: orphan deep-link route (removed from nav; duplicates Radar coaching); internal 0–100 weight never displayed (firewall-clean, keep audited). RULING: retire-to-redirect (like `/consent`) VS author real §8.x + nav-in. MACHINE: add nav assertion — registered redirect OR nav entry, never neither.
+
+**A4 · CLAIM REVIEW · `/artist/claims` · §8.13.3 L1453–1486 · OWNER-GATED (§8.0.e#2) · SEV 3.**
+CURRENT: was worst screen (T-74: 23 truncations/34 small taps) — fully fixed T-75; remaining issue architectural: separate scrolling route duplicating Inspector; producer-confirm-request only reachable here. `claim_confirmed` fires from TWO actors under one name. GATING RULING: fold into Inspector Layer 3 VS keep as ledger with cap. FIX regardless: add `via` prop to `claim_confirmed` (ends two-actor ambiguity — admin funnel can split self-approve from producer confirm).
+
+**A5 · ONBOARDING · `/onboarding` · §8.1 L734–763 · SPEC-COMPLETE · SEV 2.**
+CURRENT: honest 3-step built; animated multi-source scan = TARGET (gated on real §9 scanner, never faked); fit-tested Step-1 render only. FIX: fit-assert consent-visible + Step-3 reveal states; engineered height cap. TASTE: does the single-link reveal feel earned or thin.
+
+**A6 · PASSPORT SELF-VIEW · `/artist/passport` · §8.4 L904–938 · SPEC-COMPLETE · SEV 2.**
+CURRENT: clean redirect to the true public passport (no second preview surface). Open items live on the Buyer side (Explorer R00, BANDS display sufficiency — owner ⑦ + R-11). FIX: rides on Module B.
+
+**A7 · REQUESTS · `/artist/requests` · §17.A.4 L4292–4317 · SPEC-COMPLETE · SEV 2.**
+CURRENT: decision-cockpit built; 1980-date floored; fit-line = request-completeness only (never a match score). OWED: swipe-to-reply (Radar 48px threshold + mandatory confirm tap). MACHINE: assert no numeric fit/match ever renders; swipe-requires-confirm once built.
+
+**A8 · SETTINGS · `/settings` · §17.B.5 L4534–4549 (marked OPEN/U26) · NEEDS-SPEC · SEV 2.**
+CURRENT: rich + hardened (accordion fixed +1521px overflow); U26 undecided: full screen VS hub-fold. MACHINE: assert collapsed-accordion one-viewport @390 (permanent regression guard); delete→sign-out no-dead-end. RULING: U26.
+
+**A9 · ACT EDITOR · `/artist/act/edit` · §8.6 L995–1009 · SPEC-COMPLETE · SEV 1.** Clean both widths (T-74). FIX: run + capture the per-field L2 state probe (empty/long/Hebrew/URL/invalid) as an assertion; draw-fields-band-only assertion. Owner witness.
+
+**A10 · ACCESS · `/artist/access` · §8.5 L971–991 · SPEC-COMPLETE · SEV 1.** Calm consent surface, solid. GAP upstream: Relationship-family signals NOT-WIRED (canon migration, owner-gated). MACHINE: assert no "grant"/ownership language toward artist.
+
+**A11 · OFFER/PAYMENT · `/artist/offer` · §14.5/§16.B.12 · OWNER-GATED (payments OFF) · SEV 1.** Dormant, redirects home. MACHINE: assert flag-off → redirect + zero payment DOM. Do not build pre-Gate.
+
+### MODULE B — BUYER (8 surfaces · 5 SPEC-COMPLETE · 2 OWNER-GATED · 1 NEEDS-SPEC)
+_No buyer login exists by design (§8.13.1: buyers need no account). Standing fact: all 5 §14.1.6 buyer events persist localStorage-only until migration 040 is applied._
+
+**B1 · PASSPORT — BOOKING face · `/passport/:id` · §8.7 L1013–1122 + §8.4 L904–938 · SPEC-COMPLETE (R00 pending + stale BUILT-status) · SEV 3.**
+CURRENT: the Gate-critical screen the owner called "still technical". The Evidence Explorer answering that IS built — but spec still says "TARGET not yet built" (stale, needs R00 + status update). Residual: chapters have NO 100dvh height contract (outer page still scrolls — one-viewport law not enforced); persona switcher = 4-tab pill, not the specced U34 "Viewing as ▾" dropdown-chip; no cold-start "Rising" state for thin passports. Firewall solid. TARGET: buyer FEELS "fills my room, shows up like a pro" in the first screen. MACHINE GAP (biggest in the app): **test:fit loads NO buyer route** — flagship ships with zero viewport/tap/CTA gate coverage. NEW: fit-passport ×4 faces · chapter≤frame assertion · hero-fold assertion. TASTE: does chaptering read premium or ceremonial; pill vs dropdown; hero lighting cinematic vs chart-like. FIX: spec BUILT-status update + R00 · enforce viewport-height chapter contract · fit harness · U34 ruling · cold-start state design.
+
+**B2 · EXPLORER component (all faces) · §8.7 L1021–1093 · SPEC-COMPLETE (R00 pending) · SEV 3.**
+CURRENT: rail/Next/Prev/swipe/keyboard/aria/persona-reset all built; no ghost dot (RENDER-LAW). GAPS: no 100dvh pane contract; `proof_unit_expanded` fires from Draw chapter ONLY (other 3 chapters not collapsible — mid-funnel engagement on them invisible). FIX: height contract · extend expandable to all chapters OR ratify Draw-only · no-ghost-dot/persona-reset/lexicon assertions · delete dead EXPLORER_FALLBACK shim.
+
+**B3 · PASSPORT — REP face · `?view=rep` · §8.4 L912 · SPEC-COMPLETE · SEV 2.** Chapter order matches spec; inherits B1/B2 shared gaps. NEW machine: static per-face chapter-order assertion vs §8.7 L1064 table.
+
+**B4 · PASSPORT — PRODUCTION face · `?view=production` · §8.4 L913+L918 · OWNER-GATED · SEV 2.** Built; CTA "Confirm show-day details" + industry-chip register = DRAFT awaiting R00 (calls 1+4). Ruling → promote to canon.
+
+**B5 · PASSPORT — PRIVATE face · `?view=private` · §8.4 L914+L918 · OWNER-GATED · SEV 2.** D9 warm register delivered ("Comfortable for 100–300 guests", Turnkey cluster). DRAFT calls: Readiness-first order (call 2) · Turnkey = 3-of-3 vs 2-of-3 (call 3) · CTA (call 1). NEW machine: private-register vocab-blocklist (no industry term leaks — guards D9).
+
+**B6 · AVAILABILITY REQUEST · `/passport/:id/request` · §8.8 L1126–1140 · SPEC-COMPLETE · SEV 1.** Cleanest buyer screen: band-selects only (never free-typed numbers), errors never clear input, dup-guard; both signals fire. FIX: fit-harness only (+ verify L615 tap smalls resolved).
+
+**B7 · REQUEST RECEIPT · `/passport/:id/sent` · §8.8 L1134–1136 · SPEC-COMPLETE · SEV 1.** Warm, never dead-end; WhatsApp CTA opt-in-gated; keep-box designed. The ONE buyer screen never machine-measured. FIX: fit-harness with router state, both branches; appUrl-base regression assertion.
+
+**B8 · DISCOVER (booker home) · `/discover` · §8.13.1 L1383–1412 · NEEDS-SPEC · SEV 2.** Resolver built + escape hatch. GAPS: fires ZERO signals (passport opens from here indistinguishable from share links — origin-marker decision needed); copy is pro-register only (§15.4.6 private/corporate variant "named, not-yet-built"); L615 13-small-taps never re-verified. RULINGS: private register · origin marker. FIX: fit harness.
+
+### MODULE C — SOURCE-CONFIRMER (1 screen · SPEC-COMPLETE, spec lags code by one detail)
+
+**C1 · CONFIRM CEREMONY · `/confirm/:token` · §8.9 L1144–1198 · SEV 3.**
+CURRENT: strong ceremony; correction box JUST built (T-88) — spec §8.9 L1164 still marks it "TARGET, not built" (spec lags code — update owed). REAL DEBTS (all server-side/cross-file): ① correction not persisted (no column, server drops key) — artist's Claim-review never sees it; ② `claim_confirmed` server insert carries NO `is_demo` flag (demo-count exposure); ③ first artist notification says "claim confirmed" EVEN on No/wrong-person (copy bug — misleads the artist); ④ HE still "מפיק", canon = מאשר-מקור (swap drafted, ruling open). MACHINE: the ONE non-artist screen in the fit gate; NEW — 4-dead-link+correction-box state-walk · server tests for is_demo + notification gating. FIX: spec status update · author correction-column migration (NEVER RUN, owner card) + server persist + Claim-review read-back · gate notification copy on response==='yes' · is_demo on insert · HE swap on ruling.
+
+### MODULE D — ADMIN/OPERATOR (1 screen · SPEC-COMPLETE)
+
+**D1 · OPERATOR COCKPIT · `/admin` · §8.12 L1324–1375 · SEV 2.**
+CURRENT: strongest-built entity — 9-anchor page, per-section independent load/error/retry, source-tags + is_demo=false on every tile EXCEPT the disclosed AI-cost path; Risk tile honestly flagged-out (needs aggregate query, not a capped list). MACHINE: NOT in recurring fit harness (highest-truncation-risk page, T-74 found 9+16 — fixed T-81 but unguarded). NEW: fit sweep · assert `.eq('is_demo',false)` on every demand tile except disclosed AI-cost (T-58 regression guard) · FUNNEL_EVENTS-vs-canon drift assertion. TASTE: Risk tile ship-now vs stay flagged; AI-cost manual line honest enough. FIX: fit harness + is_demo assertion now; Risk-tile aggregate + freshness read models = server-path tasks (flag).
+
+### MODULE E — REPRESENTATION (3 screens · SPEC-COMPLETE shells · AG1–AG4 depth OWNER-GATED/deferred)
+
+**E1 · ROSTER COCKPIT · `/agency` · §8.10 L1200–1268 · SEV 3.** TWO independent health derivations can disagree for one artist (`artistState()` vs `rosterStatus()`); "Team" named in §7.3 nav but doesn't exist — `/org/members` unreachable after checklist dismissal; fires ZERO signals (operator blind to Representation). FIX: unify health rule · persistent Team nav-in (or ratify hub-only) · fit harness · AG1–AG4 stays deferred · signals → signals-wave.
+**E2 · REQUESTS INBOX · `/agency/requests` · §8.10 L1248–1254 · SEV 2.** One-at-a-time accordion + ask-once confirm built; zero signals. FIX: fit harness · deep-link auto-open-once assertion.
+**E3 · RADAR FEED · `/agency/radar` · §8.10 L1251–1254 · SEV 2.** Narrative cards + triage-only filters; dead-end bug fixed. FIX: regression test pinning card routes · no-digit-as-grade assertion on `explain()`.
+
+### MODULE F — PRODUCTION (3 surfaces · read-honest · mutations OWNER-GATED behind 038/C6)
+
+**F1 · TEAM (default) · `/production` · §8.11 L1279–1284 · SEV 2.** Honest read-only preview + Manage-team link. FIX: fit harness + default-tab assertion.
+**F2 · EVENTS BOARD · `/production/events` · §8.11 L1285–1306 · OWNER-GATED (038) · SEV 2.** Band-only pills, five gig states, ZERO click handlers — honest; create/slot-confirm HELD behind unapplied 038. FIX now: BandPill never-exact-number assertion · fit harness · spec line-count reconcile. Build NOTHING until 038 ruling.
+**F3 · REQUESTS · `/production/requests` · §8.11 L1286–1307 · SPEC-COMPLETE read / reply OWNER-GATED · SEV 2.** Honest 032-gap card (null ≠ invented rows); `/producer` fold redirects live. FIX: gap-card + fold-redirect tests · fit harness. Reply/confirm held with the booking-path decision.
+
+### THE PLAN'S DECISION QUEUE (what only the owner rules — gates the fix waves)
+① §8.0.e#1 Evidence: fold-into-Inspector VS capped secondary · ② §8.0.e#2 Claim Review: fold VS ledger · ③ Readiness: retire-to-redirect VS author §8.x · ④ Settings U26: screen VS hub-fold · ⑤ R00 ratify batch: Explorer BUILT + §5.10/§8.2/§8.4/§14.1.6 blocks · ⑥ U34 persona dropdown VS keep pill · ⑦ Production-face draft copy (calls 1+4) · ⑧ Private-face draft (order · Turnkey 3-of-3 · CTA) · ⑨ Discover: private/corporate register + origin marker · ⑩ Confirmer: correction-column migration approval + HE מאשר-מקור swap · ⑪ R-11 bands display language · ⑫ Risk tile now VS later · ⑬ (standing, unchanged) 038/C6 · AG1–AG4 · payments.
+
+### MACHINE-GATE EXPANSION (defects that must fail the build, never reach the owner twice)
+Single biggest gap: **test:fit covers only 5 routes** (login/radar/panel/onboarding/confirm) — no buyer surface, no /admin, no /agency, no /production, no /evidence. Wave 1 of any fix work = extend the fit harness to: passport ×4 faces · request · sent · discover · evidence · agency ×3 · production ×3 · admin. Plus the per-screen assertions named in the rows above (ghost-dot, persona-reset, is_demo tiles, BandPill no-number, no-match-score, chapter-height, health-rule unification, notification-gating).
+
+_Status: PLAN COMPILED — awaiting owner module-by-module approval. NO fix work dispatched. Next number: **T-90**._
