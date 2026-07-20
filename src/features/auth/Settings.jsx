@@ -322,6 +322,19 @@ export default function Settings() {
         </button>
       </Section>
 
+      {/* Act identity — link to the Act-Identity Editor (§8.6 / D1 fix,
+          App.jsx /artist/act/edit). This link was promised in that route's
+          own comment ("Reached from ... Settings") but never actually built
+          here — this Section is the fix. Same collapsible-Section pattern as
+          every other group on this screen; the CTA reuses existing i18n keys
+          (T.actEditor.*) rather than adding new copy. */}
+      {isArtist && (
+        <Section id="act" title={T.actEditor.title} open={!!openSections.act} onToggle={() => toggleSection('act')}>
+          <p className="mb-3 text-sm text-muted">{T.actEditor.intro}</p>
+          <Link to="/artist/act/edit" className="btn-ghost w-full">{T.actEditor.edit}</Link>
+        </Section>
+      )}
+
       {/* Artist personal details — WhatsApp + the artist's own sharing opt-in.
           The number stays private; a booking manager only sees it after sending
           a request, and only if the artist opted in here (default off). */}

@@ -36,8 +36,6 @@ import AgencyRequestsInbox from './features/agency/AgencyRequestsInbox.jsx'
 import RadarFeed from './features/agency/RadarFeed.jsx'
 import ProductionDashboard from './features/production/ProductionDashboard.jsx'
 import BookerHome from './features/booker/BookerHome.jsx'
-import ProducerHome from './features/producer/ProducerHome.jsx'
-import ProducerReceivedPassports from './features/producer/ProducerReceivedPassports.jsx'
 import ProducerConfirm from './features/producer/ProducerConfirm.jsx'
 import AdminDashboard from './features/admin/AdminDashboard.jsx'
 import ForgotPassword from './features/auth/ForgotPassword.jsx'
@@ -190,7 +188,9 @@ export default function App() {
             ArtistDashboard/ClaimReview already link out to. */}
         <Route path="/artist/passport" element={<RequireRole role={ROLES.ARTIST}><PassportSelf /></RequireRole>} />
         {/* Act-Identity Editor (§8.6 / D1 fix) — edit stage_name/one_line/genre/
-            city/photo after onboarding. Reached from the Radar identity + Settings. */}
+            city/photo after onboarding. Reached from the Radar identity strip
+            (ArtistDashboard "Edit ›" link) and Settings → Your Act identity
+            section (added — was promised here but missing until this fix). */}
         <Route path="/artist/act/edit" element={<RequireRole role={ROLES.ARTIST}><ActEditor /></RequireRole>} />
         {/* Artist nav "Requests" tab — incoming availability requests. */}
         <Route path="/artist/requests" element={<RequireRole role={ROLES.ARTIST}><ArtistRequests /></RequireRole>} />
@@ -218,9 +218,13 @@ export default function App() {
         {/* booker */}
         <Route path="/discover" element={<RequireRole role={ROLES.BOOKER}><BookerHome /></RequireRole>} />
 
-        {/* producer workspace */}
-        <Route path="/producer" element={<RequireRole role={ROLES.PRODUCER}><ProducerHome /></RequireRole>} />
-        <Route path="/producer/received" element={<RequireRole role={ROLES.PRODUCER}><ProducerReceivedPassports /></RequireRole>} />
+        {/* producer workspace — RETIRED shell (M-6 fold, owner ruling 21 Jul
+            "close nav: fold + link"). Its one real capability (received-
+            passports list + link-paste box) is folded into the production
+            workspace's Requests tab (ProductionDashboard). These routes stay
+            registered as plain redirects so external bookmarks never dead-end. */}
+        <Route path="/producer" element={<Navigate to="/production/requests" replace />} />
+        <Route path="/producer/received" element={<Navigate to="/production/requests" replace />} />
       </Route>
 
       <Route path="*" element={<NotFound />} />

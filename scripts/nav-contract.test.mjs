@@ -59,8 +59,12 @@ check('returning › agency (roster) → /agency',
   homePathFor({ role: ROLES.AGENCY, isProducerWorkspace: false }), ROUTES.agency)
 check('returning › agency (production workspace) → /production',
   homePathFor({ role: ROLES.AGENCY, isProducerWorkspace: true }), ROUTES.production)
-check('returning › producer (confirmer) → /producer/received',
-  homePathFor({ role: ROLES.PRODUCER }), ROUTES.producerReceived)
+// M-6 fold (owner ruling 21 Jul "close nav: fold + link"): /producer +
+// /producer/received retired to redirects — the claim-confirmer now lands on
+// the production workspace's Requests tab, where its one real capability
+// (received-passports link paste box) was folded in.
+check('returning › producer (confirmer) → /production/requests (M-6 fold)',
+  homePathFor({ role: ROLES.PRODUCER }), ROUTES.productionRequests)
 check('returning › operator → /admin',
   homePathFor({ role: ROLES.OPERATOR }), ROUTES.admin)
 
@@ -109,6 +113,10 @@ check('gate › non-production agency on /production → /agency (not dead-end)'
   requireProductionRedirect({ user: U, role: ROLES.AGENCY, isProducerWorkspace: false }), ROUTES.agency)
 check('gate › artist on /production → bounced to "/"',
   requireProductionRedirect({ user: U, role: ROLES.ARTIST }), ROUTES.home)
+// M-6 fold: the claim-confirmer role is allowed here too (no redirect loop
+// with the homePathFor change above).
+check('gate › claim-confirmer (producer role) allowed on /production/requests (M-6 fold)',
+  requireProductionRedirect({ user: U, role: ROLES.PRODUCER }), null)
 
 // ── ROUTER INTEGRITY — every landing target the contract can resolve to must be
 //    a real <Route path> in App.jsx (params/RoleHome "/" excluded).
@@ -116,7 +124,7 @@ const appSrc = readFileSync(path.join(DIR, '..', 'src', 'App.jsx'), 'utf8')
 const registered = new Set([...appSrc.matchAll(/path="([^"]+)"/g)].map((m) => m[1]))
 const landingTargets = [
   ROUTES.login, ROUTES.select, ROUTES.onboarding, ROUTES.artistHome,
-  ROUTES.discover, ROUTES.agency, ROUTES.production, ROUTES.producerReceived, ROUTES.admin,
+  ROUTES.discover, ROUTES.agency, ROUTES.production, ROUTES.productionRequests, ROUTES.admin,
 ]
 for (const t of landingTargets) {
   check(`router › "${t}" is a registered <Route>`, registered.has(t), true)

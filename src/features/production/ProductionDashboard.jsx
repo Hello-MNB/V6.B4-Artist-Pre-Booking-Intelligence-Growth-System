@@ -1,16 +1,25 @@
 import { useEffect, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { getMembers, listOrgGigs, groupGigsIntoEvents, listProductionRequests } from '../../lib/orgs.js'
-import { PageShell, Loading, ErrorState, BandPill } from '../../components/ui.jsx'
+import { PageShell, Loading, ErrorState, BandPill, Field } from '../../components/ui.jsx'
 import { useLang } from '../../context/LangContext.jsx'
 import { useOrg } from '../../context/OrgContext.jsx'
+import { ROLES } from '../../lib/constants.js'
 
 // ============================================================
 // PRODUCTION WORKSPACE (INSOMNIA-style) — organization.workspace_type='producer'
 // (migration 027). A production company runs its own events and books lineup
 // slots; this is a DIFFERENT concept from the individual `producer` (מפיק)
 // role that confirms one claim via a no-login magic link (see
-// src/features/producer/ProducerConfirm.jsx) — that flow is untouched here.
+// src/features/producer/ProducerConfirm.jsx) — the /confirm/:token ceremony
+// itself is untouched. What DID change (M-6 fold, owner ruling 21 Jul "close
+// nav: fold + link"): the claim-confirmer's standalone /producer +
+// /producer/received shell was retired, and its one real capability (a
+// received-passports list + passport-link paste box) now lives inside the
+// Requests section below as <ReceivedPassportsFold/> — visible to real
+// production workspaces there, AND rendered standalone (no org needed) when
+// a ROLES.PRODUCER user lands here directly, since that role has no
+// organization membership of its own.
 //
 // One component, three real routes (/production, /production/events,
 // /production/requests) — `useLocation` picks the active section so nav
@@ -21,7 +30,9 @@ import { useOrg } from '../../context/OrgContext.jsx'
 // scoped by organization_id, migration 023's gig-depth columns). Where the
 // schema/RLS genuinely has no path yet (the confirm-requests surface — see
 // listOrgConfirmRequests in orgs.js), this renders an honest "not wired yet"
-// state instead of inventing rows.
+// state instead of inventing rows. The folded received-passports list is the
+// same honest case: no received-passports fetch exists in the data layer yet,
+// so it stays an empty state — the paste box is the one real, working piece.
 // ============================================================
 
 const fmtDate = (d) => {
@@ -159,6 +170,37 @@ function EventsSection({ orgId, T }) {
   )
 }
 
+// M-6 fold (owner ruling 21 Jul "close nav: fold + link") — folded from the
+// retired src/features/producer/ProducerReceivedPassports.jsx. That shell's
+// only real capability was this: paste a Passport link/ID an artist sent you
+// and open it (there is still no received-passports FETCH in the data layer,
+// so the "list" stays an honest empty state rather than inventing rows — same
+// resolver pattern as the booker /discover entry). Rendered both as a
+// sub-section of RequestsSection (real production workspaces) and standalone
+// for a ROLES.PRODUCER visitor with no org (see ProductionDashboard below).
+function ReceivedPassportsFold() {
+  const nav = useNavigate()
+  const [v, setV] = useState('')
+  function open() {
+    const m = v.trim().match(/passport\/([0-9a-f-]{6,})/i)
+    const id = m ? m[1] : v.trim()
+    if (id) nav(`/passport/${id}`)
+  }
+  return (
+    <div className="card">
+      <p className="mb-1 font-bold text-ink">Passports shared with you</p>
+      <p className="mb-3 text-sm text-muted">
+        Paste a Passport link an artist sent you to open it — standardized, method-labeled evidence, no account needed.
+      </p>
+      <Field label="Passport link / ID">
+        <input className="field" dir="ltr" value={v} onChange={(e) => setV(e.target.value)}
+          placeholder=".../passport/…" onKeyDown={(e) => e.key === 'Enter' && open()} />
+      </Field>
+      <button className="btn-primary w-full" onClick={open} disabled={!v.trim()}>Open Passport</button>
+    </div>
+  )
+}
+
 // A7 (rel-07.13, 032-backed): the inbox of availability requests THIS workspace
 // sent, with reply status — real data via list_production_requests (SECURITY
 // DEFINER, membership-gated). null = 032 not applied → honest gap state.
@@ -169,55 +211,83 @@ function RequestsSection({ T }) {
   }
   useEffect(() => { load() }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  if (requests === undefined) return <Loading />
-
-  if (requests === null) {
-    return (
+  let body
+  if (requests === undefined) {
+    body = <Loading />
+  } else if (requests === null) {
+    body = (
       <div className="card border border-line">
         <p className="mb-1 font-bold text-ink">{T.production.requestsGapTitle}</p>
         <p className="text-sm text-muted">{T.production.requestsGapBody}</p>
       </div>
     )
-  }
-
-  if (requests.length === 0) {
-    return (
+  } else if (requests.length === 0) {
+    body = (
       <div className="card text-center py-8">
         <p className="font-bold text-ink mb-1">{T.production.requestsEmptyTitle}</p>
         <p className="text-sm text-muted">{T.production.requestsEmptyBody}</p>
       </div>
     )
+  } else {
+    const statusLabel = (s) =>
+      s === 'replied' ? T.production.reqStatusReplied : s === 'closed' ? T.production.reqStatusClosed : T.production.reqStatusNew
+    body = (
+      <div className="space-y-2">
+        {requests.map((r) => (
+          <div key={r.request_id} className="card">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="truncate text-sm font-semibold text-ink">{r.artist_stage_name || '—'}</p>
+                <p className="mt-0.5 truncate text-xs text-muted">
+                  {[r.event_type, r.location, r.event_date].filter(Boolean).join(' · ')}
+                </p>
+                {r.message && <p className="mt-1 line-clamp-2 text-sm text-ink">“{r.message}”</p>}
+              </div>
+              <span className={`shrink-0 font-mono text-[10px] uppercase tracking-[0.08em] ${r.status === 'replied' ? 'text-accent' : r.status === 'closed' ? 'text-faint' : 'text-amber'}`}>
+                {statusLabel(r.status)}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    )
   }
 
-  const statusLabel = (s) =>
-    s === 'replied' ? T.production.reqStatusReplied : s === 'closed' ? T.production.reqStatusClosed : T.production.reqStatusNew
+  // Sub-section (M-6 fold): the folded received-passports capability sits
+  // below the outgoing-requests list rather than replacing its structure.
   return (
-    <div className="space-y-2">
-      {requests.map((r) => (
-        <div key={r.request_id} className="card">
-          <div className="flex items-start justify-between gap-3">
-            <div className="min-w-0">
-              <p className="truncate text-sm font-semibold text-ink">{r.artist_stage_name || '—'}</p>
-              <p className="mt-0.5 truncate text-xs text-muted">
-                {[r.event_type, r.location, r.event_date].filter(Boolean).join(' · ')}
-              </p>
-              {r.message && <p className="mt-1 line-clamp-2 text-sm text-ink">“{r.message}”</p>}
-            </div>
-            <span className={`shrink-0 font-mono text-[10px] uppercase tracking-[0.08em] ${r.status === 'replied' ? 'text-accent' : r.status === 'closed' ? 'text-faint' : 'text-amber'}`}>
-              {statusLabel(r.status)}
-            </span>
-          </div>
-        </div>
-      ))}
+    <div className="space-y-3">
+      {body}
+      <ReceivedPassportsFold />
     </div>
   )
 }
 
 export default function ProductionDashboard() {
   const { T } = useLang()
-  const { activeOrgId, activeOrg } = useOrg()
+  const { activeOrgId, activeOrg, role } = useOrg()
   const loc = useLocation()
   const section = sectionFromPath(loc.pathname)
+
+  // M-6 fold: the individual claim-confirmer role (ROLES.PRODUCER — magic-link
+  // only, see ProducerConfirm.jsx) now lands HERE (homePathFor + the nav tab
+  // both point at /production/requests) since its own shell was retired. That
+  // role has no organization membership, so the org-scoped Team/Events
+  // sections below don't apply — show only the folded capability instead of
+  // waiting forever on an activeOrgId that will never arrive.
+  if (role === ROLES.PRODUCER) {
+    return (
+      <PageShell max="max-w-4xl">
+        <div className="mb-1 flex items-center justify-between">
+          <h1 className="font-display text-xl font-bold text-ink">Passports shared with you</h1>
+        </div>
+        <p className="mb-4 text-sm text-muted">
+          Artists may ask you to confirm one specific statement via a secure one-time email link — no account, no dashboard. Anything they also send you directly opens below.
+        </p>
+        <ReceivedPassportsFold />
+      </PageShell>
+    )
+  }
 
   if (!activeOrgId) return <PageShell max="max-w-4xl"><Loading /></PageShell>
 

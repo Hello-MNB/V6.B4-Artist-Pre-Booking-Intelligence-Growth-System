@@ -30,9 +30,14 @@ export function getNavTabs(role, isAgency, T, isProducerWorkspace = false) {
     { key: 'requests', label: n.requests, to: '/agency/requests', end: true },
     { key: 'account',  label: n.account,  to: '/settings',        end: true },
   ]
+  // M-6 fold (owner ruling 21 Jul "close nav: fold + link"): the standalone
+  // /producer/received shell is retired — its one real capability (received-
+  // passports link paste box) now lives in the production workspace's
+  // Requests tab, which is where this role lands directly (see
+  // homePathFor/requireProductionRedirect in lib/navigation.js).
   if (role === ROLES.PRODUCER) return [
-    { key: 'received', label: n.received, to: '/producer/received', end: false },
-    { key: 'account',  label: n.account,  to: '/settings',          end: true  },
+    { key: 'received', label: n.received, to: '/production/requests', end: true },
+    { key: 'account',  label: n.account,  to: '/settings',            end: true },
   ]
   // Booker (booking manager) — lands on /discover (open a Passport you were sent).
   // Without this branch a booker fell through to the account-only fallback and

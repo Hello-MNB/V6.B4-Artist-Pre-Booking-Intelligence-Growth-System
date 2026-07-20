@@ -25,7 +25,12 @@ export const ROUTES = {
   discover: '/discover',                  // booking manager (booker) home
   agency: '/agency',                      // roster / talent agency home
   production: '/production',              // production-company workspace home
-  producerReceived: '/producer/received', // claim-confirmer landing
+  // M-6 FOLD (owner ruling 21 Jul "close nav: fold + link"): the standalone
+  // /producer + /producer/received shell is retired to redirects — its one
+  // real capability (received-passports list + link-paste box) now lives in
+  // the production workspace's Requests tab (ProductionDashboard), and this
+  // is also where the claim-confirmer role (ROLES.PRODUCER) lands.
+  productionRequests: '/production/requests',
   admin: '/admin',                        // operator
 }
 
@@ -41,7 +46,10 @@ export function homePathFor({ role, isProducerWorkspace = false, demo = false } 
     // but its own screen-set — workspace_type is the real routing signal.
     case ROLES.AGENCY:   return isProducerWorkspace ? ROUTES.production : ROUTES.agency
     case ROLES.BOOKER:   return ROUTES.discover
-    case ROLES.PRODUCER: return ROUTES.producerReceived
+    // M-6 fold: the claim-confirmer's dedicated shell is retired; they land on
+    // the production workspace's Requests tab, where their one real
+    // capability (received-passports link paste box) now lives.
+    case ROLES.PRODUCER: return ROUTES.productionRequests
     case ROLES.ARTIST:   return ROUTES.artistHome
     default:             return ROUTES.artistHome
   }
@@ -82,9 +90,14 @@ export function requireAgencyRedirect({ user, role, isAgency = false, isProducer
 // RequireProduction contract → redirect path or null to allow. Gated on the
 // active org's workspace_type (functional_role has no dedicated producer-org
 // value). A non-production agency falls through to the roster screen, not "/".
+// M-6 fold: the claim-confirmer role (ROLES.PRODUCER — magic-link only, see
+// ProducerConfirm.jsx) is also allowed here, since its retired shell's home
+// now resolves to this workspace's Requests tab (homePathFor above) — without
+// this branch that would be a redirect LOOP (RoleHome → here → bounced → "/").
 export function requireProductionRedirect({ user, role, isAgency = false, isProducerWorkspace = false } = {}) {
   if (!user) return ROUTES.login
   if (isProducerWorkspace) return null
+  if (role === ROLES.PRODUCER) return null
   if (role === ROLES.AGENCY || isAgency) return ROUTES.agency
   return ROUTES.home
 }
