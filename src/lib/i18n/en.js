@@ -734,6 +734,9 @@ export const T = {
     selfReportedNoPassport: 'Self-reported claims stay in your private view — they never appear on the public Passport. Strengthen with a source or a producer confirmation.',
     // Named confirmation receipt — says WHAT was confirmed and WHERE it landed.
     confirmReceipt: (dest, w) => `Added to ${dest}: “${w}”`,
+    // 7s undo on the receipt toast (§8.3 confirm-wording law, same contract as
+    // the Radar Inspector's confirm).
+    undo: 'Undo',
   },
   settings: {
     title: 'Settings',

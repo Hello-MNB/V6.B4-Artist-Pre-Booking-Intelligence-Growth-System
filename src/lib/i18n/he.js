@@ -731,6 +731,9 @@ export const T = {
     selfReportedNoPassport: 'הוכחות שדווחו עצמאית נשארות בתצוגה הפרטית שלך — הן לעולם לא מופיעות בפספורט הציבורי. חזק אותן עם מקור או אישור מפיק.',
     // Named confirmation receipt — says WHAT was confirmed and WHERE it landed.
     confirmReceipt: (dest, w) => `נוסף אל ${dest}: “${w}”`,
+    // 7s undo on the receipt toast (§8.3 confirm-wording law, same contract as
+    // the Radar Inspector's confirm).
+    undo: 'בטל',
   },
   settings: {
     title: 'הגדרות',

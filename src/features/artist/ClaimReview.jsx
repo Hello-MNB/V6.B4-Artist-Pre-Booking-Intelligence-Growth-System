@@ -299,11 +299,15 @@ export default function ClaimReview() {
         </Link>
       )}
 
-      {/* named receipt — says WHAT was confirmed and WHERE it now appears */}
-      {receipt && (
+      {/* named receipt — says WHAT was confirmed and WHERE it now appears,
+          + a 7s undo (§8.3 confirm-wording law) */}
+      {receiptClaim && (
         <div role="status" className="fixed inset-x-4 bottom-4 z-[70] mx-auto flex max-w-md items-center gap-2 rounded-xl border border-accent/25 bg-surface px-3.5 py-2.5 text-xs font-semibold text-ink shadow-card">
           <span aria-hidden className="h-2 w-2 shrink-0 rounded-full bg-accent" />
-          <span className="line-clamp-2 min-w-0 whitespace-normal break-words">{receipt}</span>
+          <span className="line-clamp-2 min-w-0 flex-1 whitespace-normal break-words">{receiptClaim.msg}</span>
+          <button type="button" className="tap-target shrink-0 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-accent underline" onClick={undoApprove}>
+            {T.claims.undo}
+          </button>
         </div>
       )}
     </PageShell>

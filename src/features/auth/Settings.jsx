@@ -216,8 +216,42 @@ export default function Settings() {
   const [waShare, setWaShare] = useState(false)
   const [waSaving, setWaSaving] = useState(false)
   const [waSaved, setWaSaved] = useState(false)
+  const [waInvalid, setWaInvalid] = useState(false)
+  // The last value actually PERSISTED (from load, or from a prior save) — the
+  // undo target. Distinct from waNumber/waShare, which track the live,
+  // not-yet-saved input; using those for the snapshot would "undo" to the
+  // value that was just saved, not the one before it.
+  const [waLastSaved, setWaLastSaved] = useState({ number: '', share: false })
+  const [waUndo, setWaUndo] = useState(null) // { number, share } pre-save snapshot
+  const waUndoTimer = useRef(null)
 
-  logEvent(EVENTS.SETTINGS_OPENED, { role })
+  // §14.1.2 event #settings_opened — fires ONCE per screen visit (not per
+  // re-render: this used to be a bare call in the render body, so every
+  // keystroke/toggle on this screen re-fired it into the local ring buffer).
+  useEffect(() => {
+    logEvent(EVENTS.SETTINGS_OPENED, { role })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // §14.1.2 event #6 `consent_withdrawn` / consent_granted trigger is named
+  // "(settings)" in the canon table — this IS that trigger point. Skips the
+  // initial load (hasConsent below only sets the starting value, not a change).
+  const marketingFirstLoad = useRef(true)
+  useEffect(() => {
+    if (!marketingLoaded) return
+    if (marketingFirstLoad.current) { marketingFirstLoad.current = false; return }
+    logEvent(marketing ? EVENTS.CONSENT_ACCEPTED : EVENTS.CONSENT_WITHDRAWN, { role, scope: 'marketing' })
+  }, [marketing, marketingLoaded, role])
+
+  // Dev-only breadcrumb (§14.1.2: `language_changed` is a local-ring event,
+  // never persisted) — the language row's own DoD ("language change... applies
+  // + confirms"); skips the initial mount so switching INTO this screen in the
+  // artist's existing language doesn't log a false "change".
+  const langFirstRender = useRef(true)
+  useEffect(() => {
+    if (langFirstRender.current) { langFirstRender.current = false; return }
+    logEvent(EVENTS.LANGUAGE_CHANGED, { role, lang })
+  }, [lang, role])
 
   useEffect(() => {
     (async () => {
@@ -234,20 +268,48 @@ export default function Settings() {
       setArtistId(a.id)
       setWaNumber(a.whatsapp_number || '')
       setWaShare(!!a.whatsapp_share)
+      setWaLastSaved({ number: a.whatsapp_number || '', share: !!a.whatsapp_share })
     }).catch(() => { /* no artist record yet — section still lets them save once created */ })
     return () => { alive = false }
   }, [isArtist, user.id])
 
   async function saveWhatsApp() {
     if (!artistId) { setError(T.settings.waNeedProfile); return }
+    // §10.4 "invalid = human explanation" — checked before the round-trip,
+    // inline under the field, never a silent reject.
+    if (!isValidWa(waNumber)) { setWaInvalid(true); return }
+    setWaInvalid(false)
+    const prevSnapshot = waLastSaved // the value BEFORE this save, for undo
     setWaSaving(true); setError(''); setWaSaved(false)
     try {
       await saveArtistWhatsApp(artistId, { number: waNumber, share: waShare })
       setWaSaved(true)
-      setTimeout(() => setWaSaved(false), 2000)
+      setWaLastSaved({ number: waNumber, share: waShare })
+      setWaUndo(prevSnapshot)
+      clearTimeout(waUndoTimer.current)
+      waUndoTimer.current = setTimeout(() => { setWaSaved(false); setWaUndo(null) }, 4000)
     } catch (e) {
       setError(e.message || T.common.error)
     } finally { setWaSaving(false) }
+  }
+
+  // §10.4/§17.A.10 undo — restores the snapshot taken just BEFORE the last
+  // successful save and re-saves it, so undo is itself a real, visible save.
+  async function undoWhatsApp() {
+    if (!waUndo || !artistId) return
+    clearTimeout(waUndoTimer.current)
+    const { number, share } = waUndo
+    setWaSaving(true)
+    try {
+      await saveArtistWhatsApp(artistId, { number, share })
+      setWaNumber(number)
+      setWaShare(share)
+      setWaLastSaved({ number, share })
+    } catch (e) {
+      setError(e.message || T.common.error)
+    } finally {
+      setWaSaving(false); setWaSaved(false); setWaUndo(null)
+    }
   }
 
   async function toggleMarketing() {
@@ -265,15 +327,35 @@ export default function Settings() {
   }
 
   async function saveProfile() {
+    const prevName = profile?.full_name || '' // pre-save snapshot, for undo
     setSaving(true); setError(''); setSaved(false)
     try {
       await upsertProfile({ id: user.id, role: baseRole, full_name: name.trim() || null })
       await reloadProfile()
       setSaved(true)
-      setTimeout(() => setSaved(false), 2000)
+      setNameUndo(prevName !== (name.trim() || '') ? prevName : null)
+      clearTimeout(nameUndoTimer.current)
+      nameUndoTimer.current = setTimeout(() => { setSaved(false); setNameUndo(null) }, 4000)
     } catch (e) {
       setError(e.message || T.common.error)
     } finally { setSaving(false) }
+  }
+
+  // §10.4/§17.A.10 undo — restores the account name to what it was just
+  // before the last successful save, via a real save (not a silent local revert).
+  async function undoName() {
+    if (nameUndo == null) return
+    clearTimeout(nameUndoTimer.current)
+    setSaving(true)
+    try {
+      await upsertProfile({ id: user.id, role: baseRole, full_name: nameUndo || null })
+      await reloadProfile()
+      setName(nameUndo)
+    } catch (e) {
+      setError(e.message || T.common.error)
+    } finally {
+      setSaving(false); setSaved(false); setNameUndo(null)
+    }
   }
 
   async function handleDeleteAccount() {
@@ -318,11 +400,20 @@ export default function Settings() {
           )}
         </div>
 
-        <div className="min-h-0 flex-1 overflow-y-auto pb-4">
+        {/* §6 law 7 — a long ledger may scroll within a CONTAINED, NAMED region
+            (never the outer page). role="region" + aria-label gives this
+            internal scroller its own accessible name, matching the law's own
+            wording rather than an unnamed generic scroll div. */}
+        <div className="min-h-0 flex-1 overflow-y-auto pb-4" role="region" aria-label={T.settings.title}>
 
       {/* Profile */}
       <Section id="profile" title={T.settings.profile} open={!!openSections.profile} onToggle={() => toggleSection('profile')}>
-        <Field label={T.settings.displayName}>
+        {/* T-A3 (§17.B.5 / §8.5-adjacent one-name law): this is the ACCOUNT
+            (person-level) name — it never renders on any buyer-facing surface.
+            What a buyer reads is the Act's own "Stage name" (§8.6, edited in
+            Your Act above). The hint exists so that distinction is never
+            re-confused on this screen again. */}
+        <Field label={T.settings.displayName} hint={T.settings.displayNameHint}>
           <input className="field" value={name} onChange={(e) => setName(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && saveProfile()} />
         </Field>
@@ -332,6 +423,13 @@ export default function Settings() {
         <button className="btn-primary w-full" onClick={saveProfile} disabled={saving}>
           {saving ? T.common.loading : saved ? T.settings.saved + ' ✓' : T.settings.save}
         </button>
+        {/* §10.4/§17.A.10 — "undo available" on every save. */}
+        {saved && nameUndo != null && (
+          <p className="mt-2 flex items-center gap-3 text-xs text-accent">
+            <span>✓ {T.settings.saved}</span>
+            <button type="button" className="tap-target underline" onClick={undoName}>{T.settings.undo}</button>
+          </p>
+        )}
       </Section>
 
       {/* Act identity — link to the Act-Identity Editor (§8.6 / D1 fix,
@@ -353,10 +451,10 @@ export default function Settings() {
       {isArtist && (
         <Section id="whatsapp" title={T.settings.waTitle} open={!!openSections.whatsapp} onToggle={() => toggleSection('whatsapp')}>
           <p className="mb-3 text-sm text-muted">{T.settings.waIntro}</p>
-          <Field label={T.settings.waNumber} hint={T.settings.waNumberHint}>
+          <Field label={T.settings.waNumber} hint={T.settings.waNumberHint} error={waInvalid ? T.settings.waInvalid : ''}>
             <input className="field" dir="ltr" inputMode="tel" autoComplete="tel"
               placeholder="+972 5X-XXX-XXXX"
-              value={waNumber} onChange={(e) => setWaNumber(e.target.value)} />
+              value={waNumber} onChange={(e) => { setWaNumber(e.target.value); if (waInvalid) setWaInvalid(false) }} />
           </Field>
           <label className="mt-1 flex cursor-pointer items-start gap-3">
             <input type="checkbox" className="mt-1 h-4 w-4 accent-accent" checked={waShare}
@@ -369,6 +467,13 @@ export default function Settings() {
           <button className="btn-primary mt-4 w-full" onClick={saveWhatsApp} disabled={waSaving}>
             {waSaving ? T.common.loading : waSaved ? T.settings.saved + ' ✓' : T.settings.save}
           </button>
+          {/* §10.4/§17.A.10 — "undo available" on every save. */}
+          {waSaved && waUndo != null && (
+            <p className="mt-2 flex items-center gap-3 text-xs text-accent">
+              <span>✓ {T.settings.saved}</span>
+              <button type="button" className="tap-target underline" onClick={undoWhatsApp}>{T.settings.undo}</button>
+            </p>
+          )}
         </Section>
       )}
 

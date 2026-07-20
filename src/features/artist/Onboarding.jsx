@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthProvider.jsx'
-import { getMyArtist, upsertArtist, addProfileItem, addEvidence, processEvidence, hasConsent } from '../../lib/db.js'
+import { getMyArtist, upsertArtist, addProfileItem, addEvidence, processEvidence, hasConsent, listProfileItems } from '../../lib/db.js'
 import { logEvent, EVENTS } from '../../lib/analytics.js'
 import { SOURCE_STATUS } from '../../lib/constants.js'
 import { PageShell, Field, Spinner, ErrorNote, Loading } from '../../components/ui.jsx'
@@ -104,7 +104,6 @@ export default function Onboarding() {
   // land at the top of it (Step 1 already autofocuses its own input, so this
   // only matters for 2→3 and any back-navigation).
   const stepHeadingRef = useRef(null)
-  const mountedRef = useRef(false)
   const startedLoggedRef = useRef(false)
 
   useEffect(() => {
@@ -118,6 +117,19 @@ export default function Onboarding() {
           // Canon scope is the single `privacy-processing` (migration 021 CHECK).
           setConsentAlready(await hasConsent(user.id, 'privacy-processing'))
         } catch { setConsentAlready(false) }
+        // A refresh that resumes directly on the step-3 reveal has no `link`
+        // in memory (only the step POSITION is mirrored — never re-fetched
+        // field data, per this file's own convention). Without this, the
+        // reveal would show a blank row — never an honest reveal (§2.8: a
+        // reveal never fabricates, but it must never go blank either). Best
+        // effort: re-read the link just saved in step 2.
+        if (readSavedStep(user.id) === 3) {
+          try {
+            const items = await listProfileItems(a.id)
+            const savedLink = items?.find((i) => i.item_type === 'link')?.public_url
+            if (savedLink) setCapturedLink(savedLink)
+          } catch { /* best-effort only — the reveal simply won't repopulate */ }
+        }
         // Funnel top signal (was never fired anywhere — a genuine gap: the
         // canon event name exists in analytics.js but no screen fired it).
         // Fires once per mount, on every real visit to the entry screen
@@ -136,10 +148,11 @@ export default function Onboarding() {
     sessionStorage.setItem(stepStorageKey(user.id), String(step))
   }, [user.id, step])
 
-  // Move focus to the new step's own heading on every step change (never on
-  // first mount — Step 1's stage-name input already autofocuses).
+  // Move focus to the new step's own heading whenever step 2 or 3 renders —
+  // including landing there directly on a resumed mid-entry refresh. Step 1
+  // has no heading ref (its stage-name input already autofocuses via HTML
+  // `autoFocus`, so nothing competes for focus there).
   useEffect(() => {
-    if (!mountedRef.current) { mountedRef.current = true; return }
     stepHeadingRef.current?.focus()
   }, [step])
 
@@ -209,8 +222,14 @@ export default function Onboarding() {
 
   if (loading) return <Loading />
 
-  const linkGiven = /^https?:\/\//i.test(link.trim())
-  const linkPlatform = linkGiven ? detectPlatform(link.trim()) : null
+  const normalizedTyped = normalizeLink(link)
+  const linkGiven = !!normalizedTyped
+  const linkPlatform = linkGiven ? detectPlatform(normalizedTyped) : null
+  // §10.4 invalid state: only once the artist has actually typed something
+  // that still doesn't resolve to a link — never nags on an empty, optional
+  // field (empty just means "skip this, the Radar will ask later").
+  const linkInvalid = linkTouched && link.trim() !== '' && !linkGiven
+  const revealPlatform = detectPlatform(capturedLink)
 
   return (
     <PageShell max="max-w-lg">
@@ -248,11 +267,15 @@ export default function Onboarding() {
       {step === 2 && (
         <form onSubmit={startRadar}>
           <div className="card">
-            <h2 className="font-display mb-1 text-xl font-bold tracking-[-0.01em] text-ink">{T.onboarding.entryLinkTitle}</h2>
+            <h2 ref={stepHeadingRef} tabIndex={-1} className="font-display mb-1 text-xl font-bold tracking-[-0.01em] text-ink outline-none">{T.onboarding.entryLinkTitle}</h2>
             <p className="mb-4 text-xs text-muted">{T.onboarding.entryLinkHint}</p>
-            <Field label={`${T.onboarding.linkPlaceholder} (${T.onboarding.entryOptional})`}>
+            <Field label={`${T.onboarding.linkPlaceholder} (${T.onboarding.entryOptional})`}
+              error={linkInvalid ? T.onboarding.linkInvalid : ''}>
               <input className="field" dir="ltr" value={link} inputMode="url"
-                onChange={(e) => setLink(e.target.value)} placeholder="https://…" />
+                aria-invalid={linkInvalid}
+                onChange={(e) => setLink(e.target.value)}
+                onBlur={() => setLinkTouched(true)}
+                placeholder="https://…" />
             </Field>
             {/* instant recognition, same beat as the Radar's setup chip — names
                 the platform + shows its logo while typing, never silent */}
@@ -282,12 +305,12 @@ export default function Onboarding() {
       {step === 3 && (
         <div>
           <div className="card">
-            <h2 className="font-display mb-1 text-xl font-bold tracking-[-0.01em] text-ink">{T.onboarding.revealTitle}</h2>
+            <h2 ref={stepHeadingRef} tabIndex={-1} className="font-display mb-1 text-xl font-bold tracking-[-0.01em] text-ink outline-none">{T.onboarding.revealTitle}</h2>
             <p className="mb-4 text-xs text-muted">{T.onboarding.revealSub}</p>
             <div className="flex items-center gap-3 rounded-xl border border-gold/30 bg-surface2 px-3 py-2.5">
-              {linkPlatform && <PlatformLogo name={linkPlatform} size={18} className="shrink-0 text-gold" />}
+              {revealPlatform && <PlatformLogo name={revealPlatform} size={18} className="shrink-0 text-gold" />}
               <div className="min-w-0 flex-1">
-                <p dir="ltr" className="truncate text-sm font-semibold text-ink">{link.trim()}</p>
+                <p dir="ltr" className="truncate text-sm font-semibold text-ink">{capturedLink}</p>
                 <p className="text-[11px] text-muted">{T.onboarding.revealRowSub}</p>
               </div>
               <span className="shrink-0 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-gold">✦ {T.onboarding.revealFound}</span>
