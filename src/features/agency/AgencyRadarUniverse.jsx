@@ -116,7 +116,7 @@ export default function AgencyRadarUniverse({ artists, claims }) {
         <div className="mt-2 flex justify-center">
           <a href="#roster"
             className="tap-target rounded-full border border-line px-3 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-muted transition hover:border-accent hover:text-accent">
-            +{overflow} more — full roster below
+            {S.overflowMore ? S.overflowMore(overflow) : `+${overflow} more — full roster below`}
           </a>
         </div>
       )}

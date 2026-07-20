@@ -74,7 +74,7 @@ export default function RadarFeed() {
 
   return (
     <PageShell>
-      <div className="flex items-center justify-end mb-4"><Link to="/agency" className="text-sm text-muted hover:text-ink">{T.common.back}</Link></div>
+      <div className="flex items-center justify-end mb-4"><Link to="/agency" className="tap-target text-sm text-muted hover:text-ink">{T.common.back}</Link></div>
       <h1 className="font-display text-xl font-bold text-ink mb-1">{T.radar.title}</h1>
       <p className="text-sm text-muted mb-4">{T.radar.subtitle}</p>
 
@@ -85,12 +85,12 @@ export default function RadarFeed() {
           {signals.length > 0 && (
             <div className="flex gap-2 mb-4">
               <select aria-label={T.radar.filterArtist} value={fArtist} onChange={(e) => setFArtist(e.target.value)}
-                className="field flex-1 min-h-[40px] rounded-lg px-2 py-2 text-xs">
+                className="field flex-1 min-h-[44px] rounded-lg px-2 py-2 text-xs">
                 <option value="">{T.radar.filterArtist}: {T.radar.filterAll}</option>
                 {artists.map((a) => <option key={a} value={a}>{a}</option>)}
               </select>
               <select aria-label={T.radar.filterType} value={fType} onChange={(e) => setFType(e.target.value)}
-                className="field flex-1 min-h-[40px] rounded-lg px-2 py-2 text-xs">
+                className="field flex-1 min-h-[44px] rounded-lg px-2 py-2 text-xs">
                 <option value="">{T.radar.filterType}: {T.radar.filterAll}</option>
                 {types.map((t) => <option key={t} value={t}>{T.radar.ruleLabel?.[t] || t}</option>)}
               </select>
