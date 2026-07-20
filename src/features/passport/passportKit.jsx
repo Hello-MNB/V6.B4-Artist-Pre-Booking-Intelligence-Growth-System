@@ -72,7 +72,14 @@ export function ProofUnit({ claim, context, band, status, methodLabel, reviewedA
   const { lang } = useLang()
   const claimIsBand = isBand(claim)
   const reviewed = humanizeReviewDate(reviewedAt, { lang })
-  const reviewedLabel = reviewed && (reviewed.isFresh ? T.passport.dateFresh(reviewed.monthYear) : T.passport.dateVerified(reviewed.monthYear))
+  // Defensive fallback to the bare month/year: keeps this card from throwing
+  // if T.passport.dateFresh/dateVerified haven't landed in i18n yet (new keys
+  // — see B1-a report). Once added, the warm phrasing is what actually shows.
+  const reviewedLabel = reviewed && (
+    reviewed.isFresh
+      ? (T.passport.dateFresh ? T.passport.dateFresh(reviewed.monthYear) : reviewed.monthYear)
+      : (T.passport.dateVerified ? T.passport.dateVerified(reviewed.monthYear) : reviewed.monthYear)
+  )
   return (
     <article className="rounded-[18px] border border-line bg-surface p-5 shadow-card">
       {contextLine

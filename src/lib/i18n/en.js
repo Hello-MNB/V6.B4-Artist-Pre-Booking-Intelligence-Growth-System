@@ -392,6 +392,27 @@ export const T = {
     loadErrorTitle: "Couldn't load this passport",
     loadErrorBody: 'Connection issue on our side or yours — your link is probably fine.',
     contextTitle: 'Context — not a draw metric',
+    // ── B1 (T-77) — Production + Private/corporate faces + §5.10 date warmth ──
+    dateFresh: (m) => `Fresh proof · ${m}`,
+    dateVerified: (m) => `Verified · ${m}`,
+    personaProduction: 'Production',
+    personaPrivate: 'Private & corporate',
+    taglineProduction: 'LOCK · FOR PRODUCTION',
+    taglinePrivate: 'LOCK · FOR PRIVATE & CORPORATE EVENTS',
+    ctaProduction: 'Confirm show-day details',
+    ctaPrivate: 'Check availability for my event',
+    productionReadiness: 'Show-day readiness',
+    privateReadiness: 'Ready to book',
+    readinessTurnkey: 'Turnkey booking',
+    privateProofTitle: 'Great fit for your event',
+    privatePerformance: 'Where they’ve performed',
+    privateContextTitle: 'Online presence',
+    privateSetLabel: (v) => `${v} performance`,
+    privateRegionsLabel: (v) => `Available in ${v}`,
+    privateInvoiceLabel: 'Invoicing handled — no paperwork hassle',
+    // Index-aligned to BANDS.capacity like drawContext above — room FIT for a
+    // private event, never a rank (§5.10 firewall).
+    drawContextPrivate: ['Comfortable for intimate gatherings', 'Comfortable for 100–300 guests', 'Handles large private events with ease', 'Built for large-scale celebrations'],
   },
   request: {
     title: (name) => `Availability check — ${name}`,
@@ -417,6 +438,15 @@ export const T = {
     messagePlaceholder: 'Anything the artist should know about the event',
     nameRequired: 'Add your name so the artist knows who is asking.',
     noCommitment: 'No commitment — this only asks the artist about the date.',
+    // ── B1 (T-77) — per-field human hints + past-date invalid state ──
+    nameHint: 'So the artist knows who’s asking.',
+    orgHint: 'Optional — helps the artist understand the context.',
+    eventDateHint: 'Optional — a specific date speeds up their reply.',
+    locationHint: 'Helps the artist plan travel and logistics.',
+    capacityHint: 'Optional — an approximate range is enough.',
+    budgetHint: 'Optional — a range is enough to start the conversation.',
+    messageHint: 'Optional — anything about the vibe, lineup, or set length they should know.',
+    eventDatePast: 'That date has already passed — check for a typo, or leave it blank if you’re not sure yet.',
     // ── confirmation landing (RequestConfirmation) ──
     willGetBack: (name) => `${name} or their agency will get back to you using the details you sent.`,
     keepLinkHint: 'Keep the passport link for your file — the evidence stays available there.',
@@ -1271,6 +1301,17 @@ export const T = {
     'artist-declared': 'Artist-declared',
     'unable-to-verify': 'Unable to verify',
     'stale': 'Not recently updated',
+  },
+  // B1 (T-77) — one-line peek shown on hover/focus/tap of a method label:
+  // WHAT the label means, scoped to this claim only. Never a score or strength
+  // number — plain words about the verification method (§3).
+  methodLabelHint: {
+    'producer-confirmed': 'Verified by an industry peer who worked with them — this claim only.',
+    'evidence-supported': 'Backed by uploaded evidence (ticket export, settlement, or similar) — this claim only.',
+    'source-linked': 'Backed by a public, checkable source — this claim only.',
+    'artist-declared': 'Stated by the artist, not yet independently verified.',
+    'unable-to-verify': 'Could not be independently verified.',
+    'stale': 'Verified previously — due for a refresh.',
   },
   // Shared artist_access scope vocabulary — the exact 5 values DB-STRUCTURE.md
   // locks (view/upload/edit/share/publish). Reused by both the agency's invite
