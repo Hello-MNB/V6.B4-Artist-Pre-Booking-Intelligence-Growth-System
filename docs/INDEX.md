@@ -2,6 +2,11 @@
 
 _Rule: new information goes ONLY to its owning doc. Two docs claiming one truth = drift (the "28" lesson). States: `current` · `mirror-only` · `archived` · `draft-unsigned`._
 
+**TOP RULE (owner ruling 21 Jul 2026, binding on every wave close):** Any file referenced by a core
+doc MUST appear here and MUST exist; a reference to a non-listed file is a bug, caught at wave
+close. See `docs/HOW-TO-BUILD-A-TASK.md` PART 12 for the standing wave-close doc-hygiene check this
+enforces.
+
 | Domain | Owning doc | Owner | State |
 |---|---|---|---|
 | Product law | docs/LOCK-PRODUCT-SPECIFICATION.md (§0–21) | Maria (rulings) / Claude (text) | current |
@@ -22,6 +27,7 @@ _Rule: new information goes ONLY to its owning doc. Two docs claiming one truth 
 | Task method + self-verify ladder (L0–L5, fit law) | docs/HOW-TO-BUILD-A-TASK.md (T-66) | Claude (owner-ordered governance) | current — binding on every task |
 | Per-screen witness-readiness standard | docs/SCREEN-BUILD-CHECKLIST.md (T-67) + spec §7.7.a map | Claude (owner-ordered governance) | current — every screen passes it before witness |
 | Marketing-site page standard | docs/MARKETING-SITE-CHECKLIST.md (T-84) + docs/SITE-REWRITE-BRIEF.md (glossary+CTA law) | Claude (owner-ordered governance) | current — ratify: R00; every website-next page passes it before witness |
+| Marketing-site navigation model (nav layers, entity map, journeys, nav laws) | docs/SITE-NAVIGATION-SPEC.md (T-48) | Claude (owner-ordered governance, 17 Jul) | current — S0-grounded; changes ship only via rule-12 taste trains |
 | Architecture map | ARCHITECTURE.md | Team G | ❌ T-38 (Wave 3) |
 | Security boundaries | SECURITY-BOUNDARY-MATRIX.md | Team G | ❌ T-39 |
 | Risk register (current) | docs/RISK-REGISTER.md | Claude + Maria | ❌ T-42 |

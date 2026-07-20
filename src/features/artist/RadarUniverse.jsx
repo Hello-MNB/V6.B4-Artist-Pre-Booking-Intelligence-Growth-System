@@ -8,7 +8,7 @@ import { PlatformLogo, detectPlatform } from '../../components/PlatformLogo.jsx'
 import { MethodLabel } from './proofBits.jsx'
 import { useLang } from '../../context/LangContext.jsx'
 import { methodLabelFor, VISIBILITY } from '../../lib/constants.js'
-import { PLANETS, NODE, buildUniverse, deriveWorlds, bandFromCount, ownHistory, PLATFORM_NAMES } from '../../lib/radarUniverse.js'
+import { PLANETS, NODE, buildUniverse, deriveWorlds, bandFromCount, ownHistory } from '../../lib/radarUniverse.js'
 import { primaryPlanets } from '../../lib/genreWeights.js'
 
 // ── The Radar Universe — "Live Intelligence" (warm cinematic night) ──────────
@@ -24,19 +24,9 @@ import { primaryPlanets } from '../../lib/genreWeights.js'
 // what was confirmed.
 // FIREWALL: no numbers, no fills, no position, no peer comparison. Ever.
 
-// Thin state rings — color is punctuation, not paragraph.
-const RING = {
-  established: 'border-accent/50',
-  developing: 'border-teal/50',
-  needs: 'border-amber/60',
-  // R-2 (T-82) — locked is a sequencing hook, never shame styling: a quiet,
-  // low-contrast ring, no warning/red register.
-  locked: 'border-line/40',
-}
-// R-3 (T-82, §8.2 constellation threads) — one thread center↔planet, coloured
-// by the SAME live-state vocabulary as RING above (amber/teal/lime/faint).
-// Geometry is fixed by planet angle, identical for every artist — colour is a
-// state only, it grades nothing.
+// R-3 (T-82, §8.2 constellation threads) — the ambient thread colours, one
+// per live state (amber/teal/lime/faint). Geometry is fixed by planet angle,
+// identical for every artist — colour is a state only, it grades nothing.
 // Token CLASSES, never literal hexes (§5.6) — the <line> strokes currentColor.
 const THREAD_STROKE = {
   needs: 'text-amber',
@@ -74,38 +64,59 @@ function destinationOf(claim, S) {
   return publicBound ? S.destPassport : S.destPrivate
 }
 
-// ── Platform ring (META-FIELD LAW) — small nodes orbiting the universe, ONE
-// per platform actually DETECTED in this Act's own data (a profile_items link
-// or a claim's value/source_type), each showing the REAL row value — never an
-// invented count/follower number. A platform with no data simply isn't
-// rendered; the ring's one "+ connect" affordance (below) stands in for every
-// not-yet-connected platform, instead of a per-platform empty state.
-function derivePlatformNodes(items = [], claims = []) {
-  const byKey = new Map()
-  for (const it of items) {
-    if (it.item_type !== 'link' || !it.public_url) continue
-    const platform = detectPlatform(it.public_url)
-    if (!platform || byKey.has(platform)) continue
-    // T-9x (owner verdict 21 Jul, §5.10 warmth layer): the ring caption is the
-    // PLATFORM'S human name when it's a recognized brand ("Spotify", never
-    // "open.spotify.com") — the raw host stays only as the honest fallback for
-    // a category source with no brand name (ticket/venue/press/mailing/search).
-    byKey.set(platform, { key: platform, platform, value: PLATFORM_NAMES[platform] || hostOf(it.public_url) || human(it.title) || platform })
-  }
-  for (const c of claims) {
-    const platform = detectPlatform(c.value) || detectPlatform(c.source_type)
-    if (!platform) continue
-    const prev = byKey.get(platform)
-    if (prev?.fromClaim) continue // first real claim wins — richer than a bare host
-    // T-59 (owner firewall catch, 18 Jul): NEVER the claim VALUE on the ring —
-    // a draw-band value is a band, and a band never floats as a naked number
-    // on the face (§5.10). The ring shows only WHERE proof comes from: the
-    // caption is the method label (provenance word), rendered via i18n at the
-    // call site. The band itself lives in the planet panel, paired with its
-    // method chip + room-fit line as spec'd.
-    byKey.set(platform, { key: platform, platform, method: c.method_label || c.source_type, fromClaim: true })
-  }
-  return [...byKey.values()]
+// ── Shelf-card state chips (§8.2 RADAR FACE RULING #2) — the SAME AA-approved
+// good/dev/need/na pairs used everywhere else on the face (§5.5), never a
+// bespoke hex, so the shelf reads as one system with the Inspector/dock.
+const SHELF_CHIP = {
+  established: 'bg-good-bg text-good',
+  developing: 'bg-dev-bg text-dev',
+  needs: 'bg-need-bg text-need',
+  locked: 'bg-na-bg text-faint',
+}
+const SHELF_DOT = { established: 'bg-good', developing: 'bg-dev', needs: 'bg-need', locked: 'bg-faint' }
+
+// ── Shelf sentence (§8.2 RADAR FACE RULING #2) — "ONE honest sentence each
+// (derive from the planet's live state via the §5.10 warm words + its
+// found/confirmed counts as own-item counts only)". Never a hand-written
+// per-artist line, never a %, never a comparison — just the planet's own
+// state word (S.state[...], rendered separately as the chip) plus a count of
+// its OWN items, the same "N of 8" precedent already legal on this private
+// surface (§5.10 progress vocabulary).
+function shelfLine(info, S) {
+  if (info.state === 'locked') return S.lockedChip
+  const confirmed = info.nodes.filter((n) => n.state === NODE.CONFIRMED).length
+  const missing = info.nodes.filter((n) => n.state === NODE.MISSING).length
+  if (info.foundCount > 0) return S.shelf.needsLine(info.foundCount)
+  if (confirmed > 0 && missing === 0) return S.shelf.readyLine(confirmed)
+  return S.shelf.developingLine(confirmed, missing)
+}
+
+// ── Ambient atmosphere (§8.2 RADAR FACE RULING #3, owner design-sprint pick
+// 21 Jul) — "The radial visual survives as FAINT ATMOSPHERE ONLY behind the
+// coach card: ambient, non-interactive, never the navigation." A simplified
+// rendering of the SAME geometry (orbit rings + the R-3 state-coloured
+// threads, planetXY-derived so it can never drift from the real planet
+// angles) at low opacity — no planet icons, no captions, no tap targets.
+function AmbientUniverse({ uni }) {
+  return (
+    <div aria-hidden className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden opacity-[0.14]">
+      <div className="relative aspect-square w-[150%] max-w-[820px] shrink-0 sm:w-[115%]">
+        <div className="absolute inset-[9%] rounded-full border border-line" />
+        <div className="absolute inset-[27%] rounded-full border border-line" />
+        <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+          {PLANETS.map((p) => {
+            const { x, y } = planetXY(p.angle)
+            const st = uni.planets[p.key].state
+            return (
+              <line key={p.key} x1="50" y1="50" x2={x} y2={y} stroke="currentColor" strokeWidth={1}
+                vectorEffect="non-scaling-stroke" opacity={st === 'locked' ? 0.12 : 0.4}
+                className={THREAD_STROKE[st] || THREAD_STROKE.developing} />
+            )
+          })}
+        </svg>
+      </div>
+    </div>
+  )
 }
 
 // ── Breakpoint gate (Tailwind md, 768px) — CTA law (§10.2 / §8.2): the md+
@@ -186,24 +197,6 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
     setPeek(text)
     peekRef.current = setTimeout(() => setPeek(''), 1800)
   }
-  // Long-press bookkeeping for the platform-ring tiles (list-rendered, so a
-  // Map keyed by node key rather than one hook call per item — hooks cannot
-  // live inside .map()). PlanetRow (a real component instance per row) uses
-  // its own useRef instead — see below.
-  const ringLongPress = useRef(new Map())
-  function longPressHandlers(key, text) {
-    if (!ringLongPress.current.has(key)) ringLongPress.current.set(key, { timer: null, fired: false })
-    const st = ringLongPress.current.get(key)
-    const start = () => { st.fired = false; clearTimeout(st.timer); st.timer = setTimeout(() => { st.fired = true; showPeek(text) }, 500) }
-    const clear = () => clearTimeout(st.timer)
-    const guardClick = (e) => { if (st.fired) { e.preventDefault(); e.stopPropagation(); st.fired = false } }
-    return {
-      onTouchStart: start, onTouchEnd: clear, onTouchMove: clear, onTouchCancel: clear,
-      onMouseDown: start, onMouseUp: clear, onMouseLeave: clear,
-      onClickCapture: guardClick, onContextMenu: (e) => e.preventDefault(),
-    }
-  }
-
   // R-1(b) — swipe left/right cycles the focused planet (only while one is
   // selected; the stage otherwise has no pan gesture). ~48px horizontal
   // threshold with a vertical-drift guard (|dy| < |dx|).
@@ -376,9 +369,12 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
   const worlds = useMemo(() => deriveWorlds({ artist: effArtist, items: effItems }), [effArtist, effItems])
   const evidenceRoute = `/evidence/${artist.id}`
 
-  // The platform ring — real detected platforms + one trailing "+ connect" node.
-  const platformNodes = useMemo(() => derivePlatformNodes(effItems, effClaims), [effItems, effClaims])
-  const ringNodes = useMemo(() => [...platformNodes, { key: 'connect' }], [platformNodes])
+  // ── THE RADAR FACE RULING (§8.2, owner design-sprint pick 21 Jul) — the coach
+  // card's headline is the §8.3 Layer-1 coaching voice, scene-aware, aimed at
+  // whichever planet the next-best-action actually targets (falling back to
+  // the family's own first-priority planet when the NBA has none) — the SAME
+  // coachIn()+coach[] sentence the Inspector already renders, never new prose.
+  const coachTargetPlanet = nextAction?.planet || genreLabelPlanet || null
 
   // Every found/review node across all planets — the radar's review mode.
   // A just-confirmed node stays in this list for its bloom duration (bloomIds)
@@ -491,122 +487,56 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
     onPeek: showPeek, // R-1(c) — long-press method peek on a source row
   }
 
-  // R-4 (T-82, §8.2 4-zone) — the right-rail inspector holds the ONE primary
-  // CTA whenever it is showing one, so the floating next-move dock (below)
-  // must not render a SECOND .btn-primary at the same time (CTA law).
-  const railHoldsCTA = fullStage && !!sel && (
+  // §8.2 RADAR FACE RULING — law 3 (§6): exactly ONE primary CTA at a time.
+  // The Inspector (desktop rail OR mobile sheet — same PlanetPanelContent
+  // either way) holds its OWN .btn-primary whenever it shows a batch-confirm
+  // or the locked-prokit CTA; whenever it does, the coach card below cedes
+  // its CTA (keeping only its headline/next-move text visible). No longer
+  // width-gated (T-9x cleanup): the same rule now holds on mobile too, where
+  // the coach card and the sheet can otherwise both be on screen at once.
+  const panelHoldsCTA = !!sel && (
     (selected === 'prokit' && sel.state === 'locked') || batchable.length >= 2
   )
 
-  // Owner screenshot defect (20 Jul, §8.2 corner-tenant law/D3 collision law):
-  // the scene rail is `absolute md:end-8 md:top-8` against the OUTER stage
-  // container (below), which also holds the 300px right-rail Inspector
-  // `<aside>` (§8.3) as a flex sibling once a planet is selected — the
-  // Inspector's own content starts flush at its box's top (no offset), which
-  // is the SAME y as the scene rail's positioning origin, so at ≥1024 the
-  // rail's chip row floats directly over the Inspector's own top-end corner,
-  // clipping its title ("Career Proof" etc.) under the "Your standing in"
-  // chips. Tried-and-reverted: shrinking the rail's own `end` inset by the
-  // Inspector's footprint (300px + gap) instead moved the collision onto the
-  // top-START lens/filter rail (test-fit DESKTOP-1360 caught it) — the two
-  // rails already share the container's full width by design when no planet
-  // is selected, so narrowing the scene rail's box pushes it into the lens
-  // rail's space instead of fixing anything. The rail itself (and the lens
-  // rail, history line, next-move card — every corner tenant) is therefore
-  // UNTOUCHED; only the Inspector's own top padding gets pushed down (below,
-  // at the `<aside>`) enough to clear the rail's real footprint, ONLY while
-  // both are actually on screen together — the Inspector never renders below
-  // md, so mobile is unaffected, and with no scene rail declared the
-  // Inspector keeps its original padding.
-  const inspectorClearsSceneRail = scenes.length > 0
-
   return (
-    // Viewport law (T-35/§10.2): inside the dashboard's fixed-height column this
-    // panel FLEXES to the remaining height on md+ (min-h-0 + flex-1 instead of a
-    // fixed min-h) — the universe square below derives its size from this height,
-    // so the whole radar scales to fit rather than pushing the page past the fold.
-    <div className="relative shrink-0 overflow-hidden rounded-3xl border border-line bg-bg2 p-4 sm:p-5 md:flex md:min-h-0 md:flex-1 md:flex-col md:justify-center md:p-8">
-      {/* the ONE warm light — backstage lamp above the artist (gold budget: this + method labels).
-          Full-stage (md+): the same aura, sized for a taller cinematic canvas. */}
+    // §8.2 RADAR FACE RULING (owner design-sprint pick, 21 Jul — ratify: R00) —
+    // ONE warm coach card owns the screen's center of gravity; the radial
+    // survives only as faint atmosphere behind it; the six dimensions become a
+    // calm shelf below. Viewport law (§6 law 7) unchanged: md+ still FLEXES to
+    // the dashboard's remaining height; mobile now carries an explicit
+    // max-height so the shelf — a "long ledger" (§6 law 7 exception) — scrolls
+    // WITHIN this panel instead of ever pushing the page itself.
+    <div className="relative flex max-h-[64vh] shrink-0 flex-col overflow-hidden rounded-3xl border border-line bg-bg2 p-4 sm:p-5 md:max-h-none md:min-h-0 md:flex-1 md:p-8">
+      {/* the ONE warm light — backstage lamp above the artist (gold budget: this + method labels). */}
       <div aria-hidden className="pointer-events-none absolute inset-x-0 -top-24 h-64 md:-top-16 md:h-[600px]"
         style={{ background: 'radial-gradient(60% 100% at 50% 0%, rgba(242,192,99,0.12), transparent 70%)' }} />
 
-      {/* Scene rail (§8.2 top-center) — shown only when the artist declared
-          genres; picking one re-weights the ★ through genreWeights (additive
-          emphasis only — never dims, never grades). */}
-      {scenes.length > 0 && (
-        <div className="relative z-10 mb-2 flex items-center gap-1.5 overflow-x-auto pb-1 md:absolute md:end-8 md:top-8 md:mb-0 md:pb-0"
-          role="tablist" aria-label={S.sceneLabel}>
-          {/* V4 (owner witness-fix 20 Jul): the label WAS already rendering
-              unconditionally at every width (no hidden/md: gate) — the defect
-              was contrast, not visibility: text-faint measures ~3.8:1 on bg2,
-              below the 4.5:1 AA floor, so it read as "unlabeled" at a glance
-              exactly as the owner's walk flagged. text-muted (~7.2:1) fixes
-              it while staying quieter than the chip labels beside it. */}
-          <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.08em] text-muted">{S.sceneLabel}</span>
-          {[null, ...scenes].map((g) => (
-            <button key={g || 'all'} role="tab" aria-selected={scene === g} onClick={() => setScene(g)}
-              className={`tap-target shrink-0 rounded-full border px-3 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] transition-colors ${
-                scene === g ? 'border-gold/60 bg-gold/10 text-gold' : 'border-transparent bg-surface2 text-muted hover:bg-raise'
-              }`}>
-              {g || S.sceneAll}
-            </button>
-          ))}
-        </div>
-      )}
+      {/* R-4 (T-82, §8.2 4-zone) — md+: the coach/shelf column and the
+            persistent right-rail inspector sit side by side. Nothing here
+            changes when no planet is selected (the rail simply doesn't
+            render) — no layout jump on load. */}
+      <div className="relative flex min-h-0 flex-1 flex-col md:flex-row md:items-stretch md:gap-5">
+      <div className="relative flex min-h-0 flex-1 flex-col md:min-w-0"
+        onTouchStart={onStageTouchStart} onTouchEnd={onStageTouchEnd}>
 
-      {/* N4 (T-65, §5.10) — the OWN-HISTORY line: additive, positive-only,
-          the artist against their own past. Renders only when something new
-          exists; never a %, never a comparison. Artist-private (N5 test). */}
-      {history && (
-        /* L1 fit law (HOW-TO-BUILD-A-TASK): bottom-END corner — the scene rail
-           owns top-center/end and the next-move card owns bottom-START; this
-           corner is free at every width (retro-run caught the top-end collision). */
-        <p className="relative z-10 mb-2 font-mono text-[10px] uppercase tracking-[0.08em] text-gold/80 md:absolute md:bottom-8 md:end-8 md:mb-0">
-          {S.historyLine(history.n, history.since.toLocaleDateString(undefined, { month: 'long' }))}
-        </p>
-      )}
+        {/* THE RADAR FACE RULING #3 — the radial universe demoted to faint,
+              non-interactive atmosphere behind everything below (never the
+              navigation — tapping it does nothing; the shelf is the tap
+              surface now). */}
+        <AmbientUniverse uni={uni} />
 
-      {/* ONE control row: state lenses + worlds dropdown. Full-stage (md+): floats
-          top-start over the universe, like the prototype's .rfilters strip. */}
-      <div className="relative z-10 mb-3 flex items-center gap-1.5 overflow-x-auto pb-1 md:absolute md:start-8 md:top-8 md:mb-0 md:w-auto md:pb-0" role="tablist" aria-label={S.filtersLabel}>
-        {/* T-62: the lens rail carries a visible label, same pattern as the
-            scene rail — an artist must be able to tell the two rows apart.
-            V4 (owner witness-fix 20 Jul): same text-faint contrast defect as
-            the scene rail label above (~3.8:1, below AA) — raised to
-            text-muted (~7.2:1) so both rails are legible at a glance. */}
-        <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.08em] text-muted">{S.filtersLabel}</span>
-        {FILTERS.map((f) => (
-          <button key={f.key} role="tab" aria-selected={filter === f.key} onClick={() => pickFilter(f.key)}
-            className={`tap-target relative flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] transition-colors ${
-              filter === f.key ? 'border-line2 bg-line text-ink' : 'border-transparent bg-surface2 text-muted hover:bg-raise'
-            }`}>
-            {f.label}
-            {/* found-items live here — a quiet gold dot on the Needs-you lens */}
-            {f.dot && <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-gold" />}
-          </button>
-        ))}
-        {worlds.length > 0 && (
-          <select
-            value={world || ''}
-            onChange={(e) => setWorld(e.target.value || null)}
-            aria-label={S.worldsHint}
-            className={`ms-auto min-h-[44px] shrink-0 appearance-none rounded-full border bg-surface2 px-3 py-1 font-mono text-[10px] outline-none md:min-h-0 ${
-              world ? 'border-line2 text-ink' : 'border-line text-faint'
-            }`}>
-            <option value="">{S.allWorlds}</option>
-            {worlds.map((w) => <option key={w} value={w}>{w.toUpperCase()}</option>)}
-          </select>
+        {/* R-1(c) — long-press method peek, transient overlay (auto-dismiss
+            ~1.8s), reusing the exact wording already rendered elsewhere. */}
+        {peek && (
+          <div aria-hidden className="pointer-events-none absolute inset-x-0 top-1 z-20 flex justify-center">
+            <span className="rounded-full border border-gold/40 bg-surface/95 px-3 py-1 text-center font-mono text-[9px] uppercase tracking-[0.08em] text-gold shadow-card">
+              {peek}
+            </span>
+          </div>
         )}
-      </div>
 
-      {/* R-4 (T-82, §8.2 4-zone) — md+: the stage and the persistent right-rail
-            inspector sit side by side. Nothing here changes when no planet is
-            selected (the rail simply doesn't render) — no layout jump on load. */}
-      <div className="relative md:flex md:min-h-0 md:flex-1 md:items-stretch md:gap-5">
-      <div className="relative md:min-h-0 md:min-w-0 md:flex-1">
       {blossom ? (
-        <div className="relative py-10 text-center">
+        <div className="relative z-10 py-6 text-center">
           <CenterStar artist={effArtist} T={T} S={S} dim
             onOpenSwitch={() => (selected ? setSelected(null) : setActSheet(true))}
             onTagClick={() => setSelected('identity')} />
@@ -615,203 +545,168 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
           <button className="btn-primary mt-4 min-h-[44px] px-4 py-2.5 text-xs" onClick={() => nav(evidenceRoute)}>{S.blossomCta}</button>
         </div>
       ) : (
-        /* ── THE UNIVERSE — always mounted, never reflows. Full-stage (md+):
-              the same square grows to fill the taller canvas — orbit math is
-              percentage-based so every node scales with it for free. ── */
-        /* md+: HEIGHT-driven square (h-full + aspect-square ⇒ width follows the
-              flexed panel height, capped at the original 620px) — orbit math is
-              percentage-based so every node scales with it for free. */
-        <div className="relative mx-auto aspect-square w-full max-w-[400px] md:h-full md:max-h-[620px] md:w-auto md:max-w-[min(620px,100%)]"
-          onTouchStart={onStageTouchStart} onTouchEnd={onStageTouchEnd}>
-          {/* thin orbit rings — the quiet geometry of the night. A third,
-              outermost hairline (md+) carries the platform ring below. */}
-          <div className="absolute inset-[9%] rounded-full border border-line" aria-hidden />
-          <div className="absolute inset-[27%] rounded-full border border-line" aria-hidden />
-          <div className="absolute inset-[4%] hidden rounded-full border border-line/60 md:block" aria-hidden />
-
-          {/* R-3 (T-82, §8.2 constellation threads) — one thread center↔each
-              planet, coloured by live state only; geometry is fixed by the
-              SAME planet angle used for the markers below (planetXY) — it
-              grades nothing. Behind the planets, above the orbit rings. */}
-          <svg aria-hidden className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <defs>
-              <filter id="radarThreadGlow" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="0.6" result="blur" />
-                <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-              </filter>
-            </defs>
-            {PLANETS.map((p) => {
-              const { x, y } = planetXY(p.angle)
-              const st = uni.planets[p.key].state
-              return (
-                <line key={p.key} x1="50" y1="50" x2={x} y2={y}
-                  stroke="currentColor"
-                  strokeWidth={1} vectorEffect="non-scaling-stroke"
-                  opacity={st === 'locked' ? 0.12 : 0.32}
-                  filter={st === 'established' ? 'url(#radarThreadGlow)' : undefined}
-                  className={`${THREAD_STROKE[st] || THREAD_STROKE.developing}${reduceMotion ? '' : ' transition-opacity duration-500'}`} />
-              )
-            })}
-          </svg>
-
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            <CenterStar artist={effArtist} T={T} S={S}
-              onOpenSwitch={() => (selected ? setSelected(null) : setActSheet(true))}
-              onTagClick={() => setSelected('identity')} />
-          </div>
-          {PLANETS.map((p) => {
-            const info = uni.planets[p.key]
-            const { x, y } = planetXY(p.angle)
-            // R-1(a) — focus state: while a planet is selected, everything
-            // else (incl. the platform ring below) fades to ~40%, never gone
-            // (opacity only — pointer-events stay live). Without a selection,
-            // the existing filter-driven dim still applies.
-            const filterDimmed = !info.nodes.some(matchesFilter) && (filter !== 'all' || world)
-            const isFocused = selected === p.key
-            const dimmed = selected ? !isFocused : filterDimmed
-            const opacityClass = dimmed ? (selected ? 'opacity-40' : 'opacity-25') : 'opacity-100'
-            const complete = info.state === 'established' && info.foundCount === 0 &&
-              !info.nodes.some((n) => n.state === NODE.MISSING)
-            // G2 — genre-PRIMARY planet: additive ring + slight size + label.
-            // Never touches other planets' opacity, order or interactivity.
-            const primary = genrePrimary.has(p.key)
-            return (
-              <button key={p.key}
-                onClick={() => setSelected(p.key)}
-                style={{ left: `${x}%`, top: `${y}%` }}
-                data-genre-primary={primary || undefined}
-                className={`absolute -translate-x-1/2 -translate-y-1/2 text-center ${reduceMotion ? '' : 'transition-all duration-300'} ${opacityClass} ${isFocused ? 'scale-110' : ''}`}
-                aria-label={`${S.planets[p.key]} — ${S.state[info.state]}${primary ? ` · ${S.genrePrimary}` : ''}${complete ? ` · ${S.complete}` : ''}`}>
-                <span className={`relative mx-auto grid place-items-center rounded-full border bg-surface2 transition-transform hover:scale-105 ${
-                  primary ? 'h-[60px] w-[60px] md:h-[68px] md:w-[68px]' : 'h-14 w-14 md:h-16 md:w-16'
-                } ${RING[info.state]} ${info.foundCount > 0 ? 'shadow-[0_0_16px_rgba(242,192,99,0.14)]' : ''}`}>
-                  {/* G2 genre-primary emphasis — a quiet SECOND concentric ring
-                      (shape, not color-only) in the gold register; additive only */}
-                  {primary && (
-                    <span aria-hidden className="absolute -inset-1.5 rounded-full border border-gold/40 shadow-[0_0_14px_rgba(242,192,99,0.10)]" />
-                  )}
-                  <GpIcon id={p.icon} className={`h-6 w-6 text-ink/90 md:h-7 md:w-7 ${info.state === 'locked' ? 'opacity-50' : ''}`} />
-                  {/* found — a small gold dot, not a badge shouting */}
-                  {info.foundCount > 0 && (
-                    <span aria-hidden className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-gold ring-2 ring-bg2" />
-                  )}
-                  {/* accomplishment — deliberately quiet: a small settled ✓ */}
-                  {complete && (
-                    <span aria-hidden className="absolute -bottom-0.5 -right-0.5 grid h-4 w-4 place-items-center rounded-full bg-[rgba(190,226,78,0.10)] text-[8px] text-[#CBEE72] ring-1 ring-bg2">✓</span>
-                  )}
-                  {/* R-2 (T-82) — locked is a sequencing hook, never shame: a
-                      small quiet lock mark, no red/warning register. */}
-                  {info.state === 'locked' && (
-                    <span aria-hidden className="absolute -bottom-0.5 -right-0.5 grid h-4 w-4 place-items-center rounded-full bg-na-bg text-faint ring-1 ring-bg2">
-                      <GpIcon id="gp-lock" className="h-2.5 w-2.5" />
-                    </span>
-                  )}
+        <>
+          {/* Identity — the Act-switch trigger (Design Spec §MULTI-ACT), now a
+              small top-of-card row (chrome minimal, ruling point 4) instead of
+              the old center-of-universe star. */}
+          <div className="relative z-10 mb-1 flex shrink-0 items-center">
+            <button type="button" onClick={() => (selected ? setSelected(null) : setActSheet(true))}
+              aria-haspopup="dialog" aria-label={S?.actSwitch?.switchAria}
+              className="tap-target -m-1 flex items-center gap-2.5 rounded-xl p-1 text-start transition-opacity hover:opacity-90">
+              {effArtist.photo_url
+                ? <img src={effArtist.photo_url} alt="" className="h-8 w-8 shrink-0 rounded-full border border-gold/60 object-cover" />
+                : <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-gold/60 bg-surface2 font-display text-xs text-ink">{(effArtist.stage_name || '★').slice(0, 1)}</span>}
+              <span className="min-w-0">
+                <span className="font-display flex items-center gap-1 text-sm font-bold text-ink">
+                  {effArtist.stage_name || S.you}
+                  <span aria-hidden className="text-[10px] text-faint">▾</span>
                 </span>
-                {/* V3 (owner witness-fix 20 Jul): text-faint measured ~3.8:1 on
-                    bg2 — below the 4.5:1 AA floor for sub-9px text, reading as
-                    "faint" exactly as the owner's walk flagged. text-ink/80
-                    (~10.8:1) fixes contrast without a new color token. T-61
-                    wrap law made explicit here too: line-clamp-2 + max-w
-                    (was a bare w-20 with no clamp) so the longest label
-                    ("AUDIENCE & COMMUNITY") gets a firm 2-line cap, never an
-                    ellipsis mid-word — none of the six planet names actually
-                    need a 3rd line at this width, so the clamp never fires. */}
-                {/* T-9x (owner verdict 21 Jul): readable case, not all-caps
-                    mono — a planet's name is a name, not a code, so it reads
-                    the way the coach copy elsewhere reads (Heebo, sentence/
-                    title case, no letter-spacing). */}
-                <span className="line-clamp-2 mt-1.5 block max-w-[84px] whitespace-normal break-words text-center text-[10px] font-semibold leading-tight text-ink/80 md:text-[11px]">
-                  {S.planets[p.key]}
-                </span>
-                {/* G2 — method-safe wording label; words only, never a weight.
-                    T-60: text on the FIRST-priority planet only (ring+★ still
-                    mark every primary; the rest keep the wording in aria). */}
-                {primary && p.key === genreLabelPlanet && (
-                  <span className="mt-0.5 block w-20 text-[9px] font-medium leading-tight text-gold/75 md:text-[10px]">
-                    {S.genrePrimary}
-                  </span>
-                )}
-              </button>
-            )
-          })}
-
-          {/* R-1(c) — long-press method peek, transient overlay (auto-dismiss
-              ~1.8s), reusing the exact wording already rendered elsewhere. */}
-          {peek && (
-            <div aria-hidden className="pointer-events-none absolute inset-x-0 top-1 z-20 flex justify-center">
-              <span className="rounded-full border border-gold/40 bg-surface/95 px-3 py-1 text-center font-mono text-[9px] uppercase tracking-[0.08em] text-gold shadow-card">
-                {peek}
+                {effArtist.genre && <span className="block truncate text-[11px] text-muted">{effArtist.genre}</span>}
               </span>
+            </button>
+          </div>
+          {/* N4 (T-65, §5.10) — the own-history line: additive, positive-only,
+              the artist against their own past; renders only when something
+              new exists. */}
+          {history && (
+            <p className="relative z-10 mb-2 shrink-0 font-mono text-[10px] uppercase tracking-[0.08em] text-gold/80">
+              {S.historyLine(history.n, history.since.toLocaleDateString(undefined, { month: 'long' }))}
+            </p>
+          )}
+
+          {/* ONE quiet control row (ruling point 4 — "fold into one quiet
+              control if it clutters"): the scene lens and the state lens now
+              share a single horizontally-scrollable row instead of two
+              absolutely-positioned rails, so nothing floats over the
+              Inspector (the old corner-collision fix is no longer needed). */}
+          <div className="relative z-10 mb-4 flex shrink-0 items-center gap-1.5 overflow-x-auto pb-1" role="tablist" aria-label={S.filtersLabel}>
+            {scenes.length > 0 && (
+              <>
+                <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.08em] text-muted">{S.sceneLabel}</span>
+                {[null, ...scenes].map((g) => (
+                  <button key={g || 'all'} role="tab" aria-selected={scene === g} onClick={() => setScene(g)}
+                    className={`tap-target shrink-0 rounded-full border px-3 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] transition-colors ${
+                      scene === g ? 'border-gold/60 bg-gold/10 text-gold' : 'border-transparent bg-surface2 text-muted hover:bg-raise'
+                    }`}>
+                    {g || S.sceneAll}
+                  </button>
+                ))}
+                <span aria-hidden className="mx-1 h-4 w-px shrink-0 bg-line" />
+              </>
+            )}
+            <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.08em] text-muted">{S.filtersLabel}</span>
+            {FILTERS.map((f) => (
+              <button key={f.key} role="tab" aria-selected={filter === f.key} onClick={() => pickFilter(f.key)}
+                className={`tap-target relative flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] transition-colors ${
+                  filter === f.key ? 'border-line2 bg-line text-ink' : 'border-transparent bg-surface2 text-muted hover:bg-raise'
+                }`}>
+                {f.label}
+                {/* found-items live here — a quiet gold dot on the Needs-you lens */}
+                {f.dot && <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-gold" />}
+              </button>
+            ))}
+            {worlds.length > 0 && (
+              <select
+                value={world || ''}
+                onChange={(e) => setWorld(e.target.value || null)}
+                aria-label={S.worldsHint}
+                className={`ms-auto min-h-[44px] shrink-0 appearance-none rounded-full border bg-surface2 px-3 py-1 font-mono text-[10px] outline-none md:min-h-0 ${
+                  world ? 'border-line2 text-ink' : 'border-line text-faint'
+                }`}>
+                <option value="">{S.allWorlds}</option>
+                {worlds.map((w) => <option key={w} value={w}>{w.toUpperCase()}</option>)}
+              </select>
+            )}
+          </div>
+
+          {/* ── THE RADAR FACE RULING #1 — ONE warm coach card owns the
+                screen's center of gravity: the scene-aware coaching headline
+                (§8.3 Layer-1 voice) + the single next move with its reason +
+                time (the SAME pickNextAction/withGenreNote data). This ONE
+                card replaces both the old floating md+ dock AND
+                ArtistDashboard's separate mobile next-step card — one coach,
+                one CTA, every width (panelHoldsCTA below keeps the CTA count
+                at exactly one, §6 law 3). ── */}
+          {nextAction && (
+            <div className="relative z-10 mx-auto mb-4 w-full max-w-xl shrink-0 rounded-2xl border border-line2 bg-surface2/70 px-5 py-4 text-center shadow-card sm:px-8 sm:py-6">
+              <span className="mb-2.5 inline-flex items-center gap-1.5 rounded-full border border-gold/25 bg-gold/10 px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-gold">
+                <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-gold" />
+                {T.radar.coachEyebrow}
+              </span>
+              {/* §8.3 Layer-1 voice, reused verbatim: names the artist's real
+                  scene + why this dimension matters there; no scene signal →
+                  the neutral fallback (G2 guard — identical rule to the
+                  Inspector's own coaching line, §8.3). */}
+              <p className="font-display mx-auto max-w-lg text-lg font-bold leading-snug text-ink sm:text-2xl">
+                {coachScene && coachTargetPlanet && S.coach?.[coachTargetPlanet]
+                  ? <>{S.coachIn(coachScene)} {S.coach[coachTargetPlanet]}</>
+                  : T.radar.nextMove}
+              </p>
+              <p className="mx-auto mt-2 max-w-md text-sm font-semibold text-ink/90">{nextAction.title}</p>
+              {nextAction.why && (
+                <p className="mx-auto mt-1 max-w-md text-[12px] leading-relaxed text-muted">
+                  {nextAction.why}
+                  {nextAction.time != null && <span className="text-faint"> {T.radar.timeHint(nextAction.time)}</span>}
+                </p>
+              )}
+              {!panelHoldsCTA && (nextAction.to || nextAction.planet) && (
+                <button className="btn-primary mt-3 px-6 py-2.5 text-sm" onClick={() => onNextAction?.(nextAction)}>
+                  {T.common.continue}
+                </button>
+              )}
             </div>
           )}
 
-          {/* ── PLATFORM RING (META-FIELD LAW) — one small muted node per REAL
-                detected platform (a profile_items link or a claim), showing the
-                real row value; never an invented count. Sits just outside the
-                category-planet orbit. The trailing node is always the single
-                muted "+ connect" affordance, never a per-platform empty state. */}
-          {ringNodes.map((pn, i) => {
-            // Fixed slots exactly BETWEEN the 6 category-planet angles
-            // (-90/-30/30/90/150/210), never on top of one, on a wider radius
-            // just outside the planet orbit — a visually distinct outer ring.
-            const SLOTS = [-60, 0, 60, 120, 180, 240]
-            const angle = SLOTS[i % SLOTS.length]
-            const rad = (angle * Math.PI) / 180
-            const x = 50 + 47 * Math.cos(rad)
-            const y = 50 + 47 * Math.sin(rad)
-            const isConnect = pn.key === 'connect'
-            return (
-              <div key={pn.key} style={{ left: `${x}%`, top: `${y}%` }}
-                className={`absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1 ${selected ? 'opacity-40' : 'opacity-100'} ${reduceMotion ? '' : 'transition-opacity duration-300'}`}>
-                {isConnect ? (
-                  <button type="button" onClick={goEvidence}
-                    aria-label={S.platformConnectAria} title={S.platformConnectAria}
-                    className="tap-target grid h-7 w-7 place-items-center rounded-full border border-dashed border-line2 bg-surface2 text-faint transition-colors hover:border-line2 hover:text-ink">
-                    <span aria-hidden className="text-xs font-bold leading-none">+</span>
+          {/* ── THE RADAR FACE RULING #2 — the calm shelf: six dimension cards
+                with the PLAIN display names from the ruling + ONE honest
+                sentence each (shelfLine — derived from live state + own-item
+                counts only, never hand-written per artist). Tap a card →
+                opens the EXISTING Inspector (desktop rail / mobile sheet,
+                §8.3 content unchanged). A long shelf scrolls WITHIN this
+                bounded region (§6 law 7) rather than the page. ── */}
+          <p className="relative z-10 mb-2 shrink-0 text-center font-mono text-[10px] uppercase tracking-[0.08em] text-faint">{S.shelf.label}</p>
+          <div className="relative z-10 min-h-0 flex-1 overflow-y-auto pe-0.5">
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 md:gap-2.5 lg:grid-cols-6">
+              {PLANETS.map((p) => {
+                const info = uni.planets[p.key]
+                const dimmed = !info.nodes.some(matchesFilter) && (filter !== 'all' || world)
+                const isSelected = selected === p.key
+                const primary = genrePrimary.has(p.key)
+                return (
+                  <button key={p.key} type="button" onClick={() => setSelected(p.key)}
+                    aria-label={`${S.shelf.names[p.key]} — ${S.state[info.state]}${primary ? ` · ${S.genrePrimary}` : ''}`}
+                    className={`flex items-center gap-2.5 rounded-2xl border bg-surface px-3.5 py-2.5 text-start transition-opacity md:flex-col md:items-start md:gap-2 md:py-3.5 ${
+                      dimmed ? 'opacity-40' : 'opacity-100'} ${isSelected ? 'border-line2 ring-1 ring-gold/30' : 'border-line'}`}>
+                    <span aria-hidden className={`grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-line bg-surface2 ${info.state === 'locked' ? 'opacity-60' : ''}`}>
+                      <GpIcon id={p.icon} className="h-[18px] w-[18px] text-ink/80" />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="flex items-center gap-1.5">
+                        <span className="font-display text-sm font-bold text-ink">{S.shelf.names[p.key]}</span>
+                        {primary && <span aria-hidden className="text-[10px] text-gold">★</span>}
+                      </span>
+                      <span className="mt-0.5 block text-xs leading-snug text-muted">{shelfLine(info, S)}</span>
+                      <span className={`mt-1.5 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold ${SHELF_CHIP[info.state]}`}>
+                        <span aria-hidden className={`h-1.5 w-1.5 rounded-full ${SHELF_DOT[info.state]}`} />
+                        {S.state[info.state]}
+                      </span>
+                    </span>
                   </button>
-                ) : (() => {
-                  // T-59: link nodes caption their PLATFORM'S human name (never
-                  // the raw domain — owner verdict 21 Jul); claim nodes caption
-                  // their METHOD LABEL (provenance word) — never the value.
-                  const caption = pn.fromClaim ? (T.methodLabel?.[pn.method] || human(pn.method)) : pn.value
-                  return (
-                    // R-1(c) — long-press (touch ~500ms / mouse-down hold) peeks
-                    // the same method-label caption already rendered below it.
-                    <button type="button" aria-label={S.platformNodeAria(caption)} title={caption}
-                      {...longPressHandlers(pn.key, caption)}
-                      className="tap-target relative grid h-7 w-7 place-items-center rounded-full border border-gold/35 bg-surface2 text-ink/75 shadow-glow-gold">
-                      <PlatformLogo name={pn.platform} size={16} />
-                      <span aria-hidden className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-gold ring-2 ring-bg2" />
-                    </button>
-                  )
-                })()}
-                {!isConnect && (
-                  /* T-61 (L-8 fit law): captions WRAP to two centered lines —
-                     truncation on the flagship face is forbidden; the longest
-                     method label ("Producer-confirmed") must read in full.
-                     T-9x (owner verdict 21 Jul): readable case, not all-caps
-                     mono — a platform's name reads like a name here. */
-                  <span className="line-clamp-2 block max-w-[96px] whitespace-normal break-words text-center text-[9px] leading-tight text-faint">
-                    {pn.fromClaim ? (T.methodLabel?.[pn.method] || human(pn.method)) : pn.value}
-                  </span>
-                )}
-              </div>
-            )
-          })}
-        </div>
+                )
+              })}
+            </div>
+          </div>
+        </>
       )}
       </div>
 
       {/* R-4 (T-82, §8.2 4-zone "RIGHT · the persistent Planet Inspector") —
             md+ only, and only while a planet is selected (collapses back to
             nothing otherwise — no layout jump on the default/no-selection
-            view, which renders byte-identical to before this task). Mobile
-            keeps the BottomSheet below exactly as-is. Same panel content
-            (PlanetPanelContent) as the sheet — no forked copy. */}
+            view). Mobile keeps the BottomSheet below exactly as-is. Same
+            panel content (PlanetPanelContent) as the sheet — no forked copy. */}
       {fullStage && sel && (
-        <aside aria-label={S.planets[selected]} className={`relative hidden shrink-0 flex-col rounded-2xl border border-line bg-surface2/60 px-4 pb-4 pt-4 md:flex md:w-[300px] md:min-h-0 ${
-            inspectorClearsSceneRail ? 'md:pt-16' : 'md:pt-4'
-          }`}>
+        <aside aria-label={S.planets[selected]} className="relative hidden shrink-0 flex-col rounded-2xl border border-line bg-surface2/60 px-4 pb-4 pt-4 md:flex md:w-[300px] md:min-h-0">
           <div className="mb-3 flex shrink-0 items-center justify-between gap-2">
             <h2 className="font-display text-sm font-bold text-ink">{S.planets[selected]}</h2>
             <button type="button" onClick={() => setSelected(null)}
@@ -830,40 +725,6 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
         </aside>
       )}
       </div>
-
-      {/* ── ONE next move — full-stage (md+) ONLY: floats bottom-start OVER
-            the universe, like the prototype's .next card. Mobile keeps its
-            separate card below the radar (ArtistDashboard), which renders only
-            below md — the fullStage gate keeps exactly ONE .btn-primary in the
-            DOM per view (CTA law §10.2/§8.2), never two hidden twins.
-            R-4 — when the right rail is open AND holds a CTA (batch-confirm
-            or the locked-prokit CTA), this dock hides entirely so exactly ONE
-            .btn-primary ever renders (rail closed ⇒ dock returns). ── */}
-      {fullStage && !blossom && nextAction && !railHoldsCTA && (
-        <div className="relative z-10 hidden items-center justify-between gap-3 rounded-xl border border-gold/25 bg-surface/95 px-3 py-2.5 shadow-card backdrop-blur md:absolute md:bottom-8 md:start-8 md:flex md:w-[380px] md:max-w-[calc(100%-4rem)]">
-          {/* T-9x (owner verdict 21 Jul): the NBA card carries its REASON
-              visibly — why + time hint already existed on the mobile card
-              (ArtistDashboard.jsx) but were dropped here, leaving a bare
-              title with no coaching behind it. One flowing sentence (why,
-              then the time hint as a quiet trailing aside), not a second
-              metadata row — a coach's sentence, not a stat block. */}
-          <div className="min-w-0">
-            <p className="font-mono text-[8px] uppercase tracking-[0.14em] text-faint">{T.radar.nextActionEyebrow}</p>
-            <p className="truncate text-sm font-semibold text-ink">{nextAction.title}</p>
-            {nextAction.why && (
-              <p className="mt-1 line-clamp-2 text-[11px] leading-snug text-muted">
-                {nextAction.why}
-                {nextAction.time != null && <span className="text-faint"> {T.radar.timeHint(nextAction.time)}</span>}
-              </p>
-            )}
-          </div>
-          {(nextAction.to || nextAction.planet) && (
-            <button className="btn-primary shrink-0 px-3 py-2 text-xs" onClick={() => onNextAction?.(nextAction)}>
-              {T.common.continue}
-            </button>
-          )}
-        </div>
-      )}
 
       {/* named receipt + undo — dark green card, lime dot, says WHAT landed WHERE */}
       {undo && (

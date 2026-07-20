@@ -15,7 +15,7 @@ owes the other, and the live status of cross-team asks. **Both agents read this 
 | Token backlog (what the DS still owes) | `docs/CODEX-TOKEN-COMPLETION-MAP.md` + `docs/CODEX-DS-v1.4.2-AUDIT.md` (work order, 7 ranked asks) | Claude audits → Codex delivers |
 | Approved visual directions (prototypes) | `docs/prototypes/REGISTRY.md` (`00_CURRENT/`: radar-v4, passport-v3) | Claude curates, Maria approves |
 | **Live app reality (what screens actually look like)** | `docs/design-system/current-screens/*.png` + `docs/CODEX-RADAR-VISUAL-SPEC.md` | Claude captures |
-| Release state / task board | `docs/TASK-STATUS-BOARD.md`, `docs/releases/` | Claude |
+| Release state / task board | `docs/TASK-REGISTER.md` (retired `docs/TASK-STATUS-BOARD.md` superseded 21 Jul 2026), `docs/releases/` | Claude |
 
 Conflict rule: **canon (CLAUDE.md) > functional contracts > DS > prototypes.** A DS rule may not contradict
 the firewall or the routing table; a prototype may not contradict the DS once v1.5 lands.

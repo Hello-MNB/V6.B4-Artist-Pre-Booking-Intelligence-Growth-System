@@ -946,8 +946,26 @@ names (auth email, `person.display_name`, "Maria Test"-class signup values) NEVE
 surfaces — they are login identity, not stage identity. Initials chips derive from `stage_name`
 only. The T-63(a) act mirror keeps `act` identity synced FROM the artist record; readers still read
 `artists.stage_name` (one read path, no fallback chains to account fields). A surface showing any
-other name field is a defect. Demo fixtures carry their own fixture stage names (e.g. "Maya Vale") —
-demo-only, never mixed into real-account surfaces.
+other name field is a defect.
+
+**THE ONE CANONICAL DEMO PERSONA (owner ruling 21 Jul 2026): Maya Vale.** Every demo/fixture/sample
+artist identity used in specs, design docs, screenshots, and seed data is **Maya Vale** — one name,
+everywhere. This supersedes every competing demo-persona name previously used in docs (the
+historical "Shai Perlman"/"PERLMAN" fixture identity, and the marketing site's ad-hoc sample name
+"Lior Noy"). Demo/fixture identities are never real people and are never mixed into real-account
+surfaces (the canonical display-name law above).
+- **Distinct from real accounts — never renamed to Maya Vale:** `MG` (a live-edited
+  `artists.stage_name` value on the seed organization; subject of the T-63 dual-write sync bug,
+  fix-on-owner-word) and `shydavid` (the product's first real signed-up user). Real-account values
+  are real-account values, not personas — this ruling touches naming of DEMO content only.
+- **Known code gap (reported here, not fixed — out of docs territory):** `src/lib/demo.js` — the
+  in-app offline-demo fixture module — still carries the retired "Shai Perlman"/"PERLMAN" identity
+  throughout (stage name, org slug, evidence items, notifications, confirmations — ~30 reference
+  sites as of this pass). It has not yet been renamed to Maya Vale; that is a `src/lib/demo.js`
+  build task, not a doc change.
+- **Known site gap (reported here, not fixed):** the marketing site hero mock
+  (`website-next/app/page.tsx`) still renders the sample name "Lior Noy" (pre-dates this ruling).
+  Flagged for the site-build task to rename to Maya Vale.
 
 ### 8.5 Artist Access — "Who can act for you" (`/artist/access`) (U31)
 
@@ -3167,8 +3185,10 @@ next-action guidance and planet emphasis **only** — never a public number.
 
 #### 16.A.1.b — `genre_scene` reference table (the scene registry — NEW, closes the free-text gap)
 
-Seed set below covers the electronic + IL demand the product serves today (the demo persona DJ PERLMAN
-is multi-genre: psytrance Act + techno Act). It is **extensible** — the migration should allow adding
+Seed set below covers the electronic + IL demand the product serves today (the demo persona — Maya
+Vale, per §8.4's canonical-persona note; the underlying fixture code has not yet been renamed from
+its retired "DJ PERLMAN" identity — is multi-genre: psytrance Act + techno Act). It is
+**extensible** — the migration should allow adding
 scenes without code changes. This is a *starter registry*, not the full 55-subtype sheet; the full
 family-by-family fill (F1 first) is the OWED task from the taxonomy audit.
 

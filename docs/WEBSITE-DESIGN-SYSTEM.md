@@ -404,8 +404,11 @@ dark final CTA → footer `#080B09`.
 > claim" · "Turn proof into the next useful action"
 
 **Hero proof card (the product shown as evidence):**
-> `BOOKABILITY PASSPORT` — Lior Noy — "Live electronic artist · Tel Aviv" — chip:
-> "Reviewed 29/06/2026"
+> `BOOKABILITY PASSPORT` — Maya Vale *(canonical demo-persona name, owner ruling 21 Jul 2026 —
+> supersedes the "Lior Noy" sample name quoted verbatim in this block since its authoring; the
+> live site (`website-next/app/page.tsx`) still renders "Lior Noy" as of this doc-hygiene pass —
+> flagged for the site-build task to rename, see docs/SESSION-MEMORY.md)* — "Live electronic
+> artist · Tel Aviv" — chip: "Reviewed 29/06/2026"
 > `ATTRIBUTED DRAW` — "Repeat ticket activity across three club dates" — "180–300 capacity
 > electronic events · March–June 2026" — "**Supported by ticket-system exports** / Method and
 > context visible"

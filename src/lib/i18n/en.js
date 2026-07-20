@@ -1047,6 +1047,8 @@ export const T = {
     scanKickoff: 'Your Radar is live — strengths appear first; anything that needs you waits quietly below.',
     nextMove: 'Your clearest next move',
     nextActionEyebrow: 'Recommended next action',
+    // §8.2 RADAR FACE RULING (21 Jul) — the coach card's eyebrow.
+    coachEyebrow: "Today's read",
     timeHint: (m) => `About ${m} minutes · your input is saved`,
     evidencePicture: 'Your evidence picture',
     reviewedOn: (d) => `Reviewed ${d}`,
@@ -1215,6 +1217,27 @@ export const T = {
         openEvidence: 'Open evidence capture (consent applies)',
       },
       state: { established: 'Ready to support', developing: 'Growing', needs: 'Needs your touch', locked: 'Not needed yet' },
+      // §8.2 RADAR FACE RULING #2 (21 Jul) — the calm shelf: PLAIN display
+      // names (internal planet keys stay frozen, §0.2) + ONE honest sentence
+      // each, derived from live state + the artist's OWN found/confirmed/
+      // missing counts (§5.10 "N of 8" precedent) — never a hand-written
+      // per-artist line, never a %.
+      shelf: {
+        label: 'Everything below is quietly holding this up',
+        names: {
+          identity: 'Who you are',
+          music: 'Your sound',
+          live: 'Your stage',
+          audience: 'Your crowd',
+          prokit: 'The essentials',
+          proof: 'Your track record',
+        },
+        readyLine: (n) => `${n} confirmed — ready to support you.`,
+        needsLine: (n) => n === 1 ? '1 thing waiting for your confirm.' : `${n} things waiting for your confirm.`,
+        developingLine: (confirmed, missing) => confirmed > 0
+          ? `${confirmed} confirmed, ${missing} still open.`
+          : `${missing} still open — nothing confirmed yet.`,
+      },
       // R-2 (T-82, §8.2 L648) — locked Professional Kit: a sequencing hook, never a judgement.
       lockedChip: 'Not needed yet — it opens once your live draw is backed',
       lockedCta: 'Confirm your live draw first',
@@ -1260,10 +1283,6 @@ export const T = {
       blossomTitle: 'Let your universe form',
       blossomBody: 'Connect your 3 strongest sources — a gig, a ticket export, a music link. Strengths appear first; gaps can wait.',
       blossomCta: 'Add your first evidence',
-      // Platform ring (radar stage) — small orbiting nodes, ONE per detected
-      // real platform (profile_items/claims), never an invented count.
-      platformNodeAria: (value) => `Platform — ${value}`,
-      platformConnectAria: 'Connect a platform — add a link',
       src: {
         photo: 'Press photo',
         positioning: 'One-line positioning',

@@ -238,6 +238,8 @@ Four confirmed mojibake instances found in prototype copy:
 
 **Fix brief for Codex:** Replace all `ג€`, `׳¢׳'׳¨׳™׳×` and similar sequences with correct Unicode characters. Set file encoding to UTF-8-BOM for all source files. Verify Hebrew strings render correctly in RTL context.
 
+_Name note: "Lior Noy" in the corrupted quote above is the sample name as it literally appeared in the prototype at the time of this audit — left verbatim as bug evidence. The canonical demo persona is now **Maya Vale** (owner ruling 21 Jul 2026, see docs/LOCK-PRODUCT-SPECIFICATION.md §8.4); any live rebuild of this flow should sample-name it Maya Vale, not Lior Noy._
+
 **Additional requirements:**
 - Mixed-script user content (Hebrew + English in same field) must use bidirectional text isolation (`dir="auto"` or explicit `<bdi>` wrapping).
 - Deep links must never switch role or workspace context silently (B4-35.30 §4). Navigating a Passport URL while authenticated as a different persona must reach a clear boundary state, not a silent role switch.

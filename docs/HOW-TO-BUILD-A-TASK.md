@@ -135,3 +135,24 @@ Inconsistent reporting IS drift. Every report ends with ALL six, in this order �
 5. **HOLDS** — what is NOT happening until the owner's word.
 6. **THE TARGET FOOTER** — always last: "🎯 The target: Gate 1 — a real artist uses the app, a real client sees their profile and reacts, one pays." + 1–3 sentences on how this report's work advances it.
 Cite the same SHA the owner sees on the build stamp — one version truth.
+
+## PART 12 — DOC HYGIENE AT WAVE CLOSE (standing rule, owner 21 Jul)
+
+Docs drift the same way builds do (Part 0): a wave adds pages without checking whether the doc set
+still holds together. Every wave close runs this short check, no exceptions:
+
+1. **NO PHANTOM REFS** — every `.md` file named by any core doc actually exists at HEAD, and every
+   file that exists and matters is reachable from `docs/INDEX.md` (the TOP RULE at the head of that
+   file). A reference to a non-listed or non-existent file is a bug, not a nit — fix it in the same
+   wave, delete-the-reference by default (never invent the missing file unless the owner ordered it
+   built).
+2. **NO CROSS-DOC CONTRADICTIONS** — two docs claiming one truth (a persona name, a task's status, a
+   process step) is drift; one canonical statement in its owning doc, everything else points at it.
+3. **INDEX CURRENT** — `docs/INDEX.md` reflects every owning doc that exists; a new doc without an
+   INDEX row does not ship.
+4. **SESSION-MEMORY TIGHT** — `docs/SESSION-MEMORY.md` stays ≤~60 lines: who/what · current SHAs ·
+   active owner list · pointers to owning docs, never durable content duplicated from elsewhere.
+   Durable content lives in its owning doc, not memory.
+
+Doc count trend at every wave close: total `docs/**/*.md` file count and total line count go DOWN
+or stay flat, never silently up — consolidation is the default, a new file is the exception.

@@ -46,7 +46,9 @@ media scenes inside planets; stage-lighting atmosphere; momentum/"career-kick" f
 - **Fixed start-side sidebar, 248px** (logical CSS — flips for RTL): wordmark top, then per-entity tabs
   (artist: Radar · Passport · Requests · Account), active tab = ink text + 2px lime start-edge bar.
 - **Top bar (56px, sticky):** right side only — language toggle (EN/עב) · notification bell (lime dot) ·
-  **workspace switcher** ("ARTIST WORKSPACE · Shai Perlman ▾") · Settings link. Wordmark appears ONCE
+  **workspace switcher** ("ARTIST WORKSPACE · Maya Vale ▾" — canonical demo persona, owner ruling
+  21 Jul 2026; live-app screenshot behind this doc predates the ruling and still shows "Shai
+  Perlman", see LOCK-PRODUCT-SPECIFICATION.md §8.4) · Settings link. Wordmark appears ONCE
   (sidebar), never in the top bar.
 - The whole shell is **dark** today (this is the divergence — DS says paper for work surfaces; the
   Radar/media moments may stay dark per the Surface Language Contract).

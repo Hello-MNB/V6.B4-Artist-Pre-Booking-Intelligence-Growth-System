@@ -29,14 +29,14 @@ navigation still works. This is how modern teams ship — scaled down to a solo 
 5. **Confirm live.** Check the deployed fingerprints (title, a changed string, key pages return 200).
    Only then is it "verified live," not just "pushed."
 6. **Record it.** Add a row to `docs/DEPLOY-LOG.md`, tag the release in git, and refresh
-   `SESSION-MEMORY.md` + the task board. This is the step that stops threads getting lost.
+   `SESSION-MEMORY.md` + `docs/TASK-REGISTER.md`. This is the step that stops threads getting lost.
 
 ## How YOU track it — four anchors, nothing else to remember
 | You want to know… | Look here |
 |---|---|
 | **What is live right now** | `docs/SESSION-MEMORY.md` (top "Deployments" block) |
 | **Every release, in order, with date + what shipped + verified?** | `docs/DEPLOY-LOG.md` |
-| **What's done / in progress / pending (by priority)** | `docs/TASK-STATUS-BOARD.md` |
+| **What's done / in progress / pending (by priority)** | `docs/TASK-REGISTER.md` (ship records own this truth; `docs/TASK-STATUS-BOARD.md` was retired 21 Jul 2026 — superseded by this register) |
 | **The whole skeleton at a glance (screens + gaps)** | the flow-map artifact |
 
 Every git release is also **tagged** (`rel-YYYY.MM.DD`), so there is an immutable, named point to

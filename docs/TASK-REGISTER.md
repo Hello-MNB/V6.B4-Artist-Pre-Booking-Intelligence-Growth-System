@@ -26,6 +26,7 @@ _Created 17 Jul 2026 from the real, witnessed state of the product — not from 
 11. **The permanence boundary (owner + external review, 17 Jul):** autonomy NEVER touches real people's data, sends real email, moves real money, or changes the live database. Each such act requires the owner's explicit per-instance word; where legality is the question, it is lawyer-gated (T-24). The email send-path ships FLAG-OFF until counsel signs. All autonomous building/testing runs on demo/seed fixtures. A µ-task that turns out to touch the boundary STOPS the loop and asks first.
 12. **The named-train law (site):** the marketing site NEVER ships as cargo of an app merge (17 Jul regression: unapproved branch-only redesign rode whole-branch merges into production). Site changes ship only on their own train, after the owner's TASTE approval of a preview. For the site, owner approval comes BEFORE production — L8 moves ahead of SHIP.
 13. **Token economy:** every wave report states its measured token cost; low-risk docs-only µ-tasks may skip L5 (Team D) at the orchestrator's discretion ONLY when no code changed; waves are sized to the owner's remaining plan budget — Gate-critical tasks first, heavy build programs (site S4-S8) deferred if the budget tightens.
+14. **Artifact governance (owner order, 14 Jul 2026 — moved here from SESSION-MEMORY.md during the 21 Jul doc-hygiene pass, its content unchanged):** maintain ONLY three canonical claude.ai artifacts — **Version Map** (a65d12d9-a66d-442c-9077-306eb05fddd6) · **Entities/Flows** (f702abc5-beb4-41a6-9f60-a2f8d239b6c6) · **Full App Prototype** (1c9b0030-9b25-4e1a-87ee-5d18823a661b). No new standalone artifact is ever published without explicit owner approval (**NO-NEW-DOCS rule**, 14 Jul) — extend these three or an existing repo doc instead. Claude NEVER renames, overwrites, or modifies any artifact outside these three — especially other projects' artifacts (**ARTIFACT-SCOPE rule**, 14 Jul, after a real incident overwriting non-LOCK artifacts). Deletion of a stale artifact is always the owner's own action; Claude only lists candidates.
 
 **Marks:** ✅ done · ⚠️ partial/unwitnessed (note says what's missing) · ❌ not built · — not applicable (non-screen task).
 **Deployment-state labels (PM-audit upgrade, 17 Jul — never blur code-state with live-state):** `in-code` (work branch) · `merged` (on main) · `deployed-live` (production answered a live probe). A status may claim `deployed-live` ONLY with an L7 probe as evidence.
@@ -224,7 +225,11 @@ These are pre-Gate necessities that are not screens. Screen-style MOBILE/DESKTOP
 | T-29 | Concierge first-10 outreach kit (materials by Claude; outreach by Maria) | §16.B.11 | ❌ | shared |
 | T-30 | `is_demo=false` server filter on Gate metrics (ships only AFTER 037 applies) | §14.3.2 | ⛔ | **Maria M-1** (apply 037) |
 
-**Post-Gate (NOT queued, per directive):** monetization ON/prices · growth loops · international · platformization (§16.B.12-16, §19).
+**Post-Gate (NOT queued, per directive):** monetization ON/prices · growth loops (incl. two named
+backlog items merged 21 Jul 2026 from the retired TASK-STATUS-BOARD.md P2 list, still true and not
+tracked elsewhere by name: Spotify catalog integration into discovery/evidence — key verified; a
+value-vs-genre view for managers — needs genre taxonomy filled, Registry B) · international ·
+platformization (§16.B.12-16, §19).
 
 ---
 

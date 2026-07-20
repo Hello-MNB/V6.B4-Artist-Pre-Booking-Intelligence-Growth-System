@@ -1037,6 +1037,8 @@ export const T = {
     artistSubtitle: 'פרטי — רק לך ולשותפים שאישרת.',
     nextMove: 'הצעד הבא הברור ביותר שלך',
     nextActionEyebrow: 'הפעולה הבאה המומלצת',
+    // §8.2 THE RADAR FACE RULING (21 ביולי) — הכותרת הקטנה של כרטיס האימון.
+    coachEyebrow: 'הקריאה של היום',
     timeHint: (m) => `בערך ${m} דקות · מה שהזנת נשמר`,
     evidencePicture: 'תמונת הראיות שלך',
     reviewedOn: (d) => `נבדק ${d}`,
@@ -1202,6 +1204,26 @@ export const T = {
         openEvidence: 'פתח לכידת ראיות (בכפוף להסכמה)',
       },
       state: { established: 'מוכן לתמוך', developing: 'בצמיחה', needs: 'זקוק לנגיעה שלך', locked: 'לא נדרש עדיין' },
+      // §8.2 THE RADAR FACE RULING #2 (21 ביולי) — המדף הרגוע: שמות תצוגה
+      // פשוטים (מפתחות הפלנטות הפנימיים נשארים קפואים, §0.2) + משפט כן אחד לכל
+      // אחת, נגזר ממצב חי + ספירת הפריטים העצמית של האמן בלבד — לעולם לא שורה
+      // כתובה-ביד, לעולם לא אחוז.
+      shelf: {
+        label: 'כל מה שלמטה מחזיק את זה בשקט',
+        names: {
+          identity: 'מי אתה',
+          music: 'הסאונד שלך',
+          live: 'הבמה שלך',
+          audience: 'הקהל שלך',
+          prokit: 'הדברים הבסיסיים',
+          proof: 'קורות המסלול שלך',
+        },
+        readyLine: (n) => `${n} אושרו — מוכן לתמוך בך.`,
+        needsLine: (n) => n === 1 ? 'דבר אחד מחכה לאישור שלך.' : `${n} דברים מחכים לאישור שלך.`,
+        developingLine: (confirmed, missing) => confirmed > 0
+          ? `${confirmed} אושרו, ${missing} עדיין פתוחים.`
+          : `${missing} עדיין פתוחים — שום דבר לא אושר עדיין.`,
+      },
       // R-2 (T-82, §8.2 L648) — כלי מקצועי נעול: שלב ברצף, לעולם לא שיפוט.
       lockedChip: 'לא נדרש עדיין — זה נפתח ברגע שההוכחה החיה שלך מגובה',
       lockedCta: 'אשר קודם את ההוכחה החיה שלך',
@@ -1246,10 +1268,6 @@ export const T = {
       blossomTitle: 'תן ליקום שלך להיווצר',
       blossomBody: 'חבר את 3 המקורות החזקים ביותר שלך — הופעה, ייצוא כרטיסים, קישור למוזיקה. חוזקות מופיעות קודם; פערים יכולים לחכות.',
       blossomCta: 'הוסף את הראיה הראשונה שלך',
-      // Platform ring (radar stage) — small orbiting nodes, ONE per detected
-      // real platform (profile_items/claims), never an invented count.
-      platformNodeAria: (value) => `פלטפורמה — ${value}`,
-      platformConnectAria: 'חבר פלטפורמה — הוסף קישור',
       src: {
         photo: 'תמונת יח"צ',
         positioning: 'שורת מיצוב אחת',

@@ -13,4 +13,4 @@ My Drive tools are read-only for content (no in-place edit), so these are named 
 - Privacy v0.2-corrected (HE): repo `docs/legal/PRIVACY-HE.md` → rendered live at /privacy (HE+EN)
 - Terms / Accessibility HE drafts: repo `docs/legal/`
 - Glossary (binding): repo `docs/GLOSSARY.md`
-- Status: repo `docs/TASK-STATUS-BOARD.md` + `docs/SESSION-MEMORY.md`
+- Status: repo `docs/TASK-REGISTER.md` (retired `docs/TASK-STATUS-BOARD.md` superseded 21 Jul 2026) + `docs/SESSION-MEMORY.md`

@@ -9,10 +9,10 @@ where each seat's self-build package currently LIVES and its import state into t
 |---|---|---|
 | **GPT** | **Imported: `docs/team/GPT-SKILLS.md`** (this folder). Source of record: Canon Mirror transport file, Drive fileId `1h3wb5YqJGSZCYxIiwYuEdQy8o256P1TN` (per SYNC §32 — "import to docs/team/ rides RC1"). | ✅ IMPORTED verbatim (this round) |
 | **CODEX** | Drive — its versioned DS lane, folder "BRANDING AND DESIGN SYSTEM" (delivery via Drive ONLY per constitution row; self-build package delivered in its §§29–33-round reports). | ⬜ pending import to `docs/team/CODEX-SKILLS.md` |
-| **COWORK** | Drive — its evidence-pack output area in the collaboration folder (self-build package delivered in its §§29–33-round reports; charter: `docs/team/COWORK-CHARTER.md`). | ⬜ pending import to `docs/team/COWORK-SKILLS.md` |
+| **COWORK** | Drive — its evidence-pack output area in the collaboration folder (self-build package delivered in its §§29–33-round reports; charter: `docs/COWORK-CHARTER.md`). | ⬜ pending import to `docs/team/COWORK-SKILLS.md` |
 | **CFRO** | Its versioned HTML doc — **tab 12** (CFRO works only from its versioned doc + mirror read, per constitution row). | ⬜ pending import to `docs/team/CFRO-SKILLS.md` |
 | **GROWTH OP** | Drive — Cowork outputs / outreach folder (Growth Op runs as Claude Cowork #2; charter already in repo: `docs/team/GROWTH-OPERATOR-CHARTER.md`). | ⬜ pending import to `docs/team/GROWTH-OP-SKILLS.md` |
-| **CLAUDE CODE** | Repo-native — charter material spread across `docs/team/ORG-CONSTITUTION.md`, `docs/team/BUILD-METHOD.md`, `docs/team/RELEASE-PROCESS.md`. | ⬜ consolidation into `docs/team/CLAUDE-CODE-SKILLS.md` pending |
+| **CLAUDE CODE** | Repo-native — charter material spread across `docs/team/ORG-CONSTITUTION.md`, `docs/BUILD-METHOD.md`, `docs/RELEASE-PROCESS.md`. | ⬜ consolidation into `docs/team/CLAUDE-CODE-SKILLS.md` pending |
 | MARIA | Human seat — no self-build package (sole approver). | N/A |
 | PILOT PANEL | Human seat — feedback form only. | N/A |
 

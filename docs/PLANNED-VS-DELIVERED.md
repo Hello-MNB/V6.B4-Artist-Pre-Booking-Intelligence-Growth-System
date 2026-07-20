@@ -1,5 +1,13 @@
 # PLANNED vs DELIVERED — Owner Audit (8 Jul 2026)
 
+> **HISTORICAL SNAPSHOT — read as-of 8 Jul 2026, not current state.** Two names below have since
+> moved: (1) the demo/fixture persona quoted throughout as "Shai Perlman"/"Perlman" was the code
+> value that day; the **canonical demo persona is now Maya Vale** (owner ruling 21 Jul 2026 — see
+> `docs/LOCK-PRODUCT-SPECIFICATION.md` §8.4; `src/lib/demo.js` has not yet been renamed, a known
+> gap tracked there). Left verbatim below as it is the literal evidence this audit captured, not a
+> current persona description. (2) `docs/TASK-STATUS-BOARD.md`, cited below as a source this audit
+> cross-checked, was deleted 21 Jul 2026 doc-hygiene pass (superseded by `docs/TASK-REGISTER.md`).
+
 **Method:** `npm run build:demo` (clean build, no errors) → served `dist/` on :4600 → Playwright/chromium
 walkthrough of the real built bundle (screenshots in `scratchpad/reconcile/*.png`) + direct code
 reads (`src/`, `supabase/migrations/`, `website-next/`) cross-checked against
