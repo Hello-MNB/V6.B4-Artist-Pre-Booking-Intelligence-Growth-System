@@ -831,9 +831,83 @@ demo-only, never mixed into real-account surfaces.
 
 **PURPOSE.** THE product surface for the buyer. A recipient-safe, **no-login** page that answers **fit · trust · readiness · availability** in the first viewport, in the buyer's language, and offers one action: check the date. This is the Gate-critical buyer surface.
 
-**DESKTOP & MOBILE layout.** A full page (`.pp`): dark hero island (photo + veil + LOCK wordmark) → id block (eyebrow "LOCK · FOR YOUR EVENT" · genre/active-since line · name · one-line positioning · persona toggle · "No login needed" reassurance) → body sections (proof-of-draw / career-proof grid · performance track · booking-readiness binaries · the CTA) → footer. Mobile: single column, sticky availability CTA.
+**DESKTOP & MOBILE layout.** A full page (`.pp`): dark hero island (photo + veil + LOCK wordmark) → id block (eyebrow "LOCK · FOR YOUR EVENT" · genre/active-since line · name · one-line positioning · persona toggle · "No login needed" reassurance) → the compact 3-beat proof story (UNIVERSE TRANSLATION pt.2 below, unchanged) → **the Interactive Evidence Explorer** (new — see below; REPLACES the old flat body-sections scroll) → footer. Mobile: single column; the explorer paginates in place; the sticky availability CTA stays pinned across hero, story and every explorer chapter.
 
-**COMPONENTS.** Persona toggle (**Booking a show** / **Representing**) that changes copy + CTA · proof cards (big band OR claim + context + method label + reviewed date) · performance track rows (each source-linked) · readiness chips (binaries only) · primary CTA + sub-line.
+**COMPONENTS.** Persona toggle (**Booking a show** / **Representing**) that changes copy + CTA · the 3-beat proof story (jump-menu, see Explorer below) · **the chapter rail** (persistent index + jump) · **Next/Prev controls** · proof cards, each with a **collapsed** (one line + method chip) and **expanded** (big band OR claim + context + method label + reviewed date) state · performance track rows (each source-linked) · readiness chips (binaries only) · primary CTA + sub-line.
+
+**THE INTERACTIVE EVIDENCE EXPLORER — one-viewport chaptered pages (owner verdict 21 Jul, verbatim intent: "The PASSPORT is still TECHNICAL. I asked for it designed INTERACTIVE and INTERESTING for the other entities (buyers) — otherwise it's not clear to a human. Everything in ONE screen height as interactive screens." — TARGET, not yet built — ratify: R00).**
+
+The hero above is the one-viewport HERO MOMENT (law 7, already built). Below it, the OLD flat scroll — Draw → Performance → Readiness → Context stacked one under another, requiring the buyer to keep scrolling past a growing ledger — is exactly the "still technical" complaint. It is REPLACED by an **Explorer**: the same four section components (`DrawSection` / `PerformanceSection` / `ReadinessSection` / `ContextSection` in `passportKit.jsx`, unchanged — same firewall, same RENDER LAW, same facts), each now rendered as its own **one-viewport CHAPTER**, advanced by direct interaction instead of scrolled past. No fact, no per-face order (§8.4), and no evidence component changes — only the interaction wrapper around them is new.
+
+**Chosen model (the strongest coherent fit; the other candidates are logged as flagged alternatives for R00, not built):** a **chaptered, one-viewport-per-pane sequence** — panes sized to `100dvh` or the frame's own contained height (§6 law 7) — advanced by (a) an explicit **Next/Prev** control pair, (b) a **persistent chapter rail** (dots + current label, reusing the `PersonaToggle` segmented-chip visual grammar) that also allows a direct jump, and (c) a **swipe** gesture on mobile (the SAME idiom the Radar already uses for "swipe between planets," §7.5 — one gesture vocabulary product-wide, not a new one). Density inside a chapter is handled by **tap-to-expand proof cards** (collapsed = one line + method chip; expand in place, single-open accordion) so a chapter with several items still fits its own one-viewport frame; only if a chapter's own list still overflows does it become the law-7/13 **NAMED contained-scroll region** — the outer page itself never scrolls.
+
+**Why this combination, not the others:**
+- *Chaptered pagination* is the direct, literal answer to "everything in ONE screen height as **interactive screens**" (plural screens, each one height) — no single-tall-page variant satisfies that sentence.
+- *Tap-to-expand* is nested INSIDE a chapter, never the primary mechanism — a long accordion is still a long page, merely shorter at rest; it solves density, not the "one screen" requirement.
+- *The rail* stays SLIM (dots + current label only, not a full always-open index) — a full always-visible sidebar index would compete for width on a 360px screen and add a second area of focus, breaking law 3 (one CTA/one focus at a time) and law 4 (no extra chrome).
+- *Per-face guided 30-second tours* are NOT the primary mechanism — a forced tour is a tutorial/onboarding pattern, and this screen's own DEFINITION OF DONE requires the buyer to need **no login, no tutorial**, reading in 30 seconds unassisted. A tour that auto-advances or gates content behind a "start tour" click would itself become the friction the owner is rejecting.
+
+**FLAGGED ALTERNATIVES (for R00 — logged, not built, so they are never silently reinvented):**
+1. **Guided 30-second tour per face** (auto-advancing, modal-like walkthrough) — rejected as PRIMARY (adds tutorial friction the spec forbids here); could exist later as an OPTIONAL, dismiss-on-sight "narrated" toggle over the same chapters — a pure taste call, not built now.
+2. **Flat single-page accordion** (tap-to-expand only, no chaptering — the page still scrolls past all four sections, just each starts collapsed) — rejected as PRIMARY (does not solve "one screen height"); **FLAG:** should this stand as a reduced-motion/no-JS graceful-degradation fallback, or does scroll-snap degrade safely on its own without a separate fallback mode? Owner/Codex taste call.
+3. **Full always-open index rail** (a permanent side panel listing every chapter + a one-line preview, visible at all times — common on desktop long-form sites) — rejected as PRIMARY on mobile (width/focus conflict, laws 3–4). **FLAG:** on desktop (≥1024px, where width is free), should the slim rail expand into a richer always-visible index with a one-line preview per chapter? Taste call for R00/Codex, non-blocking (the slim rail is the floor spec either way).
+
+**THE FULL INTERACTION ENUMERATION (element · states · in-place behavior · mobile gesture — per HOW-TO-BUILD-A-TASK Part 8 shape):**
+
+1. **Chapter rail** (persistent, docked between the 3-beat story and the explorer frame; reuses `PersonaToggle`'s pill/chip pattern).
+   - *States:* idle (N dots/labels; the current one is a **lime OUTLINE**, never solid-lime — §5.10 lime discipline: solid lime stays button-only) · focus-visible ring per dot · overflow-scroll (mobile: `overflow-x-auto` drag, same as `PersonaToggle`, never wraps to a second row).
+   - *In-place behavior:* click/tap a dot → the explorer jumps straight to that chapter (crossfade/slide ≤300ms per the §5.11/§17.0 motion tokens; reduced-motion = instant swap); the current dot updates; the URL/route is unchanged (still `/passport/:id`) — chapter position is view-local state only, not persisted or deep-linkable. **FLAG for R00:** should a chapter be deep-linkable (e.g. `?ch=performance`) for a "share this one proof" use case? Not built now — no fact changes either way.
+   - *Mobile gesture:* tap only on the rail itself — the rail never responds to swipe (swipe belongs to the explorer body, #2, so the two gestures never collide).
+2. **Next / Prev controls** (an explicit affordance so a first-time buyer never needs to *discover* a hidden swipe).
+   - *States:* default (44px min tap target, §5.11 CTA spec) · Prev absent/disabled on chapter 1 · Next replaced by the `explorerEnd` closing state on the last chapter (never a dead "next" that goes nowhere) · focus-visible ring.
+   - *In-place behavior:* same jump/transition as the rail; keyboard Left/Right (or Home/End) moves chapters when the explorer region holds focus.
+   - *Mobile gesture:* the buttons are tap-only; the SAME chapter-advance also fires on a horizontal swipe anywhere on the chapter body (left = next, right = prev — the Radar's established "swipe between planets" idiom, §7.5, kept as the product's ONE gesture vocabulary, not a second one).
+3. **Proof-card collapse/expand** (extends the existing `ProofUnit`; no new visual component).
+   - *States:* collapsed (source icon + one-line headline, truncated, + method chip — no band/date row) · expanded (the full existing `ProofUnit` card: contextLine, BandPill, reviewed date) · single-open accordion (expanding one card auto-collapses any other open card in the SAME chapter, keeping the chapter inside its one-viewport frame).
+   - *In-place behavior:* tap the card's header row (or a chevron) → expands in place; the chapter's own inner list becomes the law-7/13 **named contained-scroll region** ONLY if the expanded state still overflows the frame — the outer page never scrolls for this.
+   - *Mobile gesture:* tap (44px row height, already true of `ProofUnit`'s header row); swipe is reserved for chapter navigation (#2), never card-expand, so the two never collide.
+4. **The 3-beat proof story as a jump-menu** (extends `ProofStory`; no new component; stays put between hero and explorer, itself NOT paginated).
+   - *States:* unchanged visuals (mobile compact single line / desktop 3-row list); beats 02 ("what's proven") and 03 ("who vouches") gain `role="button"` + focus-visible when their fact lives inside a chapter; beat 01 ("who they are") stays inert — it describes the hero already on screen, nothing to jump to.
+   - *In-place behavior:* tap beat 02 → the explorer jumps to the Draw chapter; tap beat 03 → jumps to whichever chapter structurally holds that producer-confirmed claim (Draw or Performance, per face).
+   - *Mobile gesture:* tap only.
+5. **The chapter frame** (the one-viewport pane itself).
+   - *States:* current / entering / exiting (crossfade or slide, §5.11/§17.0 motion tokens) · a first-open hint (`explorerSwipeHint`) shown once per session on chapter 1's first render, auto-dismissed on any interaction or after ~2.5s, never re-shown.
+   - *In-place behavior:* renders the SAME per-face component order already built in the four view files (table below) — only the pagination wrapper is new; a face whose RENDER LAW removes a section (e.g. no `hasContext`) simply has fewer total chapters — the rail must reflect the TRUE count only (see FIREWALL below).
+   - *Mobile gesture:* swipe (see #2).
+6. **Sticky CTA + disclaimer bar** (existing, UNCHANGED) — persists across hero, story and every chapter; never paginated, never covered by the explorer.
+7. **Keyboard / focus / a11y.** Tab order: hero controls → persona toggle → story beats (if tappable) → rail dots → Prev/Next → the active chapter's own proof cards → sticky CTA. An `aria-live="polite"` region announces `explorerLiveAnnounce` on every chapter change (name + position) so a screen-reader user is never silently relocated. Reduced-motion: every transition above collapses to an instant swap (no slide/crossfade), consistent with the existing motion contract (§5.11/§17.0).
+8. **Persona toggle × explorer interaction.** Switching persona re-orders chapters per the existing per-face arrays (table below) AND resets the explorer to chapter 1 — a buyer must never be left "on chapter 3" silently holding DIFFERENT content after a persona switch. This is an honesty guardrail, not only a UX nicety: a fixed position with silently-swapped content underneath would misrepresent what is currently on screen.
+
+**PER-FACE CHAPTER MAP (identical order to the already-built/ratified §8.4 view files — ONLY the interaction wrapper is new; no order or fact changes):**
+| Face | Ch.1 | Ch.2 | Ch.3 | Ch.4 |
+|---|---|---|---|---|
+| **Booking** (`PassportBookingView`) | Proof of draw (Room Grammar hero, §5.10) | Performance | Booking readiness | Context |
+| **Representation** (`PassportRepView`) | Career proof (Performance) | Audience (Context) | Proof of draw | Readiness |
+| **Production** (`PassportProductionView`) | Show-day readiness | Proof of draw | Performance | Context |
+| **Private & corporate** (`PassportPrivateView`) | Turnkey / private readiness | Proof of draw (private register) | Performance (private) | Context (private) |
+Each row's real chapter count is dynamic — RENDER LAW still applies PER CHAPTER (e.g. a face with no `hasContext` shows 3 chapters, never 4 with a blank one).
+
+**FIREWALL on the explorer itself (the two-question check, §5.10 rule 6, applied to pagination):**
+- Chapter ORDER is relevance-to-THIS-VIEWER (already ratified §8.4), never a rank of the artist — restated here because pagination makes order more visually prominent than a continuous scroll ever did.
+- The rail shows the artist's TRUE chapter count only — **never a ghost/disabled dot for a section RENDER LAW removed.** A visible-but-unlit 4th dot when only 3 chapters are real would read as "this artist is missing something" — exactly the gap-display the firewall forbids on a buyer face (§8.7 FIREWALL / §5.10).
+- Collapse/expand changes PRESENTATION only of already-approved facts — it never reveals a field the old scrolled ledger would not already have shown expanded (no "hidden extra data" behind a tap).
+- No count anywhere in the explorer (rail position, "N of Y") describes the ARTIST — it describes the buyer's OWN navigation position through public content, the same category as a pagination indicator on any content site, never a score about the person.
+
+**EN + HE LEXICON — new copy keys (namespace `T.passport.*`; chapter NAMES reuse existing keys — `proofTitle` / `performance` / `careerProof` / `readiness` / `productionReadiness` / `privateReadiness` / `contextTitle` / `audience` / `privateContextTitle` — no new chapter-name keys needed):**
+| Key | EN | HE |
+|---|---|---|
+| `explorerRailLabel` | Evidence chapters | פרקי ההוכחה |
+| `explorerJumpTo(label)` | Jump to {label} | עבור אל {label} |
+| `explorerNext(label)` | Next: {label} | הבא: {label} |
+| `explorerPrev(label)` | Back: {label} | חזרה: {label} |
+| `explorerProgress(n, total)` | {n} of {total} | {n} מתוך {total} |
+| `explorerSwipeHint` | Swipe or tap to see more | החליקו או הקישו כדי לראות עוד |
+| `explorerExpandAria` | Show full details | הצג פרטים מלאים |
+| `explorerCollapseAria` | Hide details | הסתר פרטים |
+| `explorerShowMore(n)` | Show {n} more | הצג עוד {n} |
+| `explorerEnd` | That's everything verified so far. | אלה כל הממצאים המאומתים עד כה. |
+| `explorerLiveAnnounce(label, n, total)` | Now viewing: {label}, {n} of {total} | מוצג כעת: {label}, {n} מתוך {total} |
+All new keys mark **ratify: R00** (new copy — CLAUDE.md lexicon rule); none replace, rename, or shadow an existing key.
 
 **Non-pro language (target — broaden beyond "booker").** The buyer surface must read for **all** demand segments (private/corporate/planner), not only pros. Evidence is phrased buyer-readable ("Can this artist carry a room?" not "Proof of draw"). Booking-vs-representing changes the copy and the CTA. The private/corporate register is warm and non-industry.
 
