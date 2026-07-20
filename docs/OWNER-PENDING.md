@@ -26,7 +26,7 @@ _Maintained by the build agent. Appears at the end of every reply (owner directi
 |---|---|---|
 | G-8/G-9/G-10/G-DS | Backfilled spec blocks marked `ratify: R00` (milestone canon · history-line corner law · mobile scene rail · DS block §5.11) + the Wave-B backfills (§8.4 four-faces status · §8.9 dead-link states · §8.12 rows · §5.10 BUILT markers) | yes/confirm each |
 | R-11 | Display-language ruling (UNIVERSE-GAP-REPORT §4): count-based vocabulary only (**recommended**) or ALSO artist-private completion % | Richer Radar progress displays |
-| M-17 | Universe/registry rulings ×3: Registry-B schema (rec F1.csv 15-col+3) · certainty ladder (rec 4-door + 10-value) · the Sheet's 4 open R00 decisions | Field-grain fill + ≥038 taxonomy migration + registry-driven Radar |
+| M-17 | **⅔ RULED (R00, 20 Jul):** (a) Registry-B schema = **F1.csv 15 columns — approved** · (b) certainty = **two separate fields (4-value claim door + 10-value extraction provenance) — approved** · (c) the 4 taxonomy sub-calls: laid out with recommendations 20 Jul, awaiting one-pass ruling | (c) releases R-6/R-7 — the registry-driven universe, priority build |
 
 ## 🧰 PRE-LAUNCH CHECKLIST (technical team, before public launch — parked 20 Jul, silent until launch prep)
 
