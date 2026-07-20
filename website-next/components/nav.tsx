@@ -19,6 +19,14 @@ const NAV_LINK_KEYS = [
   { href: '/pricing',      key: 'pricing'      },
 ] as const
 
+// T-84 CTA attribution law (docs/SITE-REWRITE-BRIEF.md): nav is shared across
+// every page, so the campaign must be derived from the route, not hardcoded —
+// otherwise 100% of nav-driven signups attribute via referrer only.
+function pageSlug(pathname: string | null): string {
+  if (!pathname || pathname === '/') return 'home'
+  return pathname.replace(/^\/+|\/+$/g, '').replace(/\//g, '-')
+}
+
 function LocaleToggle() {
   const { locale, setLocale } = useLocale()
   const next: Locale = locale === 'en' ? 'he' : 'en'
@@ -66,6 +74,10 @@ export function Nav() {
 
   const isActive = (href: string) =>
     href === '/' ? pathname === '/' : pathname === href || pathname?.startsWith(`${href}/`)
+
+  const slug = pageSlug(pathname)
+  const loginHref = `${APP_URL}/login?utm_source=site&utm_campaign=${slug}&utm_content=nav`
+  const signupHref = `${APP_URL}/signup?utm_source=site&utm_campaign=${slug}&utm_content=nav`
 
   return (
     <nav
@@ -152,7 +164,7 @@ export function Nav() {
           })}
           <LocaleToggle />
           <a
-            href={`${APP_URL}/login`}
+            href={loginHref}
             style={{
               fontFamily: 'var(--font-space-mono)',
               fontSize: '0.75rem',
@@ -167,7 +179,7 @@ export function Nav() {
             {nav.login}
           </a>
           <a
-            href={`${APP_URL}/signup`}
+            href={signupHref}
             style={{
               fontFamily: 'var(--font-space-mono)',
               fontSize: '0.75rem',
@@ -252,7 +264,7 @@ export function Nav() {
             <LocaleToggle />
           </div>
           <a
-            href={`${APP_URL}/login`}
+            href={loginHref}
             style={{
               display: 'block',
               marginTop: '12px',
@@ -271,7 +283,7 @@ export function Nav() {
             {nav.login}
           </a>
           <a
-            href={`${APP_URL}/signup`}
+            href={signupHref}
             style={{
               display: 'block',
               marginTop: '10px',
