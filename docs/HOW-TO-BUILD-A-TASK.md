@@ -78,3 +78,14 @@ A team never reads outside its territory or its cited sections.
 **Shared-component law:** if a wave's teams all depend on a shared component (`src/components/**`), the shared piece is built FIRST, solo, then the teams parallelize on top. Shared = collision risk by definition.
 
 **Wave close = ONE witness batch.** MOBILE/DESKTOP green only after the owner looks.
+
+## PART 7 — THE OWNER-TASK SHAPE (standing rule, owner 20 Jul)
+
+A non-dev item is either **advanced by the agent** or **reduced to a one-line owner decision with a recommendation** — it is NEVER allowed to just sit as a blocker. Whenever something genuinely needs the owner, it is handed to her in EXACTLY this shape, always:
+
+1. **WHAT** it is — one sentence, plain language, no jargon.
+2. **EXACTLY what to do** — numbered steps, written as if she has never done it before ("1. Go to resend.com → API Keys. 2. …"), naming the exact site, project, and variable.
+3. **HOW to verify** it worked — what to check, what success looks like.
+4. **WHY it matters** — what breaks or stays blocked if skipped.
+
+**An owner task without all four parts is not ready to hand her.** For decisions (not actions), the same discipline collapses to: the single concrete choice + the recommendation + the reason — "pick A or B; I recommend A because X" — never an open-ended "pending". Keys/secrets: steps run in the provider's UI (Vercel/Resend/etc.), and a secret value never appears in chat, in a commit, or in a client bundle.

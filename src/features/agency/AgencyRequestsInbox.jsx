@@ -106,8 +106,8 @@ export default function AgencyRequestsInbox() {
                 <button type="button" onClick={() => toggle(r.id)} aria-expanded={open}
                   className="flex min-h-[44px] w-full items-center justify-between gap-2 text-start">
                   <div className="min-w-0">
-                    <p className="truncate font-bold text-ink">{r.requester_name}{r.requester_org ? ` · ${r.requester_org}` : ''}</p>
-                    <p className="truncate text-xs text-muted">
+                    <p className="line-clamp-2 whitespace-normal break-words font-bold leading-snug text-ink">{r.requester_name}{r.requester_org ? ` · ${r.requester_org}` : ''}</p>
+                    <p className="line-clamp-2 whitespace-normal break-words text-xs leading-snug text-muted">
                       {r.artists?.stage_name && <>{T.agency.forArtist} {r.artists.stage_name} · </>}
                       <span className="font-mono">{r.event_date || T.agency.noDate}</span>
                     </p>

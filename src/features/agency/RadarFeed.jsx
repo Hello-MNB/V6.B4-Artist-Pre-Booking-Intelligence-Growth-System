@@ -119,10 +119,10 @@ export default function RadarFeed() {
                       <span className="font-mono text-[11px] text-faint">{sig.signalDate}</span>
                     </div>
                     <p className="text-sm text-ink mb-2">{explain(sig, T)}</p>
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-2 min-w-0">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div className="flex min-w-0 flex-wrap items-center gap-2">
                         {(sig.methodLabel || sig.vstatus) && <SourceLabel status={sig.vstatus} methodLabel={sig.methodLabel} />}
-                        {sig.evidenceBasis && <span className="text-xs text-muted truncate">{T.radar.basisLabel}: {sig.evidenceBasis}</span>}
+                        {sig.evidenceBasis && <span className="min-w-0 line-clamp-2 whitespace-normal break-words text-xs leading-snug text-muted">{T.radar.basisLabel}: {sig.evidenceBasis}</span>}
                       </div>
                       <button onClick={() => nav(actionRoute(sig))}
                         className="chip bg-accent text-[#12160A] text-xs font-bold shrink-0 min-h-[44px] px-3">

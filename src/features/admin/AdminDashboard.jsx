@@ -465,7 +465,7 @@ export default function AdminDashboard() {
                         <button
                           onClick={() => togglePublished(a)}
                           disabled={toggling === a.id}
-                          className={`chip px-3 py-1.5 text-xs font-bold transition ${toggling === a.id ? 'opacity-60' : ''} ${
+                          className={`chip tap-target px-3 py-1.5 text-xs font-bold transition ${toggling === a.id ? 'opacity-60' : ''} ${
                             a.published ? 'bg-accent/15 text-accent hover:bg-accent/25' : 'bg-surface2 text-muted hover:bg-raise'
                           }`}>
                           {a.published ? T.admin.publishToggleOn : T.admin.publishToggleOff}
@@ -513,7 +513,9 @@ export default function AdminDashboard() {
               <div className="space-y-2">
                 {pagedClaims.slice.map((c) => (
                   <div key={c.id} className="card flex items-center justify-between gap-3 py-3">
-                    <span className="line-clamp-2 min-w-0 whitespace-normal break-words text-sm leading-snug text-ink">{c.value || c.claim_type || '—'}</span>
+                    {/* full wrap, no clamp — an operator reads the whole claim; long
+                        seeded values exceed 2 lines at 360px (Wave-B sweep) */}
+                    <span className="min-w-0 whitespace-normal break-words text-sm leading-snug text-ink">{c.value || c.claim_type || '—'}</span>
                     <SourceLabel status={c.verification_status} methodLabel={c.method_label} expiresAt={c.expires_at} />
                   </div>
                 ))}
