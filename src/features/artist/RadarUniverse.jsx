@@ -503,10 +503,13 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
     // ONE warm coach card owns the screen's center of gravity; the radial
     // survives only as faint atmosphere behind it; the six dimensions become a
     // calm shelf below. Viewport law (§6 law 7) unchanged: md+ still FLEXES to
-    // the dashboard's remaining height; mobile now carries an explicit
-    // max-height so the shelf — a "long ledger" (§6 law 7 exception) — scrolls
-    // WITHIN this panel instead of ever pushing the page itself.
-    <div className="relative flex max-h-[64vh] shrink-0 flex-col overflow-hidden rounded-3xl border border-line bg-bg2 p-4 sm:p-5 md:max-h-none md:min-h-0 md:flex-1 md:p-8">
+    // the dashboard's remaining height. Mobile needs a DEFINITE height (not
+    // just a max-height cap) for the shelf's flex-1/overflow-y-auto below to
+    // resolve at all — a max-height-only box sizes to its content and leaves
+    // flex-grow nothing to distribute, collapsing the shelf to 0px. A real
+    // height forces the shelf — a "long ledger" (§6 law 7 exception) — to
+    // scroll WITHIN this panel instead of ever pushing the page itself.
+    <div className="relative flex h-[70vh] shrink-0 flex-col overflow-hidden rounded-3xl border border-line bg-bg2 p-4 sm:p-5 md:h-auto md:min-h-0 md:flex-1 md:p-6">
       {/* the ONE warm light — backstage lamp above the artist (gold budget: this + method labels). */}
       <div aria-hidden className="pointer-events-none absolute inset-x-0 -top-24 h-64 md:-top-16 md:h-[600px]"
         style={{ background: 'radial-gradient(60% 100% at 50% 0%, rgba(242,192,99,0.12), transparent 70%)' }} />
@@ -579,7 +582,7 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
               share a single horizontally-scrollable row instead of two
               absolutely-positioned rails, so nothing floats over the
               Inspector (the old corner-collision fix is no longer needed). */}
-          <div className="relative z-10 mb-4 flex shrink-0 items-center gap-1.5 overflow-x-auto pb-1" role="tablist" aria-label={S.filtersLabel}>
+          <div className="relative z-10 mb-3 flex shrink-0 items-center gap-1.5 overflow-x-auto pb-1" role="tablist" aria-label={S.filtersLabel}>
             {scenes.length > 0 && (
               <>
                 <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.08em] text-muted">{S.sceneLabel}</span>
@@ -628,8 +631,8 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
                 one CTA, every width (panelHoldsCTA below keeps the CTA count
                 at exactly one, §6 law 3). ── */}
           {nextAction && (
-            <div className="relative z-10 mx-auto mb-4 w-full max-w-xl shrink-0 rounded-2xl border border-line2 bg-surface2/70 px-5 py-4 text-center shadow-card sm:px-8 sm:py-6">
-              <span className="mb-2.5 inline-flex items-center gap-1.5 rounded-full border border-gold/25 bg-gold/10 px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-gold">
+            <div className="relative z-10 mx-auto mb-2.5 w-full max-w-xl shrink-0 rounded-2xl border border-line2 bg-surface2/70 px-5 py-3 text-center shadow-card sm:px-7 sm:py-3.5">
+              <span className="mb-2 inline-flex items-center gap-1.5 rounded-full border border-gold/25 bg-gold/10 px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-gold">
                 <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-gold" />
                 {T.radar.coachEyebrow}
               </span>
@@ -637,12 +640,12 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
                   scene + why this dimension matters there; no scene signal →
                   the neutral fallback (G2 guard — identical rule to the
                   Inspector's own coaching line, §8.3). */}
-              <p className="font-display mx-auto max-w-lg text-lg font-bold leading-snug text-ink sm:text-2xl">
+              <p className="font-display mx-auto max-w-lg text-base font-bold leading-snug text-ink sm:text-xl">
                 {coachScene && coachTargetPlanet && S.coach?.[coachTargetPlanet]
                   ? <>{S.coachIn(coachScene)} {S.coach[coachTargetPlanet]}</>
                   : T.radar.nextMove}
               </p>
-              <p className="mx-auto mt-2 max-w-md text-sm font-semibold text-ink/90">{nextAction.title}</p>
+              <p className="mx-auto mt-1.5 max-w-md text-sm font-semibold text-ink/90">{nextAction.title}</p>
               {nextAction.why && (
                 <p className="mx-auto mt-1 max-w-md text-[12px] leading-relaxed text-muted">
                   {nextAction.why}
@@ -650,7 +653,7 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
                 </p>
               )}
               {!panelHoldsCTA && (nextAction.to || nextAction.planet) && (
-                <button className="btn-primary mt-3 px-6 py-2.5 text-sm" onClick={() => onNextAction?.(nextAction)}>
+                <button className="btn-primary mt-2.5 px-6 py-2 text-sm" onClick={() => onNextAction?.(nextAction)}>
                   {T.common.continue}
                 </button>
               )}
@@ -664,9 +667,9 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
                 opens the EXISTING Inspector (desktop rail / mobile sheet,
                 §8.3 content unchanged). A long shelf scrolls WITHIN this
                 bounded region (§6 law 7) rather than the page. ── */}
-          <p className="relative z-10 mb-2 shrink-0 text-center font-mono text-[10px] uppercase tracking-[0.08em] text-faint">{S.shelf.label}</p>
+          <p className="relative z-10 mb-1.5 shrink-0 text-center font-mono text-[10px] uppercase tracking-[0.08em] text-faint">{S.shelf.label}</p>
           <div className="relative z-10 min-h-0 flex-1 overflow-y-auto pe-0.5">
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 md:gap-2.5 lg:grid-cols-6">
+            <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 md:grid-cols-3 md:gap-2 lg:grid-cols-6">
               {PLANETS.map((p) => {
                 const info = uni.planets[p.key]
                 const dimmed = !info.nodes.some(matchesFilter) && (filter !== 'all' || world)
@@ -675,10 +678,10 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
                 return (
                   <button key={p.key} type="button" onClick={() => setSelected(p.key)}
                     aria-label={`${S.shelf.names[p.key]} — ${S.state[info.state]}${primary ? ` · ${S.genrePrimary}` : ''}`}
-                    className={`flex items-center gap-2.5 rounded-2xl border bg-surface px-3.5 py-2.5 text-start transition-opacity md:flex-col md:items-start md:gap-2 md:py-3.5 ${
+                    className={`flex items-center gap-2.5 rounded-2xl border bg-surface px-3.5 py-2 text-start transition-opacity md:flex-col md:items-start md:gap-1.5 md:py-2.5 ${
                       dimmed ? 'opacity-40' : 'opacity-100'} ${isSelected ? 'border-line2 ring-1 ring-gold/30' : 'border-line'}`}>
-                    <span aria-hidden className={`grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-line bg-surface2 ${info.state === 'locked' ? 'opacity-60' : ''}`}>
-                      <GpIcon id={p.icon} className="h-[18px] w-[18px] text-ink/80" />
+                    <span aria-hidden className={`grid h-8 w-8 shrink-0 place-items-center rounded-xl border border-line bg-surface2 ${info.state === 'locked' ? 'opacity-60' : ''}`}>
+                      <GpIcon id={p.icon} className="h-4 w-4 text-ink/80" />
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="flex items-center gap-1.5">
@@ -686,7 +689,7 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
                         {primary && <span aria-hidden className="text-[10px] text-gold">★</span>}
                       </span>
                       <span className="mt-0.5 block text-xs leading-snug text-muted">{shelfLine(info, S)}</span>
-                      <span className={`mt-1.5 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold ${SHELF_CHIP[info.state]}`}>
+                      <span className={`mt-1 inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] font-semibold ${SHELF_CHIP[info.state]}`}>
                         <span aria-hidden className={`h-1.5 w-1.5 rounded-full ${SHELF_DOT[info.state]}`} />
                         {S.state[info.state]}
                       </span>
