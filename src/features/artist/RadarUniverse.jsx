@@ -511,7 +511,13 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
       {scenes.length > 0 && (
         <div className="relative z-10 mb-2 flex items-center gap-1.5 overflow-x-auto pb-1 md:absolute md:end-8 md:top-8 md:mb-0 md:pb-0"
           role="tablist" aria-label={S.sceneLabel}>
-          <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.08em] text-faint">{S.sceneLabel}</span>
+          {/* V4 (owner witness-fix 20 Jul): the label WAS already rendering
+              unconditionally at every width (no hidden/md: gate) — the defect
+              was contrast, not visibility: text-faint measures ~3.8:1 on bg2,
+              below the 4.5:1 AA floor, so it read as "unlabeled" at a glance
+              exactly as the owner's walk flagged. text-muted (~7.2:1) fixes
+              it while staying quieter than the chip labels beside it. */}
+          <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.08em] text-muted">{S.sceneLabel}</span>
           {[null, ...scenes].map((g) => (
             <button key={g || 'all'} role="tab" aria-selected={scene === g} onClick={() => setScene(g)}
               className={`tap-target shrink-0 rounded-full border px-3 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] transition-colors ${
@@ -539,8 +545,11 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
           top-start over the universe, like the prototype's .rfilters strip. */}
       <div className="relative z-10 mb-3 flex items-center gap-1.5 overflow-x-auto pb-1 md:absolute md:start-8 md:top-8 md:mb-0 md:w-auto md:pb-0" role="tablist" aria-label={S.filtersLabel}>
         {/* T-62: the lens rail carries a visible label, same pattern as the
-            scene rail — an artist must be able to tell the two rows apart. */}
-        <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.08em] text-faint">{S.filtersLabel}</span>
+            scene rail — an artist must be able to tell the two rows apart.
+            V4 (owner witness-fix 20 Jul): same text-faint contrast defect as
+            the scene rail label above (~3.8:1, below AA) — raised to
+            text-muted (~7.2:1) so both rails are legible at a glance. */}
+        <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.08em] text-muted">{S.filtersLabel}</span>
         {FILTERS.map((f) => (
           <button key={f.key} role="tab" aria-selected={filter === f.key} onClick={() => pickFilter(f.key)}
             className={`tap-target relative flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] transition-colors ${
@@ -672,7 +681,16 @@ export default function RadarUniverse({ artist, act, items, claims, onClaimsChan
                     </span>
                   )}
                 </span>
-                <span className="mt-1.5 block w-20 font-mono text-[8px] uppercase tracking-[0.08em] text-faint leading-tight md:text-[9px]">
+                {/* V3 (owner witness-fix 20 Jul): text-faint measured ~3.8:1 on
+                    bg2 — below the 4.5:1 AA floor for sub-9px text, reading as
+                    "faint" exactly as the owner's walk flagged. text-ink/80
+                    (~10.8:1) fixes contrast without a new color token. T-61
+                    wrap law made explicit here too: line-clamp-2 + max-w
+                    (was a bare w-20 with no clamp) so the longest label
+                    ("AUDIENCE & COMMUNITY") gets a firm 2-line cap, never an
+                    ellipsis mid-word — none of the six planet names actually
+                    need a 3rd line at this width, so the clamp never fires. */}
+                <span className="line-clamp-2 mt-1.5 block max-w-[80px] whitespace-normal break-words text-center font-mono text-[8px] uppercase leading-tight tracking-[0.08em] text-ink/80 md:text-[9px]">
                   {S.planets[p.key]}
                 </span>
                 {/* G2 — method-safe wording label; words only, never a weight.

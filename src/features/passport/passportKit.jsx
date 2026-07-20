@@ -165,7 +165,12 @@ export function ProofUnit({ claim, context, band, status, methodLabel, reviewedA
 
 export function PassportSection({ label, caption, children }) {
   return (
-    <section className="mt-10">
+    // V1 (owner witness-fix 20 Jul, §6 law 7 Passport fold): mt-10 (40px) on
+    // EVERY section compounds against the mobile fold — trimmed on mobile/
+    // tablet only (md+ keeps the original 40px rhythm unchanged) as part of
+    // the hero-fold compression; this is spacing only, no section is removed
+    // or reordered.
+    <section className="mt-6 sm:mt-8 md:mt-10">
       <h2 className="font-display text-[22px] font-bold text-ink">{label}</h2>
       {caption && (
         <p className="mt-1 font-mono text-[9.5px] uppercase tracking-[0.12em] text-faint">{caption}</p>
@@ -431,9 +436,31 @@ export function ProofStory({ artist, data, T, contextLines }) {
   const vouchSafe = vouchClaim && (vouchClaim.public_wording || vouchClaim.public_band || (isBand(vouchClaim.value) ? vouchClaim.value : null))
   const positioning = artist.one_line || [artist.genre, artist.city].filter(Boolean).join(' · ')
   if (!lead && !vouchSafe && !positioning) return null
+  // V1 (owner witness-fix 20 Jul, §6 law 7 Passport fold): at 360×780 the
+  // full 3-beat list alone measured ~225px — with the hero above it, the
+  // FIRST proof unit (the very next thing after this strip) landed ~75px
+  // below the fold. Below `sm` this collapses to ONE compact line carrying
+  // beats 01+02 (who + what's proven — the identity + strongest proof, the
+  // load-bearing half of the story); beat 03 (who vouches) is never lost —
+  // the same producer-confirmed claim still leads the ledger right below.
+  // Nothing is removed, reordered or reworded — same derived values, same
+  // method label text, just laid out on one line instead of three.
+  const leadMethodKey = lead ? methodLabelFor({ method_label: lead.methodLabel, verification_status: lead.status }) : null
   return (
-    <section className="mt-8 rounded-[18px] border border-line bg-surface2/60 px-5 py-4">
-      <ol className="space-y-3">
+    <section className="mt-4 rounded-[18px] border border-line bg-surface2/60 px-4 py-3 sm:mt-6 sm:px-5 sm:py-4 md:mt-8">
+      {/* compact single-line spine — mobile only */}
+      <p className="text-[13px] leading-snug text-ink sm:hidden">
+        <span className="font-display font-semibold">{artist.stage_name}</span>
+        {positioning && <span className="text-muted"> — {positioning}</span>}
+        {lead && (
+          <>
+            <span className="text-faint"> · </span>
+            <span className="font-semibold">{lead.contextLine || lead.claim}</span>
+            {leadMethodKey && <span className="ms-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-gold">{T.methodLabel[leadMethodKey]}</span>}
+          </>
+        )}
+      </p>
+      <ol className="hidden space-y-3 sm:block">
         <li className="flex items-start gap-3">
           <span aria-hidden="true" className="mt-0.5 font-mono text-[10px] text-faint">01</span>
           <div className="min-w-0">
@@ -476,8 +503,16 @@ export function PassportHero({ artist, tagline, photoOk, onPhotoError, children 
   const eyebrow = [artist.genre, artist.city].filter(Boolean).join(' · ')
   return (
     <header className="relative">
+      {/* V1 (owner witness-fix 20 Jul, §6 law 7 Passport fold): measured at
+          360×780 the hero ran ~492px tall before this change, and the FIRST
+          proof unit in DrawSection landed at ~854px — ~74px below the fold
+          just from the hero+strip alone. The image band + overlap are
+          compressed on mobile/tablet ONLY (md+ keeps the original 46vh/-mt-28
+          cinematic sizing unchanged) — same photo, same gradient, just a
+          shorter band so identity + the first proof card can share one
+          screen. */}
       {artist.photo_url && photoOk ? (
-        <div className="relative h-[46vh] min-h-[340px] max-h-[540px] w-full overflow-hidden">
+        <div className="relative h-[32vh] min-h-[210px] max-h-[380px] w-full overflow-hidden sm:h-[40vh] sm:min-h-[300px] sm:max-h-[480px] md:h-[46vh] md:min-h-[340px] md:max-h-[540px]">
           <img
             src={artist.photo_url}
             alt={artist.stage_name}
@@ -487,31 +522,31 @@ export function PassportHero({ artist, tagline, photoOk, onPhotoError, children 
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(11,12,11,.25)_0%,rgba(11,12,11,.05)_30%,rgba(11,12,11,.62)_68%,rgba(11,12,11,1)_100%)]" />
         </div>
       ) : (
-        <div className="relative h-[240px] w-full overflow-hidden bg-bg2">
+        <div className="relative h-[200px] w-full overflow-hidden bg-bg2 sm:h-[220px] md:h-[240px]">
           <div className="absolute inset-0 bg-[radial-gradient(90%_120%_at_50%_0%,rgba(242,192,99,.14)_0%,rgba(242,192,99,.04)_45%,rgba(11,12,11,0)_75%)]" />
           <div className="absolute inset-x-0 bottom-0 h-24 bg-[linear-gradient(180deg,rgba(11,12,11,0),rgba(11,12,11,1))]" />
         </div>
       )}
 
-      <div className="absolute inset-x-0 top-0 flex items-center justify-between px-5 pt-5 sm:px-8">
+      <div className="absolute inset-x-0 top-0 flex items-center justify-between px-5 pt-4 sm:px-8 sm:pt-5">
         <Wordmark />
         <LanguageToggle />
       </div>
 
-      <div className="relative mx-auto -mt-28 max-w-[720px] px-5 sm:px-8">
+      <div className="relative mx-auto -mt-20 max-w-[720px] px-5 sm:-mt-24 sm:px-8 md:-mt-28">
         <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-gold">
           {tagline || T.passport.eyebrow}
         </p>
         {eyebrow && (
-          <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">{eyebrow}</p>
+          <p className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.12em] text-muted sm:mt-2">{eyebrow}</p>
         )}
-        <h1 className="mt-1 font-display text-[clamp(2.2rem,8vw,3.6rem)] font-bold leading-[1.02] tracking-[-0.01em] text-ink">
+        <h1 className="mt-1 font-display text-[clamp(1.9rem,8vw,3.6rem)] font-bold leading-[1.02] tracking-[-0.01em] text-ink">
           {artist.stage_name}
         </h1>
         {artist.one_line && (
-          <p className="mt-3 max-w-[52ch] text-[17px] leading-relaxed text-muted">{artist.one_line}</p>
+          <p className="mt-2 line-clamp-2 max-w-[52ch] text-[14px] leading-snug text-muted sm:mt-3 sm:text-[15px] sm:leading-relaxed md:text-[17px]">{artist.one_line}</p>
         )}
-        {children && <div className="mt-5">{children}</div>}
+        {children && <div className="mt-3 sm:mt-4 md:mt-5">{children}</div>}
       </div>
     </header>
   )
