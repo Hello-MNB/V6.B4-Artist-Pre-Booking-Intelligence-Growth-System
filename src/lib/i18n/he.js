@@ -461,6 +461,7 @@ export const T = {
     // ── שורות פירוט ואישור סגירה (ArtistRequests / תיבת הבקשות) ──
     requesterLabel: 'פונה',
     eventLabel: 'אירוע',
+    artistLabel: 'אמן', // B3 (T-79) — שורת פירוט בתיבת הבקשות
     closeConfirm: 'לסגור את הבקשה?',
     // ── כרטיס צד ורוסטר (AgencyDashboard) ──
     newCount: (n) => `${n} חדשות`,
@@ -1015,6 +1016,8 @@ export const T = {
       sceneAll: 'הכל',
       // T-62 — תווית גלויה למסנן התצוגה (מול שורת הסצנה למעלה).
       filtersLabel: 'הצג',
+      // B3 (T-79) — קישור גלישת רוסטר (AgencyRadarUniverse). ספירת משבצות מסלול בלבד — לעולם לא מספר על אדם.
+      overflowMore: (n) => `+${n} נוספים — כל הרוסטר למטה`,
       // N3 (T-65, §8.3) — שורת אימון מודעת-סצנה. עובדות על הסצנה בלבד — לעולם לא השוואה לאחרים (§2.9).
       coachIn: (scene) => `ב${scene},`,
       coach: {

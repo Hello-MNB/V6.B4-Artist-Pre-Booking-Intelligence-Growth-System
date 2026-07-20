@@ -464,6 +464,7 @@ export const T = {
     // ── request detail rows + inline close-confirm (ArtistRequests / inbox) ──
     requesterLabel: 'Requester',
     eventLabel: 'Event',
+    artistLabel: 'Artist', // B3 (T-79) — inbox detail row
     closeConfirm: 'Close this request?',
     // ── dashboard side card + roster (AgencyDashboard) ──
     newCount: (n) => `${n} new`,
@@ -1040,6 +1041,9 @@ export const T = {
       sceneAll: 'All',
       // T-62 — the visible label on the lens rail (vs the scene rail above).
       filtersLabel: 'Show',
+      // B3 (T-79) — roster-orbit overflow link (AgencyRadarUniverse). A count
+      // of ORBIT SLOTS ("+N more"), never a number about a person (firewall).
+      overflowMore: (n) => `+${n} more — full roster below`,
       // N3 (T-65, §8.3) — scene-aware coaching, Layer 1. Scene-standard facts
       // ONLY ("in {scene}, X matters") — never a peer comparison (§2.9).
       coachIn: (scene) => `In ${scene},`,

@@ -40,9 +40,19 @@ export default function AvailabilityRequest() {
 
   async function submit(e) {
     e.preventDefault()
-    // inline validation — message next to the field, input stays intact
-    if (!f.requester_name.trim()) {
-      setFieldErr({ requester_name: T.request.nameRequired })
+    // duplicate-submit guard — a second Enter/click while the first is still
+    // in flight is a no-op, never a second request (idempotent feel).
+    if (busy) return
+    // inline validation — message next to the field, human explanation next
+    // to it, input stays intact. Never a silently-disabled button.
+    const nextFieldErr = {}
+    if (!f.requester_name.trim()) nextFieldErr.requester_name = T.request.nameRequired
+    if (f.event_date) {
+      const today = new Date(); today.setHours(0, 0, 0, 0)
+      if (new Date(f.event_date) < today) nextFieldErr.event_date = T.request.eventDatePast
+    }
+    if (Object.keys(nextFieldErr).length) {
+      setFieldErr(nextFieldErr)
       return
     }
     setBusy(true); setError('')
